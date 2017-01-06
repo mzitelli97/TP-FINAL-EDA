@@ -197,6 +197,7 @@ void BurgleBrosView::update(BurgleBrosModel* model)
     //updateGuards(model);
     updateExtraDices(model);
     /*Draw all*/
+    al_draw_scaled_bitmap(backScreen,0,0,al_get_bitmap_width(backScreen),al_get_bitmap_height(backScreen),0,0,al_get_display_width(display),al_get_display_height(display),0);
     list<list<list<GraphicItem *>>>::iterator it_layers;
     list<list<GraphicItem *>>::iterator it_itemType;
     list<GraphicItem *>::iterator it_items;
@@ -216,7 +217,7 @@ void BurgleBrosView::update(BurgleBrosModel* model)
         }
     }
     al_flip_display();
-    cin>>aux;
+    //cin>>aux;
 }
 clickItem BurgleBrosView::itemFromClick(Point point)
 {

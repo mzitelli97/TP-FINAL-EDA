@@ -181,6 +181,7 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         if(!board.isCardVisible(locationToMove))
             board.setCardVisible(locationToMove);
         getP2Player(playerId)->decActions();
+        getP2Player(playerId)->setPosition(locationToMove);
         checkTurns();
         retVal=true;
     }
