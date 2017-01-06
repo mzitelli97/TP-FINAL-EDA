@@ -424,15 +424,6 @@ CardLocation BurgleBrosView::getDDMenuLocation()
 {
     CardLocation retVal = {3,3,3};
     list<GraphicItem *>::iterator it = accessGraphicItems(THIRD_LAYER, (unsigned int) MENU_ITEM_LIST);
-    /*for(unsigned int i=0; i < BOARD_STANDARD_FLOORS * FLOOR_RAWS * FLOOR_COLUMNS ; i++, it++)
-    {
-        GraphicTile * tile = dynamic_cast<GraphicTile *>(*it);
-        if(tile->isPointIn(aux))
-        {
-            retVal = tile->getLocation();
-            break;
-        }
-    }*/
     GraphicMenuItem * menu = dynamic_cast<GraphicMenuItem *> (*it);
     if(menu != nullptr)
         retVal = menu->getTile();
