@@ -31,10 +31,12 @@ class BurgleBrosModel
         Info2DrawGuard getInfo2DrawGuard(unsigned int floor);
 	list<Info2DrawTokens> getInfo2DrawTokens();
         vector<unsigned int> getInfo2DrawExtraDices();
-        bool peek(BurgleBrosPlayer * PlayerEnTurno, CardLocation aux);
-        bool isMovePosible(ActionOrigin playerId,CardLocation tileToMove);
-        bool isPeekPosible(ActionOrigin player, CardLocation tile);
-        vector<string> getPosibleActions(ActionOrigin player, CardLocation tile);
+        bool peek(ActionOrigin playerId, CardLocation locationToPeek);
+        bool move(ActionOrigin playerId, CardLocation locationToMove);
+        bool isMovePosible(ActionOrigin playerId,CardLocation tileToMove);  //Pregunta si una movida es posible
+        bool isPeekPosible(ActionOrigin player, CardLocation tile);         //Pregunta si un peek es posible
+        vector<string> getPosibleActions(ActionOrigin player, CardLocation tile);   //Devuelve que acciones puede realizar el jugador indicado en esa tile
+        void moveGuard(unsigned int floor);
         //void attachController(Controller * controller);
 	~BurgleBrosModel();
     private:
