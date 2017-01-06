@@ -26,6 +26,7 @@ public:
     void parseMouseEvent(EventData *mouseEvent);
     virtual ~BurgleBrosController();
 private:
+    void interpretAction(string action, CardLocation location);
     BurgleBrosModel *modelPointer;
     BurgleBrosView *view;
 };
