@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="97">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <itemPath>BurgleBrosBoard.h</itemPath>
+      <itemPath>BurgleBrosCard.h</itemPath>
+      <itemPath>BurgleBrosController.h</itemPath>
+      <itemPath>BurgleBrosFloor.h</itemPath>
+      <itemPath>BurgleBrosGuard.h</itemPath>
+      <itemPath>BurgleBrosLoots.h</itemPath>
+      <itemPath>BurgleBrosModel.h</itemPath>
+      <itemPath>BurgleBrosPlayer.h</itemPath>
+      <itemPath>BurgleBrosTokens.h</itemPath>
+      <itemPath>BurgleBrosView.h</itemPath>
+      <itemPath>GraphicEDices.h</itemPath>
+      <itemPath>GraphicGDie.h</itemPath>
+      <itemPath>GraphicGuard.h</itemPath>
+      <itemPath>GraphicGuardCards.h</itemPath>
+      <itemPath>GraphicItem.h</itemPath>
+      <itemPath>GraphicLoot.h</itemPath>
+      <itemPath>GraphicMenuItem.h</itemPath>
+      <itemPath>GraphicPlayer.h</itemPath>
+      <itemPath>GraphicPlayerCard.h</itemPath>
+      <itemPath>GraphicTile.h</itemPath>
+      <itemPath>GraphicToken.h</itemPath>
+      <itemPath>ImageLoader.h</itemPath>
+      <itemPath>LibsInit.h</itemPath>
+      <itemPath>NetworkInterface.h</itemPath>
+      <itemPath>Networking.h</itemPath>
+      <itemPath>StrNmbrFieldToArray.h</itemPath>
+      <itemPath>View.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <itemPath>BurgleBrosBoard.cpp</itemPath>
+      <itemPath>BurgleBrosCard.cpp</itemPath>
+      <itemPath>BurgleBrosController.cpp</itemPath>
+      <itemPath>BurgleBrosFloor.cpp</itemPath>
+      <itemPath>BurgleBrosGuard.cpp</itemPath>
+      <itemPath>BurgleBrosLoots.cpp</itemPath>
+      <itemPath>BurgleBrosModel.cpp</itemPath>
+      <itemPath>BurgleBrosPlayer.cpp</itemPath>
+      <itemPath>BurgleBrosTokens.cpp</itemPath>
+      <itemPath>BurgleBrosView.cpp</itemPath>
+      <itemPath>GraphicEDices.cpp</itemPath>
+      <itemPath>GraphicGDie.cpp</itemPath>
+      <itemPath>GraphicGuard.cpp</itemPath>
+      <itemPath>GraphicGuardCards.cpp</itemPath>
+      <itemPath>GraphicItem.cpp</itemPath>
+      <itemPath>GraphicLoot.cpp</itemPath>
+      <itemPath>GraphicMenuItem.cpp</itemPath>
+      <itemPath>GraphicPlayer.cpp</itemPath>
+      <itemPath>GraphicPlayerCard.cpp</itemPath>
+      <itemPath>GraphicTile.cpp</itemPath>
+      <itemPath>GraphicToken.cpp</itemPath>
+      <itemPath>ImageLoader.cpp</itemPath>
+      <itemPath>LibsInit.cpp</itemPath>
+      <itemPath>NetworkInterface.cpp</itemPath>
+      <itemPath>Networking.cpp</itemPath>
+      <itemPath>StrNmbrFieldToArray.cpp</itemPath>
+      <itemPath>View.cpp</itemPath>
+      <itemPath>main.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <standard>8</standard>
+        </ccTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerOptionItem>`pkg-config --libs allegro-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_acodec-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_audio-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_color-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_dialog-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_font-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_image-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_main-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_memfile-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_physfs-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_primitives-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_ttf-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs apr-1`</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="BurgleBrosBoard.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosBoard.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="BurgleBrosCard.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosCard.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="BurgleBrosController.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosController.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="BurgleBrosFloor.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosFloor.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="BurgleBrosGuard.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosGuard.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="BurgleBrosLoots.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosLoots.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="BurgleBrosModel.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosModel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="BurgleBrosPlayer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosPlayer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="BurgleBrosTokens.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosTokens.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="BurgleBrosView.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosView.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicEDices.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicEDices.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicGDie.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicGDie.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicGuard.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicGuard.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicGuardCards.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicGuardCards.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicItem.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicItem.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicLoot.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicLoot.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicMenuItem.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicMenuItem.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicPlayer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicPlayer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicPlayerCard.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicPlayerCard.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicTile.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicTile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicToken.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicToken.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ImageLoader.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ImageLoader.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="LibsInit.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="LibsInit.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="NetworkInterface.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="NetworkInterface.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Networking.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Networking.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="StrNmbrFieldToArray.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="StrNmbrFieldToArray.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="View.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="View.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+      <item path="BurgleBrosBoard.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosBoard.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="BurgleBrosCard.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosCard.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="BurgleBrosController.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosController.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="BurgleBrosFloor.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosFloor.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="BurgleBrosGuard.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosGuard.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="BurgleBrosLoots.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosLoots.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="BurgleBrosModel.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosModel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="BurgleBrosPlayer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosPlayer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="BurgleBrosTokens.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosTokens.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="BurgleBrosView.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosView.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicEDices.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicEDices.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicGDie.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicGDie.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicGuard.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicGuard.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicGuardCards.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicGuardCards.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicItem.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicItem.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicLoot.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicLoot.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicMenuItem.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicMenuItem.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicPlayer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicPlayer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicPlayerCard.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicPlayerCard.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicTile.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicTile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicToken.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicToken.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ImageLoader.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ImageLoader.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="LibsInit.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="LibsInit.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="NetworkInterface.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="NetworkInterface.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Networking.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Networking.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="StrNmbrFieldToArray.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="StrNmbrFieldToArray.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="View.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="View.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
