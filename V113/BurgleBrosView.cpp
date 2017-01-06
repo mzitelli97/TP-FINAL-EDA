@@ -26,11 +26,6 @@
 #define SCREEN_W 1800
 #define SCREEN_H 900
 
-/*void drawImg(Image *image)
-{
-    al_draw_scaled_bitmap(image->image, 0, 0, al_get_bitmap_width(image->image), al_get_bitmap_height(image->image), image->location.min.x, image->location.min.y, image->location.width, image->location.height,0);
-}*/
-
 BurgleBrosView::BurgleBrosView() {
     imageLoader.initImages();           //Falta checkear.
     al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
@@ -425,8 +420,41 @@ void BurgleBrosView::eraseMenu()
     it_itemType = deleteList(THIRD_LAYER,(unsigned int) MENU_ITEM_LIST);
 }
 
+CardLocation BurgleBrosView::getDDMenuLocation(Point aux)
+{
+    CardLocation retVal = {4,4,4};
+    list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) TILES_LIST);
+    for(unsigned int i=0; i < BOARD_STANDARD_FLOORS * FLOOR_RAWS * FLOOR_COLUMNS ; i++, it++)
+    {
+        GraphicTile * tile = dynamic_cast<GraphicTile *>(*it);
+        if(tile->isPointIn(aux))
+        {
+            retVal = tile->getLocation();
+            break;
+        }
+    }
+    return retVal;
+}
 
-
+string BurgleBrosView::getDDMenuOption(Point aux)
+{
+    string retVal = "";
+    list<list<list<GraphicItem *>>>::iterator it_layers = graphicInterface.begin();
+    advance(it_layers, THIRD_LAYER);
+    list<list<GraphicItem *>>::iterator it_itemType;
+    advance(it_itemType, MENU_ITEM_LIST);
+    list<GraphicItem *>::iterator it_items;
+    for(it_items = it_itemType->begin(); it_items != it_itemType->end(); it_items++)
+    {
+        GraphicMenuItem * menu_items = dynamic_cast<GraphicMenuItem *>(*it_items);
+        if(menu_items->isPointIn(aux))
+        {
+            retVal = menu_items->getOption();
+            break;
+        }
+    }
+    return retVal;
+}
 
 /*void BurgleBrosView::getTilesImages()
 {
