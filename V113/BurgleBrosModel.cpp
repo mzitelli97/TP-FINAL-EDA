@@ -25,6 +25,10 @@ BurgleBrosModel::BurgleBrosModel()
     for(unsigned int i =0; i <MAX_NMBR_OF_EXTRA_DICES; i++)
         extraDices[i]=0;
 }
+void BurgleBrosModel::attachView(View * view)
+{
+    this->view = view;
+}
 vector<Info2DrawCards> BurgleBrosModel::getInfo2DrawCards()
 {
     vector<Info2DrawCards> retVal;
@@ -168,6 +172,7 @@ bool BurgleBrosModel::peek(ActionOrigin playerId, CardLocation locationToPeek)
         board.setCardVisible(locationToPeek);
         getP2Player(playerId)->decActions();
         checkTurns();
+        view->update(this);
         retVal=true;
     }
     return retVal;
@@ -183,6 +188,7 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         getP2Player(playerId)->decActions();
         getP2Player(playerId)->setPosition(locationToMove);
         checkTurns();
+        view->update(this);
         retVal=true;
     }
     return retVal;

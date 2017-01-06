@@ -28,9 +28,9 @@ typedef enum {MENU_ITEM_LIST} ThirdLayerLists;
 class BurgleBrosView : public View{
 public:
     BurgleBrosView();
-    BurgleBrosView(const BurgleBrosView& orig);
-    virtual void update(BurgleBrosModel * model);
+    BurgleBrosView(Model * model);
     clickItem itemFromClick(Point point);
+    virtual void update(Model * model);
     void ViewInit(BurgleBrosModel* model);
     void showMenu(list<string> options, Point click, CardLocation tile);
     string getDDMenuOption(Point aux);         //Asume que el clikc fue en un ddmenu, sino devuelve string vacio

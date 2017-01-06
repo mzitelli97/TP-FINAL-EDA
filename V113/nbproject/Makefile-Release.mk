@@ -59,6 +59,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/GraphicToken.o \
 	${OBJECTDIR}/ImageLoader.o \
 	${OBJECTDIR}/LibsInit.o \
+	${OBJECTDIR}/Model.o \
 	${OBJECTDIR}/MouseED.o \
 	${OBJECTDIR}/NetworkInterface.o \
 	${OBJECTDIR}/Networking.o \
@@ -210,6 +211,11 @@ ${OBJECTDIR}/LibsInit.o: LibsInit.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/LibsInit.o LibsInit.cpp
+
+${OBJECTDIR}/Model.o: Model.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Model.o Model.cpp
 
 ${OBJECTDIR}/MouseED.o: MouseED.cpp
 	${MKDIR} -p ${OBJECTDIR}

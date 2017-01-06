@@ -14,7 +14,7 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include "BurgleBrosModel.h"
+#include "Model.h"
 
 typedef enum {  TILE = 0, LOOT_CARDS, CHAR_CARD, GUARD_CARDS, ZOOM, EXTRA_DICE, MENU_ITEM, VOL_BUTTON, HELP_BUTTON, EXIT_BUTTON, NO_ITEM} clickItem;
 
@@ -23,7 +23,7 @@ public:
     View();
     View(const View& orig);
     virtual ~View();
-    virtual void update(BurgleBrosModel * model) = 0;
+    virtual void update(Model * model) = 0;
 private:
 
 };

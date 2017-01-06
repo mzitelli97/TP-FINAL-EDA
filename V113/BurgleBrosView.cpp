@@ -52,8 +52,6 @@ BurgleBrosView::BurgleBrosView() {
 
 }
 
-BurgleBrosView::BurgleBrosView(const BurgleBrosView& orig) {
-}
 
 BurgleBrosView::~BurgleBrosView() {
 }
@@ -185,9 +183,10 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     
 }
 
-void BurgleBrosView::update(BurgleBrosModel* model)
+void BurgleBrosView::update(Model* auxModel)
 {
     /*Update all*/
+    BurgleBrosModel * model = (BurgleBrosModel *) auxModel; 
     string aux;
     updateTiles(model);
     updateTokens(model);
