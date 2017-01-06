@@ -44,10 +44,8 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
         if( p2MouseData != nullptr)
         {
             clickItem temp;
-            Point aux;
+            Point aux=p2MouseData->getPoint();
             CardLocation location;
-            aux.x=p2MouseData->getX();
-            aux.y=p2MouseData->getY();
             temp=view->itemFromClick(aux);
             location=view->point2Location(aux);
             switch(temp)
