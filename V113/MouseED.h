@@ -16,7 +16,7 @@
 
 class MouseED {
 public:
-    MouseED();
+    MouseED(bool click,unsigned int x,unsigned int y);
     MouseED(const MouseED& orig);
     unsigned int getX();
     unsigned int getY();
@@ -24,6 +24,7 @@ public:
 private:
     unsigned int x;
     unsigned int y;
+    bool click;
 };
 
 #endif /* MOUSEED_H */

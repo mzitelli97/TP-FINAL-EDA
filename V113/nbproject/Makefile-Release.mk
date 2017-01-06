@@ -45,7 +45,9 @@ OBJECTFILES= \
 	${OBJECTDIR}/BurgleBrosPlayer.o \
 	${OBJECTDIR}/BurgleBrosTokens.o \
 	${OBJECTDIR}/BurgleBrosView.o \
+	${OBJECTDIR}/Controller.o \
 	${OBJECTDIR}/EventData.o \
+	${OBJECTDIR}/GUI.o \
 	${OBJECTDIR}/GraphicEDices.o \
 	${OBJECTDIR}/GraphicGDie.o \
 	${OBJECTDIR}/GraphicGuard.o \
@@ -59,6 +61,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/GraphicToken.o \
 	${OBJECTDIR}/ImageLoader.o \
 	${OBJECTDIR}/LibsInit.o \
+	${OBJECTDIR}/MouseController.o \
 	${OBJECTDIR}/MouseED.o \
 	${OBJECTDIR}/NetworkInterface.o \
 	${OBJECTDIR}/Networking.o \
@@ -141,10 +144,20 @@ ${OBJECTDIR}/BurgleBrosView.o: BurgleBrosView.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/BurgleBrosView.o BurgleBrosView.cpp
 
+${OBJECTDIR}/Controller.o: Controller.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Controller.o Controller.cpp
+
 ${OBJECTDIR}/EventData.o: EventData.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/EventData.o EventData.cpp
+
+${OBJECTDIR}/GUI.o: GUI.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GUI.o GUI.cpp
 
 ${OBJECTDIR}/GraphicEDices.o: GraphicEDices.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -210,6 +223,11 @@ ${OBJECTDIR}/LibsInit.o: LibsInit.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/LibsInit.o LibsInit.cpp
+
+${OBJECTDIR}/MouseController.o: MouseController.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MouseController.o MouseController.cpp
 
 ${OBJECTDIR}/MouseED.o: MouseED.cpp
 	${MKDIR} -p ${OBJECTDIR}
