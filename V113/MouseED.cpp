@@ -13,7 +13,10 @@
 
 #include "MouseED.h"
 
-MouseED::MouseED() {
+MouseED:: MouseED(bool click,unsigned int x,unsigned int y) {
+    this->click= click;
+    this->x=x;
+    this->y=y;
 }
 
 MouseED::MouseED(const MouseED& orig) {
@@ -32,5 +35,9 @@ unsigned int MouseED::getY()
     return y;
 }
 
+bool MouseED::isClicked()
+{
+    return click;
+}
 
 
