@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
     BurgleBrosView view;
     model.attachView(&view);
     view.ViewInit(&model);
-    //view.update(&model);
+    view.update(&model);
     al_rest(5);
     clickItem item = view.itemFromClick({50,50});
     cout << item << endl;

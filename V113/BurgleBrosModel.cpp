@@ -20,6 +20,8 @@ BurgleBrosModel::BurgleBrosModel()
     guards[1]= aux2;
     guards[2]= aux3;
     board.initBoard();
+    myPlayer.pickRandomPlayer();
+    otherPlayer.pickRandomPlayer(myPlayer.getCharacter());
     myPlayer.setTurn(true);
     otherPlayer.setTurn(false);
     for(unsigned int i =0; i <MAX_NMBR_OF_EXTRA_DICES; i++)

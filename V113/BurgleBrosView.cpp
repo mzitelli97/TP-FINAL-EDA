@@ -420,11 +420,11 @@ void BurgleBrosView::eraseMenu()
     it_itemType = deleteList(THIRD_LAYER,(unsigned int) MENU_ITEM_LIST);
 }
 
-CardLocation BurgleBrosView::getDDMenuLocation(Point aux)
+CardLocation BurgleBrosView::getDDMenuLocation()
 {
-    CardLocation retVal = {4,4,4};
-    list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) TILES_LIST);
-    for(unsigned int i=0; i < BOARD_STANDARD_FLOORS * FLOOR_RAWS * FLOOR_COLUMNS ; i++, it++)
+    CardLocation retVal = {3,3,3};
+    list<GraphicItem *>::iterator it = accessGraphicItems(THIRD_LAYER, (unsigned int) MENU_ITEM_LIST);
+    /*for(unsigned int i=0; i < BOARD_STANDARD_FLOORS * FLOOR_RAWS * FLOOR_COLUMNS ; i++, it++)
     {
         GraphicTile * tile = dynamic_cast<GraphicTile *>(*it);
         if(tile->isPointIn(aux))
@@ -432,7 +432,10 @@ CardLocation BurgleBrosView::getDDMenuLocation(Point aux)
             retVal = tile->getLocation();
             break;
         }
-    }
+    }*/
+    GraphicMenuItem * menu = dynamic_cast<GraphicMenuItem *> (*it);
+    if(menu != nullptr)
+        retVal = menu->getTile();
     return retVal;
 }
 
@@ -458,121 +461,16 @@ string BurgleBrosView::getDDMenuOption(Point aux)
 
 CardLocation BurgleBrosView::point2Location(Point aux)
 {
-    CardLocation retVal = {0,0,0};
-    list<list<list<GraphicItem *>>>::iterator it_layers = graphicInterface.begin();
-    advance(it_layers, FIRST_LAYER);
-    list<list<GraphicItem *>>::iterator it_itemType;
-    advance(it_itemType, TILES_LIST);
-    list<GraphicItem *>::iterator it_items;
-    for(it_items = it_itemType->begin(); it_items != it_itemType->end(); it_items++)
+    CardLocation retVal = {3,3,3};
+    list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) TILES_LIST);
+    for(unsigned int i=0; i < BOARD_STANDARD_FLOORS * FLOOR_RAWS * FLOOR_COLUMNS ; i++, it++)
     {
-        GraphicTile * tile = dynamic_cast<GraphicTile *> (*it_items);
+        GraphicTile * tile = dynamic_cast<GraphicTile *>(*it);
         if(tile->isPointIn(aux))
         {
             retVal = tile->getLocation();
             break;
         }
-    
     }
     return retVal;
 }
-
-/*void BurgleBrosView::getTilesImages()
-{
-    CardLocation aux;
-    for(aux.floor=0; aux.floor<BOARD_STANDARD_FLOORS; aux.floor++)
-    {
-        for(aux.row=0; aux.row < FLOOR_RAWS; aux.row++)
-        {
-            for(aux.column=0; aux.column < FLOOR_COLUMNS; aux.column++)
-            {
-              //  if(board->isCardVisible(aux))
-                   tiles[aux.floor][aux.row][aux.column].image=imageLoader.getImageP(board->getCardType(aux));
-               // else
-               //     tiles[aux.floor][aux.row][aux.column].image=imageLoader.getImageBackP(board->getCardType(aux));
-                tiles[aux.floor][aux.row][aux.column].location= getRectangle(aux,al_get_bitmap_width(screen)/3,al_get_bitmap_height(screen)/2);
-            }
-        }
-    }
-}
-
-void BurgleBrosView::drawCards()
-{
-    CardLocation aux;
-    aux.floor = 0;
-    for(int i = 0; i < 3; i++)
-    {
-        al_set_target_bitmap(floors[i]);
-        for(aux.row = 0; aux.row < FLOOR_RAWS; aux.row++)
-        {
-            for(aux.column=0; aux.column < FLOOR_COLUMNS; aux.column++)
-            {
-                drawImg(&tiles[aux.floor][aux.row][aux.column]);
-            }
-        }
-        aux.floor++;
-    }
-    al_set_target_backbuffer(display);
-    al_draw_scaled_bitmap(screen,0,0,al_get_bitmap_width(screen),al_get_bitmap_height(screen),0,0,al_get_display_width(display),al_get_display_height(display),0);
-    al_flip_display();
-    al_rest(5);
-    zoomFloor(1);
-    //al_draw_scaled_bitmap(floors[0],0,0,al_get_bitmap_width(floors[0]),al_get_bitmap_height(floors[0]),
-            //0,0,al_get_display_width(display),al_get_display_height(display),0);
-    //al_draw_scaled_bitmap(screen,0,0,al_get_bitmap_width(screen),al_get_bitmap_height(screen),0,0,al_get_display_width(display),al_get_display_height(display),0);
-    al_flip_display();
-    al_rest(5);
-}
-
-void BurgleBrosView::drawPlayers()
-{
-    BurgleBrosPlayer * me = model->getElements()->getMyPlayer();
-    Image player1;
-    player1.image = imageLoader.getImageP(me->getName(),false);
-    player1.location = getRectangle(me->getPosition(),al_get_bitmap_width(screen)/3,al_get_bitmap_height(screen)/2);
-    al_set_target_bitmap(floors[me->getPosition().floor]);
-    drawImg(&player1);
-    al_set_target_backbuffer(display);
-    al_draw_scaled_bitmap(screen,0,0,al_get_bitmap_width(screen),al_get_bitmap_height(screen),0,0,al_get_display_width(display),al_get_display_height(display),0);
-    al_flip_display();
-    al_rest(5);
-}
-*/
-/*Devuelve posicion relativa de la carta en el sub bitmap de un floor*/
-/*Rectangle BurgleBrosView::getRectangle(CardLocation cardlocation,double width, double height)
-{
-    Point min, max;
-     
-    double tile_height = height/4.5;
-    double tile_width = width/4.5;
-    if (tile_height < tile_width) tile_width = tile_height;
-    else tile_height = tile_width;
-    double yDiff = (height-FLOOR_RAWS*tile_height)/(FLOOR_RAWS+1);
-    double xDiff = (width-FLOOR_COLUMNS*tile_width)/(FLOOR_COLUMNS+1);
-    min.y = yDiff * ((float)cardlocation.row+1) + tile_height * (float)cardlocation.row;
-    min.x = xDiff * ((float)cardlocation.column+1) + tile_width * (float)cardlocation.column;
-    max.y = min.y + tile_height;
-    max.x = min.x + tile_width;
-    Rectangle retVal(min,max);
-    return retVal;
-}
-
-void BurgleBrosView::zoomFloor(unsigned int floor)
-{
-    CardLocation aux;
-    aux.floor = floor;
-    ALLEGRO_BITMAP * temp = al_load_bitmap("fondo.jpg");
-    al_set_target_bitmap(temp);
-    
-    for(aux.row=0; aux.row < FLOOR_RAWS; aux.row++)
-    {
-        for(aux.column=0; aux.column < FLOOR_COLUMNS; aux.column++)
-        {
-            tiles[aux.floor][aux.row][aux.column].location= getRectangle(aux,al_get_bitmap_width(temp),al_get_bitmap_height(temp));
-            drawImg(&tiles[aux.floor][aux.row][aux.column]);
-        }
-    }
-    al_set_target_backbuffer(display);
-    al_draw_scaled_bitmap(temp,0,0,al_get_bitmap_width(temp),al_get_bitmap_height(temp),0,0,al_get_display_width(display),al_get_display_height(display),0);
-    al_destroy_bitmap(temp);
-}*/

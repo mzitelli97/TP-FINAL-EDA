@@ -47,16 +47,14 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
             Point aux={(double)p2MouseData->getX(), (double)p2MouseData->getY()};
             CardLocation location;
             temp=view->itemFromClick(aux);
-            location=view->point2Location(aux);       //could be the same as getDDMenuLocation. it receives a point and tells you which tile it is in.
-            location = view->getDDMenuLocation(aux);    //as said above
+            location=view->point2Location(aux);
             switch(temp)
             {
                 case TILE:
                     view->showMenu(modelPointer->getPosibleActions(THIS_PLAYER_ACTION, location), aux, location);       
-                    //in the first location, there was an aux. i changed it because the function receive a cardLocation, not a point
                     break;
                 case MENU_ITEM:
-                    interpretAction(view->getDDMenuOption(aux), view->getDDMenuLocation(aux));
+                    interpretAction(view->getDDMenuOption(aux), view->getDDMenuLocation());
                     break;
                 default:
                     break;

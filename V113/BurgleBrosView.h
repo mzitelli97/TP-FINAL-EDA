@@ -34,7 +34,7 @@ public:
     void ViewInit(BurgleBrosModel* model);
     void showMenu(list<string> options, Point click, CardLocation tile);
     string getDDMenuOption(Point aux);         //Asume que el clikc fue en un ddmenu, sino devuelve string vacio
-    CardLocation getDDMenuLocation(Point aux); //Asume que el clikc fue en un ddmenu, sino devuelve location 3 3 3
+    CardLocation getDDMenuLocation(); //Asume que el clikc fue en un ddmenu, sino devuelve location 3 3 3
     CardLocation point2Location(Point aux);    //Asume que el click fue en un tile, sino devuelve location 3 3 3
     void eraseMenu();
     virtual ~BurgleBrosView();

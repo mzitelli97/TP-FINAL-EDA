@@ -91,7 +91,7 @@ string BurgleBrosPlayer:: getName()
 
 BurgleBrosPlayer::BurgleBrosPlayer()
 {
-    pickRandomPlayer();
+    //pickRandomPlayer();//Ver si queda adentro, afuera o que....
     position.floor=0;
     position.row=0;
     position.column=0;
