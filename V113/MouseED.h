@@ -18,6 +18,8 @@ class MouseED {
 public:
     MouseED();
     MouseED(const MouseED& orig);
+    unsigned int getX();
+    unsigned int getY();
     virtual ~MouseED();
 private:
 

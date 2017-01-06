@@ -12,12 +12,60 @@
  */
 
 #include "BurgleBrosController.h"
+#include "MouseED.h"
 
-BurgleBrosController::BurgleBrosController() {
+BurgleBrosController::BurgleBrosController() 
+{
+    modelPointer=nullptr;
+    view=nullptr;
 }
 
 BurgleBrosController::BurgleBrosController(const BurgleBrosController& orig) {
 }
+
+void BurgleBrosController::attachModel(BurgleBrosModel *gamePointer)
+{
+    if(gamePointer!=nullptr)
+        this->modelPointer;
+}
+void BurgleBrosController::attachView(BurgleBrosView *view)
+{
+    if(view!=nullptr)
+        this->view=view;
+}
+void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
+{
+    
+    if(mouseEvent!=nullptr)
+    {
+        MouseED *p2MouseData = dynamic_cast<MouseED *> (mouseEvent);
+        if( p2MouseData != nullptr)
+        {
+            clickItem temp;
+            Point aux;
+            CardLocation location;
+            aux.x=p2MouseData->getX();
+            aux.y=p2MouseData->getY();
+            temp=view->itemFromClick(aux);
+            location=view->point2Location(aux);
+            switch(temp)
+            {
+                case TILE:
+                    view->showMenu(modelPointer->getPosibleActions(THIS_PLAYER_ACTION, aux), aux, location);
+                    break;
+                case MENU_ITEM:
+                    interpretAction(view->getDDMenuOption(), view->getDDMenuLocation())
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    
+    
+    
+}
+
 
 BurgleBrosController::~BurgleBrosController() {
 }

@@ -23,7 +23,7 @@ public:
         list<CardLocation> getCrackedCards();
         list<CardLocation> getStealthTokensOnFloor();
         vector<CardLocation> getDownstairs();
-        void turnOffAlarm(CardLocation location); //Desarrollar
+        void turnOffAlarm(CardLocation location);                    //Desarrollar
         unsigned int howManyAlarmsOnFloor(unsigned int floor);       //FALTA DESARROLLAR
         unsigned int howManyTokensOnCPURoom(CardName cpuRoom);
         bool isThereAToken(CardLocation location, Token whichToken); //FALTA DESARROLLAR
