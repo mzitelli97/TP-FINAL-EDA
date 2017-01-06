@@ -39,6 +39,8 @@ class BurgleBrosModel
 	~BurgleBrosModel();
     private:
 	//RuleManager ruleManager;
+        void checkTurns();
+        void setGuardsNewPath(unsigned int floor);
         BurgleBrosPlayer * getP2Player(ActionOrigin playerId);
         BurgleBrosPlayer * getP2OtherPlayer(ActionOrigin playerId);
         BurgleBrosPlayer myPlayer;
