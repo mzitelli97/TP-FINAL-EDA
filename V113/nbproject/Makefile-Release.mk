@@ -59,6 +59,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/GraphicToken.o \
 	${OBJECTDIR}/ImageLoader.o \
 	${OBJECTDIR}/LibsInit.o \
+	${OBJECTDIR}/MouseED.o \
 	${OBJECTDIR}/NetworkInterface.o \
 	${OBJECTDIR}/Networking.o \
 	${OBJECTDIR}/StrNmbrFieldToArray.o \
@@ -209,6 +210,11 @@ ${OBJECTDIR}/LibsInit.o: LibsInit.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/LibsInit.o LibsInit.cpp
+
+${OBJECTDIR}/MouseED.o: MouseED.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MouseED.o MouseED.cpp
 
 ${OBJECTDIR}/NetworkInterface.o: NetworkInterface.cpp
 	${MKDIR} -p ${OBJECTDIR}
