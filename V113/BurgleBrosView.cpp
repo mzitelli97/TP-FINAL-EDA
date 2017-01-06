@@ -457,6 +457,27 @@ string BurgleBrosView::getDDMenuOption(Point aux)
     return retVal;
 }
 
+CardLocation BurgleBrosView::point2Location(Point aux)
+{
+    CardLocation retVal = {0,0,0};
+    list<list<list<GraphicItem *>>>::iterator it_layers = graphicInterface.begin();
+    advance(it_layers, FIRST_LAYER);
+    list<list<GraphicItem *>>::iterator it_itemType;
+    advance(it_itemType, TILES_LIST);
+    list<GraphicItem *>::iterator it_items;
+    for(it_items = it_itemType->begin(); it_items != it_itemType->end(); it_items++)
+    {
+        GraphicTile * tile = dynamic_cast<GraphicTile *> (*it_items);
+        if(tile->isPointIn(aux))
+        {
+            retVal = tile->getLocation();
+            break;
+        }
+    
+    }
+    return retVal;
+}
+
 /*void BurgleBrosView::getTilesImages()
 {
     CardLocation aux;
