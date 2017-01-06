@@ -14,6 +14,7 @@
       <itemPath>BurgleBrosPlayer.h</itemPath>
       <itemPath>BurgleBrosTokens.h</itemPath>
       <itemPath>BurgleBrosView.h</itemPath>
+      <itemPath>EventData.h</itemPath>
       <itemPath>GraphicEDices.h</itemPath>
       <itemPath>GraphicGDie.h</itemPath>
       <itemPath>GraphicGuard.h</itemPath>
@@ -49,6 +50,7 @@
       <itemPath>BurgleBrosPlayer.cpp</itemPath>
       <itemPath>BurgleBrosTokens.cpp</itemPath>
       <itemPath>BurgleBrosView.cpp</itemPath>
+      <itemPath>EventData.cpp</itemPath>
       <itemPath>GraphicEDices.cpp</itemPath>
       <itemPath>GraphicGDie.cpp</itemPath>
       <itemPath>GraphicGuard.cpp</itemPath>
@@ -149,6 +151,10 @@
       <item path="BurgleBrosView.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="BurgleBrosView.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="EventData.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="EventData.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="GraphicEDices.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -280,6 +286,10 @@
       <item path="BurgleBrosView.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="BurgleBrosView.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="EventData.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="EventData.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="GraphicEDices.cpp" ex="false" tool="1" flavor2="0">
       </item>
