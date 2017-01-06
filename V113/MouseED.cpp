@@ -22,3 +22,15 @@ MouseED::MouseED(const MouseED& orig) {
 MouseED::~MouseED() {
 }
 
+unsigned int MouseED::getX()
+{
+    return x;
+}
+
+unsigned int MouseED::getY()
+{
+    return y;
+}
+
+
+
