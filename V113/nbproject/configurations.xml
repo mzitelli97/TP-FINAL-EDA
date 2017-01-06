@@ -4,28 +4,34 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>BurgleBrosBoard.h</itemPath>
-      <itemPath>BurgleBrosCard.h</itemPath>
-      <itemPath>BurgleBrosController.h</itemPath>
-      <itemPath>BurgleBrosFloor.h</itemPath>
-      <itemPath>BurgleBrosGuard.h</itemPath>
-      <itemPath>BurgleBrosLoots.h</itemPath>
-      <itemPath>BurgleBrosModel.h</itemPath>
-      <itemPath>BurgleBrosPlayer.h</itemPath>
-      <itemPath>BurgleBrosTokens.h</itemPath>
-      <itemPath>BurgleBrosView.h</itemPath>
+      <logicalFolder name="f1" displayName="BurgleBros" projectFiles="true">
+        <itemPath>BurgleBrosBoard.h</itemPath>
+        <itemPath>BurgleBrosCard.h</itemPath>
+        <itemPath>BurgleBrosController.h</itemPath>
+        <itemPath>BurgleBrosFloor.h</itemPath>
+        <itemPath>BurgleBrosGuard.h</itemPath>
+        <itemPath>BurgleBrosLoots.h</itemPath>
+        <itemPath>BurgleBrosModel.h</itemPath>
+        <itemPath>BurgleBrosPlayer.h</itemPath>
+        <itemPath>BurgleBrosTokens.h</itemPath>
+        <itemPath>BurgleBrosView.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="Graphics" projectFiles="true">
+        <itemPath>GraphicEDices.h</itemPath>
+        <itemPath>GraphicGDie.h</itemPath>
+        <itemPath>GraphicGuard.h</itemPath>
+        <itemPath>GraphicGuardCards.h</itemPath>
+        <itemPath>GraphicItem.h</itemPath>
+        <itemPath>GraphicLoot.h</itemPath>
+        <itemPath>GraphicMenuItem.h</itemPath>
+        <itemPath>GraphicPlayer.h</itemPath>
+        <itemPath>GraphicPlayerCard.h</itemPath>
+        <itemPath>GraphicTile.h</itemPath>
+        <itemPath>GraphicToken.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="Networking" projectFiles="true">
+      </logicalFolder>
       <itemPath>EventData.h</itemPath>
-      <itemPath>GraphicEDices.h</itemPath>
-      <itemPath>GraphicGDie.h</itemPath>
-      <itemPath>GraphicGuard.h</itemPath>
-      <itemPath>GraphicGuardCards.h</itemPath>
-      <itemPath>GraphicItem.h</itemPath>
-      <itemPath>GraphicLoot.h</itemPath>
-      <itemPath>GraphicMenuItem.h</itemPath>
-      <itemPath>GraphicPlayer.h</itemPath>
-      <itemPath>GraphicPlayerCard.h</itemPath>
-      <itemPath>GraphicTile.h</itemPath>
-      <itemPath>GraphicToken.h</itemPath>
       <itemPath>ImageLoader.h</itemPath>
       <itemPath>LibsInit.h</itemPath>
       <itemPath>MouseED.h</itemPath>
@@ -41,33 +47,41 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>BurgleBrosBoard.cpp</itemPath>
-      <itemPath>BurgleBrosCard.cpp</itemPath>
-      <itemPath>BurgleBrosController.cpp</itemPath>
-      <itemPath>BurgleBrosFloor.cpp</itemPath>
-      <itemPath>BurgleBrosGuard.cpp</itemPath>
-      <itemPath>BurgleBrosLoots.cpp</itemPath>
-      <itemPath>BurgleBrosModel.cpp</itemPath>
-      <itemPath>BurgleBrosPlayer.cpp</itemPath>
-      <itemPath>BurgleBrosTokens.cpp</itemPath>
-      <itemPath>BurgleBrosView.cpp</itemPath>
+      <logicalFolder name="f1" displayName="BurglesBros" projectFiles="true">
+        <itemPath>BurgleBrosBoard.cpp</itemPath>
+        <itemPath>BurgleBrosCard.cpp</itemPath>
+        <itemPath>BurgleBrosController.cpp</itemPath>
+        <itemPath>BurgleBrosFloor.cpp</itemPath>
+        <itemPath>BurgleBrosGuard.cpp</itemPath>
+        <itemPath>BurgleBrosLoots.cpp</itemPath>
+        <itemPath>BurgleBrosModel.cpp</itemPath>
+        <itemPath>BurgleBrosPlayer.cpp</itemPath>
+        <itemPath>BurgleBrosTokens.cpp</itemPath>
+        <itemPath>BurgleBrosView.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f4" displayName="Events" projectFiles="true">
+        <itemPath>MouseED.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="Graphics" projectFiles="true">
+        <itemPath>GraphicEDices.cpp</itemPath>
+        <itemPath>GraphicGDie.cpp</itemPath>
+        <itemPath>GraphicGuard.cpp</itemPath>
+        <itemPath>GraphicGuardCards.cpp</itemPath>
+        <itemPath>GraphicItem.cpp</itemPath>
+        <itemPath>GraphicLoot.cpp</itemPath>
+        <itemPath>GraphicMenuItem.cpp</itemPath>
+        <itemPath>GraphicPlayer.cpp</itemPath>
+        <itemPath>GraphicPlayerCard.cpp</itemPath>
+        <itemPath>GraphicTile.cpp</itemPath>
+        <itemPath>GraphicToken.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="Networking" projectFiles="true">
+        <itemPath>NetworkInterface.cpp</itemPath>
+        <itemPath>Networking.cpp</itemPath>
+      </logicalFolder>
       <itemPath>EventData.cpp</itemPath>
-      <itemPath>GraphicEDices.cpp</itemPath>
-      <itemPath>GraphicGDie.cpp</itemPath>
-      <itemPath>GraphicGuard.cpp</itemPath>
-      <itemPath>GraphicGuardCards.cpp</itemPath>
-      <itemPath>GraphicItem.cpp</itemPath>
-      <itemPath>GraphicLoot.cpp</itemPath>
-      <itemPath>GraphicMenuItem.cpp</itemPath>
-      <itemPath>GraphicPlayer.cpp</itemPath>
-      <itemPath>GraphicPlayerCard.cpp</itemPath>
-      <itemPath>GraphicTile.cpp</itemPath>
-      <itemPath>GraphicToken.cpp</itemPath>
       <itemPath>ImageLoader.cpp</itemPath>
       <itemPath>LibsInit.cpp</itemPath>
-      <itemPath>MouseED.cpp</itemPath>
-      <itemPath>NetworkInterface.cpp</itemPath>
-      <itemPath>Networking.cpp</itemPath>
       <itemPath>StrNmbrFieldToArray.cpp</itemPath>
       <itemPath>View.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
