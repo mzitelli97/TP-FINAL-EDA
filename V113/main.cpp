@@ -15,6 +15,7 @@
 #include "BurgleBrosModel.h"
 #include "BurgleBrosView.h"
 #include "LibsInit.h"
+#include "GUI.h"
 using namespace std;
 
 /*
@@ -22,18 +23,30 @@ using namespace std;
  */
 int main(int argc, char** argv) {
     srand(time(NULL));
-    BurgleBrosModel model;
     allegro_startup();
+    BurgleBrosModel model;
     BurgleBrosView view;
-    model.attachView(&view);
+    BurgleBrosController controller;
+    GUI gui;
     view.ViewInit(&model);
     view.update(&model);
+    
+    model.attachView(&view);
+    controller.attachModel(&model);
+    controller.attachView(&view);
+    gui.atachController(&controller);
+    
+    while(true)
+    {
+        if(gui.hayEvento())
+            gui.parseEvento();
+    }
+    
+    /*view.update(&model);
     al_rest(5);
-    clickItem item = view.itemFromClick({50,50});
-    cout << item << endl;
     model.move(THIS_PLAYER_ACTION, {0,1,0});
-    //view.update(&model);
-    al_rest(5);
+    view.update(&model);
+    al_rest(5);*/
     return 0;
 }
 

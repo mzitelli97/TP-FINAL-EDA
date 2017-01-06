@@ -196,7 +196,8 @@ void BurgleBrosView::update(Model* auxModel)
     //updateGuards(model);
     updateExtraDices(model);
     /*Draw all*/
-    //al_draw_scaled_bitmap(backScreen,0,0,al_get_bitmap_width(backScreen),al_get_bitmap_height(backScreen),0,0,al_get_display_width(display),al_get_display_height(display),0);
+    /*In same cpus the backScreen is not draw without this line*/
+    al_draw_scaled_bitmap(backScreen,0,0,al_get_bitmap_width(backScreen),al_get_bitmap_height(backScreen),0,0,al_get_display_width(display),al_get_display_height(display),0);
     list<list<list<GraphicItem *>>>::iterator it_layers;
     list<list<GraphicItem *>>::iterator it_itemType;
     list<GraphicItem *>::iterator it_items;
@@ -435,7 +436,7 @@ string BurgleBrosView::getDDMenuOption(Point aux)
     string retVal = "";
     list<list<list<GraphicItem *>>>::iterator it_layers = graphicInterface.begin();
     advance(it_layers, THIRD_LAYER);
-    list<list<GraphicItem *>>::iterator it_itemType;
+    list<list<GraphicItem *>>::iterator it_itemType = it_layers->begin();
     advance(it_itemType, MENU_ITEM_LIST);
     list<GraphicItem *>::iterator it_items;
     for(it_items = it_itemType->begin(); it_items != it_itemType->end(); it_items++)

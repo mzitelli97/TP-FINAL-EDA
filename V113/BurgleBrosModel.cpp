@@ -173,7 +173,7 @@ bool BurgleBrosModel::peek(ActionOrigin playerId, CardLocation locationToPeek)
     {
         board.setCardVisible(locationToPeek);
         getP2Player(playerId)->decActions();
-        checkTurns();
+        //checkTurns();
         view->update(this);
         retVal=true;
     }
@@ -189,7 +189,7 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
             board.setCardVisible(locationToMove);
         getP2Player(playerId)->decActions();
         getP2Player(playerId)->setPosition(locationToMove);
-        checkTurns();
+        //checkTurns();
         view->update(this);
         retVal=true;
     }

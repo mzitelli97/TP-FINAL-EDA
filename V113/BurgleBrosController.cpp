@@ -28,7 +28,7 @@ BurgleBrosController::BurgleBrosController(const BurgleBrosController& orig) {
 void BurgleBrosController::attachModel(BurgleBrosModel *gamePointer)
 {
     if(gamePointer!=nullptr)
-        this->modelPointer;
+        this->modelPointer = gamePointer;
 }
 void BurgleBrosController::attachView(BurgleBrosView *view)
 {
@@ -51,7 +51,8 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
             switch(temp)
             {
                 case TILE:
-                    view->showMenu(modelPointer->getPosibleActions(THIS_PLAYER_ACTION, location), aux, location);       
+                    view->showMenu(modelPointer->getPosibleActions(THIS_PLAYER_ACTION, location), aux, location);
+                    view->update(modelPointer);
                     break;
                 case MENU_ITEM:
                     interpretAction(view->getDDMenuOption(aux), view->getDDMenuLocation());

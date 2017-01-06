@@ -14,7 +14,9 @@
 #ifndef MOUSEED_H
 #define MOUSEED_H
 
-class MouseED {
+#include "EventData.h"
+
+class MouseED : public EventData{
 public:
     
     MouseED(bool click,unsigned int x,unsigned int y);
