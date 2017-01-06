@@ -14,15 +14,16 @@
 #ifndef MOUSEED_H
 #define MOUSEED_H
 
-extern Point;
 class MouseED {
 public:
     MouseED();
     MouseED(const MouseED& orig);
-    Point getPoint();
+    unsigned int getX();
+    unsigned int getY();
     virtual ~MouseED();
 private:
-    Point p;
+    unsigned int x;
+    unsigned int y;
 };
 
 #endif /* MOUSEED_H */
