@@ -39,7 +39,6 @@ private:
         void initCardDeck();
         void shuffleCardDeck();
         void setPosition(string initialGPos);
-	void setNewTarget(CardLocation alarm);
 	
 	void shuffleDecks();
 	list<CardLocation> cardDeck;

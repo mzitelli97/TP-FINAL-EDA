@@ -14,7 +14,15 @@ string token2Str(Token token)
 	default: return "Error";
 	}
 }
-
+void BurgleBrosTokens::turnOffAlarm(CardLocation location)
+{
+    
+}
+unsigned int BurgleBrosTokens::howManyAlarmsOnFloor(unsigned int floor)
+{
+    unsigned int aux=0;
+    return aux;
+}
 
 BurgleBrosTokens::BurgleBrosTokens()
 {
