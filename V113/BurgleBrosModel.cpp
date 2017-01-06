@@ -260,13 +260,13 @@ void BurgleBrosModel::checkTurns()
     }
     return retVal;
 }
-vector<string> BurgleBrosModel::getPosibleActions(ActionOrigin player, CardLocation tile)
+list<string> BurgleBrosModel::getPosibleActions(ActionOrigin player, CardLocation tile)
 {
-    vector<string> aux;
+    list<string> aux;
     if(isMovePosible(player, tile))
-        aux.push_back("Move");
+        aux.push_back("MOVE");
     if(isPeekPosible(player, tile))
-        aux.push_back("Peek");
+        aux.push_back("PEEK");
     return aux;
 }
  

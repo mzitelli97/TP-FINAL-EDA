@@ -33,6 +33,8 @@ public:
     clickItem itemFromClick(Point point);
     void ViewInit(BurgleBrosModel* model);
     void showMenu(list<string> options, Point click, CardLocation tile);
+    string getDDMenuOption(Point aux);
+    CardLocation getDDMenuLocation(Point aux);
     void eraseMenu();
     virtual ~BurgleBrosView();
 private:

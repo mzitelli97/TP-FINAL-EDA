@@ -51,10 +51,10 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
             switch(temp)
             {
                 case TILE:
-                    //view->showMenu(modelPointer->getPosibleActions(THIS_PLAYER_ACTION, aux), aux, location);
+                    view->showMenu(modelPointer->getPosibleActions(THIS_PLAYER_ACTION, aux), aux, location);
                     break;
                 case MENU_ITEM:
-                    //interpretAction(view->getDDMenuOption(), view->getDDMenuLocation());
+                    //interpretAction(view->getDDMenuOption(aux), view->getDDMenuLocation(aux));
                     break;
                 default:
                     break;

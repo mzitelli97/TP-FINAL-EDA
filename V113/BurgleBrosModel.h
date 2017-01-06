@@ -35,7 +35,7 @@ class BurgleBrosModel
         bool move(ActionOrigin playerId, CardLocation locationToMove);
         bool isMovePosible(ActionOrigin playerId,CardLocation tileToMove);  //Pregunta si una movida es posible
         bool isPeekPosible(ActionOrigin player, CardLocation tile);         //Pregunta si un peek es posible
-        vector<string> getPosibleActions(ActionOrigin player, CardLocation tile);   //Devuelve que acciones puede realizar el jugador indicado en esa tile
+        list<string> getPosibleActions(ActionOrigin player, CardLocation tile);   //Devuelve que acciones puede realizar el jugador indicado en esa tile
         void moveGuard(unsigned int floor);
         //void attachController(Controller * controller);
 	~BurgleBrosModel();
