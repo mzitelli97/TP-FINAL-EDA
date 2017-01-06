@@ -44,7 +44,7 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
         if( p2MouseData != nullptr)
         {
             clickItem temp;
-            Point aux={p2MouseData->getX(), p2MouseData->getY()};
+            Point aux={(double)p2MouseData->getX(), (double)p2MouseData->getY()};
             CardLocation location;
             temp=view->itemFromClick(aux);
             //location=view->point2Location(aux);       //could be the same as getDDMenuLocation. it receives a point and tells you which tile it is in.
