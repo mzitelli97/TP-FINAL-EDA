@@ -47,14 +47,14 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
             Point aux=p2MouseData->getPoint();
             CardLocation location;
             temp=view->itemFromClick(aux);
-            location=view->point2Location(aux);
+            //location=view->point2Location(aux);
             switch(temp)
             {
                 case TILE:
-                    view->showMenu(modelPointer->getPosibleActions(THIS_PLAYER_ACTION, aux), aux, location);
+                    //view->showMenu(modelPointer->getPosibleActions(THIS_PLAYER_ACTION, aux), aux, location);
                     break;
                 case MENU_ITEM:
-                    interpretAction(view->getDDMenuOption(), view->getDDMenuLocation());
+                    //interpretAction(view->getDDMenuOption(), view->getDDMenuLocation());
                     break;
                 default:
                     break;
