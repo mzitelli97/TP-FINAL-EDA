@@ -38,11 +38,13 @@ public:
 	bool carriesLoot();
         void setPosition(CardLocation location);
         bool hasLoot(Loot loot);
-        list<Loot> getLootsCarried();
-	~BurgleBrosPlayer();
-private:
         void pickRandomPlayer();
         void pickRandomPlayer(CharacterName exceptThis);
+        list<Loot> getLootsCarried();
+        void decLives();
+	~BurgleBrosPlayer();
+private:
+        
 	string name;
 	bool isPlayersTurn;
 	bool isOnTheHelicopter;

@@ -18,6 +18,15 @@ unsigned int BurgleBrosPlayer::getCurrLifes()
 {
     return lives;
 }
+void BurgleBrosPlayer::decLives()
+{
+    if(lives > 0)
+        lives--;
+}
+
+
+
+
 void BurgleBrosPlayer::pickRandomPlayer()
 {
     unsigned int i= rand()% NUMBER_OF_CHARACTERS;
@@ -57,7 +66,8 @@ void BurgleBrosPlayer::setActions(unsigned int actions)
 }
 void BurgleBrosPlayer::decActions()
 {
-    currentActions--;
+    if(currentActions > 0)
+        currentActions--;
 }
 bool BurgleBrosPlayer::hasLoot(Loot loot)
 {

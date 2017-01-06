@@ -160,7 +160,15 @@ CardLocation BurgleBrosBoard::getComputerRoomLocation(CardName computerRoom)
     return retVal;
 }
 
-
+list<CardLocation> BurgleBrosBoard::getShortestPath(CardLocation source, CardLocation destination)
+{
+    list<CardLocation> aux;
+    return aux;
+}
+unsigned int BurgleBrosBoard::getShortestPathLength(CardLocation source, CardLocation destination)
+{
+    return 0;
+}
 
 
 

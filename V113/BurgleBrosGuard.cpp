@@ -12,6 +12,19 @@ BurgleBrosGuard::BurgleBrosGuard()
 {
     
 }
+bool BurgleBrosGuard::step()
+{
+    return false;
+}
+void BurgleBrosGuard::setNewTarget(CardLocation alarm)
+{
+    
+}
+void BurgleBrosGuard::setNewPathToTarget(list<CardLocation> pathToTarget)
+{
+    
+}
+
 BurgleBrosGuard::BurgleBrosGuard(unsigned int floor)
 {
     this->floor=floor;
