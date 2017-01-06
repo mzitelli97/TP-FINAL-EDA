@@ -45,7 +45,7 @@ void GraphicPlayer::setLocation(CardLocation location)
     max.x = min.x + tile_width;
     
     max.x = max.x - TILES_WIDTH/2;
-    min.y = min.y + TILES_HEIGHT/8;
+    min.y = min.y + TILES_HEIGHT/4.5;
     
     
     center.x= (min.x+max.x)/2;
