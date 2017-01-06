@@ -12,11 +12,66 @@
  */
 
 #include "BurgleBrosController.h"
+#include "MouseED.h"
 
-BurgleBrosController::BurgleBrosController() {
+using namespace std;
+
+BurgleBrosController::BurgleBrosController() 
+{
+    modelPointer=nullptr;
+    view=nullptr;
 }
 
 BurgleBrosController::BurgleBrosController(const BurgleBrosController& orig) {
+}
+
+void BurgleBrosController::attachModel(BurgleBrosModel *gamePointer)
+{
+    if(gamePointer!=nullptr)
+        this->modelPointer;
+}
+void BurgleBrosController::attachView(BurgleBrosView *view)
+{
+    if(view!=nullptr)
+        this->view=view;
+}
+void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
+{
+    
+    if(mouseEvent!=nullptr)
+    {
+        MouseED *p2MouseData = dynamic_cast<MouseED *> (mouseEvent);
+        if( p2MouseData != nullptr)
+        {
+            clickItem temp;
+            Point aux=p2MouseData->getPoint();
+            CardLocation location;
+            temp=view->itemFromClick(aux);
+            location=view->point2Location(aux);
+            switch(temp)
+            {
+                case TILE:
+                    view->showMenu(modelPointer->getPosibleActions(THIS_PLAYER_ACTION, aux), aux, location);
+                    break;
+                case MENU_ITEM:
+                    interpretAction(view->getDDMenuOption(), view->getDDMenuLocation());
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    
+    
+    
+}
+void BurgleBrosController::interpretAction(string action, CardLocation location)
+{
+    
+    if(action == "PEEK")//VER SI ESTE TIPO DE FUNCIONES TIENEN QUE RECIBIR QUE PLAYER O USAR EL QUE ESTA EN TURNO DIRECTAMENTE
+        modelPointer->peek(THIS_PLAYER_ACTION,location);
+    else if(action=="MOVE")
+        modelPointer->move(THIS_PLAYER_ACTION,location);
 }
 
 BurgleBrosController::~BurgleBrosController() {
