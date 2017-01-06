@@ -35,5 +35,9 @@ unsigned int MouseED::getY()
     return y;
 }
 
+bool MouseED::isClicked()
+{
+    return click;
+}
 
 

@@ -11,6 +11,8 @@
  * Created on 6 de enero de 2017, 10:50
  */
 
+#include <allegro5/keyboard.h>
+#include <allegro5/mouse.h>
 #include "GUI.h"
 #include "MouseED.h"
 
@@ -18,11 +20,21 @@ GUI::GUI() {
     
     this->EventQueue=al_create_event_queue();
     if(EventQueue != NULL)
+    {
+        al_register_event_source(EventQueue,al_get_mouse_event_source());
+        al_register_event_source(EventQueue,al_get_keyboard_event_source());
+    }
     
 }
 
 GUI::GUI(const GUI& orig) {
 }
+
+GUI::atachController(BurgleBrosController* Controller)
+{
+    this->Controller=Controller;
+}
+
 
 GUI::hayEvento()
 {
@@ -31,21 +43,48 @@ GUI::hayEvento()
     {
         switch(rawEvent.type)
         {       
-                case ALLEGRO_MOUSE_EVENT:
-                    MouseED *auxData;
+            case ALLEGRO_MOUSE_EVENT:
+
+                if(rawEvent.mouse.type == ALLEGRO_EVENT_MOUSE_AXES)
+                {
+
+                }
+                else if(rawEvent.mouse.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP)
+                {
+                    MouseED *auxData= new MouseED(true,rawEvent.mouse.x,rawEvent.mouse.y);
+                    eventData=(eventData *) auxData;
+                    GuiEvent=GUI_EVENT_MOUSE;
+
+                }
+                else if(rawEvent.mouse.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
+                {
+
+                }
+                break;
+            case ALLEGRO_KEYBOARD_EVENT:    
                     
-                    if(rawEvent.mouse.type == ALLEGRO_EVENT_MOUSE_AXES)
-                    {
-                        
-                    }
-                    else if(rawEvent.mouse.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP)
-                    {
-                        auxData= new MouseED(true,rawEvent.mouse.x,rawEvent.mouse.y);
-                    }
-                   
-                    
+                break;
+        
         }
+        
     }
+    //elseif NETWORKING
+    
+}
+
+GUI::parseEvento(){
+    
+    switch(GuiEvent)
+    {
+        case GUI_EVENT_MOUSE:
+            Controller->parseMouseEvent(eventData);
+            break;
+        case GUI_EVENT_KEYBOARD:
+            break;
+        case GUI_EVENT_NETWORKING:
+            break;
+    }
+    
 }
 
 GUI::~GUI() {

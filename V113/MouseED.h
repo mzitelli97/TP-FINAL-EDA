@@ -16,11 +16,14 @@
 
 class MouseED {
 public:
+    
     MouseED(bool click,unsigned int x,unsigned int y);
     MouseED(const MouseED& orig);
     unsigned int getX();
     unsigned int getY();
+    bool isClicked();
     virtual ~MouseED();
+    
 private:
     unsigned int x;
     unsigned int y;

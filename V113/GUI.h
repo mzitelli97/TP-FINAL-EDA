@@ -17,6 +17,7 @@
 #include <allegro5/events.h>
 #include <allegro5/config.h>
 #include "Controller.h"
+#include "BurgleBrosController.h"
 
 typedef enum{GUI_EVENT_MOUSE, GUI_EVENT_KEYBOARD,GUI_EVENT_NETWORKING,GUI_EVENT_NOEVENT} GuiEvent;
 
@@ -26,15 +27,15 @@ public:
     GUI(const GUI& orig);
     bool hayEvento();
     void parseEvento();
-    void atachController ( list<Controller *> *listController);
+    void atachController (BurgleBrosController * Controller);
     virtual ~GUI();
     
 private:
-    list <Controller *> * listController;
+    BurgleBrosController * Controller;
     ALLEGRO_EVENT rawEvent;
     GuiEvent Event;
     EventData *eventData;
-    ALLEGRO_EVENT_QUEUE EventQueue;        
+    ALLEGRO_EVENT_QUEUE *EventQueue;        
 };
 
 #endif /* GUI_H */
