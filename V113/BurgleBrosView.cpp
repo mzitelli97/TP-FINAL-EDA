@@ -67,7 +67,11 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     
     //creo los info2draw
     vector<Info2DrawCards> info_tiles= model->getInfo2DrawCards();
-    Info2DrawGuard infoGuard=model->getInfo2DrawGuard(0);   //esto se va romper :)
+    Info2DrawGuard infoGuard[3];
+    for(int i = 0; i < BOARD_STANDARD_FLOORS; i++)
+    {
+        infoGuard[i] = model->getInfo2DrawGuard(i);
+    }
     list<Info2DrawLoot> infoLoot= model-> getInfo2DrawLoot();
     Info2DrawPlayer infoThisPlayer= model->getInfo2DrawPlayer(THIS_PLAYER_ACTION);
     Info2DrawPlayer infoOtherPlayer= model->getInfo2DrawPlayer(OTHER_PLAYER_ACTION);
@@ -120,9 +124,16 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     //creo una lista de graphicGuardcards 
     list<GraphicItem *> auxGuard_list;
     
-    GraphicGuard *auxGuard_elemnt=new GraphicGuard(imageLoader.getImageP(infoGuard.position));
+    for(int i = 0; i < BOARD_STANDARD_FLOORS; i++)
+    {
+        GraphicGuardCards *auxGuard_card = new GraphicGuardCards(imageLoader.getImageBackP(infoGuard[i].position),i);
+        auxGuard_card->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
+        auxGuard_card->push_top_card(imageLoader.getImageP(infoGuard[i].shownDeck.front()));
+        auxGuard_list.push_back((GraphicItem *)auxGuard_card);
+    }
+    /*GraphicGuardCards *auxGuard_elemnt=new GraphicGuard(imageLoader.getImageP(infoGuard.position));
     auxGuard_elemnt->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
-    auxGuard_list.push_back((GraphicItem *)auxGuard_elemnt);
+    auxGuard_list.push_back((GraphicItem *)auxGuard_elemnt);*/
     
     //**********push sobre la primera capa 
     it_layers->push_back(auxTiles_list);
@@ -282,6 +293,9 @@ void BurgleBrosView::updateTokens(BurgleBrosModel* model)
 void BurgleBrosView::updateLoots(BurgleBrosModel * model)
 {
     list<Info2DrawLoot> aux = model->getInfo2DrawLoot();
+    Info2DrawLoot loot = {TIARA, THIS_PLAYER_ACTION};
+    aux.push_back(loot);
+    
     list<list<GraphicItem *>>::iterator itemsList = deleteList(FIRST_LAYER, LOOT_CARDS);
     for(list<Info2DrawLoot>::iterator newInfo = aux.begin() ; newInfo!= aux.end(); newInfo++)
     {
@@ -290,17 +304,6 @@ void BurgleBrosView::updateLoots(BurgleBrosModel * model)
         itemsList->push_back((GraphicItem *) p);
     }
     
-}
-list<list<GraphicItem *>>::iterator BurgleBrosView::deleteList(Layers layer, unsigned int itemList)
-{
-    list<list<list<GraphicItem *>>>::iterator aux= graphicInterface.begin();
-    advance(aux, layer);
-    list<list<GraphicItem *>>::iterator aux2 = aux->begin();
-    advance(aux2,itemList);
-    for(list<GraphicItem *>::iterator it =aux2->begin(); it !=aux2->end(); it++)
-        delete *it;
-    aux2->clear();
-    return aux2;
 }
 void BurgleBrosView::updateCharacters(BurgleBrosModel *model) {
     list<GraphicItem*>::iterator it = accessGraphicItems(SECOND_LAYER, PLAYER_INFO_LIST);
@@ -398,7 +401,17 @@ list<GraphicItem *>::iterator BurgleBrosView::accessGraphicItems(Layers layer, u
     list<GraphicItem *>::iterator it_items = it_itemType->begin();
     return it_items;
 }
-
+list<list<GraphicItem *>>::iterator BurgleBrosView::deleteList(Layers layer, unsigned int itemList)
+{
+    list<list<list<GraphicItem *>>>::iterator aux= graphicInterface.begin();
+    advance(aux, layer);
+    list<list<GraphicItem *>>::iterator aux2 = aux->begin();
+    advance(aux2,itemList);
+    for(list<GraphicItem *>::iterator it =aux2->begin(); it !=aux2->end(); it++)
+        delete *it;
+    aux2->clear();
+    return aux2;
+}
 void BurgleBrosView::showMenu(list<string> options, Point click, CardLocation tile)
 {
     list<list<GraphicItem *>>::iterator menu_items;

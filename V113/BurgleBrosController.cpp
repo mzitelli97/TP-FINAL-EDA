@@ -56,6 +56,8 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                     break;
                 case MENU_ITEM:
                     interpretAction(view->getDDMenuOption(aux), view->getDDMenuLocation());
+                    view->eraseMenu();
+                    view->update(modelPointer);
                     break;
                 default:
                     break;

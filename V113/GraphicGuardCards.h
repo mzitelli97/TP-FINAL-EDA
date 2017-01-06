@@ -19,14 +19,16 @@
 
 class GraphicGuardCards : public GraphicItem{
 public:
-    GraphicGuardCards(ALLEGRO_BITMAP * image);
+    GraphicGuardCards(ALLEGRO_BITMAP * image, unsigned int floor);
     GraphicGuardCards(const GraphicGuardCards& orig);
     virtual ~GraphicGuardCards();
     clickItem IAm() override;
     void push_top_card(ALLEGRO_BITMAP * card);
+    virtual void draw() override;
+
 private:
     list<ALLEGRO_BITMAP *> cards;
-    
+    unsigned int floor;
 
 };
 

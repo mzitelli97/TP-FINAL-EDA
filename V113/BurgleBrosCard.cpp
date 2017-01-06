@@ -59,7 +59,7 @@ bool isCardUpstairs(CardLocation source, CardLocation destination)
     {
         source.floor++;
         if(source==destination)
-            retVal==true;
+            retVal=true;
     }
     return retVal;
 }
@@ -71,7 +71,7 @@ bool isCardDownstairs(CardLocation source, CardLocation destination)
     {
         source.floor--;
         if(source==destination)
-            retVal==true;
+            retVal=true;
     }
     return retVal;
 }
