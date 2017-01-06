@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
     options.push_back("USE TOKEN");
     //options.push_back("OFFER LOOT");
     
-    view.showMenu(options, {100,100});
+    view.showMenu(options, {100,100}, {0,0,0});
     view.update(&model);
     clickItem item = view.itemFromClick({50,50});
     cout << item << endl;

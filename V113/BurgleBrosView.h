@@ -32,7 +32,7 @@ public:
     virtual void update(BurgleBrosModel * model);
     clickItem itemFromClick(Point point);
     void ViewInit(BurgleBrosModel* model);
-    void showMenu(list<string> options, Point click);
+    void showMenu(list<string> options, Point click, CardLocation tile);
     void eraseMenu();
     virtual ~BurgleBrosView();
 private:

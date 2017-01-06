@@ -403,7 +403,7 @@ list<GraphicItem *>::iterator BurgleBrosView::accessGraphicItems(Layers layer, u
     return it_items;
 }
 
-void BurgleBrosView::showMenu(list<string> options, Point click)
+void BurgleBrosView::showMenu(list<string> options, Point click, CardLocation tile)
 {
     list<list<GraphicItem *>>::iterator menu_items;
     menu_items = deleteList(THIRD_LAYER,(unsigned int) MENU_ITEM_LIST);
@@ -412,7 +412,7 @@ void BurgleBrosView::showMenu(list<string> options, Point click)
     int i = 0;
     for( it = options.begin(); it != options.end(); i++, it++)
     {
-        GraphicMenuItem * option_i = new GraphicMenuItem({click.x,click.y+i*20});
+        GraphicMenuItem * option_i = new GraphicMenuItem({click.x,click.y+i*20}, tile);
         option_i->setOption(*it);
         option_i->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
         menu_items->push_back((GraphicItem *) option_i);

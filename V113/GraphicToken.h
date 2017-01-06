@@ -24,7 +24,6 @@ public:
     virtual ~GraphicToken();
     clickItem IAm() override;
     void setPosition(CardLocation location);
-    virtual void draw();
 
 private:
     GraphicToken();

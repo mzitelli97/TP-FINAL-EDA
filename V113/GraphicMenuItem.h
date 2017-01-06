@@ -7,13 +7,16 @@ using namespace std;
 
 class GraphicMenuItem : public GraphicItem{
 public:
-    GraphicMenuItem(Point point);
+    GraphicMenuItem(Point point, CardLocation tile);
     virtual ~GraphicMenuItem();
     void setOption(string option);
     virtual void draw();
     virtual clickItem IAm();
+    CardLocation getTile();
+    string getOption();
 private:
     string option;
+    CardLocation tile;
     ALLEGRO_FONT * font;
 		
 };

@@ -24,7 +24,6 @@ public:
     GraphicGuard(const GraphicGuard& orig);
     virtual ~GraphicGuard();
     clickItem IAm() override;
-    virtual void draw();
     void setPosition(CardLocation location);
 private:
 

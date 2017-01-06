@@ -26,7 +26,6 @@ public:
     clickItem IAm() override;
     void setPosition(CardLocation location);
     void setNumber(ALLEGRO_BITMAP * die_num);
-    virtual void draw();
 private:
 
 };

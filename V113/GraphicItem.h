@@ -23,6 +23,15 @@ typedef struct
     double y;
 }Point;
 
+#define FLOOR_WIDTH (totalWidth/4.5)
+#define FLOOR_HEIGHT (totalHeight/2.25)
+#define SPACE_BETWEEN_FLOORS (totalWidth/20.0)
+#define TOTAL_FLOORS_WIDTH (3.0 * FLOOR_WIDTH + 3.0 * SPACE_BETWEEN_FLOORS)         //no configurable
+#define FLOOR_MIN_X (totalWidth/20.0)
+#define FLOOR_MIN_Y (totalHeight/10.0)
+#define TILES_HEIGHT (FLOOR_HEIGHT/(float)FLOOR_RAWS)
+#define TILES_WIDTH  (FLOOR_WIDTH/(float)FLOOR_COLUMNS)
+
 class GraphicItem {
 public:
     GraphicItem();
@@ -32,7 +41,7 @@ public:
     void setScreenDimentions(unsigned int totalWidth, unsigned int totalHeight);
     virtual ~GraphicItem();
     bool isPointIn(Point point);
-    virtual void draw()=0;
+    virtual void draw();
     virtual clickItem IAm() = 0;
 protected:
     ALLEGRO_BITMAP * image;
@@ -42,7 +51,6 @@ protected:
     double width;
     double height;
     unsigned int totalWidth, totalHeight;
-    //bool alreadyUpdated;
 };
 
 #endif /* GRAPHICITEM_H */

@@ -35,15 +35,19 @@ void GraphicPlayerCard::draw()
 {
     if(whichPlayer==THIS_PLAYER_ACTION)
     {
-        al_draw_scaled_bitmap(image,0,0,al_get_bitmap_width(image),al_get_bitmap_height(image),50,500,200,200,0);
+        al_draw_scaled_bitmap(image,0,0,al_get_bitmap_width(image),al_get_bitmap_height(image),
+                STEALTH_TOKEN_WIDTH,totalHeight - STEALTH_TOKEN_HEIGHT - 200,200,200,0);
         for(unsigned int i=0; i <(lives-1); i++)
-            al_draw_scaled_bitmap(stealthToken,0,0,al_get_bitmap_width(stealthToken),al_get_bitmap_height(stealthToken),270,500 + i * STEALTH_TOKEN_HEIGHT,STEALTH_TOKEN_WIDTH,STEALTH_TOKEN_HEIGHT,0);
+            al_draw_scaled_bitmap(stealthToken,0,0,al_get_bitmap_width(stealthToken),al_get_bitmap_height(stealthToken),
+                    STEALTH_TOKEN_WIDTH + 200 + 20, totalHeight - STEALTH_TOKEN_HEIGHT - 200 + i * STEALTH_TOKEN_HEIGHT,STEALTH_TOKEN_WIDTH,STEALTH_TOKEN_HEIGHT,0);
     }
     else
     {
-        al_draw_scaled_bitmap(image,0,0,al_get_bitmap_width(image),al_get_bitmap_height(image),1100,500,200,200,0);
+        al_draw_scaled_bitmap(image,0,0,al_get_bitmap_width(image),al_get_bitmap_height(image),
+                totalWidth - STEALTH_TOKEN_WIDTH - 200,totalHeight - STEALTH_TOKEN_HEIGHT - 200,200,200,0);
         for(unsigned int i=0; i <(lives-1); i++)
-            al_draw_scaled_bitmap(stealthToken,0,0,al_get_bitmap_width(stealthToken),al_get_bitmap_height(stealthToken),1050,500 + i * STEALTH_TOKEN_HEIGHT,STEALTH_TOKEN_WIDTH,STEALTH_TOKEN_HEIGHT,0);
+            al_draw_scaled_bitmap(stealthToken,0,0,al_get_bitmap_width(stealthToken),al_get_bitmap_height(stealthToken),
+                    totalWidth - 2*STEALTH_TOKEN_WIDTH - 200 - 20,totalHeight - STEALTH_TOKEN_HEIGHT - 200 + i * STEALTH_TOKEN_HEIGHT,STEALTH_TOKEN_WIDTH,STEALTH_TOKEN_HEIGHT,0);
     }
 }
 clickItem GraphicPlayerCard::IAm()

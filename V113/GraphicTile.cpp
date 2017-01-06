@@ -11,15 +11,6 @@
  * Created on 29 de diciembre de 2016, 20:46
  */
 
-#define FLOOR_WIDTH (totalWidth/4.5)
-#define FLOOR_HEIGHT (totalHeight/2.25)
-#define SPACE_BETWEEN_FLOORS (totalWidth/20.0)
-#define TOTAL_FLOORS_WIDTH (3.0*FLOOR_WIDTH + 2.0*SPACE_BETWEEN_FLOORS)         //no configurable
-#define FLOOR_MIN_X ((totalWidth/2.0) - (TOTAL_FLOORS_WIDTH / 2.0))               //no configurable
-#define FLOOR_MIN_Y (totalHeight/10.0)
-#define TILES_HEIGHT (FLOOR_HEIGHT/(float)FLOOR_RAWS)
-#define TILES_WIDTH  (FLOOR_WIDTH/(float)FLOOR_COLUMNS)
-
 #include "GraphicTile.h"
 #include "View.h"
 
@@ -41,13 +32,19 @@ void GraphicTile::setVisible(ALLEGRO_BITMAP * safeNumber)
     this->safeNumber=safeNumber;
     Visible=true;
 }
-void GraphicTile::setPosition(CardLocation location){
-    double yDiff = (totalHeight/8.0);
-    double xDiff = (totalWidth/30.0);
-    min.y = yDiff + TILES_HEIGHT * (float)location.row;
-    min.x = xDiff + TILES_WIDTH * (float)location.column + location.floor * (SPACE_BETWEEN_FLOORS + FLOOR_WIDTH);
-    max.y = min.y + TILES_HEIGHT;
-    max.x = min.x + TILES_WIDTH;
+void GraphicTile::setPosition(CardLocation location)
+{
+    double tile_height = TILES_HEIGHT, tile_width = TILES_WIDTH;   
+    if (tile_height < tile_width) tile_width = tile_height;
+    else tile_height = tile_width;
+    double yDiff = (FLOOR_HEIGHT-FLOOR_RAWS*tile_height)/(FLOOR_RAWS+1);
+    double xDiff = (FLOOR_WIDTH-FLOOR_COLUMNS*tile_width)/(FLOOR_COLUMNS+1);
+     if (xDiff > yDiff) yDiff = xDiff;
+    else xDiff = yDiff;
+    min.y = FLOOR_MIN_Y + yDiff * ((float)location.row+1) + tile_height * (float)location.row;
+    min.x = FLOOR_MIN_X + FLOOR_WIDTH * location.floor + SPACE_BETWEEN_FLOORS * location.floor + xDiff * ((float)location.column+1) + tile_width * (float)location.column;
+    max.y = min.y + tile_height;
+    max.x = min.x + tile_width;
     
     center.x= (min.x+max.x)/2;
     center.y= (min.y+max.y)/2;

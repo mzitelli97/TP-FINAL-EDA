@@ -48,6 +48,11 @@ void GraphicItem::setScreenDimentions(unsigned int totalWidth, unsigned int tota
     this->totalHeight=totalHeight;
 }
 
+void GraphicItem::draw()
+{
+    if(image != nullptr)
+        al_draw_scaled_bitmap(image,0,0,al_get_bitmap_width(image),al_get_bitmap_height(image),min.x,min.y,width,height,0);
+}
 
 GraphicItem::GraphicItem(const GraphicItem& orig) {
 }

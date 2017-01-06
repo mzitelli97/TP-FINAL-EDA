@@ -23,7 +23,6 @@ public:
     GraphicEDices(const GraphicEDices& orig);
     virtual ~GraphicEDices();
     clickItem IAm() override;
-    virtual void draw();
     void setPosition(unsigned int number);
 private:
 
