@@ -25,7 +25,7 @@ public:
     void draw() override;
     virtual ~GraphicPlayerCard() {};
 private:
-    
+    void setPosition();
     unsigned int lives;
     string name;
     ALLEGRO_BITMAP * stealthToken; 

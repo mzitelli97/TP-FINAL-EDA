@@ -34,23 +34,36 @@ void  GraphicPlayerCard:: setLives(unsigned int livesNumber)
     if(livesNumber<4 && livesNumber>0)
         lives=livesNumber;
 }
+
+void GraphicPlayerCard::setPosition()
+{
+    if(whichPlayer == THIS_PLAYER_ACTION)
+        min.x = STEALTH_TOKEN_WIDTH;
+    else 
+        min.x = totalWidth - STEALTH_TOKEN_WIDTH - CARD_WIDTH;
+    max.x = min.x + CARD_WIDTH;
+    min.y = totalHeight - STEALTH_TOKEN_HEIGHT - CARD_HEIGHT;
+    max.y = min.y + CARD_HEIGHT;
+}
+
 void GraphicPlayerCard::draw()
 {
+    setPosition();
     if(whichPlayer==THIS_PLAYER_ACTION)
     {
         al_draw_scaled_bitmap(image,0,0,al_get_bitmap_width(image),al_get_bitmap_height(image),
-                STEALTH_TOKEN_WIDTH,totalHeight - STEALTH_TOKEN_HEIGHT - CARD_HEIGHT,CARD_WIDTH,CARD_HEIGHT,0);
+                min.x,min.y,CARD_WIDTH,CARD_HEIGHT,0);
         for(unsigned int i=0; i <(lives-1); i++)
             al_draw_scaled_bitmap(stealthToken,0,0,al_get_bitmap_width(stealthToken),al_get_bitmap_height(stealthToken),
-                    STEALTH_TOKEN_WIDTH + CARD_WIDTH + SEPARATION, totalHeight - STEALTH_TOKEN_HEIGHT - CARD_HEIGHT + i * STEALTH_TOKEN_HEIGHT,STEALTH_TOKEN_WIDTH,STEALTH_TOKEN_HEIGHT,0);
+                    min.x + CARD_WIDTH + SEPARATION, min.y + i * STEALTH_TOKEN_HEIGHT,STEALTH_TOKEN_WIDTH,STEALTH_TOKEN_HEIGHT,0);
     }
     else
     {
         al_draw_scaled_bitmap(image,0,0,al_get_bitmap_width(image),al_get_bitmap_height(image),
-                totalWidth - STEALTH_TOKEN_WIDTH - CARD_WIDTH,totalHeight - STEALTH_TOKEN_HEIGHT - CARD_HEIGHT,CARD_WIDTH,CARD_HEIGHT,0);
+                min.x,min.y,CARD_WIDTH,CARD_HEIGHT,0);
         for(unsigned int i=0; i <(lives-1); i++)
             al_draw_scaled_bitmap(stealthToken,0,0,al_get_bitmap_width(stealthToken),al_get_bitmap_height(stealthToken),
-                    totalWidth - 2*STEALTH_TOKEN_WIDTH - CARD_WIDTH - SEPARATION,totalHeight - STEALTH_TOKEN_HEIGHT - CARD_HEIGHT + i * STEALTH_TOKEN_HEIGHT,STEALTH_TOKEN_WIDTH,STEALTH_TOKEN_HEIGHT,0);
+                    min.x - STEALTH_TOKEN_WIDTH - SEPARATION,min.y + i * STEALTH_TOKEN_HEIGHT,STEALTH_TOKEN_WIDTH,STEALTH_TOKEN_HEIGHT,0);
     }
 }
 clickItem GraphicPlayerCard::IAm()

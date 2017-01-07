@@ -29,7 +29,7 @@ public:
     virtual void draw();
     virtual ~GraphicLoot();
 private:
-    void setPosition(ActionOrigin owner);
+    void setPosition();
     bool isVisible;
     ActionOrigin owner;
 };

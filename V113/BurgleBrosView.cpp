@@ -25,6 +25,7 @@
 
 #define SCREEN_W 1800
 #define SCREEN_H 900
+#define TITLE_H al_get_bitmap_height(backScreen)/20.0
 
 BurgleBrosView::BurgleBrosView() {
     imageLoader.initImages();           //Falta checkear.
@@ -33,16 +34,12 @@ BurgleBrosView::BurgleBrosView() {
     backScreen = al_load_bitmap("fondo.jpg");
     al_draw_scaled_bitmap(backScreen,0,0,al_get_bitmap_width(backScreen),al_get_bitmap_height(backScreen),0,0,al_get_display_width(display),al_get_display_height(display),0);
     
-    /*Aca va a haber que pushear g_items a la lista y crear layers. tambien aca hay que usar el imageloader para cargar las imagenes en los
-     g_item mediante sus constructores*/
+    ALLEGRO_FONT * font = al_load_font("title.ttf",TITLE_H,0);
+    al_set_target_bitmap(backScreen);
+    al_draw_text(font,al_map_rgb(0,0,0),al_get_bitmap_width(backScreen)/2.0,TITLE_H/2,ALLEGRO_ALIGN_CENTER, "EDA BURGLE BROS");
+    al_destroy_font(font);
+    al_set_target_backbuffer(display);
     
-    
-    
-    /*for(int i = 0; i < BOARD_STANDARD_FLOORS; i++)
-    {
-        floors[i] = al_create_sub_bitmap(screen,(al_get_bitmap_width(screen)/BOARD_STANDARD_FLOORS)*i,al_get_bitmap_height(screen)/6,
-               al_get_bitmap_width(screen)/BOARD_STANDARD_FLOORS,al_get_bitmap_height(screen)/2);
-    }*/
     #ifdef ICON
     ALLEGRO_BITMAP *icon = al_load_bitmap(ICON);                              //Falta checkear.
     al_set_display_icon(display,icon);
@@ -63,8 +60,7 @@ BurgleBrosView::~BurgleBrosView() {
 */
 void BurgleBrosView::ViewInit(BurgleBrosModel* model)
 {
-    /*VEO SI ANDA ASI O SINO VER CASTEO CON */
-    
+    /*VEO SI ANDA ASI O SINO VER CASTEO CON */    
     //creo los info2draw
     vector<Info2DrawCards> info_tiles= model->getInfo2DrawCards();
     Info2DrawGuard infoGuard[3];
@@ -118,6 +114,10 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     //creo una lista para graphicLoots
     list<GraphicItem* > auxLoot_list;
     
+    GraphicLoot * auxLoot = new GraphicLoot(imageLoader.getImageBackP(infoLoot.front().loot));
+    auxLoot->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
+    auxLoot_list.push_back(auxLoot);
+    
     //creo una lista para extra_dies
     list<GraphicItem* > auxExtraDies_list;
     
@@ -131,9 +131,6 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
         auxGuard_card->push_top_card(imageLoader.getImageP(infoGuard[i].shownDeck.front()));
         auxGuard_list.push_back((GraphicItem *)auxGuard_card);
     }
-    /*GraphicGuardCards *auxGuard_elemnt=new GraphicGuard(imageLoader.getImageP(infoGuard.position));
-    auxGuard_elemnt->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
-    auxGuard_list.push_back((GraphicItem *)auxGuard_elemnt);*/
     
     //**********push sobre la primera capa 
     it_layers->push_back(auxTiles_list);
@@ -294,6 +291,8 @@ void BurgleBrosView::updateLoots(BurgleBrosModel * model)
 {
     list<Info2DrawLoot> aux = model->getInfo2DrawLoot();
     Info2DrawLoot loot = {TIARA, THIS_PLAYER_ACTION};
+    aux.push_back(loot);
+    loot = {PERSIAN_KITTY, OTHER_PLAYER_ACTION};
     aux.push_back(loot);
     
     list<list<GraphicItem *>>::iterator itemsList = deleteList(FIRST_LAYER, LOOT_CARDS);
