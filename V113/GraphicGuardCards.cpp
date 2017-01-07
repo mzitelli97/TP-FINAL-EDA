@@ -13,9 +13,9 @@
 
 #include "GraphicGuardCards.h"
 
-#define CARD_WIDTH (totalWidth/10.0)
-#define CARD_HEIGHT (totalHeight/6.0)
-#define SEPARATION (totalWidth/50.0)
+#define CARD_WIDTH (totalWidth/11.0)
+#define CARD_HEIGHT (totalHeight/7.0)
+#define SEPARATION (FLOOR_HEIGHT-2*CARD_WIDTH)
 
 GraphicGuardCards::GraphicGuardCards(ALLEGRO_BITMAP * image, unsigned int floor)
 {
