@@ -235,7 +235,7 @@ void BurgleBrosModel::checkTurns()
              if(board.getCardType(playerMovingPos) == SERVICE_DUCT && (board.getOtherServiceDuctPos(playerMovingPos)== tileToMove))
                 retVal=true;
          }
-         if(board.getCardType(tileToMove) == SECRET_DOOR && board.isAWallBetween(playerMovingPos,tileToMove))
+         if(board.getCardType(tileToMove) == SECRET_DOOR && board.isAWallBetween(playerMovingPos,tileToMove))//No hay que ver que tambien la card sea visible?
              retVal=true;
          if(tokens.isThereAToken(playerMovingPos, DOWNSTAIRS_TOKEN) && isCardDownstairs(playerMovingPos, tileToMove))
              retVal=true;
