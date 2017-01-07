@@ -46,10 +46,12 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
             clickItem temp;
             Point aux={(double)p2MouseData->getX(), (double)p2MouseData->getY()};
             CardLocation location;
-            temp=view->itemFromClick(aux);
+            temp=view->itemFromClick(aux);          //this could be in the tile case
             location=view->point2Location(aux);
             switch(temp)
             {
+   /*For the other cases it may be necessary functions like point2Guard, point2Player, to recognize which
+    graphic item was clicked, ex., which of the guardCard(floor), which playerCard, which playerLoot, which button*/
                 case TILE:
                     view->showMenu(modelPointer->getPosibleActions(THIS_PLAYER_ACTION, location), aux, location);
                     view->update(modelPointer);
