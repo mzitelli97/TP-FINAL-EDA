@@ -57,8 +57,8 @@ void GraphicPlayer::setLocation(CardLocation location)
 GraphicPlayer::~GraphicPlayer() {
 }
 
-clickItem GraphicPlayer::IAm()
+ItemInfo GraphicPlayer::IAm()
 {
-    return NO_ITEM;
+    return {NO_ITEM, nullptr};
 }
 

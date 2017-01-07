@@ -6,7 +6,7 @@
 GraphicMenuItem::GraphicMenuItem(Point point, CardLocation tile)
 {
 	min = point;
-        this->tile = tile;
+        this->properties.location = tile;
         font = al_load_font("fonts.ttf",10,0);
         //definir alto y ancho del cuadrado
         width = 100;
@@ -21,27 +21,30 @@ void GraphicMenuItem::draw()
 	al_draw_filled_rectangle(min.x, min.y, max.x, max.y, WHITE);
         al_draw_rectangle(min.x, min.y, max.x, max.y, BLACK, 0);
 	//escribo el string option en este cuadrado
-	al_draw_text(font, BLACK, min.x + 5, min.y + 5, 0, option.c_str());
+	al_draw_text(font, BLACK, min.x + 5, min.y + 5, 0, properties.option.c_str());
 }
 
 void GraphicMenuItem::setOption(string option)
 {
-	this->option = option;
+    this->properties.option = option;
 }
 
-clickItem GraphicMenuItem::IAm()
+ItemInfo GraphicMenuItem::IAm()
 {
-	return MENU_ITEM;
+    ItemInfo retVal;
+    retVal.type = MENU_ITEM;
+    retVal.info = &properties;
+    return retVal;
 }
 
 string GraphicMenuItem::getOption()
 {
-    return option;
+    return properties.option;
 }
 
 CardLocation GraphicMenuItem::getTile()
 {
-    return tile;
+    return properties.location;
 }
 
 GraphicMenuItem::~GraphicMenuItem()

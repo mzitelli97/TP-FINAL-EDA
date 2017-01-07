@@ -23,7 +23,7 @@ public:
     GraphicGDie(ALLEGRO_BITMAP * image);
     GraphicGDie(const GraphicGDie& orig);
     virtual ~GraphicGDie();
-    clickItem IAm() override;
+    ItemInfo IAm() override;
     void setPosition(CardLocation location);
     void setNumber(ALLEGRO_BITMAP * die_num);
 private:

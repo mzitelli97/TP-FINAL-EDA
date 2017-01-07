@@ -22,7 +22,7 @@ public:
     GraphicGuardCards(ALLEGRO_BITMAP * image, unsigned int floor);
     GraphicGuardCards(const GraphicGuardCards& orig);
     virtual ~GraphicGuardCards();
-    clickItem IAm() override;
+    ItemInfo IAm() override;
     void push_top_card(ALLEGRO_BITMAP * card);
     virtual void draw() override;
 

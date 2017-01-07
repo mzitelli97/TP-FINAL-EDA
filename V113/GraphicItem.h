@@ -15,13 +15,20 @@
 #define GRAPHICITEM_H
 
 #include "View.h"
-#include "ImageLoader.h"
+#include "ImageLoader.h"        //check if this is necessary(this include the model)
+#include "LibsInit.h"
 
 typedef struct
 {
     double x;
     double y;
 }Point;
+
+typedef struct
+{
+    clickItem type;
+    void * info;
+}ItemInfo;
 
 #define FLOOR_WIDTH (totalWidth/4.5)
 #define FLOOR_HEIGHT (totalHeight/2.25)
@@ -42,7 +49,7 @@ public:
     virtual ~GraphicItem();
     bool isPointIn(Point point);
     virtual void draw();
-    virtual clickItem IAm() = 0;
+    virtual ItemInfo IAm() = 0;
 protected:
     ALLEGRO_BITMAP * image;
     Point min;

@@ -22,7 +22,7 @@ public:
     GraphicEDices(ALLEGRO_BITMAP * image);
     GraphicEDices(const GraphicEDices& orig);
     virtual ~GraphicEDices();
-    clickItem IAm() override;
+    ItemInfo IAm() override;
     void setPosition(unsigned int number);
 private:
 

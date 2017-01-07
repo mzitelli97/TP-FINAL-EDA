@@ -30,21 +30,22 @@ GraphicLoot::GraphicLoot(ALLEGRO_BITMAP * backImage)
 {
     isVisible=false;
     image = backImage;
+    this->owner = NON_PLAYER;
 }
-clickItem GraphicLoot::IAm()
+ItemInfo GraphicLoot::IAm()
 {
-    return LOOT_CARDS;
+    ItemInfo retVal;
+    retVal.type = LOOT_CARDS;
+    retVal.info = &owner;
+    return retVal;
 }
 
 void GraphicLoot::setPosition()
 {
-    if(isVisible)
-    {
-        if(owner == THIS_PLAYER_ACTION)
+    if(owner == THIS_PLAYER_ACTION)
             min.x = 4 * SPACE_X + CARD_WIDTH;
-        else if (owner == OTHER_PLAYER_ACTION)
+    else if (owner == OTHER_PLAYER_ACTION)
             min.x = totalWidth - SPACE_X * 4 - CARD_WIDTH * 2;
-    }
     else min.x = 4 * SPACE_X + 3 * CARD_WIDTH;
     min.y = totalHeight - SPACE_Y - CARD_HEIGHT;
     max.x = min.x + CARD_WIDTH;

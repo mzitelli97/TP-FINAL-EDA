@@ -25,7 +25,7 @@ public:
     void setVisible(ALLEGRO_BITMAP * safeNumber);
     CardLocation getLocation();
     virtual ~GraphicTile();
-    virtual clickItem IAm();
+    virtual ItemInfo IAm();
     virtual void draw();
 private:
     //clickItem me;

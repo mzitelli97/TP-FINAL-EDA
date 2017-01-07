@@ -22,7 +22,7 @@ public:
     GraphicToken(ALLEGRO_BITMAP * image);
     GraphicToken(const GraphicToken& orig);
     virtual ~GraphicToken();
-    clickItem IAm() override;
+    ItemInfo IAm() override;
     void setPosition(CardLocation location);
 
 private:

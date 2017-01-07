@@ -13,6 +13,7 @@
 
 #include "BurgleBrosController.h"
 #include "MouseED.h"
+#include "GraphicMenuItem.h"
 
 using namespace std;
 
@@ -43,24 +44,35 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
         MouseED *p2MouseData = dynamic_cast<MouseED *> (mouseEvent);
         if( p2MouseData != nullptr)
         {
-            clickItem temp;
+            ItemInfo temp;
             Point aux={(double)p2MouseData->getX(), (double)p2MouseData->getY()};
-            CardLocation location;
-            temp=view->itemFromClick(aux);          //this could be in the tile case
-            location=view->point2Location(aux);
-            switch(temp)
+            temp=view->itemFromClick(aux);
+            //location=view->point2Location(aux);
+            CardLocation * auxLocation;
+            ActionOrigin * auxPlayer;
+            auxInfo * menuInfo;
+            unsigned int * guardFloor;
+            switch(temp.type)
             {
    /*For the other cases it may be necessary functions like point2Guard, point2Player, to recognize which
     graphic item was clicked, ex., which of the guardCard(floor), which playerCard, which playerLoot, which button*/
                 case TILE:
-                    view->showMenu(modelPointer->getPosibleActions(THIS_PLAYER_ACTION, location), aux, location);
+                    auxLocation = (CardLocation *)temp.info;
+                    view->showMenu(modelPointer->getPosibleActions(THIS_PLAYER_ACTION, *auxLocation), aux, *auxLocation);
                     view->update(modelPointer);
                     break;
                 case MENU_ITEM:
-                    interpretAction(view->getDDMenuOption(aux), view->getDDMenuLocation());
+                    menuInfo = (auxInfo *)temp.info;
+                    interpretAction(menuInfo->option, menuInfo->location);
                     view->eraseMenu();
                     view->update(modelPointer);
                     break;
+                case LOOT_CARDS:
+                    auxPlayer = (ActionOrigin *)temp.info;
+                    break;
+                case GUARD_CARDS:
+                    guardFloor = (unsigned int *)temp.info;
+                    cout<<*guardFloor<<endl;
                 default:
                     break;
             }

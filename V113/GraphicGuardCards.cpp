@@ -29,9 +29,12 @@ GraphicGuardCards::GraphicGuardCards(const GraphicGuardCards& orig) {
 GraphicGuardCards::~GraphicGuardCards() {
 }
 
-clickItem GraphicGuardCards::IAm()
+ItemInfo GraphicGuardCards::IAm()
 {
-    return GUARD_CARDS;
+    ItemInfo retVal;
+    retVal.type = GUARD_CARDS;
+    retVal.info = &floor;
+    return retVal;
 }
 
 void GraphicGuardCards::push_top_card(ALLEGRO_BITMAP* card)

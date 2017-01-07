@@ -5,18 +5,23 @@
 
 using namespace std;
 
+typedef struct
+{
+    string option;
+    CardLocation location;
+}auxInfo;
+
 class GraphicMenuItem : public GraphicItem{
 public:
     GraphicMenuItem(Point point, CardLocation tile);
     virtual ~GraphicMenuItem();
     void setOption(string option);
     virtual void draw();
-    virtual clickItem IAm();
+    virtual ItemInfo IAm();
     CardLocation getTile();
     string getOption();
 private:
-    string option;
-    CardLocation tile;
+    auxInfo properties;
     ALLEGRO_FONT * font;
 		
 };

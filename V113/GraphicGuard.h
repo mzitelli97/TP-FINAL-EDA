@@ -23,7 +23,7 @@ public:
     GraphicGuard(ALLEGRO_BITMAP * image);
     GraphicGuard(const GraphicGuard& orig);
     virtual ~GraphicGuard();
-    clickItem IAm() override;
+    ItemInfo IAm() override;
     void setPosition(CardLocation location);
 private:
 

@@ -25,7 +25,7 @@ public:
     GraphicLoot(const GraphicLoot& orig);
     ActionOrigin GetOwner();
     void setOwner(ActionOrigin owner);
-    virtual clickItem IAm();
+    virtual ItemInfo IAm();
     virtual void draw();
     virtual ~GraphicLoot();
 private:

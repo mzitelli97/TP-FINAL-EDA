@@ -27,9 +27,9 @@ GraphicToken::GraphicToken(const GraphicToken& orig) {
 GraphicToken::~GraphicToken() {
 }
 
-clickItem GraphicToken::IAm() 
+ItemInfo GraphicToken::IAm() 
 {
-    return NO_ITEM;
+    return {NO_ITEM, nullptr};
 }
 
 void GraphicToken::setPosition(CardLocation location)

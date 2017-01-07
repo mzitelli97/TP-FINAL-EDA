@@ -66,9 +66,12 @@ void GraphicPlayerCard::draw()
                     min.x - STEALTH_TOKEN_WIDTH - SEPARATION,min.y + i * STEALTH_TOKEN_HEIGHT,STEALTH_TOKEN_WIDTH,STEALTH_TOKEN_HEIGHT,0);
     }
 }
-clickItem GraphicPlayerCard::IAm()
+ItemInfo GraphicPlayerCard::IAm()
 {
-    return CHAR_CARD;
+    ItemInfo retVal;
+    retVal.type = CHAR_CARD;
+    retVal.info = &whichPlayer;
+    return retVal;
 }
 
 

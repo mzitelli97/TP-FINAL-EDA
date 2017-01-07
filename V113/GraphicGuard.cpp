@@ -27,9 +27,9 @@ GraphicGuard::GraphicGuard(const GraphicGuard& orig) {
 GraphicGuard::~GraphicGuard() {
 }
 
-clickItem GraphicGuard::IAm()
+ItemInfo GraphicGuard::IAm()
 {
-    return NO_ITEM;
+    return {NO_ITEM, nullptr};
 }
 
 void GraphicGuard::setPosition(CardLocation location)

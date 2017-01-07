@@ -21,7 +21,7 @@ class GraphicPlayerCard : public GraphicItem{
 public:
     GraphicPlayerCard(ALLEGRO_BITMAP * image, ALLEGRO_BITMAP * stealthTokenImg, unsigned int lives, std::string name, ActionOrigin whichPlayer,unsigned int width,unsigned int height);
     void setLives(unsigned int livesNumber);
-    clickItem IAm() override;
+    ItemInfo IAm() override;
     void draw() override;
     virtual ~GraphicPlayerCard() {};
 private:

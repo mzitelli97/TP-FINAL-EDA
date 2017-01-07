@@ -29,9 +29,10 @@ GraphicEDices::GraphicEDices(const GraphicEDices& orig) {
 GraphicEDices::~GraphicEDices() {
 }
 
-clickItem GraphicEDices::IAm()
+ItemInfo GraphicEDices::IAm()
 {
-    return EXTRA_DICE;
+    ItemInfo retVal = {EXTRA_DICE, nullptr};
+    return retVal;
 }
 
 void GraphicEDices::setPosition(unsigned int number)

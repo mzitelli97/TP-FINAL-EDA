@@ -29,13 +29,21 @@ class BurgleBrosView : public View{
 public:
     BurgleBrosView();
     BurgleBrosView(Model * model);
-    clickItem itemFromClick(Point point);
+    
+    /*Devuelve sobre que item fue el click, junto con informacion del item.
+     TILE -> CARDLOCATION
+     LOOT_CARD -> OWNER(actionOrigin)
+     PLAYER_CARDS -> ACTIONORIGIN
+     GUARD_CARD -> FLOOR(unsigned int)
+     MENU_ITEM -> AUXINFO (string y cardLocation)*/
+    ItemInfo itemFromClick(Point point);
+    
     virtual void update(Model * model);
     void ViewInit(BurgleBrosModel* model);
     void showMenu(list<string> options, Point click, CardLocation tile);
-    string getDDMenuOption(Point aux);         //Asume que el clikc fue en un ddmenu, sino devuelve string vacio
-    CardLocation getDDMenuLocation(); //Asume que el clikc fue en un ddmenu, sino devuelve location 3 3 3
-    CardLocation point2Location(Point aux);    //Asume que el click fue en un tile, sino devuelve location 3 3 3
+    //string getDDMenuOption(Point aux);         //Asume que el clikc fue en un ddmenu, sino devuelve string vacio
+    //CardLocation getDDMenuLocation(); //Asume que el clikc fue en un ddmenu, sino devuelve location 3 3 3
+    //CardLocation point2Location(Point aux);    //Asume que el click fue en un tile, sino devuelve location 3 3 3
     void eraseMenu();
     virtual ~BurgleBrosView();
 private:

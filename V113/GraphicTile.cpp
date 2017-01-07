@@ -69,8 +69,11 @@ GraphicTile::~GraphicTile()
 {
 }
 
-clickItem GraphicTile::IAm()
+ItemInfo GraphicTile::IAm()
 {
-    return TILE;
+    ItemInfo retVal;
+    retVal.type = TILE;
+    retVal.info = &location;
+    return retVal;
 }
 

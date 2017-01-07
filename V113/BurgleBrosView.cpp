@@ -79,7 +79,7 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     list<list<list<GraphicItem *>>>::iterator it_layers;
     
     
-    //***************creo las capas y creo un iterador
+    /***************creo las capas y creo un iterador***/
     
     for(int i=0; i<INIT_QUANTITY_LAYERS;i++)
     {
@@ -87,10 +87,7 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     }
     it_layers=graphicInterface.begin();
           
-    
     /*********Inicializo la primera capa****************/
-   
-        //tile (front back carlocation total withd y total hith)
 
     //creo una lista de graphicTiles
     list<GraphicItem*> auxTiles_list;
@@ -161,7 +158,7 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     auxGuardInfo_list.push_back(auxGuardDie);
     /********************************/
     
-    //creo una lista de grraphicPlayer
+    //creo una lista de graphicPlayer
     list<GraphicItem *> auxPlayer_list;
     
     GraphicPlayer *auxThisPlayer_element=new GraphicPlayer(imageLoader.getImageP(infoThisPlayer.character,false),infoThisPlayer.position,al_get_display_width(display),al_get_display_height(display)); 
@@ -195,30 +192,29 @@ void BurgleBrosView::update(Model* auxModel)
 {
     /*Update all*/
     BurgleBrosModel * model = (BurgleBrosModel *) auxModel; 
-    string aux;
+    //string aux;
     updateTiles(model);
     updateTokens(model);
     updateCharacters(model);
     updateCharacterCards(model);
     updateLoots(model);
-    //updateGuards(model);
+    updateGuards(model);
     updateExtraDices(model);
     /*Draw all*/
-    /*In same cpus the backScreen is not draw without this line*/
     al_draw_scaled_bitmap(backScreen,0,0,al_get_bitmap_width(backScreen),al_get_bitmap_height(backScreen),0,0,al_get_display_width(display),al_get_display_height(display),0);
     list<list<list<GraphicItem *>>>::iterator it_layers;
     list<list<GraphicItem *>>::iterator it_itemType;
     list<GraphicItem *>::iterator it_items;
-    cout << "hola" << endl;
+    //cout << "hola" << endl;
     for( it_layers = graphicInterface.begin(); it_layers != graphicInterface.end(); it_layers++)
     {
-        cout << "hola1" << endl;
+        //cout << "hola1" << endl;
         for( it_itemType = it_layers->begin(); it_itemType != it_layers->end(); it_itemType++)
         {
-            cout << "hola2" << endl;
+            //cout << "hola2" << endl;
             for( it_items = it_itemType->begin(); it_items != it_itemType->end(); it_items++)
             {
-                cout << "hola3" << endl;
+                //cout << "hola3" << endl;
                 (*it_items)->draw();
                 
             }
@@ -227,9 +223,9 @@ void BurgleBrosView::update(Model* auxModel)
     al_flip_display();
     //cin>>aux;
 }
-clickItem BurgleBrosView::itemFromClick(Point point)
+ItemInfo BurgleBrosView::itemFromClick(Point point)
 {
-    clickItem retVal = NO_ITEM;
+    ItemInfo retVal = {NO_ITEM, nullptr};
     bool layer_flag = false;                                                                    //to exit outer loop
     list<list<list<GraphicItem *>>>::reverse_iterator it_layers;
     list<list<GraphicItem *>>::iterator it_itemType;
@@ -433,7 +429,7 @@ void BurgleBrosView::eraseMenu()
     it_itemType = deleteList(THIRD_LAYER,(unsigned int) MENU_ITEM_LIST);
 }
 
-CardLocation BurgleBrosView::getDDMenuLocation()
+/*CardLocation BurgleBrosView::getDDMenuLocation()
 {
     CardLocation retVal = {3,3,3};
     list<GraphicItem *>::iterator it = accessGraphicItems(THIRD_LAYER, (unsigned int) MENU_ITEM_LIST);
@@ -477,4 +473,4 @@ CardLocation BurgleBrosView::point2Location(Point aux)
         }
     }
     return retVal;
-}
+}*/
