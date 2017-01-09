@@ -14,31 +14,33 @@ BurgleBrosGuard::BurgleBrosGuard()
 }
 bool BurgleBrosGuard::step()
 {
-    return false;
+    bool retVal=false;
+    position=pathToTarget.front();
+    if(position== currentTarget)
+        retVal=true;
+    pathToTarget.pop_front();
+    return retVal;
 }
 void BurgleBrosGuard::setNewTarget(CardLocation alarm)
 {
-    
+    currentTarget=alarm;
 }
-void BurgleBrosGuard::setNewPathToTarget(list<CardLocation> pathToTarget)
+void BurgleBrosGuard::setNewPathToTarget(list<CardLocation> &pathToTarget)
 {
-    
+    this->pathToTarget=pathToTarget;
 }
 
 BurgleBrosGuard::BurgleBrosGuard(unsigned int floor)
 {
     this->floor=floor;
-    if(floor=0)
+    if(floor==0)
         diceNumber=FLOOR_1_INIT_DICE;
-    else if(floor=1)
+    else if(floor==1)
         diceNumber=FLOOR_2_INIT_DICE;
-    else if(floor=2)
+    else if(floor==2)
         diceNumber=FLOOR_3_INIT_DICE;
     initCardDeck();
     isGuardsTurn=false;
-    position.column=2;
-    position.floor=0;
-    position.row=2;
     CardLocation aux = drawCardTarget();
     currentTarget= aux;
     diceNumber = 2+floor;
@@ -50,6 +52,11 @@ void BurgleBrosGuard::setPosition(string initialGPos)
     string guardDicePosition=initialGPos.substr(4,4);
     drawCardTarget(protocolToCardLocation(guardDicePosition));
     position=protocolToCardLocation(guardPosition);
+}
+
+void BurgleBrosGuard::setPosition(CardLocation location)
+{
+    position=location;
 }
 void BurgleBrosGuard::setPosition()
 {
