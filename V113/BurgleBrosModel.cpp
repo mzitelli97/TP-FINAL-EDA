@@ -127,6 +127,13 @@ list<Info2DrawLoot> BurgleBrosModel::getInfo2DrawLoot()
     }
     return retVal;
 }
+ActionOrigin BurgleBrosModel::getPlayerOnTurn()
+{
+    if(myPlayer.isItsTurn())
+        return THIS_PLAYER_ACTION;
+    else
+        return OTHER_PLAYER_ACTION;
+}
 Info2DrawGuard BurgleBrosModel::getInfo2DrawGuard(unsigned int floor)
 {
     Info2DrawGuard info;//CONTROLAR ERROR
