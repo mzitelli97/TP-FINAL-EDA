@@ -83,6 +83,15 @@ bool BurgleBrosPlayer::hasLoot(Loot loot)
     }
     return retVal;
 }
+
+bool BurgleBrosPlayer::carriesLoot() 
+{
+    bool retVal=true;
+    if(lootCarried.empty())
+        retVal=false;
+    return retVal;
+}
+
 CharacterName BurgleBrosPlayer:: getCharacter()
 {
     return characterName;
