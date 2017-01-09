@@ -275,3 +275,27 @@ CardLocation intToCardLocation(unsigned int cardNumber)
 	retVal.row = (cardNumber % (FLOOR_COLUMNS*FLOOR_COLUMNS)) / FLOOR_COLUMNS;
 	return retVal;
 }
+
+bool BurgleBrosBoard:: isCardUpstairs(CardLocation source, CardLocation destination)
+{
+    bool retVal=false;
+    if(source.floor<2)
+    {
+        source.floor++;
+        if(source==destination)
+            retVal=true;
+    }
+    return retVal;
+}
+
+bool BurgleBrosBoard::  isCardDownstairs(CardLocation source, CardLocation destination)
+{
+    bool retVal=false;
+    if(source.floor>0)
+    {
+        source.floor--;
+        if(source==destination)
+            retVal=true;
+    }
+    return retVal;
+}
