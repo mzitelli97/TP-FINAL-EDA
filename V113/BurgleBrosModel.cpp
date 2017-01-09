@@ -1,4 +1,5 @@
 #include "BurgleBrosModel.h"
+#include <unistd.h>
 typedef struct
 {
     CardLocation target;
@@ -25,13 +26,20 @@ BurgleBrosModel::BurgleBrosModel()
     myPlayer.setTurn(true);
     otherPlayer.setTurn(false);
     for(unsigned int i =0; i <MAX_NMBR_OF_EXTRA_DICES; i++)
-        extraDices[i]=0;
+        extraDices[i]=0;/*
     CardLocation aux = {0,1,2};
     guards[0].setPosition(aux);
     aux = {1,1,2};
     guards[1].setPosition(aux);
     aux = {2,2,2};
-    guards[2].setPosition(aux);
+    guards[2].setPosition(aux);*/
+    
+    guards[0].init();
+    list<CardLocation> path = board.getShortestPath(guards[0].getPosition(), guards[0].getTargetPosition());
+    guards[0].setNewPathToTarget(path );
+    
+    guards[1].init();
+    guards[2].init();
 }
 void BurgleBrosModel::attachView(View * view)
 {
@@ -186,7 +194,7 @@ bool BurgleBrosModel::peek(ActionOrigin playerId, CardLocation locationToPeek)
     {
         board.setCardVisible(locationToPeek);
         getP2Player(playerId)->decActions();
-        //checkTurns();
+        checkTurns();
         view->update(this);
         retVal=true;
     }
@@ -214,8 +222,6 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
             board.setCardVisible(locationToMove);
         movingPlayer->decActions();
         movingPlayer->setPosition(locationToMove);
-        //checkTurns();
-        view->update(this);
         //Cambios segun la carta a la que me movi
         //Si me movi a un atrium y hay un guard arriba o abajo se activa una alarma
         if(newCardType==ATRIUM &&
@@ -239,6 +245,8 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         if( newCardType==KEYPAD && !tokens.isThereAToken(locationToMove,KEYPAD_TOKEN))
             cout<<"tirar dados"<<endl;//hay que ver como hacemos la funcion 
         
+        checkTurns();
+        view->update(this);
         retVal=true;
     }
     return retVal;
@@ -282,7 +290,7 @@ void BurgleBrosModel::checkTurns()
     if(otherPlayer.isItsTurn() && otherPlayer.getcurrentActions() == 0)
     {
         otherPlayer.setTurn(false);
-        myPlayer.setActions(INIT_NMBR_OF_LIVES);
+        otherPlayer.setActions(INIT_NMBR_OF_LIVES);
         if(myPlayer.hasLoot(MIRROR))
             myPlayer.setActions(INIT_NMBR_OF_LIVES-1);
         moveGuard(otherPlayer.getPosition().floor);
@@ -408,6 +416,8 @@ void BurgleBrosModel::moveGuard(unsigned int floor)
         /*Si había un crow token en el tile donde se encuentra*/
         if(tokens.isThereAToken(guards[floor].getPosition(), CROW_TOKEN) && stepsToMove > 1)
             stepsToMove--;
+        view->update(this);
+        sleep(1.0);         //Esto despues cambiará (es bloqueante)
     }
 }
 void BurgleBrosModel::setGuardsNewPath(unsigned int floor)

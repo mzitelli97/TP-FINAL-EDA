@@ -10,7 +10,7 @@ static void vector2List(vector<CardLocation> &vector, list<CardLocation> &list )
 
 BurgleBrosGuard::BurgleBrosGuard()
 {
-    
+    initialized=false;
 }
 bool BurgleBrosGuard::step()
 {
@@ -39,12 +39,20 @@ BurgleBrosGuard::BurgleBrosGuard(unsigned int floor)
         diceNumber=FLOOR_2_INIT_DICE;
     else if(floor==2)
         diceNumber=FLOOR_3_INIT_DICE;
+    initialized=false;
     initCardDeck();
     isGuardsTurn=false;
-    CardLocation aux = drawCardTarget();
-    currentTarget= aux;
+    
     diceNumber = 2+floor;
 }
+
+void BurgleBrosGuard::init() 
+{
+    initialized=true;
+    position = drawCardTarget();            //Toma una carta objetivo, allí se posicionara el guard
+    currentTarget = drawCardTarget();       //La siguiente carta objetivo es hacia donde se dirige.
+}
+
 
 void BurgleBrosGuard::setPosition(string initialGPos)
 {

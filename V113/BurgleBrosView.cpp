@@ -156,6 +156,22 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     auxGuard->setPosition({2,2,1});
     auxGuardInfo_list.push_back(auxGuard);
     auxGuardInfo_list.push_back(auxGuardDie);
+    auxGuardDie = new GraphicGDie(imageLoader.getImageP(RED_DICE, 2));
+    auxGuardDie->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
+    auxGuardDie->setPosition({2,2,1});
+    auxGuard = new GraphicGuard(imageLoader.getGuardImage());
+    auxGuard->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
+    auxGuard->setPosition({2,2,1});
+    auxGuardInfo_list.push_back(auxGuard);
+    auxGuardInfo_list.push_back(auxGuardDie);
+    auxGuardDie = new GraphicGDie(imageLoader.getImageP(RED_DICE, 2));
+    auxGuardDie->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
+    auxGuardDie->setPosition({2,2,1});
+    auxGuard = new GraphicGuard(imageLoader.getGuardImage());
+    auxGuard->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
+    auxGuard->setPosition({2,2,1});
+    auxGuardInfo_list.push_back(auxGuard);
+    auxGuardInfo_list.push_back(auxGuardDie);
     /********************************/
     
     //creo una lista de graphicPlayer
@@ -329,11 +345,12 @@ void BurgleBrosView::updateCharacterCards(BurgleBrosModel *model) {
 }
 void BurgleBrosView::updateGuards(BurgleBrosModel* model)
 {
+    list<GraphicItem *>:: iterator guard = accessGraphicItems(SECOND_LAYER, (unsigned int) GUARD_INFO_LIST);
     for(int i = 0; i < BOARD_STANDARD_FLOORS; i++)
     {
         /*Here update all things related to a guard on a floor*/
         Info2DrawGuard info_guard = model->getInfo2DrawGuard(i);
-        list<GraphicItem *>:: iterator guard = accessGraphicItems(SECOND_LAYER, (unsigned int) GUARD_INFO_LIST);
+        
         if(*guard != NULL)
         {
             /*Suppose the first item is the guard item*/

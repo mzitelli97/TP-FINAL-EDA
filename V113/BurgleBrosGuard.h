@@ -27,6 +27,7 @@ public:
 	unsigned int getfloor();
 	CardLocation getPosition();
 	CardLocation getTargetPosition();
+        void init();
         bool step();                                        //DESARROLLAR (devuelve 1 si llego al objetivo)
         void setNewTarget(CardLocation alarm);              //DESARROLLAR
         void setNewPathToTarget(list<CardLocation> &pathToTarget);   //DESARROLLAR
@@ -42,6 +43,7 @@ private:
         void setPosition(string initialGPos);
 	
 	void shuffleDecks();
+        bool initialized;
 	list<CardLocation> cardDeck;
 	list<CardLocation> shownDeck;
 	CardLocation currentTarget;
