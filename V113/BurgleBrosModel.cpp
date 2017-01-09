@@ -1,4 +1,5 @@
 #include "BurgleBrosModel.h"
+#include <unistd.h>
 typedef struct
 {
     CardLocation target;
@@ -283,7 +284,7 @@ void BurgleBrosModel::checkTurns()
     if(otherPlayer.isItsTurn() && otherPlayer.getcurrentActions() == 0)
     {
         otherPlayer.setTurn(false);
-        myPlayer.setActions(INIT_NMBR_OF_LIVES);
+        otherPlayer.setActions(INIT_NMBR_OF_LIVES);
         if(myPlayer.hasLoot(MIRROR))
             myPlayer.setActions(INIT_NMBR_OF_LIVES-1);
         moveGuard(otherPlayer.getPosition().floor);
@@ -409,6 +410,8 @@ void BurgleBrosModel::moveGuard(unsigned int floor)
         /*Si había un crow token en el tile donde se encuentra*/
         if(tokens.isThereAToken(guards[floor].getPosition(), CROW_TOKEN) && stepsToMove > 1)
             stepsToMove--;
+        view->update(this);
+        sleep(1.0);         //Esto despues cambiará (es bloqueante)
     }
 }
 void BurgleBrosModel::setGuardsNewPath(unsigned int floor)
