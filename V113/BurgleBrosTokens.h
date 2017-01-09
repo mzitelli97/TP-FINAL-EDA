@@ -18,27 +18,28 @@ typedef struct
 class BurgleBrosTokens
 {
 public:
-	BurgleBrosTokens();
-        list<CardLocation> getAlarmsList();
-        list<CardLocation> getCrackedCards();
-        list<CardLocation> getStealthTokensOnFloor();
-        vector<CardLocation> getDownstairs();
-        void turnOffAlarm(CardLocation location);                    //Desarrollar
-        unsigned int howManyAlarmsOnFloor(unsigned int floor);       //FALTA DESARROLLAR
-        unsigned int howManyTokensOnCPURoom(CardName cpuRoom);
-        bool isThereAToken(CardLocation location, Token whichToken); //FALTA DESARROLLAR
-        bool isKeypadOpen();
-        CardLocation getKeypadOpenLocation();
-	~BurgleBrosTokens();
+    BurgleBrosTokens();
+    list<CardLocation> getAlarmsList();
+    list<CardLocation> getCrackedCards();
+    list<CardLocation> getStealthTokensOnFloor();
+    vector<CardLocation> getDownstairs();
+    void triggerAlarm(CardLocation location);   //Desarrollar
+    void turnOffAlarm(CardLocation location);   //Desarrollar
+    unsigned int howManyAlarmsOnFloor(unsigned int floor);       //FALTA DESARROLLAR
+    unsigned int howManyTokensOnCPURoom(CardName cpuRoom);
+    bool isThereAToken(CardLocation location, Token whichToken); //FALTA DESARROLLAR
+    bool isKeypadOpen();
+    CardLocation getKeypadOpenLocation();
+    ~BurgleBrosTokens();
 private:
-	bool isThereADownstairToken(CardLocation location);
+    bool isThereADownstairToken(CardLocation location);
     list<CardLocation> alarms;	
-        list<CardLocation> crackedCards;
-	list<CardLocation> stealthTokensOnFloor;
-        vector<CardLocation> downstairs;
-	map<CardName, unsigned int> computerRoomsInfo;
-	bool keypadOpen;
-	CardLocation keypadOpenLocation;
+    list<CardLocation> crackedCards;
+    list<CardLocation> stealthTokensOnFloor;
+    vector<CardLocation> downstairs;
+    map<CardName, unsigned int> computerRoomsInfo;
+    bool keypadOpen;
+    CardLocation keypadOpenLocation;
 };
 #endif
 
