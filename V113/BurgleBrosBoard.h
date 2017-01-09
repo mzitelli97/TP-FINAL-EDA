@@ -35,6 +35,8 @@ public:
 	CardName getCardType(std::string location);
         CardLocation getOtherServiceDuctPos(CardLocation secretDoor1);
         CardLocation getComputerRoomLocation(CardName computerRoom);
+        bool isCardUpstairs(CardLocation source, CardLocation destination);
+        bool isCardDownstairs(CardLocation source, CardLocation destination);
         list<CardLocation> getShortestPath(CardLocation source, CardLocation destination);//DESARROLLAR
         unsigned int getShortestPathLength(CardLocation source, CardLocation destination);//DESARROLLAR
 	void testBoard();
