@@ -64,7 +64,7 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                 case MENU_ITEM:
                     menuInfo = (auxInfo *)temp.info;
                     interpretAction(menuInfo->option, menuInfo->location);
-                    view->eraseMenu();
+                    //view->eraseMenu();
                     view->update(modelPointer);
                     break;
                 case LOOT_CARDS:
@@ -90,7 +90,7 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
 }
 void BurgleBrosController::interpretAction(string action, CardLocation location)
 {
-    
+    view->eraseMenu();
     if(action == "PEEK")//VER SI ESTE TIPO DE FUNCIONES TIENEN QUE RECIBIR QUE PLAYER O USAR EL QUE ESTA EN TURNO DIRECTAMENTE
         modelPointer->peek(modelPointer->getPlayerOnTurn(),location);
     else if(action=="MOVE")
