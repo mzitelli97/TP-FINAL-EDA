@@ -4,16 +4,12 @@
  * and open the template in the editor.
  */
 
-#include "BurgleBrosLoots.h"
-
-
 /* 
  * File:   GraphicPlayer.cpp
  * Author: carlos
  * 
  * Created on 30 de diciembre de 2016, 00:40
  */
-
 #include <allegro5/bitmap.h>
 #include "GraphicPlayer.h"
 
