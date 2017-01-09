@@ -256,7 +256,11 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         if(newCardType==LASER)
             cout<<"gasto una action mas, un hack token o activo alarma";
         //
-        
+        if( newCardType==MOTION)
+            ;//hay que marcar que se entro en este turno y si sale en el mismo turno tiene que gastar un token o activar una alarma, en el proximo ya puede salir
+        if( newCardType==SCANNER_DETECTOR && movingPlayer->carriesLoot())
+            tokens.triggerAlarm(locationToMove);
+            
         checkTurns();
         view->update(this);
         retVal=true;
