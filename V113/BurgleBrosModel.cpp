@@ -1,4 +1,5 @@
 #include "BurgleBrosModel.h"
+#include "BurgleBrosView.h"
 #include <unistd.h>
 typedef struct
 {
@@ -222,6 +223,10 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
             board.setCardVisible(locationToMove);
         movingPlayer->decActions();
         movingPlayer->setPosition(locationToMove);
+        view->update(this);
+        
+        //ver si aca tiene que ir algo mas antes de los cambios por cartas
+        
         //Cambios segun la carta a la que me movi
         //Si me movi a un atrium y hay un guard arriba o abajo se activa una alarma
         if(newCardType==ATRIUM &&
@@ -244,6 +249,13 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         //Si quiero entrar a un keypad y no esta abierto tengo que tirar los dados (el numero de dados se corresponde con los intentos en el mismo turno)
         if( newCardType==KEYPAD && !tokens.isThereAToken(locationToMove,KEYPAD_TOKEN))
             cout<<"tirar dados"<<endl;//hay que ver como hacemos la funcion 
+        //
+        if( newCardType==FINGERPRINT)
+            cout<<"gasto un token del room o activo alarma"<<endl;
+        //
+        if(newCardType==LASER)
+            cout<<"gasto una action mas, un hack token o activo alarma";
+        //
         
         checkTurns();
         view->update(this);
