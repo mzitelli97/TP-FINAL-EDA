@@ -17,31 +17,26 @@ typedef struct{
 }ModelEvent;*/
 #define MAX_NMBR_OF_EXTRA_DICES 6
 
-
-
-
 class BurgleBrosModel : public Model
 {
     public:
 	BurgleBrosModel();
 	vector<Info2DrawCards> getInfo2DrawCards();
-        ActionOrigin getPlayerOnTurn();
         list<Info2DrawLoot> getInfo2DrawLoot();
 	Info2DrawPlayer getInfo2DrawPlayer(ActionOrigin player);
         Info2DrawGuard getInfo2DrawGuard(unsigned int floor);
 	list<Info2DrawTokens> getInfo2DrawTokens();
         vector<unsigned int> getInfo2DrawExtraDices();
+        ActionOrigin getPlayerOnTurn();
         bool peek(ActionOrigin playerId, CardLocation locationToPeek);
         bool move(ActionOrigin playerId, CardLocation locationToMove);
         bool isMovePosible(ActionOrigin playerId,CardLocation tileToMove);  //Pregunta si una movida es posible
         bool isPeekPosible(ActionOrigin player, CardLocation tile);         //Pregunta si un peek es posible
         list<string> getPosibleActions(ActionOrigin player, CardLocation tile);   //Devuelve que acciones puede realizar el jugador indicado en esa tile
         void moveGuard(unsigned int floor);
-        //void attachController(Controller * controller);
         void attachView(View * view);
 	~BurgleBrosModel();
     private:
-	//RuleManager ruleManager;
         void checkTurns();
         bool GuardInCamera();
         void setGuardsNewPath(unsigned int floor);
@@ -54,7 +49,6 @@ class BurgleBrosModel : public Model
 	BurgleBrosTokens tokens;
 	BurgleBrosLoots loots;
 	unsigned int extraDices[MAX_NMBR_OF_EXTRA_DICES];
-        //Controller * controller;
         View * view;
 };
 #endif

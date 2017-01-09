@@ -48,6 +48,7 @@ public:
     void setScreenDimentions(unsigned int totalWidth, unsigned int totalHeight);
     virtual ~GraphicItem();
     bool isPointIn(Point point);
+    bool isZoomed();
     virtual void draw();
     virtual ItemInfo IAm() = 0;
 protected:
@@ -58,6 +59,7 @@ protected:
     double width;
     double height;
     unsigned int totalWidth, totalHeight;
+    bool zoomed;
 };
 
 #endif /* GRAPHICITEM_H */

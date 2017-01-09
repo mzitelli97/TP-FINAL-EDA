@@ -42,6 +42,12 @@ void GraphicGuardCards::push_top_card(ALLEGRO_BITMAP* card)
     cards.push_front(card);
 }
 
+void GraphicGuardCards::clearShownCards()
+{
+    cards.clear();
+}
+
+
 void GraphicGuardCards::draw()
 {
     min.x = floor * FLOOR_WIDTH + (floor+1) * SPACE_BETWEEN_FLOORS + CARD_WIDTH + SEPARATION;

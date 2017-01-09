@@ -54,6 +54,12 @@ void GraphicItem::draw()
         al_draw_scaled_bitmap(image,0,0,al_get_bitmap_width(image),al_get_bitmap_height(image),min.x,min.y,width,height,0);
 }
 
+bool GraphicItem::isZoomed()
+{
+    return zoomed;
+}
+
+
 GraphicItem::GraphicItem(const GraphicItem& orig) {
 }
 

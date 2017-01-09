@@ -24,6 +24,7 @@ public:
     virtual ~GraphicGuardCards();
     ItemInfo IAm() override;
     void push_top_card(ALLEGRO_BITMAP * card);
+    void clearShownCards();
     virtual void draw() override;
 
 private:

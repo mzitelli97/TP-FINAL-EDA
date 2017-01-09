@@ -39,6 +39,7 @@ BurgleBrosView::BurgleBrosView() {
     al_draw_text(font,al_map_rgb(0,0,0),al_get_bitmap_width(backScreen)/2.0,TITLE_H/2,ALLEGRO_ALIGN_CENTER, "EDA BURGLE BROS");
     al_destroy_font(font);
     al_set_target_backbuffer(display);
+    onZoom = false;
     
     #ifdef ICON
     ALLEGRO_BITMAP *icon = al_load_bitmap(ICON);                              //Falta checkear.
@@ -231,7 +232,8 @@ void BurgleBrosView::update(Model* auxModel)
             for( it_items = it_itemType->begin(); it_items != it_itemType->end(); it_items++)
             {
                 //cout << "hola3" << endl;
-                (*it_items)->draw();
+                if((*it_items)->isZoomed() || !onZoom)
+                    (*it_items)->draw();
                 
             }
         }
@@ -252,12 +254,13 @@ ItemInfo BurgleBrosView::itemFromClick(Point point)
         {
             for( it_items = it_itemType->begin(); it_items != it_itemType->end(); it_items++)
             {
-                if((*it_items)->isPointIn(point))
-                {
-                    retVal = (*it_items)->IAm();
-                    layer_flag = true;
-                    break;
-                }
+                if((*it_items)->isZoomed() || !onZoom)
+                    if((*it_items)->isPointIn(point))
+                    {
+                        retVal = (*it_items)->IAm();
+                        layer_flag = true;
+                        break;
+                    }
             }
         }
     }
@@ -346,6 +349,7 @@ void BurgleBrosView::updateCharacterCards(BurgleBrosModel *model) {
 void BurgleBrosView::updateGuards(BurgleBrosModel* model)
 {
     list<GraphicItem *>:: iterator guard = accessGraphicItems(SECOND_LAYER, (unsigned int) GUARD_INFO_LIST);
+    list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) GUARD_CARDS_LIST);
     for(int i = 0; i < BOARD_STANDARD_FLOORS; i++)
     {
         /*Here update all things related to a guard on a floor*/
@@ -368,13 +372,14 @@ void BurgleBrosView::updateGuards(BurgleBrosModel* model)
             guard_die->setPosition(info_guard.diePosition);
             guard_die->setNumber(imageLoader.getImageP(RED_DICE, info_guard.dieNumber));
 
-            list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) GUARD_CARDS_LIST);
             GraphicGuardCards * it_cards = dynamic_cast<GraphicGuardCards *> (*it);
+            it_cards->clearShownCards();
             while(!info_guard.shownDeck.empty())
-            {          
+            {         
                 it_cards->push_top_card(imageLoader.getImageP(info_guard.shownDeck.back()));
                 info_guard.shownDeck.pop_back();
             } 
+            it++;
         }
     }
 }
@@ -445,6 +450,23 @@ void BurgleBrosView::eraseMenu()
     list<list<GraphicItem *>>::iterator it_itemType;
     it_itemType = deleteList(THIRD_LAYER,(unsigned int) MENU_ITEM_LIST);
 }
+
+void BurgleBrosView::zoomFloor(unsigned int floor)
+{
+    onZoom = true;
+    //al_draw_scaled_bitmap(backScreen,0,0,al_get_bitmap_width(backScreen),al_get_bitmap_height(backScreen),0,0,al_get_display_width(display),al_get_display_height(display),0);
+    list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) TILE);
+    for(unsigned int i=0; i < BOARD_STANDARD_FLOORS * FLOOR_RAWS * FLOOR_COLUMNS ; i++, it++)
+    {
+        GraphicTile * tile = dynamic_cast<GraphicTile *>(*it);
+        if(tile->getLocation().floor == floor)
+        {
+            tile->zoom();
+        }
+    }
+    it = accessGraphicItems(SECOND_LAYER, (unsigned int) PLAYER_INFO_LIST);
+}
+
 
 /*CardLocation BurgleBrosView::getDDMenuLocation()
 {
