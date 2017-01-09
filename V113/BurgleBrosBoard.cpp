@@ -166,6 +166,7 @@ list<CardLocation> BurgleBrosBoard::getShortestPath(CardLocation source, CardLoc
     if(source.floor == destination.floor && source.floor <BOARD_STANDARD_FLOORS)
     {
         retVal= floors[source.floor].getShortestPath(source, destination);
+        retVal.pop_front(); //Borro el primer elemento del camino ya que es igual al source
     }
     return retVal;
 }
@@ -175,6 +176,7 @@ unsigned int BurgleBrosBoard::getShortestPathLength(CardLocation source, CardLoc
     if(source.floor == destination.floor && source.floor <BOARD_STANDARD_FLOORS)
     {
         aux = floors[source.floor].getShortestPath(source, destination);
+        aux.pop_front();    //Borro el primer elemento del camino ya que es igual al source
     }
     return aux.size();
 }

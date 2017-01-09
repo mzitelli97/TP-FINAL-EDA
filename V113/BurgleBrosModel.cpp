@@ -25,13 +25,20 @@ BurgleBrosModel::BurgleBrosModel()
     myPlayer.setTurn(true);
     otherPlayer.setTurn(false);
     for(unsigned int i =0; i <MAX_NMBR_OF_EXTRA_DICES; i++)
-        extraDices[i]=0;
+        extraDices[i]=0;/*
     CardLocation aux = {0,1,2};
     guards[0].setPosition(aux);
     aux = {1,1,2};
     guards[1].setPosition(aux);
     aux = {2,2,2};
-    guards[2].setPosition(aux);
+    guards[2].setPosition(aux);*/
+    
+    guards[0].init();
+    list<CardLocation> path = board.getShortestPath(guards[0].getPosition(), guards[0].getTargetPosition());
+    guards[0].setNewPathToTarget(path );
+    
+    guards[1].init();
+    guards[2].init();
 }
 void BurgleBrosModel::attachView(View * view)
 {
@@ -186,7 +193,7 @@ bool BurgleBrosModel::peek(ActionOrigin playerId, CardLocation locationToPeek)
     {
         board.setCardVisible(locationToPeek);
         getP2Player(playerId)->decActions();
-        //checkTurns();
+        checkTurns();
         view->update(this);
         retVal=true;
     }
@@ -211,8 +218,6 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
             board.setCardVisible(locationToMove);
         movingPlayer->decActions();
         movingPlayer->setPosition(locationToMove);
-        //checkTurns();
-        view->update(this);
         //Cambios segun la carta a la que me movi
         
         //Si me movi a un atrium y hay un guard arriba o abajo se activa una alarma
@@ -233,7 +238,8 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
             //else //Pregunto si quiere gastar 3 acciones para entrar
                 
         }    
-        
+        checkTurns();
+        view->update(this);
         retVal=true;
     }
     return retVal;

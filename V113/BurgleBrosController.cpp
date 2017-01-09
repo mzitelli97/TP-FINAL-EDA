@@ -58,7 +58,7 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
     graphic item was clicked, ex., which of the guardCard(floor), which playerCard, which playerLoot, which button*/
                 case TILE:
                     auxLocation = (CardLocation *)temp.info;
-                    view->showMenu(modelPointer->getPosibleActions(THIS_PLAYER_ACTION, *auxLocation), aux, *auxLocation);
+                    view->showMenu(modelPointer->getPosibleActions(modelPointer->getPlayerOnTurn(), *auxLocation), aux, *auxLocation);
                     view->update(modelPointer);
                     break;
                 case MENU_ITEM:
@@ -86,9 +86,9 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
 {
     
     if(action == "PEEK")//VER SI ESTE TIPO DE FUNCIONES TIENEN QUE RECIBIR QUE PLAYER O USAR EL QUE ESTA EN TURNO DIRECTAMENTE
-        modelPointer->peek(THIS_PLAYER_ACTION,location);
+        modelPointer->peek(modelPointer->getPlayerOnTurn(),location);
     else if(action=="MOVE")
-        modelPointer->move(THIS_PLAYER_ACTION,location);
+        modelPointer->move(modelPointer->getPlayerOnTurn(),location);
 }
 
 BurgleBrosController::~BurgleBrosController() {
