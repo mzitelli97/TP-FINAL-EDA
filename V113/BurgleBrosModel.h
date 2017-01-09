@@ -30,6 +30,7 @@ class BurgleBrosModel : public Model
         Info2DrawGuard getInfo2DrawGuard(unsigned int floor);
 	list<Info2DrawTokens> getInfo2DrawTokens();
         vector<unsigned int> getInfo2DrawExtraDices();
+        ActionOrigin getPlayerInTurn();
         bool peek(ActionOrigin playerId, CardLocation locationToPeek);
         bool move(ActionOrigin playerId, CardLocation locationToMove);
         bool isMovePosible(ActionOrigin playerId,CardLocation tileToMove);  //Pregunta si una movida es posible

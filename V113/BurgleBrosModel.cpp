@@ -165,6 +165,14 @@ vector<unsigned int> BurgleBrosModel::getInfo2DrawExtraDices()
     return aux;
 }
 
+ActionOrigin BurgleBrosModel::getPlayerInTurn()
+{
+    ActionOrigin retVal;
+    if(myPlayer.isItsTurn())
+        retVal = THIS_PLAYER_ACTION;
+    else retVal = OTHER_PLAYER_ACTION;
+    return retVal;
+}
 
 bool BurgleBrosModel::peek(ActionOrigin playerId, CardLocation locationToPeek)
 {
@@ -173,7 +181,7 @@ bool BurgleBrosModel::peek(ActionOrigin playerId, CardLocation locationToPeek)
     {
         board.setCardVisible(locationToPeek);
         getP2Player(playerId)->decActions();
-        //checkTurns();
+        checkTurns();
         view->update(this);
         retVal=true;
     }
@@ -189,7 +197,7 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
             board.setCardVisible(locationToMove);
         getP2Player(playerId)->decActions();
         getP2Player(playerId)->setPosition(locationToMove);
-        //checkTurns();
+        checkTurns();
         view->update(this);
         retVal=true;
     }
@@ -203,16 +211,16 @@ void BurgleBrosModel::checkTurns()
         myPlayer.setActions(INIT_NMBR_OF_LIVES);
         if(myPlayer.hasLoot(MIRROR))
             myPlayer.setActions(INIT_NMBR_OF_LIVES-1);
-        moveGuard(myPlayer.getPosition().floor);
+        //moveGuard(myPlayer.getPosition().floor);
         otherPlayer.setTurn(true);
     }
     if(otherPlayer.isItsTurn() && otherPlayer.getcurrentActions() == 0)
     {
         otherPlayer.setTurn(false);
-        myPlayer.setActions(INIT_NMBR_OF_LIVES);
-        if(myPlayer.hasLoot(MIRROR))
-            myPlayer.setActions(INIT_NMBR_OF_LIVES-1);
-        moveGuard(otherPlayer.getPosition().floor);
+        otherPlayer.setActions(INIT_NMBR_OF_LIVES);
+        if(otherPlayer.hasLoot(MIRROR))
+            otherPlayer.setActions(INIT_NMBR_OF_LIVES-1);
+        //moveGuard(otherPlayer.getPosition().floor);
         myPlayer.setTurn(true);
     }
 }

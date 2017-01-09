@@ -45,6 +45,7 @@ public:
     //CardLocation getDDMenuLocation(); //Asume que el clikc fue en un ddmenu, sino devuelve location 3 3 3
     //CardLocation point2Location(Point aux);    //Asume que el click fue en un tile, sino devuelve location 3 3 3
     void eraseMenu();
+    void zoomFloor(unsigned int floor);
     virtual ~BurgleBrosView();
 private:
     list<GraphicItem *>::iterator accessGraphicItems(Layers layer, unsigned int itemType);
@@ -60,6 +61,7 @@ private:
     ALLEGRO_DISPLAY * display;
     ALLEGRO_BITMAP * backScreen;
     ImageLoader imageLoader;
+    bool onZoom;
 
 };
 
