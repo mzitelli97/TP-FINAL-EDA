@@ -11,7 +11,8 @@ typedef struct{
     CardLocation position;
     unsigned int dieNumber;
     CardLocation diePosition;
-    list<CardLocation> shownDeck;    
+    list<CardLocation> shownDeck;
+    bool initialized;
     
 }Info2DrawGuard;
 
@@ -21,6 +22,7 @@ public:
 	BurgleBrosGuard();
         BurgleBrosGuard(unsigned int floor);
 	CardLocation getTopCard();
+        bool checkIfInitialized();
 	list<CardLocation> getPath();
         list<CardLocation> getShownDeck();
 	unsigned int getDiceNumber();

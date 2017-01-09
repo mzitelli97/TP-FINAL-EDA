@@ -29,7 +29,10 @@ void BurgleBrosGuard::setNewPathToTarget(list<CardLocation> &pathToTarget)
 {
     this->pathToTarget=pathToTarget;
 }
-
+bool BurgleBrosGuard::checkIfInitialized()
+{
+    return initialized;
+}
 BurgleBrosGuard::BurgleBrosGuard(unsigned int floor)
 {
     this->floor=floor;
