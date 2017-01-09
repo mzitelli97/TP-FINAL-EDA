@@ -19,13 +19,12 @@ typedef struct{
 
 bool operator==(const CardLocation &l, const CardLocation &r);
 bool operator<(const CardLocation &l,const CardLocation &r);
+bool operator!=(const CardLocation &l, const CardLocation &r);
 
 std::string cardLocationToProtocol(CardLocation &cardLocation);		//(0,0,0) (floor,row,column) = A1F1 (protocol)
 CardLocation protocolToCardLocation(std::string location);
 CardLocation getRandomCardLocation();
 CardLocation getRandomCardLocation(unsigned int inThisFloor);
-bool isCardUpstairs(CardLocation source, CardLocation destination);
-bool isCardDownstairs(CardLocation source, CardLocation destination);
 
 
 typedef struct{

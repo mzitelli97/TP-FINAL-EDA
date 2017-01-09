@@ -27,12 +27,14 @@ public:
 	unsigned int getfloor();
 	CardLocation getPosition();
 	CardLocation getTargetPosition();
+        void init();
         bool step();                                        //DESARROLLAR (devuelve 1 si llego al objetivo)
         void setNewTarget(CardLocation alarm);              //DESARROLLAR
-        void setNewPathToTarget(list<CardLocation> pathToTarget);   //DESARROLLAR
+        void setNewPathToTarget(list<CardLocation> &pathToTarget);   //DESARROLLAR
         CardLocation drawCardTarget();      //Devuelve una copia la que agarró
 	bool drawCardTarget(CardLocation targetCard);   //Devuelve true si encontró la carta en el mazo de las no mostradas.
         string getInitGPos();
+        void setPosition(CardLocation location);
 	~BurgleBrosGuard();
 private:
         void setPosition();
@@ -41,6 +43,7 @@ private:
         void setPosition(string initialGPos);
 	
 	void shuffleDecks();
+        bool initialized;
 	list<CardLocation> cardDeck;
 	list<CardLocation> shownDeck;
 	CardLocation currentTarget;

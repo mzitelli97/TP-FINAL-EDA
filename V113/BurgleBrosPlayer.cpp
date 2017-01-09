@@ -23,7 +23,11 @@ void BurgleBrosPlayer::decLives()
     if(lives > 0)
         lives--;
 }
-
+void BurgleBrosPlayer::getToDaChoppa()
+{
+    isOnTheHelicopter=true;
+    isOnTheBoard=false;
+}
 
 
 

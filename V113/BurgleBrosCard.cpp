@@ -52,29 +52,7 @@ CardLocation getRandomCardLocation(unsigned int inThisFloor)
     retVal.floor=inThisFloor;
     return retVal;
 }
-bool isCardUpstairs(CardLocation source, CardLocation destination)
-{
-    bool retVal=false;
-    if(source.floor<2)
-    {
-        source.floor++;
-        if(source==destination)
-            retVal=true;
-    }
-    return retVal;
-}
 
-bool isCardDownstairs(CardLocation source, CardLocation destination)
-{
-    bool retVal=false;
-    if(source.floor>0)
-    {
-        source.floor--;
-        if(source==destination)
-            retVal=true;
-    }
-    return retVal;
-}
 
 
 BurgleBrosCard::BurgleBrosCard()
@@ -218,4 +196,11 @@ bool operator==(const CardLocation &l, const CardLocation &r)
 		return true;
 	else
 		return false;
+}
+bool operator!=(const CardLocation &l, const CardLocation &r)
+{
+    if(l==r)
+        return false;
+    else
+        return true;   
 }

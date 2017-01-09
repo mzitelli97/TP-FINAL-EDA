@@ -162,12 +162,23 @@ CardLocation BurgleBrosBoard::getComputerRoomLocation(CardName computerRoom)
 
 list<CardLocation> BurgleBrosBoard::getShortestPath(CardLocation source, CardLocation destination)
 {
-    list<CardLocation> aux;
-    return aux;
+    list<CardLocation> retVal;
+    if(source.floor == destination.floor && source.floor <BOARD_STANDARD_FLOORS)
+    {
+        retVal= floors[source.floor].getShortestPath(source, destination);
+        retVal.pop_front(); //Borro el primer elemento del camino ya que es igual al source
+    }
+    return retVal;
 }
 unsigned int BurgleBrosBoard::getShortestPathLength(CardLocation source, CardLocation destination)
 {
-    return 0;
+    list<CardLocation> aux;
+    if(source.floor == destination.floor && source.floor <BOARD_STANDARD_FLOORS)
+    {
+        aux = floors[source.floor].getShortestPath(source, destination);
+        aux.pop_front();    //Borro el primer elemento del camino ya que es igual al source
+    }
+    return aux.size();
 }
 
 
@@ -274,4 +285,28 @@ CardLocation intToCardLocation(unsigned int cardNumber)
 	retVal.column = cardNumber % FLOOR_COLUMNS;
 	retVal.row = (cardNumber % (FLOOR_COLUMNS*FLOOR_COLUMNS)) / FLOOR_COLUMNS;
 	return retVal;
+}
+
+bool BurgleBrosBoard:: isCardUpstairs(CardLocation source, CardLocation destination)
+{
+    bool retVal=false;
+    if(source.floor<2)
+    {
+        source.floor++;
+        if(source==destination)
+            retVal=true;
+    }
+    return retVal;
+}
+
+bool BurgleBrosBoard::  isCardDownstairs(CardLocation source, CardLocation destination)
+{
+    bool retVal=false;
+    if(source.floor>0)
+    {
+        source.floor--;
+        if(source==destination)
+            retVal=true;
+    }
+    return retVal;
 }

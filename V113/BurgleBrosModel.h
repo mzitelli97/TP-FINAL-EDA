@@ -25,6 +25,7 @@ class BurgleBrosModel : public Model
     public:
 	BurgleBrosModel();
 	vector<Info2DrawCards> getInfo2DrawCards();
+        ActionOrigin getPlayerOnTurn();
         list<Info2DrawLoot> getInfo2DrawLoot();
 	Info2DrawPlayer getInfo2DrawPlayer(ActionOrigin player);
         Info2DrawGuard getInfo2DrawGuard(unsigned int floor);
@@ -43,6 +44,7 @@ class BurgleBrosModel : public Model
     private:
 	//RuleManager ruleManager;
         void checkTurns();
+        bool GuardInCamera();
         void setGuardsNewPath(unsigned int floor);
         BurgleBrosPlayer * getP2Player(ActionOrigin playerId);
         BurgleBrosPlayer * getP2OtherPlayer(ActionOrigin playerId);

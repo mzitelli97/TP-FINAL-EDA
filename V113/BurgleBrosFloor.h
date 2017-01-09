@@ -12,6 +12,7 @@ typedef struct{
 	CardLocation RearCard;				//Siempre se toma la de atras como la de la derecha o la de abajo.
 }wall;
 
+using namespace std;
 
 class BurgleBrosFloor
 {
@@ -21,7 +22,7 @@ public:
 	//BurgleBrosFloor(unsigned int whichFloor, std::string protocolCardTypes);
 	void initFloor(unsigned int whichFloor, std::vector<CardName> &orderedCards);
 	std::string getShortestPathProtocolar(CardLocation source, CardLocation destination);		//Devuelve con formato de protocolo
-	std::vector<CardLocation> getShortestPath(CardLocation source, CardLocation destination);		//
+	std::list<CardLocation> getShortestPath(CardLocation source, CardLocation destination);		//
 	bool isMovePossible(CardLocation source, CardRelativeLocation whereToMove);
 	bool isMovePossible(CardLocation source, CardLocation destination);
 	bool isMovePossible(std::string source, std::string destination);
@@ -40,6 +41,9 @@ public:
 private:
 	CardLocation intToIndex(unsigned int i );
 	void linkCards();
+        void initAdjList();
+        void computeDijkstra(unsigned int sourceCard, unsigned int destinationCard,vector<unsigned int> &minDist,vector<int> &prevCard);
+        vector<vector<unsigned int>> adjacentList;
 	void linkCardsWithoutWalls();
 	void generateWalls();
 	unsigned int floorNumber;
