@@ -26,6 +26,12 @@ BurgleBrosModel::BurgleBrosModel()
     otherPlayer.setTurn(false);
     for(unsigned int i =0; i <MAX_NMBR_OF_EXTRA_DICES; i++)
         extraDices[i]=0;
+    CardLocation aux = {0,1,2};
+    guards[0].setPosition(aux);
+    aux = {1,1,2};
+    guards[1].setPosition(aux);
+    aux = {2,2,2};
+    guards[2].setPosition(aux);
 }
 void BurgleBrosModel::attachView(View * view)
 {
@@ -126,6 +132,13 @@ list<Info2DrawLoot> BurgleBrosModel::getInfo2DrawLoot()
         retVal.push_back(loot);
     }
     return retVal;
+}
+ActionOrigin BurgleBrosModel::getPlayerOnTurn()
+{
+    if(myPlayer.isItsTurn())
+        return THIS_PLAYER_ACTION;
+    else
+        return OTHER_PLAYER_ACTION;
 }
 Info2DrawGuard BurgleBrosModel::getInfo2DrawGuard(unsigned int floor)
 {
@@ -430,7 +443,8 @@ void BurgleBrosModel::setGuardsNewPath(unsigned int floor)
     else        //Si no había alarmas, se toma una carta 
         newTargetLocation = guards[floor].drawCardTarget();
     guards[floor].setNewTarget(newTargetLocation);
-    guards[floor].setNewPathToTarget(board.getShortestPath(guards[floor].getPosition(), newTargetLocation));
+    list<CardLocation> temp = board.getShortestPath(guards[floor].getPosition(), newTargetLocation);
+    guards[floor].setNewPathToTarget(temp);
 }
 
 
