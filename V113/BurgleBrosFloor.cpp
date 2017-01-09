@@ -46,6 +46,12 @@ void BurgleBrosFloor::initFloor(unsigned int whichFloor, std::vector<CardName> &
         initAdjList();
 }
 
+void BurgleBrosFloor::getWalls(vector<wall> &vector) 
+{
+    for(unsigned int i=0; i<NUMBER_OF_WALLS; i++)
+        vector.push_back(walls[i]);
+}
+
 void BurgleBrosFloor::linkCards()
 {
 	linkCardsWithoutWalls();
