@@ -45,7 +45,7 @@ public:
     //CardLocation getDDMenuLocation(); //Asume que el clikc fue en un ddmenu, sino devuelve location 3 3 3
     //CardLocation point2Location(Point aux);    //Asume que el click fue en un tile, sino devuelve location 3 3 3
     void eraseMenu();
-    void zoomFloor(unsigned int floor);
+    void zoomFloor(unsigned int floor, Model * auxModel);
     virtual ~BurgleBrosView();
 private:
     list<GraphicItem *>::iterator accessGraphicItems(Layers layer, unsigned int itemType);
