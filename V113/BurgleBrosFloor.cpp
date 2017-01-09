@@ -300,7 +300,7 @@ list<CardLocation> BurgleBrosFloor::getShortestPath(CardLocation source, CardLoc
     }
     return retVal;
 }
-
+/* Creditos de la función a https://rosettacode.org/wiki/Dijkstra%27s_algorithm#C.2B.2B*/
  void BurgleBrosFloor::computeDijkstra(unsigned int sourceCard, unsigned int destinationCard,vector<unsigned int> &minDist,vector<int> &prevCard)
  {
     int numberOfCards = FLOOR_RAWS * FLOOR_COLUMNS; //El numero de cartas siempre es fijo
