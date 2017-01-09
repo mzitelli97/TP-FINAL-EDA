@@ -178,6 +178,13 @@ bool BurgleBrosModel::peek(ActionOrigin playerId, CardLocation locationToPeek)
         retVal=true;
     }
     return retVal;
+    
+    
+    
+    
+    
+    
+    
 }
 bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
 {
@@ -191,10 +198,44 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         getP2Player(playerId)->setPosition(locationToMove);
         //checkTurns();
         view->update(this);
+        //Cambios segun la carta a la que me movi
+        /*if(board.getCardType(locationToMove)==ATRIUM && guards[locationToMove.floor].getPosition()==)
+        */
         retVal=true;
     }
     return retVal;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void BurgleBrosModel::checkTurns()
 {
     if(myPlayer.isItsTurn() && myPlayer.getcurrentActions() == 0)
@@ -228,16 +269,16 @@ void BurgleBrosModel::checkTurns()
              retVal=true;
          if(board.isCardVisible(playerMovingPos))
          {
-             if(board.getCardType(playerMovingPos) == STAIR  && isCardUpstairs(playerMovingPos, tileToMove))
+             if(board.getCardType(playerMovingPos) == STAIR  && board.isCardUpstairs(playerMovingPos, tileToMove))
                 retVal=true;
-             if(board.getCardType(playerMovingPos) == WALKAWAY  &&  isCardDownstairs(playerMovingPos, tileToMove))
+             if(board.getCardType(playerMovingPos) == WALKAWAY  &&  board.isCardDownstairs(playerMovingPos, tileToMove))
                 retVal=true;
              if(board.getCardType(playerMovingPos) == SERVICE_DUCT && (board.getOtherServiceDuctPos(playerMovingPos)== tileToMove))
                 retVal=true;
          }
          if(board.getCardType(tileToMove) == SECRET_DOOR && board.isAWallBetween(playerMovingPos,tileToMove))//No hay que ver que tambien la card sea visible?
              retVal=true;
-         if(tokens.isThereAToken(playerMovingPos, DOWNSTAIRS_TOKEN) && isCardDownstairs(playerMovingPos, tileToMove))
+         if(tokens.isThereAToken(playerMovingPos, DOWNSTAIRS_TOKEN) && board.isCardDownstairs(playerMovingPos, tileToMove))
              retVal=true;
          if((playerMoving->getcurrentActions() < 3 )&&(board.getCardType(playerMovingPos) == DEADBOLT )&& !(guards[playerMoving->getPosition().floor].getPosition() == tileToMove) && !(getP2OtherPlayer(playerId)->getPosition() == tileToMove))
              retVal=false;
@@ -262,9 +303,9 @@ void BurgleBrosModel::checkTurns()
             retVal=true;
         else if(p->getCharacter()==THE_HAWK && board.isAWallBetween(p->getPosition(),tile))//HACER FUNCION WALLLSEPARATES
             retVal=true;
-        else if( board.getCardType(p->getPosition())== ATRIUM && ( isCardUpstairs(p->getPosition(),tile) || isCardDownstairs(p->getPosition(),tile) ) )
+        else if( board.getCardType(p->getPosition())== ATRIUM && ( board.isCardUpstairs(p->getPosition(),tile) || board.isCardDownstairs(p->getPosition(),tile) ) )
             retVal=true;
-        else if( board.getCardType(p->getPosition())== STAIR && isCardUpstairs(p->getPosition(),tile)  )
+        else if( board.getCardType(p->getPosition())== STAIR && board.isCardUpstairs(p->getPosition(),tile)  )
             retVal=true;
     }
     return retVal;
@@ -310,15 +351,15 @@ void BurgleBrosModel::moveGuard(unsigned int floor)
             otherPlayer.decLives();
         if(board.isCardVisible(guards[floor].getPosition()))
         {   /*Si el guardia se encuentra sobre un atrium, es visible y un jugador está arriba o debajo del guardia, ese jugador pierde una vida */
-            if(board.getCardType(guards[floor].getPosition()) == ATRIUM && (isCardDownstairs(guards[floor].getPosition(), myPlayer.getPosition()) || isCardUpstairs(guards[floor].getPosition(), myPlayer.getPosition())))
+            if(board.getCardType(guards[floor].getPosition()) == ATRIUM && (board.isCardDownstairs(guards[floor].getPosition(), myPlayer.getPosition()) || board.isCardUpstairs(guards[floor].getPosition(), myPlayer.getPosition())))
                 myPlayer.decLives();
-            if(board.getCardType(guards[floor].getPosition()) == ATRIUM && (isCardDownstairs(guards[floor].getPosition(), otherPlayer.getPosition()) || isCardUpstairs(guards[floor].getPosition(), otherPlayer.getPosition())))
+            if(board.getCardType(guards[floor].getPosition()) == ATRIUM && (board.isCardDownstairs(guards[floor].getPosition(), otherPlayer.getPosition()) || board.isCardUpstairs(guards[floor].getPosition(), otherPlayer.getPosition())))
                 otherPlayer.decLives();
         }
         /*Si un player esta sobre un atrium dado vuelta, y el guardia pasa un piso arriba o abajo de ese player, este pierde una vida*/
-        if(board.getCardType(myPlayer.getPosition()) == ATRIUM && board.isCardVisible(myPlayer.getPosition()) && (isCardDownstairs(myPlayer.getPosition(), guards[floor].getPosition()) || isCardUpstairs(myPlayer.getPosition(), guards[floor].getPosition())))
+        if(board.getCardType(myPlayer.getPosition()) == ATRIUM && board.isCardVisible(myPlayer.getPosition()) && (board.isCardDownstairs(myPlayer.getPosition(), guards[floor].getPosition()) || board.isCardUpstairs(myPlayer.getPosition(), guards[floor].getPosition())))
             myPlayer.decLives();
-        if(board.getCardType(otherPlayer.getPosition()) == ATRIUM && board.isCardVisible(otherPlayer.getPosition()) && (isCardDownstairs(otherPlayer.getPosition(), guards[floor].getPosition()) || isCardUpstairs(otherPlayer.getPosition(), guards[floor].getPosition())))
+        if(board.getCardType(otherPlayer.getPosition()) == ATRIUM && board.isCardVisible(otherPlayer.getPosition()) && (board.isCardDownstairs(otherPlayer.getPosition(), guards[floor].getPosition()) || board.isCardUpstairs(otherPlayer.getPosition(), guards[floor].getPosition())))
             otherPlayer.decLives();
         /*Si un player esta sobre un Foyer dado vuelta, y el guardia se encuentra en un tile adyacente, este pierde una vida*/
         if(board.getCardType(myPlayer.getPosition()) == FOYER && board.isCardVisible(myPlayer.getPosition()) && board.isMovePossible(myPlayer.getPosition(), guards[floor].getPosition()))
