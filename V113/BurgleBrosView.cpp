@@ -451,9 +451,10 @@ void BurgleBrosView::eraseMenu()
     it_itemType = deleteList(THIRD_LAYER,(unsigned int) MENU_ITEM_LIST);
 }
 
-void BurgleBrosView::zoomFloor(unsigned int floor)
+void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
 {
     onZoom = true;
+    BurgleBrosModel * model = (BurgleBrosModel *) auxModel; 
     //al_draw_scaled_bitmap(backScreen,0,0,al_get_bitmap_width(backScreen),al_get_bitmap_height(backScreen),0,0,al_get_display_width(display),al_get_display_height(display),0);
     list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) TILE);
     for(unsigned int i=0; i < BOARD_STANDARD_FLOORS * FLOOR_RAWS * FLOOR_COLUMNS ; i++, it++)
@@ -464,8 +465,21 @@ void BurgleBrosView::zoomFloor(unsigned int floor)
             tile->zoom();
         }
     }
+    Info2DrawPlayer infoPlayer = model->getInfo2DrawPlayer(THIS_PLAYER_ACTION);
+    if(infoPlayer.position.floor == floor);
     it = accessGraphicItems(SECOND_LAYER, (unsigned int) PLAYER_INFO_LIST);
 }
+
+void BurgleBrosView::cheatCards()
+{
+    list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) TILE);
+    for(unsigned int i=0; i < BOARD_STANDARD_FLOORS * FLOOR_RAWS * FLOOR_COLUMNS ; i++, it++)
+    {
+        GraphicTile * tile = dynamic_cast<GraphicTile *>(*it);
+        tile->setVisible(imageLoader.getImageP(3));
+    }
+}
+
 
 
 /*CardLocation BurgleBrosView::getDDMenuLocation()

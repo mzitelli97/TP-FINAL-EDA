@@ -79,6 +79,13 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                 case GUARD_CARDS:
                     guardFloor = (unsigned int *)temp.info;
                     cout<<*guardFloor<<endl;
+                case CHAR_CARD:
+                    auxPlayer = (ActionOrigin *)temp.info;
+                    if(*auxPlayer == THIS_PLAYER_ACTION)
+                    {
+                        view->cheatCards();
+                        view->update(modelPointer);
+                    }
                 default:
                     break;
             }
