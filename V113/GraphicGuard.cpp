@@ -60,6 +60,6 @@ void GraphicGuard::setPosition(CardLocation location)
 }
 void GraphicGuard::draw()
 {
-    if(image != nullptr && initialized)
+   // if(image != nullptr && initialized)
         al_draw_scaled_bitmap(image,0,0,al_get_bitmap_width(image),al_get_bitmap_height(image),min.x,min.y,width,height,0);
 }
