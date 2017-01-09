@@ -202,10 +202,13 @@ bool BurgleBrosModel::peek(ActionOrigin playerId, CardLocation locationToPeek)
 bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
 {
     bool retVal=false;
-    BurgleBrosPlayer* movingPlayer=getP2Player(playerId);
-    CardLocation prevLocation=movingPlayer->getPosition();
+
     if(isMovePosible(playerId, locationToMove))
     {
+        BurgleBrosPlayer* movingPlayer=getP2Player(playerId);
+        CardLocation prevLocation=movingPlayer->getPosition();
+        CardName newCardType=board.getCardType(locationToMove);
+        
         
         if(!board.isCardVisible(locationToMove))
             board.setCardVisible(locationToMove);
@@ -214,25 +217,27 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         //checkTurns();
         view->update(this);
         //Cambios segun la carta a la que me movi
-        
         //Si me movi a un atrium y hay un guard arriba o abajo se activa una alarma
-        if(board.getCardType(locationToMove)==ATRIUM &&
+        if(newCardType==ATRIUM &&
                 ( (locationToMove.floor>0 && board.isCardDownstairs(locationToMove,guards[locationToMove.floor-1].getPosition()) ) || ( locationToMove.floor<2 && board.isCardUpstairs(locationToMove,guards[locationToMove.floor+1].getPosition()) ) ) )
             movingPlayer->decLives();//OJO SI PIERDE NO HACE NADA POR AHORA!!!!!!!!!!!!!
         //Si me movi a una camara y hay un guardia en otra camara activo una alarma en donde estoy
-        if( board.getCardType(locationToMove)==CAMERA && GuardInCamera() && locationToMove!= guards[locationToMove.floor].getPosition() ) 
+        if( newCardType==CAMERA && GuardInCamera() && locationToMove!= guards[locationToMove.floor].getPosition() ) 
             tokens.triggerAlarm(locationToMove);
         //Si me movi a un foyer y hay un guardia en un tile adyacente me ve (a menos que haya una pared)
-        /*if( board.getCardType(locationToMove)== FOYER && board.neighbours(locationToMove, guards[locationToMove.floor].getPosition() ) )
+        /*if( newCardType== FOYER && board.neighbours(locationToMove, guards[locationToMove.floor].getPosition() ) )
             movingPlayer->decLives();//OJO SI PIERDE NO HACE NADA POR AHORA!!!!!!!!!!!!!*/
         //Si me movi a un deadbolt tengo que gastar 3 acciones para entrar o vuelvo a donde estaba
-        if( board.getCardType(locationToMove)==DEADBOLT)
+        if( newCardType==DEADBOLT)
         {
             if(movingPlayer->getcurrentActions()<3)
                 movingPlayer->setPosition(prevLocation);
             //else //Pregunto si quiere gastar 3 acciones para entrar
                 
         }    
+        //Si quiero entrar a un keypad y no esta abierto tengo que tirar los dados (el numero de dados se corresponde con los intentos en el mismo turno)
+        if( newCardType==KEYPAD && !tokens.isThereAToken(locationToMove,KEYPAD_TOKEN))
+            cout<<"tirar dados"<<endl;//hay que ver como hacemos la funcion 
         
         retVal=true;
     }
@@ -254,7 +259,7 @@ bool BurgleBrosModel::GuardInCamera()
     bool GuardOnCamera=false;
     for(unsigned int i=0; i<BOARD_STANDARD_FLOORS; ++i)
     {
-        if(board.getCardType(guards[i].getPosition())== CAMERA)
+        if(board.getCardType(guards[i].getPosition())== CAMERA && board.isCardVisible(guards[i].getPosition()))//chequeo que la camara este dada vuelta
         {    
             GuardOnCamera=true;
             break;
