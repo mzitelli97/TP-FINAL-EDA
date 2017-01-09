@@ -46,6 +46,7 @@ public:
     //CardLocation point2Location(Point aux);    //Asume que el click fue en un tile, sino devuelve location 3 3 3
     void eraseMenu();
     void zoomFloor(unsigned int floor, Model * auxModel);
+    void cheatCards();
     virtual ~BurgleBrosView();
 private:
     list<GraphicItem *>::iterator accessGraphicItems(Layers layer, unsigned int itemType);
