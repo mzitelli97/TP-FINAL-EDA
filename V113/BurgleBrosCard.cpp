@@ -197,3 +197,10 @@ bool operator==(const CardLocation &l, const CardLocation &r)
 	else
 		return false;
 }
+bool operator!=(const CardLocation &l, const CardLocation &r)
+{
+    if(l==r)
+        return false;
+    else
+        return true;   
+}

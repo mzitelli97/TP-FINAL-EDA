@@ -20,6 +20,7 @@ public:
 	bool isMovePossible(std::string source, std::string destination);
 	BurgleBrosCard getCardCopy(CardLocation location);
 	BurgleBrosCard getCardCopy(std::string location);
+        bool neighbours(CardLocation cardA,CardLocation cardB);//Desarrollar
 	void setCardVisible(CardLocation location);
 	void setCardVisible(std::string location);
 	bool isCardVisible(CardLocation location);

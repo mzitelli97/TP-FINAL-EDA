@@ -43,6 +43,7 @@ class BurgleBrosModel : public Model
     private:
 	//RuleManager ruleManager;
         void checkTurns();
+        bool GuardInCamera();
         void setGuardsNewPath(unsigned int floor);
         BurgleBrosPlayer * getP2Player(ActionOrigin playerId);
         BurgleBrosPlayer * getP2OtherPlayer(ActionOrigin playerId);

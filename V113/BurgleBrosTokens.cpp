@@ -18,6 +18,12 @@ void BurgleBrosTokens::turnOffAlarm(CardLocation location)
 {
     
 }
+
+void BurgleBrosTokens::triggerAlarm(CardLocation location)
+{
+    cout<<"ALARM!"<<endl;
+}
+
 unsigned int BurgleBrosTokens::howManyAlarmsOnFloor(unsigned int floor)
 {
     unsigned int aux=0;
