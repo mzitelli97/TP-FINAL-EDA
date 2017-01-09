@@ -40,7 +40,11 @@ BurgleBrosModel::BurgleBrosModel()
     guards[0].setNewPathToTarget(path );
     
     guards[1].init();
+    path = board.getShortestPath(guards[1].getPosition(), guards[1].getTargetPosition());
+    guards[1].setNewPathToTarget(path );
     guards[2].init();
+    path = board.getShortestPath(guards[2].getPosition(), guards[2].getTargetPosition());
+    guards[2].setNewPathToTarget(path );
 }
 void BurgleBrosModel::attachView(View * view)
 {
@@ -152,6 +156,7 @@ Info2DrawGuard BurgleBrosModel::getInfo2DrawGuard(unsigned int floor)
         info.diePosition=guards[floor].getTargetPosition();
         info.position=guards[floor].getPosition();
         info.shownDeck=guards[floor].getShownDeck();
+        info.initialized=guards[floor].checkIfInitialized();
     }
     return info;
 }
