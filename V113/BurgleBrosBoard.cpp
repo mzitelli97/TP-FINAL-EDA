@@ -162,12 +162,21 @@ CardLocation BurgleBrosBoard::getComputerRoomLocation(CardName computerRoom)
 
 list<CardLocation> BurgleBrosBoard::getShortestPath(CardLocation source, CardLocation destination)
 {
-    list<CardLocation> aux;
-    return aux;
+    list<CardLocation> retVal;
+    if(source.floor == destination.floor && source.floor <BOARD_STANDARD_FLOORS)
+    {
+        retVal= floors[source.floor].getShortestPath(source, destination);
+    }
+    return retVal;
 }
 unsigned int BurgleBrosBoard::getShortestPathLength(CardLocation source, CardLocation destination)
 {
-    return 0;
+    list<CardLocation> aux;
+    if(source.floor == destination.floor && source.floor <BOARD_STANDARD_FLOORS)
+    {
+        aux = floors[source.floor].getShortestPath(source, destination);
+    }
+    return aux.size();
 }
 
 

@@ -1,7 +1,15 @@
 #include "BurgleBrosFloor.h"
 #include <cstring>
+#include <limits>
+#include <set>
+
+using namespace std;
+
+#define NO_PREVIOUS (-1)
+
 std::string testFunction(bool yesOrNo);
 std::string testFunction2(CardName entry);
+unsigned int indexToInt(CardLocation &i );
 
 BurgleBrosFloor::BurgleBrosFloor(unsigned int whichFloor, std::vector<CardName> &orderedCards)
 {
@@ -35,6 +43,7 @@ void BurgleBrosFloor::initFloor(unsigned int whichFloor, std::vector<CardName> &
 		}
 		linkCards();
 	}
+        initAdjList();
 }
 
 void BurgleBrosFloor::linkCards()
@@ -133,6 +142,28 @@ void BurgleBrosFloor::generateWalls()
 		std::memcpy(walls, wallTemp, sizeof(wallTemp));
 	}
 }
+
+void BurgleBrosFloor::initAdjList()
+{
+    vector<unsigned int> aux;
+    adjacentList.reserve(FLOOR_COLUMNS * FLOOR_RAWS);
+    for(unsigned int i=0; i < FLOOR_COLUMNS * FLOOR_RAWS; i++)
+        adjacentList.push_back(aux);
+    unsigned int count;
+    vector<vector<unsigned int>>::iterator tileIt;
+    for(tileIt = adjacentList.begin(), count=0;tileIt!=adjacentList.end(); tileIt++,count++ )
+    {
+        if(cards[count/FLOOR_COLUMNS][count%FLOOR_COLUMNS].hasNeighboard(RIGHT_CARD))
+            tileIt->push_back(count+1);
+        if(cards[count/FLOOR_COLUMNS][count%FLOOR_COLUMNS].hasNeighboard(DOWN_CARD))
+            tileIt->push_back(count+FLOOR_COLUMNS);
+        if(cards[count/FLOOR_COLUMNS][count%FLOOR_COLUMNS].hasNeighboard(LEFT_CARD))
+            tileIt->push_back(count-1);
+        if(cards[count/FLOOR_COLUMNS][count%FLOOR_COLUMNS].hasNeighboard(UP_CARD))
+            tileIt->push_back(count-FLOOR_COLUMNS);
+    }
+}
+
 bool BurgleBrosFloor::isAWallBetween(CardLocation tile1, CardLocation tile2)
 {
     bool retVal=false;
@@ -145,6 +176,7 @@ bool BurgleBrosFloor::isAWallBetween(CardLocation tile1, CardLocation tile2)
     }
     return retVal;
 }
+
 bool BurgleBrosFloor::isMovePossible(CardLocation source, CardRelativeLocation whereToMove)
 {
 	return cards[source.row][source.column].hasNeighboard(whereToMove);
@@ -251,6 +283,65 @@ CardLocation BurgleBrosFloor::intToIndex(unsigned int i)
 	aux.column = i%FLOOR_COLUMNS;
 	aux.row = i / FLOOR_RAWS;
 	return aux;
+}
+
+list<CardLocation> BurgleBrosFloor::getShortestPath(CardLocation source, CardLocation destination)
+{
+    vector<unsigned int> minDist;
+    vector<int> prevCard;
+    unsigned int auxCard = indexToInt(destination);
+    list<CardLocation> retVal;
+    computeDijkstra(indexToInt(source), indexToInt(destination), minDist, prevCard);
+    
+    for ( ; auxCard != NO_PREVIOUS; auxCard = prevCard[auxCard])
+    {    
+        CardLocation temp = {floorNumber, auxCard/FLOOR_COLUMNS,auxCard%FLOOR_COLUMNS};
+        retVal.push_front(temp);
+    }
+    return retVal;
+}
+
+ void BurgleBrosFloor::computeDijkstra(unsigned int sourceCard, unsigned int destinationCard,vector<unsigned int> &minDist,vector<int> &prevCard)
+ {
+    int numberOfCards = FLOOR_RAWS * FLOOR_COLUMNS; //El numero de cartas siempre es fijo
+    bool pathToTargetObtained=false;
+    minDist.clear();                       
+    minDist.resize(numberOfCards, std::numeric_limits<int>::max());      //Pongo todas las etiquetas de djikstra en infinito, como trabajo con ints, le pongo max.
+    minDist[sourceCard] = 0;                                        //La distancia desde el vertice que partí hacia si mismo es 0.
+    prevCard.clear();                               
+    prevCard.resize(numberOfCards, NO_PREVIOUS);
+    set<pair<unsigned int, int> > cardQueue;
+    cardQueue.insert(make_pair(minDist[sourceCard], sourceCard));  //Parto del vértice sourceCard.
+    while (!pathToTargetObtained && !cardQueue.empty())             
+    {
+        unsigned int dist = cardQueue.begin()->first;
+        int A = cardQueue.begin()->second;
+        cardQueue.erase(cardQueue.begin());
+        vector<unsigned int> &neighbors = adjacentList[A];
+        vector<unsigned int>::iterator neighbor_iter = neighbors.begin();
+        for (neighbor_iter = neighbors.begin();neighbor_iter != neighbors.end();neighbor_iter++)
+        {
+            
+            unsigned int B = *neighbor_iter;
+            unsigned int totalDist = dist + 1; //El peso de entre dos vértices siempre es 1 para nuestro grafo.
+            if (totalDist < minDist[B]) {
+	        cardQueue.erase(std::make_pair(minDist[B], B));
+ 
+	        minDist[B] = totalDist;
+	        prevCard[B] = A;
+	        cardQueue.insert(std::make_pair(minDist[B], B));
+                if(B==destinationCard)
+                {
+                    pathToTargetObtained=true;
+                    break;
+                }
+	    }
+        }
+    }
+ }
+unsigned int indexToInt(CardLocation &i )
+{
+    return i.row*FLOOR_COLUMNS+i.column;
 }
 
 BurgleBrosFloor::~BurgleBrosFloor()
