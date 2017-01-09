@@ -7,15 +7,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/diego/NetBeansProjects/GIT%20repo/TP-FINAL-EDA/TP-FINAL-EDA/V113/BurgleBrosPlayer.h</file>
-            <file>file:/home/diego/NetBeansProjects/GIT%20repo/TP-FINAL-EDA/TP-FINAL-EDA/V113/BurgleBrosModel.h</file>
-            <file>file:/home/diego/NetBeansProjects/GIT%20repo/TP-FINAL-EDA/TP-FINAL-EDA/V113/BurgleBrosFloor.h</file>
-            <file>file:/home/diego/NetBeansProjects/GIT%20repo/TP-FINAL-EDA/TP-FINAL-EDA/V113/BurgleBrosGuard.h</file>
-            <file>file:/home/diego/NetBeansProjects/GIT%20repo/TP-FINAL-EDA/TP-FINAL-EDA/V113/BurgleBrosTokens.cpp</file>
-            <file>file:/home/diego/NetBeansProjects/GIT%20repo/TP-FINAL-EDA/TP-FINAL-EDA/V113/BurgleBrosTokens.h</file>
-            <file>file:/home/diego/NetBeansProjects/GIT%20repo/TP-FINAL-EDA/TP-FINAL-EDA/V113/BurgleBrosModel.cpp</file>
-            <file>file:/home/diego/NetBeansProjects/GIT%20repo/TP-FINAL-EDA/TP-FINAL-EDA/V113/BurgleBrosBoard.cpp</file>
-            <file>file:/home/diego/NetBeansProjects/GIT%20repo/TP-FINAL-EDA/TP-FINAL-EDA/V113/BurgleBrosBoard.h</file>
+            <file>file:/home/javier/Desktop/GitHub/TP-FINAL-EDA/V113/BurgleBrosGuard.cpp</file>
+            <file>file:/home/javier/Desktop/GitHub/TP-FINAL-EDA/V113/BurgleBrosGuard.h</file>
+            <file>file:/home/javier/Desktop/GitHub/TP-FINAL-EDA/V113/GraphicGuard.cpp</file>
+            <file>file:/home/javier/Desktop/GitHub/TP-FINAL-EDA/V113/BurgleBrosFloor.cpp</file>
+            <file>file:/home/javier/Desktop/GitHub/TP-FINAL-EDA/V113/BurgleBrosModel.h</file>
+            <file>file:/home/javier/Desktop/GitHub/TP-FINAL-EDA/V113/main.cpp</file>
+            <file>file:/home/javier/Desktop/GitHub/TP-FINAL-EDA/V113/BurgleBrosModel.cpp</file>
+            <file>file:/home/javier/Desktop/GitHub/TP-FINAL-EDA/V113/BurgleBrosView.cpp</file>
         </group>
     </open-files>
 </project-private>

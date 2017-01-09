@@ -42,11 +42,6 @@ int main(int argc, char** argv) {
             gui.parseEvento();
     }
     
-    /*view.update(&model);
-    al_rest(5);
-    model.move(THIS_PLAYER_ACTION, {0,1,0});
-    view.update(&model);
-    al_rest(5);*/
     return 0;
 }
 
