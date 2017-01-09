@@ -24,9 +24,11 @@ public:
     GraphicGuard(const GraphicGuard& orig);
     virtual ~GraphicGuard();
     ItemInfo IAm() override;
+    virtual void draw();
+    void setInitialized(bool setInitialized);
     void setPosition(CardLocation location);
 private:
-
+    bool initialized;
 };
 
 #endif /* GRAPHICGUARD_H */
