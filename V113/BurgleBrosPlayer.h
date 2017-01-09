@@ -37,6 +37,7 @@ public:
 	bool isOnBoard();
 	bool carriesLoot();
         void setPosition(CardLocation location);
+        void getToDaChoppa();
         bool hasLoot(Loot loot);
         void pickRandomPlayer();
         void pickRandomPlayer(CharacterName exceptThis);
