@@ -49,7 +49,7 @@ void GraphicToken::setPosition(CardLocation location, unsigned int number)
     else tile_height = tile_width;
     double yDiff = (myHeight-FLOOR_RAWS*tile_height)/(FLOOR_RAWS+1);
     double xDiff = (myWidth-FLOOR_COLUMNS*tile_width)/(FLOOR_COLUMNS+1);
-     if (xDiff > yDiff) yDiff = xDiff;
+    if ((xDiff > yDiff && !zoomed) || (xDiff < yDiff && zoomed)) yDiff = xDiff;
     else xDiff = yDiff;
     min.y = yDiff * ((float)location.row+1) + tile_height * (float)location.row;
     min.x = xDiff * ((float)location.column+1) + tile_width * (float)location.column;
@@ -61,16 +61,18 @@ void GraphicToken::setPosition(CardLocation location, unsigned int number)
     max.y = min.y + tile_height;
     max.x = min.x + tile_width;
     
-    min.x = min.x + tile_width/1.5 - 10.0 * (number%6);
-    max.x = max.x - 10.0 * (number%6);
-    max.y = max.y - tile_height/1.5;
+    //min.x = min.x + tile_width/1.3 - 10.0 * (number%6);
+    min.x = min.x + tile_width/1.4;
+    //max.x = max.x - 10.0 * (number%6);
+    min.y = min.y + 10.0 * (number%6);
+    max.y = max.y - tile_height/1.4 + 10.0 * (number%6);
     
     width = max.x-min.x;
     height = max.y- min.y;
     if(number>=6)
     {
-        min.y = min.y + height;
-        max.y = max.y + height;
+        min.x = min.x - width;
+        max.x = max.x - width;
     }
     center.x= (min.x+max.x)/2;
     center.y= (min.y+max.y)/2;
