@@ -252,9 +252,9 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         if( newCardType== FOYER && board.adjacentCards(locationToMove, guards[locationToMove.floor].getPosition() ) )
             movingPlayer->decLives();//OJO SI PIERDE NO HACE NADA POR AHORA!!!!!!!!!!!!!
         //Si me movi a un deadbolt tengo que gastar 3 acciones para entrar o vuelvo a donde estaba
-        if( newCardType==DEADBOLT)
+        if( newCardType==DEADBOLT && locationToMove!=guards[locationToMove.floor].getPosition() && locationToMove!=getP2OtherPlayer(playerId)->getPosition())
         {       //DIEGO: Soy javi, creo que también faltaría agregar si hay alguien en el deabolt (eran 3 acciones si no habia nadie en el deadbolt). En ismoveposible está si lo queres pegar, un if enorme
-            if(movingPlayer->getcurrentActions()<3)
+            if(movingPlayer->getcurrentActions()<3 && !cardWasVisible)
                 movingPlayer->setPosition(prevLocation);
             //else //Pregunto si quiere gastar 3 acciones para entrar
                 
@@ -392,7 +392,7 @@ void BurgleBrosModel::checkTurns()
              retVal=true;
          if(tokens.isThereAToken(playerMovingPos, DOWNSTAIRS_TOKEN) && board.isCardDownstairs(playerMovingPos, tileToMove))
              retVal=true;
-         if((playerMoving->getcurrentActions() < 3 )&&(board.getCardType(tileToMove) == DEADBOLT )&& !(guards[playerMoving->getPosition().floor].getPosition() == tileToMove) && !(getP2OtherPlayer(playerId)->getPosition() == tileToMove))
+         if((playerMoving->getcurrentActions() <4 )&& board.isCardVisible(tileToMove) &&(board.getCardType(tileToMove) == DEADBOLT )&& !(guards[playerMoving->getPosition().floor].getPosition() == tileToMove) && !(getP2OtherPlayer(playerId)->getPosition() == tileToMove))
              retVal=false;
          if(board.getCardType(playerMovingPos) == SERVICE_DUCT && (board.getOtherServiceDuctPos(playerMovingPos)== tileToMove) && playerMoving->hasLoot(PAINTING) && board.isCardVisible(tileToMove))
              retVal=false;
