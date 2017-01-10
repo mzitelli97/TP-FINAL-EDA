@@ -95,13 +95,13 @@ list<Info2DrawTokens> BurgleBrosModel::getInfo2DrawTokens()
     for(vector<CardLocation>::iterator it=downstairsTokens.begin(); it!=downstairsTokens.end(); it++)
     {
         toPush.position=*it;
-        toPush.token=ALARM_TOKEN;
+        toPush.token=DOWNSTAIRS_TOKEN;
         retVal.push_back(toPush);
     }
     for(list<CardLocation>::iterator it=auxList.begin(); it!=auxList.end(); it++)
     {
         toPush.position=*it;
-        toPush.token=DOWNSTAIRS_TOKEN;
+        toPush.token=ALARM_TOKEN;
         retVal.push_back(toPush);
     }
     auxList = tokens.getCrackedCards();
@@ -260,9 +260,6 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         //Si quiero entrar a un keypad y no esta abierto tengo que tirar los dados (el numero de dados se corresponde con los intentos en el mismo turno)
         if( newCardType==KEYPAD && !tokens.isThereAToken(locationToMove,KEYPAD_TOKEN))
             cout<<"tirar dados"<<endl;//hay que ver como hacemos la funcion 
-        //DIEGO! Soy javi. Creo que si queres entrar al keypad y no está abierto no debería pasar is move possible
-        //Me parece que la manera para solucionar el keypad es que haya una funcion "ThrowDices" que intente desbloquear el keypad
-        //Sin embargo, quedaría en move el caso en el que se mueve al keypad estando este no visible y ahí vuelve a la posición que estaba antes el jugador.
         if( newCardType==FINGERPRINT)
             cout<<"gasto un token del room o activo alarma"<<endl;
         //DIEGO: Javi de vuelta, te dejo un mini ejemplo para usar el askforspent ok que quedó ayer y los tokens
@@ -564,7 +561,7 @@ void BurgleBrosModel::moveGuard(unsigned int floor)
         if(tokens.isThereAToken(guards[floor].getPosition(), CROW_TOKEN) && stepsToMove > 1)
             stepsToMove--;
         view->update(this);
-        sleep(1.0);         //Esto despues cambiará (es bloqueante)
+        //sleep(1.0);         //Esto despues cambiará (es bloqueante)
     }
 }
 void BurgleBrosModel::setGuardsNewPath(unsigned int floor)
