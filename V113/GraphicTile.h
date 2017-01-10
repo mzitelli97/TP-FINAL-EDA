@@ -27,7 +27,7 @@ public:
     virtual ~GraphicTile();
     virtual ItemInfo IAm();
     virtual void draw();
-    void zoom();
+    void toggleZoom();
 private:
     //clickItem me;
     void setPosition(CardLocation location);

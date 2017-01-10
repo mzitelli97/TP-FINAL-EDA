@@ -24,6 +24,7 @@ public:
     virtual ~GraphicToken();
     ItemInfo IAm() override;
     void setPosition(CardLocation location, unsigned int number);
+    void toggleZoom();
 
 private:
     GraphicToken();

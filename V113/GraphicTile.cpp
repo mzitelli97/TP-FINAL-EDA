@@ -79,25 +79,29 @@ ItemInfo GraphicTile::IAm()
     return retVal;
 }
 
-void GraphicTile::zoom()
+void GraphicTile::toggleZoom()
 {
-    zoomed = true;
-    double tile_height = totalHeight/6.0, tile_width = totalWidth/6.0;   
-    if (tile_height < tile_width) tile_width = tile_height;
-    else tile_height = tile_width;
-    double yDiff = (totalHeight-FLOOR_RAWS*tile_height)/(FLOOR_RAWS+1);
-    double xDiff = (totalWidth-FLOOR_COLUMNS*tile_width)/(FLOOR_COLUMNS+1);
-     if (xDiff < yDiff) yDiff = xDiff;
-    else xDiff = yDiff;
-    min.y =  yDiff * ((float)location.row+1) + tile_height * (float)location.row;
-    min.x =  xDiff * ((float)location.column+1) + tile_width * (float)location.column;
-    max.y = min.y + tile_height;
-    max.x = min.x + tile_width;
-    
-    center.x= (min.x+max.x)/2;
-    center.y= (min.y+max.y)/2;
-    width = max.x-min.x;
-    height = max.y- min.y;
+    zoomed ^= true;
+    if(zoomed)
+    {
+        double tile_height = totalHeight/6.0, tile_width = totalWidth/6.0;   
+        if (tile_height < tile_width) tile_width = tile_height;
+        else tile_height = tile_width;
+        double yDiff = (totalHeight-FLOOR_RAWS*tile_height)/(FLOOR_RAWS+1);
+        double xDiff = (totalWidth-FLOOR_COLUMNS*tile_width)/(FLOOR_COLUMNS+1);
+         if (xDiff < yDiff) yDiff = xDiff;
+        else xDiff = yDiff;
+        min.y =  yDiff * ((float)location.row+1) + tile_height * (float)location.row;
+        min.x =  xDiff * ((float)location.column+1) + tile_width * (float)location.column;
+        max.y = min.y + tile_height;
+        max.x = min.x + tile_width;
+
+        center.x= (min.x+max.x)/2;
+        center.y= (min.y+max.y)/2;
+        width = max.x-min.x;
+        height = max.y- min.y;
+    }
+    else setPosition(location);
 }
 
 

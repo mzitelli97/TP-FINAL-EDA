@@ -20,6 +20,7 @@ GraphicGuard::GraphicGuard(ALLEGRO_BITMAP* image)
 {
     this->image = image;
     initialized=false;
+    zoomed = false;
 }
 
 GraphicGuard::GraphicGuard(const GraphicGuard& orig) {
