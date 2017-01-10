@@ -346,7 +346,11 @@ bool BurgleBrosModel::crackSafe(ActionOrigin playerId, CardLocation safe)
         list<CardLocation> tilesCrackedOnThisAction = board.tilesWithCracked(aux,safe.floor);
         tokens.addCrackTokenOn(tilesCrackedOnThisAction);
         if(tokens.isSafeOpened(safe.floor))
+        {
             p->attachLoot(loots.getLoot(playerId));
+            board.setSafeCracked(safe.floor);
+            triggerSilentAlarm(safe.floor);
+        }
         view->update(this);
         checkTurns();
     }
@@ -605,7 +609,13 @@ void BurgleBrosModel::setGuardsNewPath(unsigned int floor)
     list<CardLocation> temp = board.getShortestPath(guards[floor].getPosition(), newTargetLocation);
     guards[floor].setNewPathToTarget(temp);
 }
-
+void BurgleBrosModel::triggerSilentAlarm(unsigned int floor)
+{
+    for(int i=floor; i >= 0; i--)
+    {
+        guards[i].incDiceNumber();
+    }
+}
 
 
 

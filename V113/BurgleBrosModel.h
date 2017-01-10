@@ -53,6 +53,7 @@ class BurgleBrosModel : public Model
 	~BurgleBrosModel();
     private:
         void checkTurns();
+        void triggerSilentAlarm(unsigned int floor);
         bool GuardInCamera();
         void setGuardsNewPath(unsigned int floor);
         BurgleBrosPlayer * getP2Player(ActionOrigin playerId);
