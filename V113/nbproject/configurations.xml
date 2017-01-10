@@ -8,6 +8,7 @@
         <itemPath>BurgleBrosBoard.h</itemPath>
         <itemPath>BurgleBrosCard.h</itemPath>
         <itemPath>BurgleBrosController.h</itemPath>
+        <itemPath>BurgleBrosDices.h</itemPath>
         <itemPath>BurgleBrosFloor.h</itemPath>
         <itemPath>BurgleBrosGuard.h</itemPath>
         <itemPath>BurgleBrosLoots.h</itemPath>
@@ -55,6 +56,7 @@
         <itemPath>BurgleBrosBoard.cpp</itemPath>
         <itemPath>BurgleBrosCard.cpp</itemPath>
         <itemPath>BurgleBrosController.cpp</itemPath>
+        <itemPath>BurgleBrosDices.cpp</itemPath>
         <itemPath>BurgleBrosFloor.cpp</itemPath>
         <itemPath>BurgleBrosGuard.cpp</itemPath>
         <itemPath>BurgleBrosLoots.cpp</itemPath>
@@ -64,6 +66,8 @@
         <itemPath>BurgleBrosView.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f4" displayName="Events" projectFiles="true">
+        <itemPath>EventData.cpp</itemPath>
+        <itemPath>MouseED.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="Graphics" projectFiles="true">
         <itemPath>GraphicEDices.cpp</itemPath>
@@ -84,12 +88,10 @@
         <itemPath>Networking.cpp</itemPath>
       </logicalFolder>
       <itemPath>Controller.cpp</itemPath>
-      <itemPath>EventData.cpp</itemPath>
       <itemPath>GUI.cpp</itemPath>
       <itemPath>ImageLoader.cpp</itemPath>
       <itemPath>LibsInit.cpp</itemPath>
       <itemPath>Model.cpp</itemPath>
-      <itemPath>MouseED.cpp</itemPath>
       <itemPath>StrNmbrFieldToArray.cpp</itemPath>
       <itemPath>View.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
@@ -196,6 +198,10 @@
       <item path="BurgleBrosController.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="BurgleBrosController.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="BurgleBrosDices.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosDices.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="BurgleBrosFloor.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -351,6 +357,10 @@
       <item path="BurgleBrosController.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="BurgleBrosController.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="BurgleBrosDices.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosDices.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="BurgleBrosFloor.cpp" ex="false" tool="1" flavor2="0">
       </item>

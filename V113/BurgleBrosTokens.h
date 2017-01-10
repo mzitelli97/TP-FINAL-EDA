@@ -26,6 +26,8 @@ public:
     list<CardLocation> getCrackedCards();
     pair<CardLocation, unsigned int> getStealthTokensOnFloor();
     pair<bool, CardLocation> getKeypadToken();
+    pair<bool, CardLocation> getPersianKittyToken();
+    pair<bool, CardLocation> getCrowToken();
     vector<CardLocation> getDownstairs();
     void triggerAlarm(CardLocation location);   
     void turnOffAlarm(CardLocation location);
