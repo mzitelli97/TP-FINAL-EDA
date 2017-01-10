@@ -21,6 +21,8 @@ void BurgleBrosBoard::initBoard()
 {
 	vector<CardName> firstFloor, secondFloor, thirdFloor;
 	getEachFloorTiles(&firstFloor, &secondFloor, &thirdFloor);
+        firstFloor[0]=FINGERPRINT;
+        firstFloor[4]=COMPUTER_ROOM_FINGERPRINT;
 	floors[0].initFloor(0, firstFloor);
 	floors[1].initFloor(1, secondFloor);
 	floors[2].initFloor(2, thirdFloor);
@@ -29,8 +31,8 @@ void BurgleBrosBoard::initBoard(string startInfo)
 {
 	vector<CardName> allFloors;
 	vector<CardName> firstFloor, secondFloor, thirdFloor;
-	startInfoToVector(startInfo, &allFloors);
-	sliceVector(allFloors, &firstFloor, &secondFloor, &thirdFloor);
+	startInfoToVector(startInfo, &allFloors);        
+        sliceVector(allFloors, &firstFloor, &secondFloor, &thirdFloor);
 	floors[0].initFloor(0, firstFloor);
 	floors[1].initFloor(1, secondFloor);
 	floors[2].initFloor(2, thirdFloor);
