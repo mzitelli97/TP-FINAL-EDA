@@ -14,20 +14,29 @@ string token2Str(Token token)
 	default: return "Error";
 	}
 }
-void BurgleBrosTokens::turnOffAlarm(CardLocation location)
-{
-    
-}
 
 void BurgleBrosTokens::triggerAlarm(CardLocation location)
 {
     cout<<"ALARM!"<<endl;
+    list<CardLocation>::iterator it;
+    for(it=alarms.begin(); it != alarms.end(); it ++)       //Recorro la lista 
+    {
+        if( *it ==location )                                //Si ya había una alarma en esa locación corto el for
+            break;
+    }
+    if(it==alarms.end())                                    //Si nunca se salio del for, o sea no había ninguna alarma en la location que pasaron
+        alarms.push_back(location);                          //Pongo una alarma allí
 }
-
-unsigned int BurgleBrosTokens::howManyAlarmsOnFloor(unsigned int floor)
+void BurgleBrosTokens::turnOffAlarm(CardLocation location)
 {
-    unsigned int aux=0;
-    return aux;
+    for(list<CardLocation>::iterator it=alarms.begin(); it != alarms.end(); it ++)       //Recorro la lista de alarmas
+    {
+        if( *it ==location )                                //Si ya había una alarma en esa locación, la borro y termino la función.
+        {
+            alarms.erase(it);
+            break;
+        }
+    }
 }
 
 BurgleBrosTokens::BurgleBrosTokens()
@@ -54,7 +63,7 @@ list<CardLocation> BurgleBrosTokens::getCrackedCards()
 {
     return crackedCards;
 }
-list<CardLocation> BurgleBrosTokens::getStealthTokensOnFloor()
+pair<CardLocation, unsigned int> BurgleBrosTokens::getStealthTokensOnFloor()
 {
     return stealthTokensOnFloor;
 }
@@ -62,13 +71,19 @@ unsigned int BurgleBrosTokens::howManyTokensOnCPURoom(CardName cpuRoom)
 {
     return computerRoomsInfo[cpuRoom];
 }
-bool BurgleBrosTokens::isKeypadOpen()
+pair<bool, CardLocation> BurgleBrosTokens::getKeypadToken()
 {
-    return keypadOpen;
+    return keypad;
 }
-CardLocation BurgleBrosTokens::getKeypadOpenLocation()
+unsigned int BurgleBrosTokens::howManyAlarmsOnFloor(unsigned int floor)
 {
-    return keypadOpenLocation;
+    unsigned int count=0;
+    for(list<CardLocation>::iterator it=alarms.begin(); it != alarms.end(); it ++)       //Recorro la lista de alarmas
+    {
+        if( it->floor == floor)   //Si la alarma esta en el piso que pasaron.                            
+            count++;
+    }
+    return count;
 }
 bool BurgleBrosTokens::isThereAToken(CardLocation location, Token whichToken)
 {
@@ -78,10 +93,22 @@ bool BurgleBrosTokens::isThereAToken(CardLocation location, Token whichToken)
         case DOWNSTAIRS_TOKEN:
             retVal=isThereADownstairToken(location);
             break;
+        case ALARM_TOKEN:
+            retVal=isThereAnAlarmToken(location);
+            break;
     }
     return retVal;
 }
-
+bool BurgleBrosTokens::isThereAnAlarmToken(CardLocation location)
+{
+    bool retVal=false;
+    for(list<CardLocation>::iterator it=alarms.begin(); it != alarms.end(); it ++)       //Recorro la lista de alarmas
+    {
+        if( *it == location)                            
+            retVal=true;
+    }
+    return true;
+}
 
 bool BurgleBrosTokens::isThereADownstairToken(CardLocation location)
 {
@@ -93,8 +120,54 @@ bool BurgleBrosTokens::isThereADownstairToken(CardLocation location)
     }
     return retVal;
 }
-
-
+bool BurgleBrosTokens::isThereAStealthToken(CardLocation location)
+{
+    bool retVal=false;
+    if(stealthTokensOnFloor.first==location && stealthTokensOnFloor.second > 0)
+        retVal=true;
+    return retVal;
+}
+void BurgleBrosTokens::lavatoryRevealed(CardLocation lavatoryLocation)
+{
+    stealthTokensOnFloor.first = lavatoryLocation;
+    stealthTokensOnFloor.second = LAVATORY_STEALTH_TOKENS;
+}
+void BurgleBrosTokens::useLavatoryToken()
+{
+    if(stealthTokensOnFloor.second > 0)
+        stealthTokensOnFloor.second--;
+}
+void BurgleBrosTokens::placeDownstairToken(CardLocation location)
+{
+    downstairs.push_back(location);
+}
+void BurgleBrosTokens::addHackTokenOn(CardName computerRoom)
+{
+    if(computerRoomsInfo[computerRoom] < MAX_HACK_TOKENS_ON_COMPUTER_ROOM)
+        computerRoomsInfo[computerRoom]++;
+}
+void BurgleBrosTokens::removeOneHackTokenOf(CardName computerRoom)
+{
+    if(computerRoomsInfo[computerRoom] > 0)
+        computerRoomsInfo[computerRoom]--;
+}
+void BurgleBrosTokens::addCrackTokenOn(CardLocation location)
+{
+    crackedCards.push_back(location);
+}
+bool BurgleBrosTokens::isSafeOpened(unsigned int floor)
+{
+    bool retVal=false;
+    unsigned int count=0;
+    for(list<CardLocation>::iterator it= crackedCards.begin(); it!=crackedCards.end(); it++)
+    {
+        if(it->floor == floor)
+            count++;
+    }
+    if(count == 6) //Si había 6 cartas crackeadas en el mismo piso significa que el safe de ese piso esta crackeado
+        retVal=true;
+    return retVal;
+}
 BurgleBrosTokens::~BurgleBrosTokens()
 {
 }

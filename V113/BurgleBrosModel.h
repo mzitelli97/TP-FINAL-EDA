@@ -37,8 +37,10 @@ class BurgleBrosModel : public Model
         ActionOrigin getPlayerOnTurn();
         bool peek(ActionOrigin playerId, CardLocation locationToPeek);
         bool move(ActionOrigin playerId, CardLocation locationToMove);
+        bool addToken(ActionOrigin playerId, CardLocation locationToAddToken);
         bool isMovePosible(ActionOrigin playerId,CardLocation tileToMove);  //Pregunta si una movida es posible
         bool isPeekPosible(ActionOrigin player, CardLocation tile);         //Pregunta si un peek es posible
+        bool isAddTokenPosible(ActionOrigin player, CardLocation tile);
         list<string> getPosibleActions(ActionOrigin player, CardLocation tile);   //Devuelve que acciones puede realizar el jugador indicado en esa tile
         void moveGuard(unsigned int floor);
         void attachView(View * view);

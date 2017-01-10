@@ -113,6 +113,8 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
         modelPointer->peek(modelPointer->getPlayerOnTurn(),location);
     else if(action=="MOVE")
         modelPointer->move(modelPointer->getPlayerOnTurn(),location);
+    else if(action=="ADD TOKEN")
+        modelPointer->addToken(modelPointer->getPlayerOnTurn(),location);
 }
 
 BurgleBrosController::~BurgleBrosController() {

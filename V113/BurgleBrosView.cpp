@@ -184,7 +184,7 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     list<GraphicItem *> auxStaticItem_list;
     for(int i = 0; i < NUMBER_OF_WALLS * BOARD_STANDARD_FLOORS; i++)
     {
-        GraphicWall * wall_i = new GraphicWall();
+        GraphicWall * wall_i = new GraphicWall;
         wall_i->setScreenDimentions(al_get_display_width(display), al_get_display_height(display));
         wall_i->setLocation(infoWalls[i].FrontCard, infoWalls[i].RearCard);
         auxStaticItem_list.push_back(wall_i);

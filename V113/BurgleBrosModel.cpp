@@ -110,16 +110,16 @@ list<Info2DrawTokens> BurgleBrosModel::getInfo2DrawTokens()
         toPush.token= SAFE_TOKEN;
         retVal.push_back(toPush);
     }
-    auxList = tokens.getStealthTokensOnFloor();
+/*    auxList = tokens.getStealthTokensOnFloor();
     for(list<CardLocation>::iterator it=auxList.begin(); it!=auxList.end(); it++)
     {
         toPush.position=*it;
         toPush.token= STEALTH_TOKEN;
         retVal.push_back(toPush);
-    }
-    if(tokens.isKeypadOpen())
+    }*/
+    if(tokens.getKeypadToken().first)
     {
-        toPush.position= tokens.getKeypadOpenLocation();
+        toPush.position= tokens.getKeypadToken().second;
         toPush.token= KEYPAD_TOKEN;
         retVal.push_back(toPush);
     }
@@ -286,6 +286,20 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
     }
     return retVal;
 }
+bool BurgleBrosModel::addToken(ActionOrigin playerId, CardLocation locationToAddToken)
+{
+    bool retVal=false;
+    BurgleBrosPlayer* movingPlayer=getP2Player(playerId);
+    if(isAddTokenPosible(playerId, locationToAddToken))
+    {
+        tokens.addHackTokenOn(board.getCardType(locationToAddToken));
+        movingPlayer->decActions();
+        checkTurns();
+        view->update(this);
+        retVal=true;
+    }
+    return retVal;
+}
 
 
 
@@ -385,6 +399,18 @@ void BurgleBrosModel::checkTurns()
     }
     return retVal;
 }
+bool BurgleBrosModel::isAddTokenPosible(ActionOrigin player, CardLocation tile)
+{
+    bool retVal=false;
+    BurgleBrosPlayer* p;
+    p = getP2Player(player);
+    if(p->isItsTurn() && (board.isCardVisible(tile)) && p->getPosition() == tile)
+    {
+        if(IS_COMPUTER_ROOM(board.getCardType(tile)) && tokens.howManyTokensOnCPURoom(board.getCardType(tile)) < MAX_HACK_TOKENS_ON_COMPUTER_ROOM)
+            retVal=true;
+    }
+    return retVal;
+}
 list<string> BurgleBrosModel::getPosibleActions(ActionOrigin player, CardLocation tile)
 {
     list<string> aux;
@@ -392,6 +418,8 @@ list<string> BurgleBrosModel::getPosibleActions(ActionOrigin player, CardLocatio
         aux.push_back("MOVE");
     if(isPeekPosible(player, tile))
         aux.push_back("PEEK");
+    if(isAddTokenPosible(player, tile))
+        aux.push_back("ADD TOKEN");
     return aux;
 }
  

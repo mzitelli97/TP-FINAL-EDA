@@ -28,6 +28,7 @@
         <itemPath>GraphicPlayerCard.h</itemPath>
         <itemPath>GraphicTile.h</itemPath>
         <itemPath>GraphicToken.h</itemPath>
+        <itemPath>GraphicWall.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="Networking" projectFiles="true">
       </logicalFolder>
@@ -76,6 +77,7 @@
         <itemPath>GraphicPlayerCard.cpp</itemPath>
         <itemPath>GraphicTile.cpp</itemPath>
         <itemPath>GraphicToken.cpp</itemPath>
+        <itemPath>GraphicWall.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="Networking" projectFiles="true">
         <itemPath>NetworkInterface.cpp</itemPath>
