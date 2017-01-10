@@ -94,13 +94,13 @@ list<Info2DrawTokens> BurgleBrosModel::getInfo2DrawTokens()
     for(vector<CardLocation>::iterator it=downstairsTokens.begin(); it!=downstairsTokens.end(); it++)
     {
         toPush.position=*it;
-        toPush.token=ALARM_TOKEN;
+        toPush.token=DOWNSTAIRS_TOKEN;
         retVal.push_back(toPush);
     }
     for(list<CardLocation>::iterator it=auxList.begin(); it!=auxList.end(); it++)
     {
         toPush.position=*it;
-        toPush.token=DOWNSTAIRS_TOKEN;
+        toPush.token=ALARM_TOKEN;
         retVal.push_back(toPush);
     }
     auxList = tokens.getCrackedCards();
