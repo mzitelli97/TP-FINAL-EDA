@@ -50,9 +50,10 @@ CardLocation BurgleBrosFloor::getSafeLocation()
     CardLocation retVal,aux;
     for(aux.row=0; aux.row<FLOOR_RAWS; aux.row++)
     {
-        for(aux.column=0;aux.column<FLOOR_COLUMNS;aux.column)
+        for(aux.column=0;aux.column<FLOOR_COLUMNS;aux.column++)
         {
-            if(cards[aux.row][aux.column].getCardType() == SAFE)
+            CardName name=cards[aux.row][aux.column].getCardType();
+            if(name == SAFE)
                 retVal=aux;
         }
     }
