@@ -293,16 +293,28 @@ void BurgleBrosView::updateTokens(BurgleBrosModel* model)
     /*For test*/
     Info2DrawTokens aux = {ALARM_TOKEN, {1,1,0}};
     info_tokens.push_back(aux);
-    aux = {KEYPAD_TOKEN, {2,2,1}};
+    aux = {KEYPAD_TOKEN, {1,1,0}};
+    info_tokens.push_back(aux);
+    aux = {HACK_TOKEN, {1,1,0}};
+    info_tokens.push_back(aux);
+    aux = {STEALTH_TOKEN, {1,1,0}};
+    info_tokens.push_back(aux);
+    aux = {SAFE_TOKEN, {1,1,0}};
+    info_tokens.push_back(aux);
+    aux = {PERSIAN_KITTY_TOKEN, {1,1,0}};
+    info_tokens.push_back(aux);
+    aux = {DOWNSTAIRS_TOKEN, {1,1,0}};
     info_tokens.push_back(aux);
     /***********/
+    
+    map<CardLocation, unsigned int> tokensCount;
     
     list<Info2DrawTokens>::iterator it;
     for( it = info_tokens.begin(); it != info_tokens.end(); it++)
     {
         GraphicToken * token = new GraphicToken(imageLoader.getImageP(it->token));
         token->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
-        token->setPosition(it->position);
+        token->setPosition(it->position, tokensCount[it->position]++);
         it_itemType->push_back(token);
     }
 }
@@ -470,16 +482,15 @@ void BurgleBrosView::eraseMenu()
 
 void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
 {
-    onZoom = true;
-    BurgleBrosModel * model = (BurgleBrosModel *) auxModel; 
-    //al_draw_scaled_bitmap(backScreen,0,0,al_get_bitmap_width(backScreen),al_get_bitmap_height(backScreen),0,0,al_get_display_width(display),al_get_display_height(display),0);
+    onZoom ^= true;
+    BurgleBrosModel * model = (BurgleBrosModel *) auxModel;
     list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) TILE);
     for(unsigned int i=0; i < BOARD_STANDARD_FLOORS * FLOOR_RAWS * FLOOR_COLUMNS ; i++, it++)
     {
         GraphicTile * tile = dynamic_cast<GraphicTile *>(*it);
         if(tile->getLocation().floor == floor)
         {
-            tile->zoom();
+            tile->toggleZoom();
         }
     }
 
@@ -487,13 +498,10 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
     //First Player
     Info2DrawPlayer player = model->getInfo2DrawPlayer(THIS_PLAYER_ACTION);
     GraphicPlayer* gPlayer = dynamic_cast<GraphicPlayer*> (*it); //ASUMI QUE EL PRIMERO ES THIS_PLAYER
-    if(gPlayer!=NULL)       //VER EL ORDEN DE LAS COSAS, DEBERIA ANDAR IGUAL
+    if(gPlayer!=NULL)
     {
         if(player.position.floor == floor)
-        {
-            //gPlayer->setLocation(player.position);
-            gPlayer->zoom(player.position);
-        }
+            gPlayer->toggleZoom();
     }
     //Second Player
     player = model->getInfo2DrawPlayer(OTHER_PLAYER_ACTION);
@@ -501,9 +509,10 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
     if(gPlayer!=NULL)
     {
         if(player.position.floor == floor)
-            //gPlayer->setLocation(player.position);
-            gPlayer->zoom(player.position);
+            gPlayer->toggleZoom();
     }
+    
+    
     
 }
 
@@ -516,51 +525,3 @@ void BurgleBrosView::cheatCards()
         tile->setVisible(imageLoader.getImageP(3));
     }
 }
-
-
-
-/*CardLocation BurgleBrosView::getDDMenuLocation()
-{
-    CardLocation retVal = {3,3,3};
-    list<GraphicItem *>::iterator it = accessGraphicItems(THIRD_LAYER, (unsigned int) MENU_ITEM_LIST);
-    GraphicMenuItem * menu = dynamic_cast<GraphicMenuItem *> (*it);
-    if(menu != nullptr)
-        retVal = menu->getTile();
-    return retVal;
-}
-
-string BurgleBrosView::getDDMenuOption(Point aux)
-{
-    string retVal = "";
-    list<list<list<GraphicItem *>>>::iterator it_layers = graphicInterface.begin();
-    advance(it_layers, THIRD_LAYER);
-    list<list<GraphicItem *>>::iterator it_itemType = it_layers->begin();
-    advance(it_itemType, MENU_ITEM_LIST);
-    list<GraphicItem *>::iterator it_items;
-    for(it_items = it_itemType->begin(); it_items != it_itemType->end(); it_items++)
-    {
-        GraphicMenuItem * menu_items = dynamic_cast<GraphicMenuItem *>(*it_items);
-        if(menu_items->isPointIn(aux))
-        {
-            retVal = menu_items->getOption();
-            break;
-        }
-    }
-    return retVal;
-}
-
-CardLocation BurgleBrosView::point2Location(Point aux)
-{
-    CardLocation retVal = {3,3,3};
-    list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) TILES_LIST);
-    for(unsigned int i=0; i < BOARD_STANDARD_FLOORS * FLOOR_RAWS * FLOOR_COLUMNS ; i++, it++)
-    {
-        GraphicTile * tile = dynamic_cast<GraphicTile *>(*it);
-        if(tile->isPointIn(aux))
-        {
-            retVal = tile->getLocation();
-            break;
-        }
-    }
-    return retVal;
-}*/

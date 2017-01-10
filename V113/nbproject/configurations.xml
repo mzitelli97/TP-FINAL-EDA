@@ -32,6 +32,8 @@
         <itemPath>GraphicWall.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="Networking" projectFiles="true">
+        <itemPath>NetworkInterface.h</itemPath>
+        <itemPath>Networking.h</itemPath>
       </logicalFolder>
       <itemPath>Controller.h</itemPath>
       <itemPath>EventData.h</itemPath>
@@ -40,8 +42,6 @@
       <itemPath>LibsInit.h</itemPath>
       <itemPath>Model.h</itemPath>
       <itemPath>MouseED.h</itemPath>
-      <itemPath>NetworkInterface.h</itemPath>
-      <itemPath>Networking.h</itemPath>
       <itemPath>StrNmbrFieldToArray.h</itemPath>
       <itemPath>View.h</itemPath>
     </logicalFolder>

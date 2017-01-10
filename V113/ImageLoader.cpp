@@ -117,7 +117,7 @@ bool ImageLoader::loadCharactersFigures()
 bool ImageLoader::loadTokens()
 {
 	bool retVal = false;
-	for (unsigned int i = (unsigned int)STEALTH_TOKEN; i <= (unsigned int)KEYPAD_TOKEN; i++)
+	for (unsigned int i = (unsigned int)STEALTH_TOKEN; i <= (unsigned int)CROW_TOKEN; i++)
 	{
 		string fullPath = ((string)IMAGE_FOLDER + (string)TOKENS_SUBFOLDER + token2Str((Token)i) + IMAGE_EXTENSION);
 		ALLEGRO_BITMAP *bitmapTemp = al_load_bitmap(fullPath.c_str());

@@ -19,6 +19,7 @@ GraphicGDie::GraphicGDie() {
 GraphicGDie::GraphicGDie(ALLEGRO_BITMAP* image)
 {
     this->image = image;
+    zoomed = false;
 }
 
 GraphicGDie::GraphicGDie(const GraphicGDie& orig) {

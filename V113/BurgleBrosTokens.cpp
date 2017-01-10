@@ -3,16 +3,18 @@
 #include "BurgleBrosTokens.h"
 string token2Str(Token token)
 {
-	switch (token)
-	{
-	case STEALTH_TOKEN:return "Stealth";
-	case ALARM_TOKEN:return "Alarm";
-	case SAFE_TOKEN:return "Safe";
-	case PERSIAN_KITTY_TOKEN:return "Persian kitty";
-	case HACK_TOKEN:return "Hack";
-	case KEYPAD_TOKEN:return "Keypad open";
-	default: return "Error";
-	}
+    switch (token)
+    {
+    case STEALTH_TOKEN:return "Stealth";
+    case ALARM_TOKEN:return "Alarm";
+    case SAFE_TOKEN:return "Safe";
+    case PERSIAN_KITTY_TOKEN:return "Persian kitty";
+    case HACK_TOKEN:return "Hack";
+    case KEYPAD_TOKEN:return "Keypad open";
+    case DOWNSTAIRS_TOKEN: return "Downstairs";
+    case CROW_TOKEN: return "Crow";
+    default: return "Error";
+    }
 }
 
 void BurgleBrosTokens::triggerAlarm(CardLocation location)

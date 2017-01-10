@@ -26,7 +26,7 @@ public:
     virtual ~GraphicPlayer();
     void setLocation(CardLocation l);
     virtual ItemInfo IAm();
-    void zoom(CardLocation location);
+    void toggleZoom();
 private:
     GraphicPlayer();
 

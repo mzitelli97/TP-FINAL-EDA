@@ -19,6 +19,7 @@ GraphicToken::GraphicToken() {
 GraphicToken::GraphicToken(ALLEGRO_BITMAP* image)
 {
     this->image = image;
+    zoomed = false;
 }
 
 GraphicToken::GraphicToken(const GraphicToken& orig) {
@@ -32,14 +33,22 @@ ItemInfo GraphicToken::IAm()
     return {NO_ITEM, nullptr};
 }
 
-void GraphicToken::setPosition(CardLocation location)
+void GraphicToken::setPosition(CardLocation location, unsigned int number)
 {
     /*Convert logic location to graphic location*/
-    double tile_height = TILES_HEIGHT, tile_width = TILES_WIDTH;   
+    double myWidth = FLOOR_WIDTH , myHeight = FLOOR_HEIGHT;
+    double tile_height = TILES_HEIGHT, tile_width = TILES_WIDTH;
+    if(zoomed)
+    {
+        myHeight = totalHeight;
+        myWidth = totalWidth;
+        tile_width = myWidth/6.0;
+        tile_height = myHeight/6.0;
+    }
     if (tile_height < tile_width) tile_width = tile_height;
     else tile_height = tile_width;
-    double yDiff = (FLOOR_HEIGHT-FLOOR_RAWS*tile_height)/(FLOOR_RAWS+1);
-    double xDiff = (FLOOR_WIDTH-FLOOR_COLUMNS*tile_width)/(FLOOR_COLUMNS+1);
+    double yDiff = (myHeight-FLOOR_RAWS*tile_height)/(FLOOR_RAWS+1);
+    double xDiff = (myWidth-FLOOR_COLUMNS*tile_width)/(FLOOR_COLUMNS+1);
      if (xDiff > yDiff) yDiff = xDiff;
     else xDiff = yDiff;
     min.y = FLOOR_MIN_Y + yDiff * ((float)location.row+1) + tile_height * (float)location.row;
@@ -47,13 +56,22 @@ void GraphicToken::setPosition(CardLocation location)
     max.y = min.y + tile_height;
     max.x = min.x + tile_width;
     
-    min.x = min.x + TILES_WIDTH/1.5;
-    max.y = max.y - TILES_HEIGHT/1.5;
+    min.x = min.x + tile_width/1.5 - 10.0 * (number%6);
+    max.x = max.x - 10.0 * (number%6);
+    max.y = max.y - tile_height/1.5;
     
-    center.x= (min.x+max.x)/2;
-    center.y= (min.y+max.y)/2;
     width = max.x-min.x;
     height = max.y- min.y;
+    if(number>=6)
+    {
+        min.y = min.y + height;
+        max.y = max.y + height;
+    }
+    center.x= (min.x+max.x)/2;
+    center.y= (min.y+max.y)/2;
 }
 
-
+void GraphicToken::toggleZoom()
+{
+    zoomed ^= true;
+}
