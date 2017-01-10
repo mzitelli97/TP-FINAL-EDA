@@ -13,6 +13,7 @@ GraphicMenuItem::GraphicMenuItem(Point point, CardLocation tile)
         height = 20;
         max.x = min.x + width;
         max.y = min.y + height;
+        zoomed = false;
 }
 
 void GraphicMenuItem::draw()

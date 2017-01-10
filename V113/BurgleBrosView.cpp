@@ -473,6 +473,7 @@ void BurgleBrosView::showMenu(list<string> options, Point click, CardLocation ti
         GraphicMenuItem * option_i = new GraphicMenuItem({click.x,click.y+i*20}, tile);
         option_i->setOption(*it);
         option_i->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
+        if(onZoom) option_i->toggleZoom();
         menu_items->push_back((GraphicItem *) option_i);
     }
 }
@@ -515,8 +516,6 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
         if(player.position.floor == floor)
             gPlayer->toggleZoom();
     }
-    
-    
     
     list<GraphicItem *>:: iterator guard = accessGraphicItems(SECOND_LAYER, (unsigned int) GUARD_INFO_LIST);
     Info2DrawGuard info_guard = model->getInfo2DrawGuard(floor);
