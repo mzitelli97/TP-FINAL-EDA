@@ -82,7 +82,10 @@ string BurgleBrosGuard::getInitGPos()
 {
     return cardLocationToProtocol(position) + cardLocationToProtocol(*(shownDeck.begin()));
 }
-
+void BurgleBrosGuard::incDiceNumber()
+{
+    diceNumber++;
+}
 CardLocation BurgleBrosGuard::getTopCard()
 {
     return *(cardDeck.begin());
