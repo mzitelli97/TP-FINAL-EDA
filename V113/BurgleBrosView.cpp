@@ -433,10 +433,15 @@ list<list<GraphicItem *>>::iterator BurgleBrosView::deleteList(Layers layer, uns
     aux2->clear();
     return aux2;
 }
-int BurgleBrosView::yesNoMessageBox(vector<string> &msg)
+bool BurgleBrosView::yesNoMessageBox(vector<string> &msg)
 {
-    int retVal;
-    while(!(retVal=al_show_native_message_box(display, msg[0].c_str(),msg[1].c_str(),msg[2].c_str(),NULL, ALLEGRO_MESSAGEBOX_YES_NO)));
+    int aux;
+    bool retVal=false;
+    while(!(aux=al_show_native_message_box(display, msg[0].c_str(),msg[1].c_str(),msg[2].c_str(),NULL, ALLEGRO_MESSAGEBOX_YES_NO)));
+    if(aux==1)  //Si se tocó yes
+        retVal=true;
+    if(aux==2)  //Si se tocó no
+        retVal=false;
     return retVal;
 }
 

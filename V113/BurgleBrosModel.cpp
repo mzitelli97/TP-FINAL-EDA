@@ -253,7 +253,7 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
             movingPlayer->decLives();//OJO SI PIERDE NO HACE NADA POR AHORA!!!!!!!!!!!!!
         //Si me movi a un deadbolt tengo que gastar 3 acciones para entrar o vuelvo a donde estaba
         if( newCardType==DEADBOLT)
-        {
+        {       //DIEGO: Soy javi, creo que también faltaría agregar si hay alguien en el deabolt (eran 3 acciones si no habia nadie en el deadbolt). En ismoveposible está si lo queres pegar, un if enorme
             if(movingPlayer->getcurrentActions()<3)
                 movingPlayer->setPosition(prevLocation);
             //else //Pregunto si quiere gastar 3 acciones para entrar
@@ -262,10 +262,33 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         //Si quiero entrar a un keypad y no esta abierto tengo que tirar los dados (el numero de dados se corresponde con los intentos en el mismo turno)
         if( newCardType==KEYPAD && !tokens.isThereAToken(locationToMove,KEYPAD_TOKEN))
             cout<<"tirar dados"<<endl;//hay que ver como hacemos la funcion 
-        //
+        //DIEGO! Soy javi. Creo que si queres entrar al keypad y no está abierto no debería pasar is move possible
+        //Me parece que la manera para solucionar el keypad es que haya una funcion "ThrowDices" que intente desbloquear el keypad
+        //Sin embargo, quedaría en move el caso en el que se mueve al keypad estando este no visible y ahí vuelve a la posición que estaba antes el jugador.
         if( newCardType==FINGERPRINT)
             cout<<"gasto un token del room o activo alarma"<<endl;
-        //
+        //DIEGO: Javi de vuelta, te dejo un mini ejemplo para usar el askforspent ok que quedó ayer y los tokens
+        /*  if( newCardType==FINGERPRINT)
+         *  {
+         *      if(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_FINGERPRINT) //Si hay tokens disponibles
+         *      {
+            *      vector<string> msgToShow(ENTER_FINGERPRINT_TEXT);  //Esto contiene el título del cartelito, subtitulo y texto, por eso vector
+            *      bool userChoice = controller->askForSpentOK(msgToShow);
+            *      if(userChoice)
+            *           tokens.removeOneHackTokenOf(COMPUTER_ROOM_FINGERPRINT);
+         *         else
+         *         {
+         *               tokens.triggerAlarm(locationToMove);
+         *               setGuardsNewPath(locationToMove.floor); //Así se pone el dado a donde tiene que ir, este lo necesitaba desde el guardia
+         *          }
+         *      }
+         *      else
+    *           {
+    *               tokens.triggerAlarm(locationToMove);
+    *               setGuardsNewPath(locationToMove.floor); //Así se pone el dado a donde tiene que ir, este lo necesitaba desde el guardia
+    *           }
+         * 
+         *  */
         if(newCardType==LASER)
             cout<<"gasto una action mas, un hack token o activo alarma";
         //
@@ -369,7 +392,7 @@ void BurgleBrosModel::checkTurns()
              retVal=true;
          if(tokens.isThereAToken(playerMovingPos, DOWNSTAIRS_TOKEN) && board.isCardDownstairs(playerMovingPos, tileToMove))
              retVal=true;
-         if((playerMoving->getcurrentActions() < 3 )&&(board.getCardType(playerMovingPos) == DEADBOLT )&& !(guards[playerMoving->getPosition().floor].getPosition() == tileToMove) && !(getP2OtherPlayer(playerId)->getPosition() == tileToMove))
+         if((playerMoving->getcurrentActions() < 3 )&&(board.getCardType(tileToMove) == DEADBOLT )&& !(guards[playerMoving->getPosition().floor].getPosition() == tileToMove) && !(getP2OtherPlayer(playerId)->getPosition() == tileToMove))
              retVal=false;
          if(board.getCardType(playerMovingPos) == SERVICE_DUCT && (board.getOtherServiceDuctPos(playerMovingPos)== tileToMove) && playerMoving->hasLoot(PAINTING) && board.isCardVisible(tileToMove))
              retVal=false;

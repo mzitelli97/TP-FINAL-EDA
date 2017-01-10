@@ -25,7 +25,7 @@ public:
     void attachModel(BurgleBrosModel *gamePointer);
     void attachView(BurgleBrosView *view);
     void parseMouseEvent(EventData *mouseEvent);
-    virtual int yesNoMessageBox(vector<string> &message);
+    virtual bool askForSpentOK(vector<string> &message);
     virtual ~BurgleBrosController();
 private:
     void interpretAction(string action, CardLocation location);
