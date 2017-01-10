@@ -50,6 +50,13 @@ void BurgleBrosModel::attachView(View * view)
 {
     this->view = view;
 }
+vector<wall> BurgleBrosModel::getInfo2DrawWalls()
+{
+    vector<wall> aux;
+    aux.reserve(BOARD_STANDARD_FLOORS * NUMBER_OF_WALLS);
+    board.getWalls(aux);
+    return aux;
+}
 vector<Info2DrawCards> BurgleBrosModel::getInfo2DrawCards()
 {
     vector<Info2DrawCards> retVal;
