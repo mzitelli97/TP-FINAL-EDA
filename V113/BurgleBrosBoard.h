@@ -15,9 +15,8 @@ public:
 	void initBoard();						//Inicializa el tablero repartiendo las cartas entre los distintos pisos.
 	void initBoard(std::string startInfo);	//Inicializa el tablero interpretando el msj "START_INFO" del protocolo.
 	std::string getStartInfo();				//Devuelve todos los numeros de tipos de carta en el formato del paquete "START_INFO" sin la ultima coma y sin la posici�n del guardia.
-	bool isMovePossible(CardLocation source, CardRelativeLocation whereToMove);
-	bool isMovePossible(CardLocation source, CardLocation destination);
-	bool isMovePossible(std::string source, std::string destination);
+	bool adjacentCards(CardLocation source, CardRelativeLocation whereToMove);
+	bool adjacentCards(CardLocation source, CardLocation destination);
 	BurgleBrosCard getCardCopy(CardLocation location);
 	BurgleBrosCard getCardCopy(std::string location);
         bool neighbours(CardLocation cardA,CardLocation cardB);//Desarrollar

@@ -55,18 +55,15 @@ bool BurgleBrosBoard::isAWallBetween(CardLocation tile1, CardLocation tile2)
     else
         return false;
 }
-bool BurgleBrosBoard::isMovePossible(CardLocation source, CardRelativeLocation whereToMove)
+bool BurgleBrosBoard::adjacentCards(CardLocation source, CardRelativeLocation whereToMove)
 {
 	return floors[source.floor].isMovePossible(source, whereToMove);
 }
-bool BurgleBrosBoard::isMovePossible(CardLocation source, CardLocation destination)
+bool BurgleBrosBoard::adjacentCards(CardLocation source, CardLocation destination)
 {
 	return floors[source.floor].isMovePossible(source, destination);
 }
-bool BurgleBrosBoard::isMovePossible(std::string source, std::string destination)
-{
-	return isMovePossible(protocolToCardLocation(source), protocolToCardLocation(destination));
-}
+
 BurgleBrosCard BurgleBrosBoard::getCardCopy(CardLocation location)
 {
 	return floors[location.floor].getCardCopy(location);
