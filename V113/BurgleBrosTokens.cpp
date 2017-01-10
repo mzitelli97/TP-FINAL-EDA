@@ -168,6 +168,14 @@ bool BurgleBrosTokens::isSafeOpened(unsigned int floor)
         retVal=true;
     return retVal;
 }
+pair<bool, CardLocation> BurgleBrosTokens::getPersianKittyToken()
+{
+    return persianKitty;
+}
+pair<bool, CardLocation> BurgleBrosTokens::getCrowToken()
+{
+    return crowToken;
+}
 BurgleBrosTokens::~BurgleBrosTokens()
 {
 }

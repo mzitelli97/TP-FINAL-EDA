@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/BurgleBrosBoard.o \
 	${OBJECTDIR}/BurgleBrosCard.o \
 	${OBJECTDIR}/BurgleBrosController.o \
+	${OBJECTDIR}/BurgleBrosDices.o \
 	${OBJECTDIR}/BurgleBrosFloor.o \
 	${OBJECTDIR}/BurgleBrosGuard.o \
 	${OBJECTDIR}/BurgleBrosLoots.o \
@@ -109,6 +110,11 @@ ${OBJECTDIR}/BurgleBrosController.o: BurgleBrosController.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/BurgleBrosController.o BurgleBrosController.cpp
+
+${OBJECTDIR}/BurgleBrosDices.o: BurgleBrosDices.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/BurgleBrosDices.o BurgleBrosDices.cpp
 
 ${OBJECTDIR}/BurgleBrosFloor.o: BurgleBrosFloor.cpp
 	${MKDIR} -p ${OBJECTDIR}

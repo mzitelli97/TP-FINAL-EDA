@@ -26,8 +26,7 @@ BurgleBrosModel::BurgleBrosModel()
     otherPlayer.pickRandomPlayer(myPlayer.getCharacter());
     myPlayer.setTurn(true);
     otherPlayer.setTurn(false);
-    for(unsigned int i =0; i <MAX_NMBR_OF_EXTRA_DICES; i++)
-        extraDices[i]=0;/*
+    /*
     CardLocation aux = {0,1,2};
     guards[0].setPosition(aux);
     aux = {1,1,2};
@@ -190,11 +189,7 @@ Info2DrawPlayer BurgleBrosModel:: getInfo2DrawPlayer(ActionOrigin player)
 
 vector<unsigned int> BurgleBrosModel::getInfo2DrawExtraDices()
 {
-    vector<unsigned int> aux;
-    aux.reserve(MAX_NMBR_OF_EXTRA_DICES);
-    for(unsigned int i =0; i <MAX_NMBR_OF_EXTRA_DICES; i++)
-        aux.push_back(extraDices[i]);
-    return aux;
+    return dice.getCurrDice();
 }
 
 ActionOrigin BurgleBrosModel::getPlayerOnTurn()

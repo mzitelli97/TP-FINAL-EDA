@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/BurgleBrosBoard.o \
 	${OBJECTDIR}/BurgleBrosCard.o \
 	${OBJECTDIR}/BurgleBrosController.o \
+	${OBJECTDIR}/BurgleBrosDices.o \
 	${OBJECTDIR}/BurgleBrosFloor.o \
 	${OBJECTDIR}/BurgleBrosGuard.o \
 	${OBJECTDIR}/BurgleBrosLoots.o \
@@ -109,6 +110,11 @@ ${OBJECTDIR}/BurgleBrosController.o: BurgleBrosController.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags allegro-5.0` `pkg-config --cflags allegro_acodec-5.0` `pkg-config --cflags allegro_audio-5.0` `pkg-config --cflags allegro_color-5.0` `pkg-config --cflags allegro_dialog-5.0` `pkg-config --cflags allegro_font-5.0` `pkg-config --cflags allegro_image-5.0` `pkg-config --cflags allegro_main-5.0` `pkg-config --cflags allegro_memfile-5.0` `pkg-config --cflags allegro_physfs-5.0` `pkg-config --cflags allegro_primitives-5.0` `pkg-config --cflags allegro_ttf-5.0` `pkg-config --cflags apr-1` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/BurgleBrosController.o BurgleBrosController.cpp
+
+${OBJECTDIR}/BurgleBrosDices.o: BurgleBrosDices.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags allegro-5.0` `pkg-config --cflags allegro_acodec-5.0` `pkg-config --cflags allegro_audio-5.0` `pkg-config --cflags allegro_color-5.0` `pkg-config --cflags allegro_dialog-5.0` `pkg-config --cflags allegro_font-5.0` `pkg-config --cflags allegro_image-5.0` `pkg-config --cflags allegro_main-5.0` `pkg-config --cflags allegro_memfile-5.0` `pkg-config --cflags allegro_physfs-5.0` `pkg-config --cflags allegro_primitives-5.0` `pkg-config --cflags allegro_ttf-5.0` `pkg-config --cflags apr-1` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/BurgleBrosDices.o BurgleBrosDices.cpp
 
 ${OBJECTDIR}/BurgleBrosFloor.o: BurgleBrosFloor.cpp
 	${MKDIR} -p ${OBJECTDIR}
