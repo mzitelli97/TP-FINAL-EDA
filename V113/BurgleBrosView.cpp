@@ -521,13 +521,14 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
     list<Info2DrawTokens>::iterator it1;
     for( it1 = info_tokens.begin(); it1 != info_tokens.end(); it1++)
     {
-        if(info_tokens.front().position.floor == floor)
+        if(it1->position.floor == floor)
         {
             GraphicToken * token = new GraphicToken(imageLoader.getImageP(it1->token));
             token->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
             token->toggleZoom();
+            token->setPosition(it1->position, tokensCount[it1->position]);
             it_itemType->push_back(token);
-        }
+        }   
     }
 }
 

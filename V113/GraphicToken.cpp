@@ -51,8 +51,13 @@ void GraphicToken::setPosition(CardLocation location, unsigned int number)
     double xDiff = (myWidth-FLOOR_COLUMNS*tile_width)/(FLOOR_COLUMNS+1);
      if (xDiff > yDiff) yDiff = xDiff;
     else xDiff = yDiff;
-    min.y = FLOOR_MIN_Y + yDiff * ((float)location.row+1) + tile_height * (float)location.row;
-    min.x = FLOOR_MIN_X + FLOOR_WIDTH * location.floor + SPACE_BETWEEN_FLOORS * location.floor + xDiff * ((float)location.column+1) + tile_width * (float)location.column;
+    min.y = yDiff * ((float)location.row+1) + tile_height * (float)location.row;
+    min.x = xDiff * ((float)location.column+1) + tile_width * (float)location.column;
+    if(!zoomed)
+    {
+        min.y += FLOOR_MIN_Y;
+        min.x += FLOOR_MIN_X + FLOOR_WIDTH * location.floor + SPACE_BETWEEN_FLOORS * location.floor;
+    }
     max.y = min.y + tile_height;
     max.x = min.x + tile_width;
     
