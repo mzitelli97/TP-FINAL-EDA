@@ -93,7 +93,10 @@ unsigned int BurgleBrosCard::getColumn()
 void BurgleBrosCard::setVisible()
 {
 	visible = true;
-	safeNumber = MIN_SAFE_NUMBER + (rand() % (MAX_SAFE_NUMBER - 1));
+        if(cardType != SAFE)
+            safeNumber = MIN_SAFE_NUMBER + (rand() % (MAX_SAFE_NUMBER - 1));
+        else
+            safeNumber = 0;
 }
 bool BurgleBrosCard::isVisible()
 {
