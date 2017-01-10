@@ -57,7 +57,8 @@ void GraphicTile::draw()
     if(Visible)
     {
         al_draw_scaled_bitmap(image,0,0,al_get_bitmap_width(image),al_get_bitmap_height(image),min.x,min.y,width,height,0);
-        al_draw_scaled_bitmap(safeNumber,0,0,al_get_bitmap_width(safeNumber),al_get_bitmap_height(safeNumber),min.x,min.y,width,height,0);
+        if(safeNumber != nullptr)
+            al_draw_scaled_bitmap(safeNumber,0,0,al_get_bitmap_width(safeNumber),al_get_bitmap_height(safeNumber),min.x,min.y,width,height,0);
     }
     else
         al_draw_scaled_bitmap(back,0,0,al_get_bitmap_width(back),al_get_bitmap_height(back),min.x,min.y,width,height,0);
