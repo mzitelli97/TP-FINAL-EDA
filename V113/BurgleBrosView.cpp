@@ -407,11 +407,11 @@ void BurgleBrosView::updateExtraDices(BurgleBrosModel* model)
     list<list<GraphicItem *>>::iterator it_itemType;
     it_itemType = deleteList(FIRST_LAYER, EXTRA_DICES_LIST);
     
-    /*For test*/
+    /*For test*//*
     info_dices[0] = 1;
     info_dices[1] = 5;
     info_dices[2] = 2;
-    info_dices[3] = 6;
+    info_dices[3] = 6;*/
     /**********/
     
     for( int i = 0; i < info_dices.size(); i++)
@@ -515,24 +515,6 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
     {
         if(player.position.floor == floor)
             gPlayer->toggleZoom();
-    }
-    
-    list<Info2DrawTokens> info_tokens = model->getInfo2DrawTokens();
-    list<list<GraphicItem *>>::iterator it_itemType;
-    it_itemType = deleteList(SECOND_LAYER, TOKENS_LIST);
-    
-    map<CardLocation, unsigned int> tokensCount;
-    
-    list<Info2DrawTokens>::iterator it1;
-    for( it1 = info_tokens.begin(); it1 != info_tokens.end(); it1++)
-    {
-        if(info_tokens.front().position.floor == floor)
-        {
-            GraphicToken * token = new GraphicToken(imageLoader.getImageP(it1->token));
-            token->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
-            token->toggleZoom();
-            it_itemType->push_back(token);
-        }
     }
 }
 

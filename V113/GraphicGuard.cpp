@@ -12,6 +12,7 @@
  */
 
 #include "GraphicGuard.h"
+#define SEPARATION (totalWidth/135.0)
 
 GraphicGuard::GraphicGuard() {
 }
@@ -51,7 +52,8 @@ void GraphicGuard::setPosition(CardLocation location)
     max.y = min.y + tile_height;
     max.x = min.x + tile_width;
     
-    min.x = min.x + TILES_WIDTH/2;
+    min.x = min.x + TILES_WIDTH/2 - SEPARATION;
+    max.x = max.x - SEPARATION;
     min.y = min.y + TILES_HEIGHT/2;
     
     center.x= (min.x+max.x)/2;

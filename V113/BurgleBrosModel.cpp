@@ -346,7 +346,10 @@ bool BurgleBrosModel::crackSafe(ActionOrigin playerId, CardLocation safe)
         list<CardLocation> tilesCrackedOnThisAction = board.tilesWithCracked(aux,safe.floor);
         tokens.addCrackTokenOn(tilesCrackedOnThisAction);
         if(tokens.isSafeOpened(safe.floor))
+        {
             p->attachLoot(loots.getLoot(playerId));
+            board.setSafeCracked(safe.floor);
+        }
         view->update(this);
         checkTurns();
     }
@@ -496,11 +499,11 @@ list<string> BurgleBrosModel::getPosibleActions(ActionOrigin player, CardLocatio
     if(isPeekPosible(player, tile))
         aux.push_back("PEEK");
     if(isAddTokenPosible(player, tile))
-        aux.push_back("ADD TOKEN");/*
+        aux.push_back("ADD TOKEN");
     if(isAddDieToSafePossible(player, tile))
         aux.push_back("ADD DIE");
     if(isCrackSafePossible(player, tile))
-        aux.push_back("CRACK");*/
+        aux.push_back("CRACK");
     return aux;
 }
  
