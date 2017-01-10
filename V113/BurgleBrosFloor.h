@@ -21,6 +21,7 @@ public:
 	BurgleBrosFloor();
 	//BurgleBrosFloor(unsigned int whichFloor, std::string protocolCardTypes);
 	void initFloor(unsigned int whichFloor, std::vector<CardName> &orderedCards);
+        void getWalls(vector<wall> &vector);
 	std::string getShortestPathProtocolar(CardLocation source, CardLocation destination);		//Devuelve con formato de protocolo
 	std::list<CardLocation> getShortestPath(CardLocation source, CardLocation destination);		//
 	bool isMovePossible(CardLocation source, CardRelativeLocation whereToMove);

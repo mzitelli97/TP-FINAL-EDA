@@ -21,6 +21,7 @@ class BurgleBrosModel : public Model
 {
     public:
 	BurgleBrosModel();
+        vector<wall> getInfo2DrawWalls();
 	vector<Info2DrawCards> getInfo2DrawCards();
         list<Info2DrawLoot> getInfo2DrawLoot();
 	Info2DrawPlayer getInfo2DrawPlayer(ActionOrigin player);
