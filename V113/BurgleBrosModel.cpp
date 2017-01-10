@@ -249,6 +249,7 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         //Si me movi a un deadbolt tengo que gastar 3 acciones para entrar o vuelvo a donde estaba
         if( newCardType==DEADBOLT && locationToMove!=guards[locationToMove.floor].getPosition() && locationToMove!=getP2OtherPlayer(playerId)->getPosition())
         {       //DIEGO: Soy javi, creo que también faltaría agregar si hay alguien en el deabolt (eran 3 acciones si no habia nadie en el deadbolt). En ismoveposible está si lo queres pegar, un if enorme
+            //JAVI:soy diego,creo que esto mas lo de isMovePosible() ya cubre todos los casos excepto el caso en el que podes gastar las 3 acciones, que hay que preguntar
             if(movingPlayer->getcurrentActions()<3 && !cardWasVisible)
                 movingPlayer->setPosition(prevLocation);
             //else //Pregunto si quiere gastar 3 acciones para entrar
