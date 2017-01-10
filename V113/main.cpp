@@ -35,6 +35,7 @@ int main(int argc, char** argv) {
     controller.attachModel(&model);
     controller.attachView(&view);
     gui.atachController(&controller);
+    model.attachController(&controller);
     
     while(true)
     {
