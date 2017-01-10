@@ -19,9 +19,9 @@ typedef struct{
 }ModelEvent;*/
 
 /*Mensajes para dialog box tienen:  TITULO             SUBTITULO        TEXTO */
-#define ENTER_FINGERPRINT_TEXT  {  "Alert",        "Confirm Action",   "You have entered a Fingerprint tile, so you will trigger an alarm unless you use a hack token. Use token?"}
-#define ENTER_LASER_ACTION_TEXT ({  "Alert",        "Confirm Action",   "You have entered a Laser tile, so you can spend and extra action to avoid triggering an alarm. Spend another action?"})
-#define ENTER_LASER_TOKEN_TEXT  ({  "Alert",        "Confirm Action",   "You have entered a Laser tile, so you can use a hack token to avoid triggering an alarm. Use token?"})
+#define ENTER_FINGERPRINT_TEXT  {  "Alert",        "Confirm Action",   "You have entered a Fingerprint tile, so you will trigger an alarm unless you use a hack token. Use token?" , "yes", "no"}
+#define ENTER_LASER_ACTION_TEXT {  "Alert",        "Confirm Action",   "You have entered a Laser tile, so you can spend and extra action to avoid triggering an alarm. Spend another action?"}
+#define ENTER_LASER_TOKEN_TEXT  {  "Alert",        "Confirm Action",   "You have entered a Laser tile, so you can use a hack token to avoid triggering an alarm. Use token?"}
 
 
 class BurgleBrosModel : public Model

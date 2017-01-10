@@ -40,7 +40,7 @@ bool BurgleBrosController::askForSpentOK(vector<string> &message)
 {
     bool retVal;
     //Parar timers que controlan el timeout
-    retVal=view->yesNoMessageBox(message);  //Bloqueante
+    retVal=view->MessageBox(message);  //Bloqueante
     
     //Manda por network el spent ok con yes o no
     return retVal;

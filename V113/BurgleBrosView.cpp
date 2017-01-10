@@ -11,6 +11,8 @@
  * Created on December 24, 2016, 12:58 PM
  */
 
+#include <vector>
+
 #include "BurgleBrosView.h"
 #include "GraphicEDices.h"
 #include "GraphicGDie.h"
@@ -445,16 +447,19 @@ list<list<GraphicItem *>>::iterator BurgleBrosView::deleteList(Layers layer, uns
     aux2->clear();
     return aux2;
 }
-bool BurgleBrosView::yesNoMessageBox(vector<string> &msg)
+int BurgleBrosView::MessageBox(vector<string> &msg)
 {
     int aux;
-    bool retVal=false;
-    while(!(aux=al_show_native_message_box(display, msg[0].c_str(),msg[1].c_str(),msg[2].c_str(),NULL, ALLEGRO_MESSAGEBOX_YES_NO)));
-    if(aux==1)  //Si se tocó yes
-        retVal=true;
-    if(aux==2)  //Si se tocó no
-        retVal=false;
-    return retVal;
+    if(msg.size()>=4)
+    {
+        string buttons="";
+        for(unsigned int i=3;i<msg.size();++i)
+            buttons+=msg[i]+"|";
+        buttons.pop_back();
+        cout<<buttons<<endl;
+        aux=al_show_native_message_box(display, msg[0].c_str(),msg[1].c_str(),msg[2].c_str(),buttons.c_str(), ALLEGRO_MESSAGEBOX_QUESTION);
+    }
+    return aux;
 }
 
 
