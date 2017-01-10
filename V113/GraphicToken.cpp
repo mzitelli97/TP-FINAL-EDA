@@ -12,6 +12,7 @@
  */
 
 #include "GraphicToken.h"
+//#define SEPARATION (totalWidth/135.0)
 
 GraphicToken::GraphicToken() {
 }
@@ -42,8 +43,8 @@ void GraphicToken::setPosition(CardLocation location, unsigned int number)
     {
         myHeight = totalHeight;
         myWidth = totalWidth;
-        tile_width = myWidth/5.0;
-        tile_height = myHeight/5.0;
+        tile_width = myWidth/4.2;
+        tile_height = myHeight/4.2;
     }
     if (tile_height < tile_width) tile_width = tile_height;
     else tile_height = tile_width;
@@ -61,11 +62,9 @@ void GraphicToken::setPosition(CardLocation location, unsigned int number)
     max.y = min.y + tile_height;
     max.x = min.x + tile_width;
     
-    //min.x = min.x + tile_width/1.3 - 10.0 * (number%6);
     min.x = min.x + tile_width/1.4;
-    //max.x = max.x - 10.0 * (number%6);
-    min.y = min.y + 10.0 * (number%6);
-    max.y = max.y - tile_height/1.4 + 10.0 * (number%6);
+    min.y = min.y + tile_height/7.5 * (number%6);
+    max.y = max.y - tile_height/1.4 + tile_height/7.5 * (number%6);
     
     width = max.x-min.x;
     height = max.y- min.y;
@@ -76,9 +75,4 @@ void GraphicToken::setPosition(CardLocation location, unsigned int number)
     }
     center.x= (min.x+max.x)/2;
     center.y= (min.y+max.y)/2;
-}
-
-void GraphicToken::toggleZoom()
-{
-    zoomed ^= true;
 }

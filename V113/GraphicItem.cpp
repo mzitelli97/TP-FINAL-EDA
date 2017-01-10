@@ -59,6 +59,11 @@ bool GraphicItem::isZoomed()
     return zoomed;
 }
 
+void GraphicItem::toggleZoom()
+{
+    zoomed ^= true;
+}
+
 
 GraphicItem::GraphicItem(const GraphicItem& orig) {
 }

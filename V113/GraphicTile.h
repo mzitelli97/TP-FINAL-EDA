@@ -29,7 +29,6 @@ public:
     virtual void draw();
     void toggleZoom();
 private:
-    //clickItem me;
     void setPosition(CardLocation location);
     CardLocation location;
     bool Visible;

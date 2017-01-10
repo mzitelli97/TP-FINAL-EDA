@@ -50,6 +50,7 @@ public:
     bool isPointIn(Point point);
     bool isZoomed();
     virtual void draw();
+    virtual void toggleZoom();
     virtual ItemInfo IAm() = 0;
 protected:
     ALLEGRO_BITMAP * image;

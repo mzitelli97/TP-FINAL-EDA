@@ -28,6 +28,7 @@
 #define SCREEN_W 1800
 #define SCREEN_H 900
 #define TITLE_H al_get_bitmap_height(backScreen)/20.0
+#define NO_FLOOR_ZOOMED -1
 
 BurgleBrosView::BurgleBrosView() {
     imageLoader.initImages();           //Falta checkear.
@@ -314,6 +315,8 @@ void BurgleBrosView::updateTokens(BurgleBrosModel* model)
     {
         GraphicToken * token = new GraphicToken(imageLoader.getImageP(it->token));
         token->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
+        if(onZoom && it->position.floor == floorZoomed)
+            token->toggleZoom();
         token->setPosition(it->position, tokensCount[it->position]++);
         it_itemType->push_back(token);
     }
@@ -483,6 +486,7 @@ void BurgleBrosView::eraseMenu()
 void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
 {
     onZoom ^= true;
+    floorZoomed = floor;
     BurgleBrosModel * model = (BurgleBrosModel *) auxModel;
     list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) TILE);
     for(unsigned int i=0; i < BOARD_STANDARD_FLOORS * FLOOR_RAWS * FLOOR_COLUMNS ; i++, it++)
@@ -511,6 +515,41 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
         if(player.position.floor == floor)
             gPlayer->toggleZoom();
     }
+    
+    
+    
+    list<GraphicItem *>:: iterator guard = accessGraphicItems(SECOND_LAYER, (unsigned int) GUARD_INFO_LIST);
+    Info2DrawGuard info_guard = model->getInfo2DrawGuard(floor);
+    advance(guard, floor * 2);
+    //guard floor * 2;     //advance to the items of the floor zoomed
+    if(*guard != NULL)
+    {
+        /*Suppose the first item is the guard item*/
+        GraphicGuard * guard_item = dynamic_cast<GraphicGuard*> (*guard);
+        GraphicGDie * guard_die = dynamic_cast<GraphicGDie*> (*(++guard));
+        if( guard_item == nullptr)
+        {
+            /*It means the die was the first*/
+            guard_item = dynamic_cast<GraphicGuard*>(*guard);
+            guard_die = dynamic_cast<GraphicGDie*> (*(--guard));
+        }
+        guard_item->toggleZoom();
+        guard_die->toggleZoom();
+        guard_item->setPosition(info_guard.position);
+        guard_die->setPosition(info_guard.diePosition);
+        guard_die->setNumber(imageLoader.getImageP(RED_DICE, info_guard.dieNumber));
+    }
+    
+    it = accessGraphicItems(SECOND_LAYER, STATIC_ITEMS);
+    advance(it,NUMBER_OF_WALLS * floor);
+    vector<wall> infoWalls = model->getInfo2DrawWalls();
+    for(int i = NUMBER_OF_WALLS * floor; i < NUMBER_OF_WALLS; it++, i++)
+    {
+        GraphicWall * wall = dynamic_cast<GraphicWall *> (*it);
+        wall->toggleZoom();
+        wall->setLocation(infoWalls[i].FrontCard, infoWalls[i].RearCard);
+    }
+    
 }
 
 void BurgleBrosView::cheatCards()
