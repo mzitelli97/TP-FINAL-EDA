@@ -12,6 +12,7 @@
  */
 
 #include "GraphicWall.h"
+#define RADIX (totalWidth/270.0)
 
 #define BROWN al_map_rgb(166,94,46)
 
@@ -66,7 +67,7 @@ void GraphicWall::setLocation(CardLocation front, CardLocation rear)
 
 void GraphicWall::draw()
 {
-    al_draw_filled_rounded_rectangle(min.x, min.y, max.x, max.y, 5.0, 5.0, BROWN);
+    al_draw_filled_rounded_rectangle(min.x, min.y, max.x, max.y, RADIX, RADIX, BROWN);
 }
 
 
