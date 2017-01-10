@@ -1,6 +1,7 @@
 #include "BurgleBrosModel.h"
 #include "BurgleBrosView.h"
 #include <unistd.h>
+#include <vector>
 typedef struct
 {
     CardLocation target;
@@ -265,27 +266,28 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         if( newCardType==FINGERPRINT)
             cout<<"gasto un token del room o activo alarma"<<endl;
         //DIEGO: Javi de vuelta, te dejo un mini ejemplo para usar el askforspent ok que quedó ayer y los tokens
-        /*  if( newCardType==FINGERPRINT)
-         *  {
-         *      if(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_FINGERPRINT) //Si hay tokens disponibles
-         *      {
-            *      vector<string> msgToShow(ENTER_FINGERPRINT_TEXT);  //Esto contiene el título del cartelito, subtitulo y texto, por eso vector
-            *      bool userChoice = controller->askForSpentOK(msgToShow);
-            *      if(userChoice)
-            *           tokens.removeOneHackTokenOf(COMPUTER_ROOM_FINGERPRINT);
-         *         else
-         *         {
-         *               tokens.triggerAlarm(locationToMove);
-         *               setGuardsNewPath(locationToMove.floor); //Así se pone el dado a donde tiene que ir, este lo necesitaba desde el guardia
-         *          }
-         *      }
-         *      else
-    *           {
-    *               tokens.triggerAlarm(locationToMove);
-    *               setGuardsNewPath(locationToMove.floor); //Así se pone el dado a donde tiene que ir, este lo necesitaba desde el guardia
-    *           }
-         * 
-         *  */
+        if( newCardType==FINGERPRINT)
+        {
+               if(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_FINGERPRINT) )//Si hay tokens disponibles
+               {
+                  std::vector<string> msgToShow(ENTER_FINGERPRINT_TEXT);  //Esto contiene el título del cartelito, subtitulo y texto, por eso vector
+                  bool userChoice = controller->askForSpentOK(msgToShow);
+                  if(userChoice)
+                       tokens.removeOneHackTokenOf(COMPUTER_ROOM_FINGERPRINT);
+                  else
+                  {
+                        tokens.triggerAlarm(locationToMove);
+                        setGuardsNewPath(locationToMove.floor); //Así se pone el dado a donde tiene que ir, este lo necesitaba desde el guardia
+                  }
+               }
+               else
+               {
+                   tokens.triggerAlarm(locationToMove);
+                   setGuardsNewPath(locationToMove.floor); //Así se pone el dado a donde tiene que ir, este lo necesitaba desde el guardia
+               }
+        }   
+          
+         
         if(newCardType==LASER)
             cout<<"gasto una action mas, un hack token o activo alarma";
         //
