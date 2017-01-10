@@ -23,7 +23,7 @@ public:
     GraphicToken(const GraphicToken& orig);
     virtual ~GraphicToken();
     ItemInfo IAm() override;
-    void setPosition(CardLocation location);
+    void setPosition(CardLocation location, unsigned int number);
 
 private:
     GraphicToken();

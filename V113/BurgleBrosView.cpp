@@ -293,16 +293,28 @@ void BurgleBrosView::updateTokens(BurgleBrosModel* model)
     /*For test*/
     Info2DrawTokens aux = {ALARM_TOKEN, {1,1,0}};
     info_tokens.push_back(aux);
-    aux = {KEYPAD_TOKEN, {2,2,1}};
+    aux = {KEYPAD_TOKEN, {1,1,0}};
+    info_tokens.push_back(aux);
+    aux = {HACK_TOKEN, {1,1,0}};
+    info_tokens.push_back(aux);
+    aux = {STEALTH_TOKEN, {1,1,0}};
+    info_tokens.push_back(aux);
+    aux = {SAFE_TOKEN, {1,1,0}};
+    info_tokens.push_back(aux);
+    aux = {PERSIAN_KITTY_TOKEN, {1,1,0}};
+    info_tokens.push_back(aux);
+    aux = {DOWNSTAIRS_TOKEN, {1,1,0}};
     info_tokens.push_back(aux);
     /***********/
+    
+    map<CardLocation, unsigned int> tokensCount;
     
     list<Info2DrawTokens>::iterator it;
     for( it = info_tokens.begin(); it != info_tokens.end(); it++)
     {
         GraphicToken * token = new GraphicToken(imageLoader.getImageP(it->token));
         token->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
-        token->setPosition(it->position);
+        token->setPosition(it->position, tokensCount[it->position]++);
         it_itemType->push_back(token);
     }
 }

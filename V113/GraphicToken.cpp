@@ -32,7 +32,7 @@ ItemInfo GraphicToken::IAm()
     return {NO_ITEM, nullptr};
 }
 
-void GraphicToken::setPosition(CardLocation location)
+void GraphicToken::setPosition(CardLocation location, unsigned int number)
 {
     /*Convert logic location to graphic location*/
     double tile_height = TILES_HEIGHT, tile_width = TILES_WIDTH;   
@@ -47,13 +47,20 @@ void GraphicToken::setPosition(CardLocation location)
     max.y = min.y + tile_height;
     max.x = min.x + tile_width;
     
-    min.x = min.x + TILES_WIDTH/1.5;
+    min.x = min.x + TILES_WIDTH/1.5 - 10.0 * (number%6);
+    max.x = max.x - 10.0 * (number%6);
     max.y = max.y - TILES_HEIGHT/1.5;
     
-    center.x= (min.x+max.x)/2;
-    center.y= (min.y+max.y)/2;
     width = max.x-min.x;
     height = max.y- min.y;
+    if(number>=6)
+    {
+        min.y = min.y + height;
+        max.y = max.y + height;
+    }
+    center.x= (min.x+max.x)/2;
+    center.y= (min.y+max.y)/2;
+    
 }
 
 
