@@ -28,6 +28,7 @@ GraphicPlayerCard::GraphicPlayerCard(ALLEGRO_BITMAP * image, ALLEGRO_BITMAP * st
     this->whichPlayer=whichPlayer;
     setScreenDimentions(width, height);
     stealthToken= stealthTokenImg;
+    zoomed = false;
 }
 void  GraphicPlayerCard:: setLives(unsigned int livesNumber)
 {   

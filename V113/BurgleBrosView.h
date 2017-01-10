@@ -59,6 +59,7 @@ private:
     void updateTokens(BurgleBrosModel * model);
     void updateExtraDices(BurgleBrosModel * model);
     list<list<list<GraphicItem *>>> graphicInterface;                   //layers structure of graphical interface
+    vector<GraphicItem*> walls;
     ALLEGRO_DISPLAY * display;
     ALLEGRO_BITMAP * backScreen;
     ImageLoader imageLoader;

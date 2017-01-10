@@ -69,12 +69,12 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                     break;
                 case LOOT_CARDS:
                     auxPlayer = (ActionOrigin *)temp.info;
-                    /*if(*auxPlayer == THIS_PLAYER_ACTION)
-                        view->zoomFloor(0);
+                    if(*auxPlayer == THIS_PLAYER_ACTION)
+                        view->zoomFloor(0,modelPointer);
                     else if(*auxPlayer == OTHER_PLAYER_ACTION)
-                        view->zoomFloor(1);
-                    else view->zoomFloor(2);
-                    view->update(modelPointer);*/
+                        view->zoomFloor(1,modelPointer);
+                    else view->zoomFloor(2,modelPointer);
+                    view->update(modelPointer);
                     break;
                 case GUARD_CARDS:
                     guardFloor = (unsigned int *)temp.info;

@@ -28,6 +28,7 @@
         <itemPath>GraphicPlayerCard.h</itemPath>
         <itemPath>GraphicTile.h</itemPath>
         <itemPath>GraphicToken.h</itemPath>
+        <itemPath>GraphicWall.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="Networking" projectFiles="true">
       </logicalFolder>
@@ -75,6 +76,7 @@
         <itemPath>GraphicPlayerCard.cpp</itemPath>
         <itemPath>GraphicTile.cpp</itemPath>
         <itemPath>GraphicToken.cpp</itemPath>
+        <itemPath>GraphicWall.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="Networking" projectFiles="true">
         <itemPath>NetworkInterface.cpp</itemPath>
@@ -243,6 +245,10 @@
       </item>
       <item path="GraphicToken.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="GraphicWall.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicWall.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="ImageLoader.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="ImageLoader.h" ex="false" tool="3" flavor2="0">
@@ -389,6 +395,10 @@
       <item path="GraphicToken.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="GraphicToken.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicWall.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicWall.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="ImageLoader.cpp" ex="false" tool="1" flavor2="0">
       </item>

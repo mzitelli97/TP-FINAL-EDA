@@ -25,12 +25,14 @@ GraphicLoot::GraphicLoot(ActionOrigin owner, ALLEGRO_BITMAP * image)
     this->image = image;
     this->owner = owner;
     isVisible=true;
+    zoomed = false;
 }
 GraphicLoot::GraphicLoot(ALLEGRO_BITMAP * backImage)
 {
     isVisible=false;
     image = backImage;
     this->owner = NON_PLAYER;
+    zoomed = false;
 }
 ItemInfo GraphicLoot::IAm()
 {

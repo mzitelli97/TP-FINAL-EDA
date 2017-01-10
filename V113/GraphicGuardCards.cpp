@@ -21,6 +21,7 @@ GraphicGuardCards::GraphicGuardCards(ALLEGRO_BITMAP * image, unsigned int floor)
 {
     this->image = image;
     this->floor = floor;
+    zoomed = false;
 }
 
 GraphicGuardCards::GraphicGuardCards(const GraphicGuardCards& orig) {

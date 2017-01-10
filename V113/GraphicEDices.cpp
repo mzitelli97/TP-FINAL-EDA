@@ -15,12 +15,15 @@
 #include "BurgleBrosView.h"
 
 #define SPACE_BETWEEN_DICES (FLOOR_HEIGHT/35.0)
+#define DICE_WIDTH (totalWidth/30.0)
+#define DICE_HEIGHT (totalHeight/15.0)
 
 GraphicEDices::GraphicEDices(ALLEGRO_BITMAP * image)
 {
     this->image = image;
-    width = 50;
-    height = 50;
+    //width = 50;
+    //height = 50;
+    zoomed = false;
 }
 
 GraphicEDices::GraphicEDices(const GraphicEDices& orig) {
@@ -37,6 +40,11 @@ ItemInfo GraphicEDices::IAm()
 
 void GraphicEDices::setPosition(unsigned int number)
 {
+    width = DICE_WIDTH;
+    height = DICE_HEIGHT;
+    if(width < height) width = height;
+    else height = width;
+    
     min.x = FLOOR_MIN_X + TOTAL_FLOORS_WIDTH;
     min.y = FLOOR_MIN_Y + number*height + (number+1)*SPACE_BETWEEN_DICES;
     max.x = min.x + width;

@@ -22,6 +22,7 @@
 #include "GraphicTile.h"
 #include "GraphicToken.h"
 #include "GraphicMenuItem.h"
+#include "GraphicWall.h"
 
 #define SCREEN_W 1800
 #define SCREEN_H 900
@@ -73,6 +74,7 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     Info2DrawPlayer infoThisPlayer= model->getInfo2DrawPlayer(THIS_PLAYER_ACTION);
     Info2DrawPlayer infoOtherPlayer= model->getInfo2DrawPlayer(OTHER_PLAYER_ACTION);
     list<Info2DrawTokens> infoTokens= model->getInfo2DrawTokens();
+    //vector<wall> infoWalls = model->getInfo2DrawWalls();
     
     /*************Inicilizo las capas*******************/
     
@@ -151,26 +153,20 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     /***********For test***************/
     GraphicGDie * auxGuardDie = new GraphicGDie(imageLoader.getImageP(RED_DICE, 2));
     auxGuardDie->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
-    auxGuardDie->setPosition({2,2,1});
     GraphicGuard * auxGuard = new GraphicGuard(imageLoader.getGuardImage());
     auxGuard->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
-    auxGuard->setPosition({2,2,1});
     auxGuardInfo_list.push_back(auxGuard);
     auxGuardInfo_list.push_back(auxGuardDie);
     auxGuardDie = new GraphicGDie(imageLoader.getImageP(RED_DICE, 2));
     auxGuardDie->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
-    auxGuardDie->setPosition({2,2,1});
     auxGuard = new GraphicGuard(imageLoader.getGuardImage());
     auxGuard->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
-    auxGuard->setPosition({2,2,1});
     auxGuardInfo_list.push_back(auxGuard);
     auxGuardInfo_list.push_back(auxGuardDie);
     auxGuardDie = new GraphicGDie(imageLoader.getImageP(RED_DICE, 2));
     auxGuardDie->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
-    auxGuardDie->setPosition({2,2,1});
     auxGuard = new GraphicGuard(imageLoader.getGuardImage());
     auxGuard->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
-    auxGuard->setPosition({2,2,1});
     auxGuardInfo_list.push_back(auxGuard);
     auxGuardInfo_list.push_back(auxGuardDie);
     /********************************/
@@ -185,6 +181,19 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
 
     //creo una lista de static item
     list<GraphicItem *> auxStaticItem_list;
+    walls.clear();
+    for(int i = 0; i < NUMBER_OF_WALLS * BOARD_STANDARD_FLOORS; i++)
+    {
+        GraphicWall * wall_i = new GraphicWall();
+        wall_i->setScreenDimentions(al_get_display_width(display), al_get_display_height(display));
+        wall_i->setLocation({0,0,0},{0,1,0});
+        al_set_target_bitmap(backScreen);
+        wall_i->draw();
+        al_set_target_backbuffer(display);
+        //walls.push_back(wall_i);
+        //walls[i]->
+        //walls[i]->draw();
+    }
     
 
     //**********push sobre la segunda capa 
@@ -465,9 +474,29 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
             tile->zoom();
         }
     }
-    Info2DrawPlayer infoPlayer = model->getInfo2DrawPlayer(THIS_PLAYER_ACTION);
-    if(infoPlayer.position.floor == floor);
-    it = accessGraphicItems(SECOND_LAYER, (unsigned int) PLAYER_INFO_LIST);
+
+    it = accessGraphicItems(SECOND_LAYER, PLAYER_INFO_LIST);
+    //First Player
+    Info2DrawPlayer player = model->getInfo2DrawPlayer(THIS_PLAYER_ACTION);
+    GraphicPlayer* gPlayer = dynamic_cast<GraphicPlayer*> (*it); //ASUMI QUE EL PRIMERO ES THIS_PLAYER
+    if(gPlayer!=NULL)       //VER EL ORDEN DE LAS COSAS, DEBERIA ANDAR IGUAL
+    {
+        if(player.position.floor == floor)
+        {
+            //gPlayer->setLocation(player.position);
+            gPlayer->zoom(player.position);
+        }
+    }
+    //Second Player
+    player = model->getInfo2DrawPlayer(OTHER_PLAYER_ACTION);
+    gPlayer = dynamic_cast<GraphicPlayer*> (*(++it));
+    if(gPlayer!=NULL)
+    {
+        if(player.position.floor == floor)
+            //gPlayer->setLocation(player.position);
+            gPlayer->zoom(player.position);
+    }
+    
 }
 
 void BurgleBrosView::cheatCards()

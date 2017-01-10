@@ -58,6 +58,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/GraphicPlayerCard.o \
 	${OBJECTDIR}/GraphicTile.o \
 	${OBJECTDIR}/GraphicToken.o \
+	${OBJECTDIR}/GraphicWall.o \
 	${OBJECTDIR}/ImageLoader.o \
 	${OBJECTDIR}/LibsInit.o \
 	${OBJECTDIR}/Model.o \
@@ -207,6 +208,11 @@ ${OBJECTDIR}/GraphicToken.o: GraphicToken.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GraphicToken.o GraphicToken.cpp
+
+${OBJECTDIR}/GraphicWall.o: GraphicWall.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GraphicWall.o GraphicWall.cpp
 
 ${OBJECTDIR}/ImageLoader.o: ImageLoader.cpp
 	${MKDIR} -p ${OBJECTDIR}

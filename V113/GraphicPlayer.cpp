@@ -22,6 +22,7 @@ GraphicPlayer::GraphicPlayer(ALLEGRO_BITMAP * image, CardLocation location,unsig
     this->image = image;
     setScreenDimentions(width,height);
     setLocation(location);
+    zoomed = false;
 }
 
 GraphicPlayer::GraphicPlayer(const GraphicPlayer& orig) {
@@ -65,8 +66,8 @@ void GraphicPlayer::zoom(CardLocation location)
     max.y = min.y + tile_height;
     max.x = min.x + tile_width;
     
-    max.x = max.x - TILES_WIDTH/2;
-    min.y = min.y + TILES_HEIGHT/4.5;
+    max.x = max.x - tile_height/2;
+    min.y = min.y + tile_width/4.5;
     
     center.x= (min.x+max.x)/2;
     center.y= (min.y+max.y)/2;
