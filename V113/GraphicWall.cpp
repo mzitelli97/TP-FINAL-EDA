@@ -45,7 +45,7 @@ void GraphicWall::setLocation(CardLocation front, CardLocation rear)
     max.y = min.y + tile_height;
     max.x = min.x + tile_width;
     
-    if(front.column == rear.column) //it means the wall is vertical
+    if(front.row == rear.row) //it means the wall is vertical
     {
         width = xDiff;
         height = tile_height;

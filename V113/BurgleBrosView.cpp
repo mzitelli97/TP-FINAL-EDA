@@ -74,7 +74,7 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     Info2DrawPlayer infoThisPlayer= model->getInfo2DrawPlayer(THIS_PLAYER_ACTION);
     Info2DrawPlayer infoOtherPlayer= model->getInfo2DrawPlayer(OTHER_PLAYER_ACTION);
     list<Info2DrawTokens> infoTokens= model->getInfo2DrawTokens();
-    //vector<wall> infoWalls = model->getInfo2DrawWalls();
+    vector<wall> infoWalls = model->getInfo2DrawWalls();
     
     /*************Inicilizo las capas*******************/
     
@@ -181,18 +181,12 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
 
     //creo una lista de static item
     list<GraphicItem *> auxStaticItem_list;
-    walls.clear();
     for(int i = 0; i < NUMBER_OF_WALLS * BOARD_STANDARD_FLOORS; i++)
     {
         GraphicWall * wall_i = new GraphicWall();
         wall_i->setScreenDimentions(al_get_display_width(display), al_get_display_height(display));
-        wall_i->setLocation({0,0,0},{0,1,0});
-        al_set_target_bitmap(backScreen);
-        wall_i->draw();
-        al_set_target_backbuffer(display);
-        //walls.push_back(wall_i);
-        //walls[i]->
-        //walls[i]->draw();
+        wall_i->setLocation(infoWalls[i].FrontCard, infoWalls[i].RearCard);
+        auxStaticItem_list.push_back(wall_i);
     }
     
 
