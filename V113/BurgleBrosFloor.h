@@ -31,9 +31,11 @@ public:
 	void setCardVisible(CardLocation location);
         bool isAWallBetween(CardLocation tile1, CardLocation tile2);
 	bool isCardVisible(CardLocation location);
-	void safeCrackedThisCard(CardLocation location);
+	void crackSafe();
 	unsigned int getCardSafeNumber(CardLocation location);
-	bool isCardCracked(CardLocation location);
+        bool isCardCracked(CardLocation location);  //()
+        bool isSafeCracked();
+        CardLocation getSafeLocation();
 	CardName getCardType(CardLocation location);
 	CardName getCardType(unsigned int number);
 	void testFloor();

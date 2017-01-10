@@ -93,14 +93,6 @@ bool BurgleBrosBoard::isCardVisible(std::string location)
 {
 	return isCardVisible(protocolToCardLocation(location));
 }
-void BurgleBrosBoard::safeCrackedThisCard(CardLocation location)
-{
-	return floors[location.floor].safeCrackedThisCard(location);
-}
-void BurgleBrosBoard::safeCrackedThisCard(std::string location)
-{
-	return safeCrackedThisCard(protocolToCardLocation(location));
-}
 unsigned int BurgleBrosBoard::getCardSafeNumber(CardLocation location)
 {
 	return floors[location.floor].getCardSafeNumber(location);
@@ -182,8 +174,60 @@ unsigned int BurgleBrosBoard::getShortestPathLength(CardLocation source, CardLoc
     }
     return aux.size();
 }
-
-
+list<CardLocation>  BurgleBrosBoard::tilesWithCracked(vector<unsigned int> &dice, unsigned int safeFloor)
+{
+    list<CardLocation> retVal;
+    CardLocation safePos=floors[safeFloor].getSafeLocation();
+    CardLocation aux;
+    for(vector<unsigned int>::iterator it=dice.begin(); it!=dice.end(); it++)   //Para cada dado
+    {
+        if(*it != 0)            //Si cada dado es distinto de 0
+        {
+            aux=safePos;
+            for(aux.row=0; aux.row < FLOOR_RAWS; aux.row++) //Recorro toda la fila en la que esta el safe
+            {
+                if(floors[safePos.floor].getCardType(aux) != SAFE && floors[safePos.floor].getCardSafeNumber(aux) == *it)  //Si hay una carta que tiene el mismo safe number que el dado se pushea
+                    retVal.push_back(aux);
+            }
+            aux.row=safePos.row;
+            for(aux.column=0; aux.column < FLOOR_COLUMNS; aux.column++)//Recorro toda la columna en la que esta el safe
+            {
+                if(floors[safePos.floor].getCardType(aux) != SAFE && floors[safePos.floor].getCardSafeNumber(aux) == *it) //Si hay una carta que tiene el mismo safe number que el dado se pushea
+                    retVal.push_back(aux);
+            }
+        }
+    }
+    return retVal;
+}
+bool BurgleBrosBoard::canSafeBeCracked(unsigned int safeFloor)
+{
+    bool retVal=true;
+    CardLocation safePos=floors[safeFloor].getSafeLocation();
+    CardLocation aux;
+    aux=safePos;
+    if(!floors[safePos.floor].isCardVisible(safePos))   //Si no esta visible la safe tampoco se puede crackear
+        retVal=false;
+    for(aux.row=0; aux.row < FLOOR_RAWS; aux.row++) //Recorro toda la fila en la que esta el safe
+    {
+        if(floors[safePos.floor].getCardType(aux) != SAFE && (!floors[safePos.floor].isCardVisible(aux)))  
+            retVal=false;
+    }
+    aux.row=safePos.row;
+    for(aux.column=0; aux.column < FLOOR_COLUMNS; aux.column++)//Recorro toda la columna en la que esta el safe
+    {
+        if(floors[safePos.floor].getCardType(aux) != SAFE && (!floors[safePos.floor].isCardVisible(aux)))  
+            retVal=false;
+    }
+    return retVal;
+}
+bool BurgleBrosBoard::isSafeCracked(unsigned int floor)
+{
+    return floors[floor].isSafeCracked();
+}
+bool BurgleBrosBoard::setSafeCracked(unsigned int floor)
+{
+    floors[floor].crackSafe();
+}
 
 
 

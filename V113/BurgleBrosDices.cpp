@@ -67,6 +67,11 @@ void BurgleBrosDices::addDieToKeypad(CardLocation keypadLocation)
         diceForKeypad[keypadLocation]=INIT_KEYPAD_DICE_COUNT;
     diceForKeypad[keypadLocation]++;
 }
+void BurgleBrosDices::addDieToSafe(unsigned int safeFloor)
+{
+    if(diceForSafe[safeFloor] < MAX_NMBR_OF_EXTRA_DICES)
+        diceForSafe[safeFloor]++;
+}
 void BurgleBrosDices::resetKeypadsDice()
 {
     for(map<CardLocation,unsigned int>::iterator it = diceForKeypad.begin(); it != diceForKeypad.end(); it++)

@@ -23,10 +23,10 @@ public:
 	BurgleBrosLoots();
 	Info2DrawLoot getLootInfo(unsigned int nmbrOfLoot);
 	unsigned int getCurrentLoots();
+        Loot getLoot(ActionOrigin owner); //Devuelve el loot que estaba en la cima de la pila y guarda en su info interna el loot que sac� y a que jugador le pertenece.
 	~BurgleBrosLoots();
 private:
 	void shuffleDeck();
-	Loot getLoot(ActionOrigin owner); //Devuelve el loot que estaba en la cima de la pila y guarda en su info interna el loot que sac� y a que jugador le pertenece.
 	vector<Loot> lootDeck;
 	Info2DrawLoot lootInfo[NUMBER_OF_PLAYERS];
 	unsigned int currentLoots;

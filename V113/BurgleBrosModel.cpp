@@ -44,6 +44,7 @@ BurgleBrosModel::BurgleBrosModel()
     guards[2].init();
     path = board.getShortestPath(guards[2].getPosition(), guards[2].getTargetPosition());
     guards[2].setNewPathToTarget(path );
+    
 }
 void BurgleBrosModel::attachView(View * view)
 {
@@ -316,6 +317,49 @@ bool BurgleBrosModel::addToken(ActionOrigin playerId, CardLocation locationToAdd
     }
     return retVal;
 }
+bool BurgleBrosModel::addDieToSafe(ActionOrigin playerId, CardLocation safe)
+{
+    bool retVal=false;
+    BurgleBrosPlayer* p= getP2Player(playerId);
+    if(isAddDieToSafePossible(playerId, safe))
+    {
+        p->decActions();
+        p->decActions();
+        dice.addDieToSafe(safe.floor);
+    }
+    return retVal;
+}
+bool BurgleBrosModel::crackSafe(ActionOrigin playerId, CardLocation safe)
+{
+    bool retVal=false;
+    BurgleBrosPlayer* p= getP2Player(playerId);
+    if(isCrackSafePossible(playerId,safe))
+    {
+        p->decActions();
+        vector<unsigned int> aux;
+        if(p->getCharacter() == THE_PETERMAN)
+            aux=dice.throwDiceForSafeWithExtraDie(safe.floor);
+        else
+            aux=dice.throwDiceForSafe(safe.floor);
+        list<CardLocation> tilesCrackedOnThisAction = board.tilesWithCracked(aux,safe.floor);
+        tokens.addCrackTokenOn(tilesCrackedOnThisAction);
+        if(tokens.isSafeOpened(safe.floor))
+            p->attachLoot(loots.getLoot(playerId));
+        view->update(this);
+        checkTurns();
+    }
+    return retVal;        
+}
+
+
+
+
+
+
+
+
+
+
 
 
 bool BurgleBrosModel::GuardInCamera() 
@@ -418,6 +462,30 @@ bool BurgleBrosModel::isAddTokenPosible(ActionOrigin player, CardLocation tile)
     }
     return retVal;
 }
+bool BurgleBrosModel::isAddDieToSafePossible(ActionOrigin player, CardLocation tile)
+{
+    bool retVal=false;
+    BurgleBrosPlayer* p;
+    p = getP2Player(player);
+    if(p->isItsTurn() && p->getcurrentActions()>= 2 && board.getCardType(p->getPosition())==SAFE && p->getPosition()==tile)
+    {
+        if(board.canSafeBeCracked(tile.floor) && !board.isSafeCracked(tile.floor) && dice.getSafeDiceCount(tile.floor) < MAX_NMBR_OF_EXTRA_DICES)
+            retVal=true;
+    }
+    return retVal;
+}
+bool BurgleBrosModel::isCrackSafePossible(ActionOrigin playerId, CardLocation safe)
+{
+    bool retVal=false;
+    BurgleBrosPlayer* p;
+    p = getP2Player(playerId);
+    if(p->isItsTurn()&& board.getCardType(p->getPosition())==SAFE && p->getPosition()==safe)
+    {
+        if(board.canSafeBeCracked(safe.floor) && !board.isSafeCracked(safe.floor))
+            retVal=true;
+    }
+    return retVal;
+}
 list<string> BurgleBrosModel::getPosibleActions(ActionOrigin player, CardLocation tile)
 {
     list<string> aux;
@@ -426,7 +494,11 @@ list<string> BurgleBrosModel::getPosibleActions(ActionOrigin player, CardLocatio
     if(isPeekPosible(player, tile))
         aux.push_back("PEEK");
     if(isAddTokenPosible(player, tile))
-        aux.push_back("ADD TOKEN");
+        aux.push_back("ADD TOKEN");/*
+    if(isAddDieToSafePossible(player, tile))
+        aux.push_back("ADD DIE");
+    if(isCrackSafePossible(player, tile))
+        aux.push_back("CRACK");*/
     return aux;
 }
  
