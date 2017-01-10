@@ -405,11 +405,11 @@ void BurgleBrosView::updateExtraDices(BurgleBrosModel* model)
     list<list<GraphicItem *>>::iterator it_itemType;
     it_itemType = deleteList(FIRST_LAYER, EXTRA_DICES_LIST);
     
-    /*For test*/
+    /*For test*//*
     info_dices[0] = 1;
     info_dices[1] = 5;
     info_dices[2] = 2;
-    info_dices[3] = 6;
+    info_dices[3] = 6;*/
     /**********/
     
     for( int i = 0; i < info_dices.size(); i++)
