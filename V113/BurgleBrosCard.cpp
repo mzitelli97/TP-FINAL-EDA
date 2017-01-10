@@ -38,6 +38,17 @@ bool operator<(const CardLocation &l, const CardLocation &r)
 		return true;
 	return false;
 }
+bool operator!=(const CardLocation &l, const CardLocation &r)
+{
+    return !(l==r);
+}
+bool operator==(const CardLocation &l, const CardLocation &r)
+{
+	if (l.column == r.column && l.row == r.row && l.floor == r.floor)
+		return true;
+	else
+		return false;
+}
 CardLocation getRandomCardLocation()
 {
     CardLocation retVal;
@@ -104,7 +115,7 @@ bool BurgleBrosCard::isVisible()
 }
 void BurgleBrosCard::safeCracked()
 {
-	safeState = true;
+    safeState = true;
 }
 unsigned int BurgleBrosCard::getSafeNumber()
 {
@@ -192,18 +203,4 @@ std::string cardLocationToProtocol(CardLocation &cardLocation)
 	std::string aux4(1, floorChar);
 	std::string retVal = aux2 + aux1 + aux3 + aux4;
 	return retVal;
-}
-bool operator==(const CardLocation &l, const CardLocation &r)
-{
-	if (l.column == r.column && l.row == r.row && l.floor == r.floor)
-		return true;
-	else
-		return false;
-}
-bool operator!=(const CardLocation &l, const CardLocation &r)
-{
-    if(l==r)
-        return false;
-    else
-        return true;   
 }

@@ -37,6 +37,7 @@ public:
     void addHackTokenOn(CardName computerRoom);
     void removeOneHackTokenOf(CardName computerRoom);
     void addCrackTokenOn(CardLocation location);
+    void addCrackTokenOn(list<CardLocation> &location);
     bool isSafeOpened(unsigned int floor);
     unsigned int howManyAlarmsOnFloor(unsigned int floor);       
     unsigned int howManyTokensOnCPURoom(CardName cpuRoom);

@@ -45,7 +45,30 @@ void BurgleBrosFloor::initFloor(unsigned int whichFloor, std::vector<CardName> &
 	}
         initAdjList();
 }
-
+CardLocation BurgleBrosFloor::getSafeLocation()
+{
+    CardLocation retVal,aux;
+    for(aux.row=0; aux.row<FLOOR_RAWS; aux.row++)
+    {
+        for(aux.column=0;aux.column<FLOOR_COLUMNS;aux.column)
+        {
+            if(cards[aux.row][aux.column].getCardType() == SAFE)
+                retVal=aux;
+        }
+    }
+    retVal.floor=floorNumber;
+    return retVal;
+}
+void BurgleBrosFloor::crackSafe()
+{
+    CardLocation safePos=getSafeLocation();
+    cards[safePos.row][safePos.column].safeCracked();
+}
+bool BurgleBrosFloor::isSafeCracked()
+{
+    CardLocation safePos=getSafeLocation();
+    return cards[safePos.row][safePos.column].isCracked();
+}
 void BurgleBrosFloor::getWalls(vector<wall> &vector) 
 {
     for(unsigned int i=0; i<NUMBER_OF_WALLS; i++)
@@ -206,10 +229,6 @@ void BurgleBrosFloor::setCardVisible(CardLocation location)
 bool BurgleBrosFloor::isCardVisible(CardLocation location)
 {
 	return cards[location.row][location.column].isVisible();
-}
-void BurgleBrosFloor::safeCrackedThisCard(CardLocation location)
-{
-	cards[location.row][location.column].safeCracked();
 }
 unsigned int BurgleBrosFloor::getCardSafeNumber(CardLocation location)
 {

@@ -25,12 +25,12 @@ public:
 	void setCardVisible(std::string location);
 	bool isCardVisible(CardLocation location);
 	bool isCardVisible(std::string location);
-	void safeCrackedThisCard(CardLocation location);
-	void safeCrackedThisCard(std::string location);
 	unsigned int getCardSafeNumber(CardLocation location);
 	unsigned int getCardSafeNumber(std::string location);
-	bool isCardCracked(CardLocation location);
+	bool isCardCracked(CardLocation location);  //()
 	bool isCardCracked(std::string location);
+        bool isSafeCracked(unsigned int floor);
+        bool setSafeCracked(unsigned int floor);
         bool isAWallBetween(CardLocation tile1, CardLocation tile2);
 	CardName getCardType(CardLocation location);
 	CardName getCardType(std::string location);
@@ -38,6 +38,8 @@ public:
         CardLocation getComputerRoomLocation(CardName computerRoom);
         bool isCardUpstairs(CardLocation source, CardLocation destination);
         bool isCardDownstairs(CardLocation source, CardLocation destination);
+        bool canSafeBeCracked(unsigned int safeFloor); //Si están visibles todas las cartas en la misma fila y columna que el safe devuelve true
+        list<CardLocation> tilesWithCracked(vector<unsigned int> &dice, unsigned int safeFloor);    //Devuelve todas las cartas que tienen el mismo safe number que algun dado que salio, y estan en misma fila o columna que el safe de su piso
         list<CardLocation> getShortestPath(CardLocation source, CardLocation destination);//DESARROLLAR
         unsigned int getShortestPathLength(CardLocation source, CardLocation destination);//DESARROLLAR
 	void testBoard();

@@ -101,7 +101,10 @@ string BurgleBrosPlayer:: getName()
     return name;
 }
 
-
+void BurgleBrosPlayer::attachLoot(Loot loot)
+{
+    lootCarried.push_back(loot);
+}
 BurgleBrosPlayer::BurgleBrosPlayer()
 {
     //pickRandomPlayer();//Ver si queda adentro, afuera o que....
