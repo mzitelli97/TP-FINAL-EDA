@@ -23,6 +23,7 @@
 #include "GraphicToken.h"
 #include "GraphicMenuItem.h"
 #include "GraphicWall.h"
+#include "allegro5/allegro_native_dialog.h"
 
 #define SCREEN_W 1800
 #define SCREEN_H 900
@@ -432,6 +433,14 @@ list<list<GraphicItem *>>::iterator BurgleBrosView::deleteList(Layers layer, uns
     aux2->clear();
     return aux2;
 }
+int BurgleBrosView::yesNoMessageBox(vector<string> &msg)
+{
+    int retVal;
+    while(!(retVal=al_show_native_message_box(display, msg[0].c_str(),msg[1].c_str(),msg[2].c_str(),NULL, ALLEGRO_MESSAGEBOX_YES_NO)));
+    return retVal;
+}
+
+
 void BurgleBrosView::showMenu(list<string> options, Point click, CardLocation tile)
 {
     list<list<GraphicItem *>>::iterator menu_items;

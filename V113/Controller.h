@@ -14,6 +14,7 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -21,7 +22,7 @@ class Controller {
 public:
     Controller();
     Controller(const Controller& orig);
-    virtual int yesNoMessageBox(string &message)=0;
+    virtual int yesNoMessageBox(vector<string> &message)=0;
     virtual ~Controller();
 private:
 

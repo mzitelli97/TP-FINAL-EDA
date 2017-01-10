@@ -36,7 +36,7 @@ void BurgleBrosController::attachView(BurgleBrosView *view)
     if(view!=nullptr)
         this->view=view;
 }
-int BurgleBrosController::yesNoMessageBox(string &message)
+int BurgleBrosController::yesNoMessageBox(vector<string> &message)
 {
     //Parar timers que controlan el timeout
     //Llamar a view a que presente el yes no msg
