@@ -153,7 +153,19 @@ void BurgleBrosTokens::removeOneHackTokenOf(CardName computerRoom)
 }
 void BurgleBrosTokens::addCrackTokenOn(CardLocation location)
 {
-    crackedCards.push_back(location);
+    bool alreadyCracked=false;
+    for(list<CardLocation>::iterator it=crackedCards.begin(); it != crackedCards.end(); it++)
+    {
+        if(*it == location)
+            alreadyCracked=true;
+    }
+    if(!alreadyCracked)
+        crackedCards.push_back(location);
+}
+void BurgleBrosTokens::addCrackTokenOn(list<CardLocation> &location)
+{
+    for(list<CardLocation>::iterator it=crackedCards.begin(); it != crackedCards.end(); it++)
+        addCrackTokenOn(*it);
 }
 bool BurgleBrosTokens::isSafeOpened(unsigned int floor)
 {
