@@ -72,6 +72,11 @@ BurgleBrosCard BurgleBrosBoard::getCardCopy(std::string location)
 {
 	return getCardCopy(protocolToCardLocation(location));
 }
+void BurgleBrosBoard::getWalls(vector<wall> &vector)
+{
+    for(unsigned int i=0;i <BOARD_STANDARD_FLOORS; i++)
+        floor[i].getWalls(vector);
+}
 void BurgleBrosBoard::setCardVisible(CardLocation location)
 {
 	return floors[location.floor].setCardVisible(location);
