@@ -45,6 +45,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/BurgleBrosPlayer.o \
 	${OBJECTDIR}/BurgleBrosTokens.o \
 	${OBJECTDIR}/BurgleBrosView.o \
+	${OBJECTDIR}/Controller.o \
 	${OBJECTDIR}/EventData.o \
 	${OBJECTDIR}/GUI.o \
 	${OBJECTDIR}/GraphicEDices.o \
@@ -143,6 +144,11 @@ ${OBJECTDIR}/BurgleBrosView.o: BurgleBrosView.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/BurgleBrosView.o BurgleBrosView.cpp
+
+${OBJECTDIR}/Controller.o: Controller.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Controller.o Controller.cpp
 
 ${OBJECTDIR}/EventData.o: EventData.cpp
 	${MKDIR} -p ${OBJECTDIR}

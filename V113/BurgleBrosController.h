@@ -16,14 +16,16 @@
 #include "BurgleBrosModel.h"
 #include "BurgleBrosView.h"
 #include "EventData.h"
+#include "Controller.h"
 
-class BurgleBrosController {
+class BurgleBrosController:public Controller {
 public:
     BurgleBrosController();
     BurgleBrosController(const BurgleBrosController& orig);
     void attachModel(BurgleBrosModel *gamePointer);
     void attachView(BurgleBrosView *view);
     void parseMouseEvent(EventData *mouseEvent);
+    virtual int yesNoMessageBox(string &message);
     virtual ~BurgleBrosController();
 private:
     void interpretAction(string action, CardLocation location);

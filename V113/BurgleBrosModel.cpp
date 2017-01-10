@@ -50,6 +50,10 @@ void BurgleBrosModel::attachView(View * view)
 {
     this->view = view;
 }
+void BurgleBrosModel::attachController(Controller * controller)
+{
+    this->controller = controller;
+}
 vector<wall> BurgleBrosModel::getInfo2DrawWalls()
 {
     vector<wall> aux;

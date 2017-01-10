@@ -28,10 +28,10 @@
         <itemPath>GraphicPlayerCard.h</itemPath>
         <itemPath>GraphicTile.h</itemPath>
         <itemPath>GraphicToken.h</itemPath>
-        <itemPath>GraphicWall.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="Networking" projectFiles="true">
       </logicalFolder>
+      <itemPath>Controller.h</itemPath>
       <itemPath>EventData.h</itemPath>
       <itemPath>GUI.h</itemPath>
       <itemPath>ImageLoader.h</itemPath>
@@ -76,12 +76,12 @@
         <itemPath>GraphicPlayerCard.cpp</itemPath>
         <itemPath>GraphicTile.cpp</itemPath>
         <itemPath>GraphicToken.cpp</itemPath>
-        <itemPath>GraphicWall.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="Networking" projectFiles="true">
         <itemPath>NetworkInterface.cpp</itemPath>
         <itemPath>Networking.cpp</itemPath>
       </logicalFolder>
+      <itemPath>Controller.cpp</itemPath>
       <itemPath>EventData.cpp</itemPath>
       <itemPath>GUI.cpp</itemPath>
       <itemPath>ImageLoader.cpp</itemPath>
@@ -91,6 +91,36 @@
       <itemPath>StrNmbrFieldToArray.cpp</itemPath>
       <itemPath>View.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -192,6 +222,10 @@
       <item path="BurgleBrosView.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="BurgleBrosView.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Controller.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Controller.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="EventData.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -343,6 +377,10 @@
       <item path="BurgleBrosView.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="BurgleBrosView.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Controller.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Controller.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="EventData.cpp" ex="false" tool="1" flavor2="0">
       </item>

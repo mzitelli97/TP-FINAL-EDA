@@ -36,6 +36,17 @@ void BurgleBrosController::attachView(BurgleBrosView *view)
     if(view!=nullptr)
         this->view=view;
 }
+int BurgleBrosController::yesNoMessageBox(string &message)
+{
+    //Parar timers que controlan el timeout
+    //Llamar a view a que presente el yes no msg
+    
+    //Manda por network el spent ok con yes o no
+    //Devuelve x si se toco yes
+    //Devuelve y si se toco no
+}
+
+
 void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
 {
     

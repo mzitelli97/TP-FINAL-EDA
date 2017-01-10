@@ -8,6 +8,7 @@
 #include "Networking.h"
 #include "Model.h"
 #include "View.h"
+#include "Controller.h"
 
 /*typedef enum{OTHER_PLAYER_ACTION, THIS_PLAYER_ACTION} ActionOrigin;
 typedef struct{
@@ -36,6 +37,7 @@ class BurgleBrosModel : public Model
         list<string> getPosibleActions(ActionOrigin player, CardLocation tile);   //Devuelve que acciones puede realizar el jugador indicado en esa tile
         void moveGuard(unsigned int floor);
         void attachView(View * view);
+        void attachController(Controller * controller);
 	~BurgleBrosModel();
     private:
         void checkTurns();
@@ -51,6 +53,7 @@ class BurgleBrosModel : public Model
 	BurgleBrosLoots loots;
 	unsigned int extraDices[MAX_NMBR_OF_EXTRA_DICES];
         View * view;
+        Controller * controller;
 };
 #endif
 
