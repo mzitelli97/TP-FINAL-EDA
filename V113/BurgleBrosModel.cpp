@@ -496,11 +496,11 @@ list<string> BurgleBrosModel::getPosibleActions(ActionOrigin player, CardLocatio
     if(isPeekPosible(player, tile))
         aux.push_back("PEEK");
     if(isAddTokenPosible(player, tile))
-        aux.push_back("ADD TOKEN");/*
+        aux.push_back("ADD TOKEN");
     if(isAddDieToSafePossible(player, tile))
         aux.push_back("ADD DIE");
     if(isCrackSafePossible(player, tile))
-        aux.push_back("CRACK");*/
+        aux.push_back("CRACK");
     return aux;
 }
  

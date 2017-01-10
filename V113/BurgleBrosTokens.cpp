@@ -166,7 +166,7 @@ void BurgleBrosTokens::addCrackTokenOn(CardLocation location)
 }
 void BurgleBrosTokens::addCrackTokenOn(list<CardLocation> &location)
 {
-    for(list<CardLocation>::iterator it=crackedCards.begin(); it != crackedCards.end(); it++)
+    for(list<CardLocation>::iterator it=location.begin(); it != location.end(); it++)
         addCrackTokenOn(*it);
 }
 bool BurgleBrosTokens::isSafeOpened(unsigned int floor)
