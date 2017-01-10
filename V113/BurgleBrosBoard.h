@@ -18,9 +18,6 @@ public:
 	bool adjacentCards(CardLocation source, CardRelativeLocation whereToMove);
 	bool adjacentCards(CardLocation source, CardLocation destination);
 	void getWalls(vector<wall> &vector);
-        bool isMovePossible(CardLocation source, CardRelativeLocation whereToMove);
-	bool isMovePossible(CardLocation source, CardLocation destination);
-	bool isMovePossible(std::string source, std::string destination);
 	BurgleBrosCard getCardCopy(CardLocation location);
 	BurgleBrosCard getCardCopy(std::string location);
         bool neighbours(CardLocation cardA,CardLocation cardB);//Desarrollar
