@@ -42,8 +42,8 @@ void GraphicToken::setPosition(CardLocation location, unsigned int number)
     {
         myHeight = totalHeight;
         myWidth = totalWidth;
-        tile_width = myWidth/6.0;
-        tile_height = myHeight/6.0;
+        tile_width = myWidth/5.0;
+        tile_height = myHeight/5.0;
     }
     if (tile_height < tile_width) tile_width = tile_height;
     else tile_height = tile_width;

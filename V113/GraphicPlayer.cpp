@@ -35,8 +35,8 @@ void GraphicPlayer::setLocation(CardLocation location)
     {
         myWidth = totalWidth;
         myHeight = totalHeight;
-        tile_height = myHeight/6.0;
-        tile_width = myWidth/6.0;
+        tile_height = myHeight/5.0;
+        tile_width = myWidth/5.0;
     }    
     if (tile_height < tile_width) tile_width = tile_height;
     else tile_height = tile_width;

@@ -84,7 +84,7 @@ void GraphicTile::toggleZoom()
     zoomed ^= true;
     if(zoomed)
     {
-        double tile_height = totalHeight/6.0, tile_width = totalWidth/6.0;   
+        double tile_height = totalHeight/5.0, tile_width = totalWidth/5.0;   
         if (tile_height < tile_width) tile_width = tile_height;
         else tile_height = tile_width;
         double yDiff = (totalHeight-FLOOR_RAWS*tile_height)/(FLOOR_RAWS+1);
