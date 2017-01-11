@@ -517,26 +517,22 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
             gPlayer->toggleZoom();
     }
     
-    list<GraphicItem *>:: iterator guard = accessGraphicItems(SECOND_LAYER, (unsigned int) GUARD_INFO_LIST);
+    it = accessGraphicItems(SECOND_LAYER, (unsigned int) GUARD_INFO_LIST);
     Info2DrawGuard info_guard = model->getInfo2DrawGuard(floor);
-    advance(guard, floor * 2);
-    //guard floor * 2;     //advance to the items of the floor zoomed
-    if(*guard != NULL)
+    advance(it, floor * 2);  //advance to the items of the floor zoomed
+    if(*it != NULL)
     {
         /*Suppose the first item is the guard item*/
-        GraphicGuard * guard_item = dynamic_cast<GraphicGuard*> (*guard);
-        GraphicGDie * guard_die = dynamic_cast<GraphicGDie*> (*(++guard));
+        GraphicGuard * guard_item = dynamic_cast<GraphicGuard*> (*it);
+        GraphicGDie * guard_die = dynamic_cast<GraphicGDie*> (*(++it));
         if( guard_item == nullptr)
         {
             /*It means the die was the first*/
-            guard_item = dynamic_cast<GraphicGuard*>(*guard);
-            guard_die = dynamic_cast<GraphicGDie*> (*(--guard));
+            guard_item = dynamic_cast<GraphicGuard*>(*it);
+            guard_die = dynamic_cast<GraphicGDie*> (*(--it));
         }
         guard_item->toggleZoom();
         guard_die->toggleZoom();
-        guard_item->setPosition(info_guard.position);
-        guard_die->setPosition(info_guard.diePosition);
-        guard_die->setNumber(imageLoader.getImageP(RED_DICE, info_guard.dieNumber));
     }
     
     it = accessGraphicItems(SECOND_LAYER, STATIC_ITEMS);
