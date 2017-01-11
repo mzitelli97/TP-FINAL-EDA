@@ -13,7 +13,6 @@
 
 #include "GraphicWall.h"
 #define RADIX (totalWidth/270.0)
-
 #define BROWN al_map_rgb(166,94,46)
 
 GraphicWall::GraphicWall()
@@ -34,40 +33,25 @@ ItemInfo GraphicWall::IAm()
 
 void GraphicWall::setLocation(CardLocation front, CardLocation rear)
 {
-    double myWidth = FLOOR_WIDTH, myHeight = FLOOR_HEIGHT;
-    double tile_height = TILES_HEIGHT, tile_width = TILES_WIDTH;   
+    
+    logic2GraphicCardLocation(front);
+    double myWidth = FLOOR_WIDTH, myHeight = FLOOR_HEIGHT; 
     if(zoomed)
     {
         myWidth = totalWidth;
         myHeight = totalHeight;
-        tile_height = myHeight/4.2;
-        tile_width = myWidth/4.2;
     }
-    if (tile_height < tile_width) tile_width = tile_height;
-    else tile_height = tile_width;
-    double yDiff = (myHeight-FLOOR_RAWS*tile_height)/(FLOOR_RAWS+1);
-    double xDiff = (myWidth-FLOOR_COLUMNS*tile_width)/(FLOOR_COLUMNS+1);
+    double yDiff = (myHeight-FLOOR_RAWS*height)/(FLOOR_RAWS+1);
+    double xDiff = (myWidth-FLOOR_COLUMNS*width)/(FLOOR_COLUMNS+1);
     if ((xDiff > yDiff && !zoomed) || (xDiff < yDiff && zoomed)) yDiff = xDiff;
     else xDiff = yDiff;
-    min.y = yDiff * ((float)front.row+1) + tile_height * (float)front.row;
-    min.x = xDiff * ((float)front.column+1) + tile_width * (float)front.column;
-    if(!zoomed)
-    {
-        min.y += FLOOR_MIN_Y;
-        min.x += FLOOR_MIN_X + FLOOR_WIDTH * front.floor + SPACE_BETWEEN_FLOORS * front.floor;
-    }
-    max.y = min.y + tile_height;
-    max.x = min.x + tile_width;
-    
     if(front.row == rear.row) //it means the wall is vertical
     {
         width = xDiff;
-        height = tile_height;
         min.x = max.x;
     }
     else //it means the wall is horizontal
     {
-        width = tile_width;
         height = yDiff;
         min.y = max.y;
     }

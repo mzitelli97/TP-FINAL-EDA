@@ -37,34 +37,11 @@ ItemInfo GraphicToken::IAm()
 void GraphicToken::setPosition(CardLocation location, unsigned int number)
 {
     /*Convert logic location to graphic location*/
-    double myWidth = FLOOR_WIDTH , myHeight = FLOOR_HEIGHT;
-    double tile_height = TILES_HEIGHT, tile_width = TILES_WIDTH;
-    if(zoomed)
-    {
-        myHeight = totalHeight;
-        myWidth = totalWidth;
-        tile_width = myWidth/4.2;
-        tile_height = myHeight/4.2;
-    }
-    if (tile_height < tile_width) tile_width = tile_height;
-    else tile_height = tile_width;
-    double yDiff = (myHeight-FLOOR_RAWS*tile_height)/(FLOOR_RAWS+1);
-    double xDiff = (myWidth-FLOOR_COLUMNS*tile_width)/(FLOOR_COLUMNS+1);
-    if ((xDiff > yDiff && !zoomed) || (xDiff < yDiff && zoomed)) yDiff = xDiff;
-    else xDiff = yDiff;
-    min.y = yDiff * ((float)location.row+1) + tile_height * (float)location.row;
-    min.x = xDiff * ((float)location.column+1) + tile_width * (float)location.column;
-    if(!zoomed)
-    {
-        min.y += FLOOR_MIN_Y;
-        min.x += FLOOR_MIN_X + FLOOR_WIDTH * location.floor + SPACE_BETWEEN_FLOORS * location.floor;
-    }
-    max.y = min.y + tile_height;
-    max.x = min.x + tile_width;
+    logic2GraphicCardLocation(location);
     
-    min.x = min.x + tile_width/1.4;
-    min.y = min.y + tile_height/7.5 * (number%6);
-    max.y = max.y - tile_height/1.4 + tile_height/7.5 * (number%6);
+    min.x = min.x + width/1.4;
+    min.y = min.y + height/7.5 * (number%6);
+    max.y = max.y - height/1.4 + height/7.5 * (number%6);
     
     width = max.x-min.x;
     height = max.y- min.y;

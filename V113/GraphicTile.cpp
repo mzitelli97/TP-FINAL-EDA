@@ -20,9 +20,9 @@ GraphicTile::GraphicTile(ALLEGRO_BITMAP * front,ALLEGRO_BITMAP * back,CardLocati
     this->back = back;
     this->location=location;
     Visible = false;
+    zoomed = false;
     setScreenDimentions(width, height);
     setPosition(location);
-    zoomed = false;
 }
 bool GraphicTile::isVisible()
 {
@@ -35,17 +35,8 @@ void GraphicTile::setVisible(ALLEGRO_BITMAP * safeNumber)
 }
 void GraphicTile::setPosition(CardLocation location)
 {
-    double tile_height = TILES_HEIGHT, tile_width = TILES_WIDTH;   
-    if (tile_height < tile_width) tile_width = tile_height;
-    else tile_height = tile_width;
-    double yDiff = (FLOOR_HEIGHT-FLOOR_RAWS*tile_height)/(FLOOR_RAWS+1);
-    double xDiff = (FLOOR_WIDTH-FLOOR_COLUMNS*tile_width)/(FLOOR_COLUMNS+1);
-     if (xDiff > yDiff) yDiff = xDiff;
-    else xDiff = yDiff;
-    min.y = FLOOR_MIN_Y + yDiff * ((float)location.row+1) + tile_height * (float)location.row;
-    min.x = FLOOR_MIN_X + FLOOR_WIDTH * location.floor + SPACE_BETWEEN_FLOORS * location.floor + xDiff * ((float)location.column+1) + tile_width * (float)location.column;
-    max.y = min.y + tile_height;
-    max.x = min.x + tile_width;
+    /*Convert logic location to graphic location*/
+    logic2GraphicCardLocation(location);
     
     center.x= (min.x+max.x)/2;
     center.y= (min.y+max.y)/2;
@@ -82,26 +73,7 @@ ItemInfo GraphicTile::IAm()
 void GraphicTile::toggleZoom()
 {
     zoomed ^= true;
-    if(zoomed)
-    {
-        double tile_height = totalHeight/4.2, tile_width = totalWidth/4.2;   
-        if (tile_height < tile_width) tile_width = tile_height;
-        else tile_height = tile_width;
-        double yDiff = (totalHeight-FLOOR_RAWS*tile_height)/(FLOOR_RAWS+1);
-        double xDiff = (totalWidth-FLOOR_COLUMNS*tile_width)/(FLOOR_COLUMNS+1);
-         if (xDiff < yDiff) yDiff = xDiff;
-        else xDiff = yDiff;
-        min.y =  yDiff * ((float)location.row+1) + tile_height * (float)location.row;
-        min.x =  xDiff * ((float)location.column+1) + tile_width * (float)location.column;
-        max.y = min.y + tile_height;
-        max.x = min.x + tile_width;
-
-        center.x= (min.x+max.x)/2;
-        center.y= (min.y+max.y)/2;
-        width = max.x-min.x;
-        height = max.y- min.y;
-    }
-    else setPosition(location);
+    setPosition(location);
 }
 
 

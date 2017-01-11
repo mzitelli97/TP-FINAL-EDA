@@ -40,34 +40,11 @@ ItemInfo GraphicGuard::IAm()
 void GraphicGuard::setPosition(CardLocation location)
 {
     /*Convert logic location to graphic location*/
-    double myWidth = FLOOR_WIDTH, myHeight = FLOOR_HEIGHT;
-    double tile_height = TILES_HEIGHT, tile_width = TILES_WIDTH;   
-    if(zoomed)
-    {
-        myWidth = totalWidth;
-        myHeight = totalHeight;
-        tile_height = myHeight/4.2;
-        tile_width = myWidth/4.2;
-    }
-    if (tile_height < tile_width) tile_width = tile_height;
-    else tile_height = tile_width;
-    double yDiff = (myHeight-FLOOR_RAWS*tile_height)/(FLOOR_RAWS+1);
-    double xDiff = (myWidth-FLOOR_COLUMNS*tile_width)/(FLOOR_COLUMNS+1);
-    if ((xDiff > yDiff && !zoomed) || (xDiff < yDiff && zoomed)) yDiff = xDiff;
-    else xDiff = yDiff;
-    min.y = yDiff * ((float)location.row+1) + tile_height * (float)location.row;
-    min.x = xDiff * ((float)location.column+1) + tile_width * (float)location.column;
-    if(!zoomed)
-    {
-        min.y += FLOOR_MIN_Y;
-        min.x += FLOOR_MIN_X + FLOOR_WIDTH * location.floor + SPACE_BETWEEN_FLOORS * location.floor;
-    }
-    max.y = min.y + tile_height;
-    max.x = min.x + tile_width;
+    logic2GraphicCardLocation(location);
     
-    min.x = min.x + tile_width/2 - SEPARATION * (1 + (int)zoomed * 2.0);
+    min.x = min.x + width/2 - SEPARATION * (1 + (int)zoomed * 2.0);
     max.x = max.x - SEPARATION * (1 + (int)zoomed * 2.0);
-    min.y = min.y + tile_height/2;
+    min.y = min.y + height/2;
     
     center.x= (min.x+max.x)/2;
     center.y= (min.y+max.y)/2;

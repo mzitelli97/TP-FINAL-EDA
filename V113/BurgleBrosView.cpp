@@ -45,6 +45,7 @@ BurgleBrosView::BurgleBrosView() {
     al_destroy_font(font);
     al_set_target_backbuffer(display);
     onZoom = false;
+    floorZoomed = NO_FLOOR_ZOOMED;
     
     #ifdef ICON
     ALLEGRO_BITMAP *icon = al_load_bitmap(ICON);                              //Falta checkear.
@@ -293,23 +294,6 @@ void BurgleBrosView::updateTokens(BurgleBrosModel* model)
     list<list<GraphicItem *>>::iterator it_itemType;
     it_itemType = deleteList(SECOND_LAYER, TOKENS_LIST);
     
-    /*For test*/
-    Info2DrawTokens aux = {ALARM_TOKEN, {1,1,0}};
-    info_tokens.push_back(aux);
-    aux = {KEYPAD_TOKEN, {1,1,0}};
-    info_tokens.push_back(aux);
-    aux = {HACK_TOKEN, {1,1,0}};
-    info_tokens.push_back(aux);
-    aux = {STEALTH_TOKEN, {1,1,0}};
-    info_tokens.push_back(aux);
-    aux = {SAFE_TOKEN, {1,1,0}};
-    info_tokens.push_back(aux);
-    aux = {PERSIAN_KITTY_TOKEN, {1,1,0}};
-    info_tokens.push_back(aux);
-    aux = {DOWNSTAIRS_TOKEN, {1,1,0}};
-    info_tokens.push_back(aux);
-    /***********/
-    
     map<CardLocation, unsigned int> tokensCount;
     
     list<Info2DrawTokens>::iterator it;
@@ -405,20 +389,14 @@ void BurgleBrosView::updateExtraDices(BurgleBrosModel* model)
     vector<unsigned int> info_dices = model->getInfo2DrawExtraDices();
     list<list<GraphicItem *>>::iterator it_itemType;
     it_itemType = deleteList(FIRST_LAYER, EXTRA_DICES_LIST);
-    
-    /*For test*//*
-    info_dices[0] = 1;
-    info_dices[1] = 5;
-    info_dices[2] = 2;
-    info_dices[3] = 6;*/
-    /**********/
-    
+       
     for( int i = 0; i < info_dices.size(); i++)
     {
         if(info_dices[i] != 0)      //if its 0 it means there is no such extra die
         {
             GraphicEDices * dice = new GraphicEDices(imageLoader.getImageP(WHITE_DICE, info_dices[i]));
             dice->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
+            if(onZoom) dice->toggleZoom();
             dice->setPosition(i);
             it_itemType->push_back(dice);
         }
@@ -497,9 +475,7 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
     {
         GraphicTile * tile = dynamic_cast<GraphicTile *>(*it);
         if(tile->getLocation().floor == floor)
-        {
             tile->toggleZoom();
-        }
     }
 
     it = accessGraphicItems(SECOND_LAYER, PLAYER_INFO_LIST);
@@ -520,26 +496,22 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
             gPlayer->toggleZoom();
     }
     
-    list<GraphicItem *>:: iterator guard = accessGraphicItems(SECOND_LAYER, (unsigned int) GUARD_INFO_LIST);
+    it = accessGraphicItems(SECOND_LAYER, (unsigned int) GUARD_INFO_LIST);
     Info2DrawGuard info_guard = model->getInfo2DrawGuard(floor);
-    advance(guard, floor * 2);
-    //guard floor * 2;     //advance to the items of the floor zoomed
-    if(*guard != NULL)
+    advance(it, floor * 2);  //advance to the items of the floor zoomed
+    if(*it != NULL)
     {
         /*Suppose the first item is the guard item*/
-        GraphicGuard * guard_item = dynamic_cast<GraphicGuard*> (*guard);
-        GraphicGDie * guard_die = dynamic_cast<GraphicGDie*> (*(++guard));
+        GraphicGuard * guard_item = dynamic_cast<GraphicGuard*> (*it);
+        GraphicGDie * guard_die = dynamic_cast<GraphicGDie*> (*(++it));
         if( guard_item == nullptr)
         {
             /*It means the die was the first*/
-            guard_item = dynamic_cast<GraphicGuard*>(*guard);
-            guard_die = dynamic_cast<GraphicGDie*> (*(--guard));
+            guard_item = dynamic_cast<GraphicGuard*>(*it);
+            guard_die = dynamic_cast<GraphicGDie*> (*(--it));
         }
         guard_item->toggleZoom();
         guard_die->toggleZoom();
-        guard_item->setPosition(info_guard.position);
-        guard_die->setPosition(info_guard.diePosition);
-        guard_die->setNumber(imageLoader.getImageP(RED_DICE, info_guard.dieNumber));
     }
     
     it = accessGraphicItems(SECOND_LAYER, STATIC_ITEMS);
@@ -553,6 +525,8 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
     }
     
 }
+
+
 
 void BurgleBrosView::cheatCards()
 {
