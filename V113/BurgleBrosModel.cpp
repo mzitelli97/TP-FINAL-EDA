@@ -274,12 +274,12 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
             {
                 std::vector<string> msgToShow({DEADBOLT_TEXT,SPEND_ACTIONS_TEXTB,GET_BACK_TEXTB});
                 string userChoice = controller->askForSpentOK(msgToShow);
-                if(userChoice==SPEND_ACTIONS_TEXTB)
+                if(userChoice==SPEND_ACTIONS_TEXTB)//decide gastar las acciones y entra
                 {
                     for(unsigned int i=0;i<3;++i)
                         movingPlayer->decActions();
                 }
-                else if(userChoice==GET_BACK_TEXTB)
+                else if(userChoice==GET_BACK_TEXTB)//decide no gastar las acciones y vuelve atras
                     movingPlayer->setPosition(prevLocation);
             }
                 
