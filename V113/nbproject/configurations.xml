@@ -14,6 +14,7 @@
         <itemPath>BurgleBrosLoots.h</itemPath>
         <itemPath>BurgleBrosModel.h</itemPath>
         <itemPath>BurgleBrosPlayer.h</itemPath>
+        <itemPath>BurgleBrosSound.h</itemPath>
         <itemPath>BurgleBrosTokens.h</itemPath>
         <itemPath>BurgleBrosView.h</itemPath>
       </logicalFolder>
@@ -43,6 +44,7 @@
       <itemPath>LibsInit.h</itemPath>
       <itemPath>Model.h</itemPath>
       <itemPath>MouseED.h</itemPath>
+      <itemPath>SoundManager.h</itemPath>
       <itemPath>StrNmbrFieldToArray.h</itemPath>
       <itemPath>View.h</itemPath>
     </logicalFolder>
@@ -63,6 +65,7 @@
         <itemPath>BurgleBrosLoots.cpp</itemPath>
         <itemPath>BurgleBrosModel.cpp</itemPath>
         <itemPath>BurgleBrosPlayer.cpp</itemPath>
+        <itemPath>BurgleBrosSound.cpp</itemPath>
         <itemPath>BurgleBrosTokens.cpp</itemPath>
         <itemPath>BurgleBrosView.cpp</itemPath>
       </logicalFolder>
@@ -94,6 +97,7 @@
       <itemPath>ImageLoader.cpp</itemPath>
       <itemPath>LibsInit.cpp</itemPath>
       <itemPath>Model.cpp</itemPath>
+      <itemPath>SoundManager.cpp</itemPath>
       <itemPath>StrNmbrFieldToArray.cpp</itemPath>
       <itemPath>View.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
@@ -285,6 +289,10 @@
       </item>
       <item path="BurgleBrosPlayer.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="BurgleBrosSound.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosSound.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="BurgleBrosTokens.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="BurgleBrosTokens.h" ex="false" tool="3" flavor2="0">
@@ -380,6 +388,10 @@
       <item path="Networking.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Networking.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SoundManager.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SoundManager.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="StrNmbrFieldToArray.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -448,6 +460,10 @@
       </item>
       <item path="BurgleBrosPlayer.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="BurgleBrosSound.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="BurgleBrosSound.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="BurgleBrosTokens.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="BurgleBrosTokens.h" ex="false" tool="3" flavor2="0">
@@ -543,6 +559,10 @@
       <item path="Networking.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Networking.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SoundManager.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SoundManager.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="StrNmbrFieldToArray.cpp" ex="false" tool="1" flavor2="0">
       </item>

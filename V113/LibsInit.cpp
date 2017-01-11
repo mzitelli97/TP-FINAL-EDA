@@ -5,6 +5,8 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
 #include "LibsInit.h"
 
 using namespace std;
@@ -25,11 +27,20 @@ int allegro_startup(void)
 						al_init_font_addon();
 						if (al_init_ttf_addon())
 						{
-							return AL_STARTUP_SUCCESS;
+                                                    if(al_install_audio())
+                                                    {
+                                                        if(al_init_acodec_addon())
+                                                            return AL_STARTUP_SUCCESS;
+                                                        else
+                                                            cout << "ERROR: Failed to init acodec addon\n";
+                                                        al_shutdown_ttf_addon();
+                                                    }
+                                                    else
+                                                        cout << "ERROR: Failed to install audio\n";
+                                                    al_shutdown_ttf_addon();
 						}
 						else
 							cout << "ERROR: Failed to initialize ttf addon\n";
-						al_shutdown_ttf_addon();
 						al_shutdown_font_addon();
 						al_shutdown_image_addon();
 					}
