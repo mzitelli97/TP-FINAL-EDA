@@ -35,8 +35,8 @@ void GraphicPlayer::setLocation(CardLocation location)
     {
         myWidth = totalWidth;
         myHeight = totalHeight;
-        tile_height = myHeight/5.0;
-        tile_width = myWidth/5.0;
+        tile_height = myHeight/4.2;
+        tile_width = myWidth/4.2;
     }
     if (tile_height < tile_width) tile_width = tile_height;
     else tile_height = tile_width;
@@ -63,12 +63,6 @@ void GraphicPlayer::setLocation(CardLocation location)
     width = max.x-min.x;
     height = max.y- min.y;
 }
-
-void GraphicPlayer::toggleZoom()
-{
-    zoomed ^= true;
-}
-
 
 GraphicPlayer::~GraphicPlayer() {
 }

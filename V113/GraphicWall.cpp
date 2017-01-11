@@ -34,15 +34,28 @@ ItemInfo GraphicWall::IAm()
 
 void GraphicWall::setLocation(CardLocation front, CardLocation rear)
 {
+    double myWidth = FLOOR_WIDTH, myHeight = FLOOR_HEIGHT;
     double tile_height = TILES_HEIGHT, tile_width = TILES_WIDTH;   
+    if(zoomed)
+    {
+        myWidth = totalWidth;
+        myHeight = totalHeight;
+        tile_height = myHeight/4.2;
+        tile_width = myWidth/4.2;
+    }
     if (tile_height < tile_width) tile_width = tile_height;
     else tile_height = tile_width;
-    double yDiff = (FLOOR_HEIGHT-FLOOR_RAWS*tile_height)/(FLOOR_RAWS+1);
-    double xDiff = (FLOOR_WIDTH-FLOOR_COLUMNS*tile_width)/(FLOOR_COLUMNS+1);
-     if (xDiff > yDiff) yDiff = xDiff;
+    double yDiff = (myHeight-FLOOR_RAWS*tile_height)/(FLOOR_RAWS+1);
+    double xDiff = (myWidth-FLOOR_COLUMNS*tile_width)/(FLOOR_COLUMNS+1);
+    if ((xDiff > yDiff && !zoomed) || (xDiff < yDiff && zoomed)) yDiff = xDiff;
     else xDiff = yDiff;
-    min.y = FLOOR_MIN_Y + yDiff * ((float)front.row+1) + tile_height * (float)front.row;
-    min.x = FLOOR_MIN_X + FLOOR_WIDTH * front.floor + SPACE_BETWEEN_FLOORS * front.floor + xDiff * ((float)front.column+1) + tile_width * (float)front.column;
+    min.y = yDiff * ((float)front.row+1) + tile_height * (float)front.row;
+    min.x = xDiff * ((float)front.column+1) + tile_width * (float)front.column;
+    if(!zoomed)
+    {
+        min.y += FLOOR_MIN_Y;
+        min.x += FLOOR_MIN_X + FLOOR_WIDTH * front.floor + SPACE_BETWEEN_FLOORS * front.floor;
+    }
     max.y = min.y + tile_height;
     max.x = min.x + tile_width;
     

@@ -65,6 +65,7 @@ private:
     ALLEGRO_BITMAP * backScreen;
     ImageLoader imageLoader;
     bool onZoom;
+    int floorZoomed;
 
 };
 

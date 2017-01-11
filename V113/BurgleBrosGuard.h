@@ -30,6 +30,7 @@ public:
 	CardLocation getPosition();
 	CardLocation getTargetPosition();
         void init();
+        void incDiceNumber();
         bool step();                                        //DESARROLLAR (devuelve 1 si llego al objetivo)
         void setNewTarget(CardLocation alarm);              //DESARROLLAR
         void setNewPathToTarget(list<CardLocation> &pathToTarget);   //DESARROLLAR

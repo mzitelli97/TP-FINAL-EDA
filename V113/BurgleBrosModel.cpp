@@ -337,21 +337,26 @@ bool BurgleBrosModel::crackSafe(ActionOrigin playerId, CardLocation safe)
     BurgleBrosPlayer* p= getP2Player(playerId);
     if(isCrackSafePossible(playerId,safe))
     {
-        p->decActions();
+        p->decActions();                //Cuesta una acción hacer un creack
         vector<unsigned int> aux;
-        if(p->getCharacter() == THE_PETERMAN)
+        if(p->getCharacter() == THE_PETERMAN)       //Si es peterman tira con un dado extra
             aux=dice.throwDiceForSafeWithExtraDie(safe.floor);
-        else
+        else                                        //Sino tira los dados normales
             aux=dice.throwDiceForSafe(safe.floor);
-        list<CardLocation> tilesCrackedOnThisAction = board.tilesWithCracked(aux,safe.floor);
+        list<CardLocation> tilesCrackedOnThisAction = board.tilesWithCracked(aux,safe.floor);   //Obtengo las cartas que tienen como safe number uno de los numeros que salio en el dado
         tokens.addCrackTokenOn(tilesCrackedOnThisAction);
         if(tokens.isSafeOpened(safe.floor))
         {
-            p->attachLoot(loots.getLoot(playerId));
+            Loot lootGotten =loots.getLoot(playerId);
+            p->attachLoot(lootGotten);
+            if(lootGotten==GOLD_BAR)
+                loots.setGoldBardLocation(safe);
             board.setSafeCracked(safe.floor);
+            triggerSilentAlarm(safe.floor);
         }
         view->update(this);
         checkTurns();
+        retVal=true;
     }
     return retVal;        
 }
@@ -608,7 +613,13 @@ void BurgleBrosModel::setGuardsNewPath(unsigned int floor)
     list<CardLocation> temp = board.getShortestPath(guards[floor].getPosition(), newTargetLocation);
     guards[floor].setNewPathToTarget(temp);
 }
-
+void BurgleBrosModel::triggerSilentAlarm(unsigned int floor)
+{
+    for(int i=floor; i >= 0; i--)
+    {
+        guards[i].incDiceNumber();
+    }
+}
 
 
 
