@@ -452,7 +452,6 @@ list<list<GraphicItem *>>::iterator BurgleBrosView::deleteList(Layers layer, uns
 }
 string BurgleBrosView::MessageBox(vector<string> &msg)
 {
-    string retVal="";
     int aux=0;
     if(msg.size()>=4)
     {
@@ -460,12 +459,12 @@ string BurgleBrosView::MessageBox(vector<string> &msg)
         for(unsigned int i=3;i<msg.size();++i)
             buttons+=msg[i]+"|";
         buttons.pop_back();
-        cout<<buttons<<endl;
+        //cout<<buttons<<endl;
         while(!(aux=al_show_native_message_box(display, msg[0].c_str(),msg[1].c_str(),msg[2].c_str(),buttons.c_str(), ALLEGRO_MESSAGEBOX_QUESTION)));
-        retVal+=msg[2+aux];
     }
-    cout<<aux;
-    return aux;
+    //cout<<2+aux<<endl;
+    //cout<<msg[2+aux]<<endl;
+    return msg[2+aux];
 }
 
 
