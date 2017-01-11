@@ -21,6 +21,7 @@ BurgleBrosController::BurgleBrosController()
 {
     modelPointer=nullptr;
     view=nullptr;
+    gameIsOver=false;
 }
 
 BurgleBrosController::BurgleBrosController(const BurgleBrosController& orig) {
@@ -35,6 +36,10 @@ void BurgleBrosController::attachView(BurgleBrosView *view)
 {
     if(view!=nullptr)
         this->view=view;
+}
+bool BurgleBrosController::checkIfGameFinished()
+{
+    return gameIsOver;
 }
 string BurgleBrosController::askForSpentOK(vector<string> &message)
 {
@@ -56,14 +61,15 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
         if( p2MouseData != nullptr)
         {
             ItemInfo temp;
+            vector<string> exitMsg={"Quit","Confirm quit", "You have pressed the quit button. Are you sure you wanna quit?"};
             Point aux={(double)p2MouseData->getX(), (double)p2MouseData->getY()};
             temp=view->itemFromClick(aux);
             //location=view->point2Location(aux);
             CardLocation * auxLocation;
             ActionOrigin * auxPlayer;
             auxInfo * menuInfo;
-            CardLocation aux1 = {0,3,3};
-            unsigned int * guardFloor;
+            CardLocation aux1 = {1,3,3};
+            unsigned int * floor;
             switch(temp.type)
             {
    /*For the other cases it may be necessary functions like point2Guard, point2Player, to recognize which
@@ -71,28 +77,20 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                 case TILE_CLICK:
                     auxLocation = (CardLocation *)temp.info;
                     view->showMenu(modelPointer->getPosibleActions(modelPointer->getPlayerOnTurn(), *auxLocation), aux, *auxLocation);
-                    if(*auxLocation == aux1)
-                        view->zoomFloor(0,modelPointer);
                     view->update(modelPointer);
                     break;
                 case MENU_ITEM_CLICK:
                     menuInfo = (auxInfo *)temp.info;
                     interpretAction(menuInfo->option, menuInfo->location);
-                    //view->eraseMenu();
                     view->update(modelPointer);
                     break;
                 case LOOT_CARDS_CLICK:
                     auxPlayer = (ActionOrigin *)temp.info;
-                    /*if(*auxPlayer == THIS_PLAYER_ACTION)
-                        view->zoomFloor(0,modelPointer);
-                    else if(*auxPlayer == OTHER_PLAYER_ACTION)
-                        view->zoomFloor(1,modelPointer);
-                    else view->zoomFloor(2,modelPointer);
-                    view->update(modelPointer);*/
                     break;
                 case GUARD_CARDS_CLICK:
-                    guardFloor = (unsigned int *)temp.info;
-                    cout<<*guardFloor<<endl;
+                    floor = (unsigned int *)temp.info;
+                    cout<<*floor<<endl;
+                    break;
                 case CHAR_CARD_CLICK:
                     auxPlayer = (ActionOrigin *)temp.info;
                     if(*auxPlayer == THIS_PLAYER_ACTION)
@@ -100,6 +98,19 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                         view->cheatCards();
                         view->update(modelPointer);
                     }
+                    break;
+                case ZOOM_CLICK:
+                    floor = (unsigned int *)temp.info;
+                    view->zoomFloor(*floor,modelPointer);
+                    view->update(modelPointer);
+                    break;
+                case EXIT_BUTTON_CLICK:
+                    if(view->yesNoMessageBox(exitMsg)==1)
+                    {
+                        gameIsOver=true;
+                        quitCause=USER_QUIT;
+                    }
+                    break;
                 default:
                     break;
             }

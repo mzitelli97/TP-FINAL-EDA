@@ -26,6 +26,7 @@
 #include "GraphicMenuItem.h"
 #include "GraphicWall.h"
 #include "allegro5/allegro_native_dialog.h"
+#include "GraphicButton.h"
 
 #define SCREEN_W 1800
 #define SCREEN_H 900
@@ -107,6 +108,16 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     
     //creo una lista de Buttons
     list<GraphicItem* > auxButtons_list;
+    
+    for(int i = 0; i < BOARD_STANDARD_FLOORS; i++)
+    {
+        GraphicButton *auxButton = new GraphicButton(imageLoader.getImageP(ZOOM_BUTTON), nullptr, ZOOM_BUTTON, al_get_display_width(display), al_get_display_height(display));
+        auxButton->setZoomFloor(i);
+        auxButton->setLocation();
+        auxButtons_list.push_back(auxButton);
+    }
+    GraphicButton *auxButton = new GraphicButton(imageLoader.getImageP(QUIT_BUTTON), nullptr, QUIT_BUTTON, al_get_display_width(display), al_get_display_height(display));
+    auxButtons_list.push_back(auxButton);
     //creo una lista de graphicCharacterscards
     list<GraphicItem* > auxCharactersCards_list;
     
@@ -118,12 +129,7 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
             
     //creo una lista para graphicLoots
     list<GraphicItem* > auxLoot_list;
-    
-    GraphicLoot * auxLoot = new GraphicLoot(imageLoader.getImageBackP(infoLoot.front().loot));
-    auxLoot->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
-    auxLoot->setPosition(0);
-    auxLoot_list.push_back(auxLoot);
-    
+       
     //creo una lista para extra_dies
     list<GraphicItem* > auxExtraDies_list;
     
@@ -187,6 +193,7 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
 
     //creo una lista de static item
     list<GraphicItem *> auxStaticItem_list;
+    /*Paredes de todos los pisos*/
     for(int i = 0; i < NUMBER_OF_WALLS * BOARD_STANDARD_FLOORS; i++)
     {
         GraphicWall * wall_i = new GraphicWall;
@@ -194,7 +201,11 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
         wall_i->setLocation(infoWalls[i].FrontCard, infoWalls[i].RearCard);
         auxStaticItem_list.push_back(wall_i);
     }
-    
+    /*Mazo de loots (loot boca abajo, en el medio)*/
+    GraphicLoot * auxLoot = new GraphicLoot(imageLoader.getImageBackP(infoLoot.front().loot));
+    auxLoot->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
+    auxLoot->setPosition(0);
+    auxStaticItem_list.push_back(auxLoot);
 
     //**********push sobre la segunda capa 
     it_layers->push_back(auxToken_list);
@@ -217,8 +228,7 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
 void BurgleBrosView::update(Model* auxModel)
 {
     /*Update all*/
-    BurgleBrosModel * model = (BurgleBrosModel *) auxModel; 
-    //string aux;
+    BurgleBrosModel * model = (BurgleBrosModel *) auxModel;
     updateTiles(model);
     updateTokens(model);
     updateCharacters(model);
@@ -248,7 +258,6 @@ void BurgleBrosView::update(Model* auxModel)
         }
     }
     al_flip_display();
-    //cin>>aux;
 }
 ItemInfo BurgleBrosView::itemFromClick(Point point)
 {
@@ -312,7 +321,7 @@ void BurgleBrosView::updateLoots(BurgleBrosModel * model)
 {
     list<Info2DrawLoot> aux = model->getInfo2DrawLoot();
     map<ActionOrigin, unsigned int> lootsCount;
-    
+       
     list<list<GraphicItem *>>::iterator itemsList = deleteList(FIRST_LAYER, LOOT_SHOW_LIST);
     for(list<Info2DrawLoot>::iterator newInfo = aux.begin() ; newInfo!= aux.end(); newInfo++)
     {
@@ -359,7 +368,7 @@ void BurgleBrosView::updateGuards(BurgleBrosModel* model)
         /*Here update all things related to a guard on a floor*/
         Info2DrawGuard info_guard = model->getInfo2DrawGuard(i);
         
-        if(*guard != NULL)
+        if(*guard != NULL )
         {
             /*Suppose the first item is the guard item*/
             GraphicGuard * guard_item = dynamic_cast<GraphicGuard*> (*guard);
@@ -372,7 +381,9 @@ void BurgleBrosView::updateGuards(BurgleBrosModel* model)
                 guard++;
             }
             guard++;    //point to next floor
+            guard_item->setInitialized(info_guard.initialized);
             guard_item->setPosition(info_guard.position);
+            guard_die->setInitialized(info_guard.initialized);
             guard_die->setPosition(info_guard.diePosition);
             guard_die->setNumber(imageLoader.getImageP(RED_DICE, info_guard.dieNumber));
 
@@ -443,7 +454,10 @@ string BurgleBrosView::MessageBox(vector<string> &msg)
     //cout<<msg[2+aux]<<endl;
     return msg[2+aux];
 }
-
+int BurgleBrosView::yesNoMessageBox(vector<string> &msg)
+{
+    return al_show_native_message_box(display, msg[0].c_str(),msg[1].c_str(),msg[2].c_str(),nullptr, ALLEGRO_MESSAGEBOX_YES_NO);
+}
 
 void BurgleBrosView::showMenu(list<string> options, Point click, CardLocation tile)
 {
@@ -520,13 +534,18 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
     it = accessGraphicItems(SECOND_LAYER, STATIC_ITEMS);
     advance(it,NUMBER_OF_WALLS * floor);
     vector<wall> infoWalls = model->getInfo2DrawWalls();
-    for(int i = NUMBER_OF_WALLS * floor; i < NUMBER_OF_WALLS; it++, i++)
+    for(int i = 0; i < NUMBER_OF_WALLS; it++, i++)
     {
         GraphicWall * wall = dynamic_cast<GraphicWall *> (*it);
         wall->toggleZoom();
-        wall->setLocation(infoWalls[i].FrontCard, infoWalls[i].RearCard);
+        wall->setLocation(infoWalls[i+NUMBER_OF_WALLS * floor].FrontCard, infoWalls[i+NUMBER_OF_WALLS * floor].RearCard);
     }
     
+    it = accessGraphicItems(FIRST_LAYER, BUTTONS_LIST);
+    advance(it, floor);
+    GraphicButton * button = dynamic_cast<GraphicButton *> (*it);
+    button->toggleZoom();
+    button->setLocation();
 }
 
 

@@ -44,6 +44,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/BurgleBrosLoots.o \
 	${OBJECTDIR}/BurgleBrosModel.o \
 	${OBJECTDIR}/BurgleBrosPlayer.o \
+	${OBJECTDIR}/BurgleBrosSound.o \
 	${OBJECTDIR}/BurgleBrosTokens.o \
 	${OBJECTDIR}/BurgleBrosView.o \
 	${OBJECTDIR}/Controller.o \
@@ -68,6 +69,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/MouseED.o \
 	${OBJECTDIR}/NetworkInterface.o \
 	${OBJECTDIR}/Networking.o \
+	${OBJECTDIR}/SoundManager.o \
 	${OBJECTDIR}/StrNmbrFieldToArray.o \
 	${OBJECTDIR}/View.o \
 	${OBJECTDIR}/main.o
@@ -141,6 +143,11 @@ ${OBJECTDIR}/BurgleBrosPlayer.o: BurgleBrosPlayer.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags allegro-5.0` `pkg-config --cflags allegro_acodec-5.0` `pkg-config --cflags allegro_audio-5.0` `pkg-config --cflags allegro_color-5.0` `pkg-config --cflags allegro_dialog-5.0` `pkg-config --cflags allegro_font-5.0` `pkg-config --cflags allegro_image-5.0` `pkg-config --cflags allegro_main-5.0` `pkg-config --cflags allegro_memfile-5.0` `pkg-config --cflags allegro_physfs-5.0` `pkg-config --cflags allegro_primitives-5.0` `pkg-config --cflags allegro_ttf-5.0` `pkg-config --cflags apr-1` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/BurgleBrosPlayer.o BurgleBrosPlayer.cpp
+
+${OBJECTDIR}/BurgleBrosSound.o: BurgleBrosSound.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags allegro-5.0` `pkg-config --cflags allegro_acodec-5.0` `pkg-config --cflags allegro_audio-5.0` `pkg-config --cflags allegro_color-5.0` `pkg-config --cflags allegro_dialog-5.0` `pkg-config --cflags allegro_font-5.0` `pkg-config --cflags allegro_image-5.0` `pkg-config --cflags allegro_main-5.0` `pkg-config --cflags allegro_memfile-5.0` `pkg-config --cflags allegro_physfs-5.0` `pkg-config --cflags allegro_primitives-5.0` `pkg-config --cflags allegro_ttf-5.0` `pkg-config --cflags apr-1` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/BurgleBrosSound.o BurgleBrosSound.cpp
 
 ${OBJECTDIR}/BurgleBrosTokens.o: BurgleBrosTokens.cpp
 	${MKDIR} -p ${OBJECTDIR}
@@ -261,6 +268,11 @@ ${OBJECTDIR}/Networking.o: Networking.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags allegro-5.0` `pkg-config --cflags allegro_acodec-5.0` `pkg-config --cflags allegro_audio-5.0` `pkg-config --cflags allegro_color-5.0` `pkg-config --cflags allegro_dialog-5.0` `pkg-config --cflags allegro_font-5.0` `pkg-config --cflags allegro_image-5.0` `pkg-config --cflags allegro_main-5.0` `pkg-config --cflags allegro_memfile-5.0` `pkg-config --cflags allegro_physfs-5.0` `pkg-config --cflags allegro_primitives-5.0` `pkg-config --cflags allegro_ttf-5.0` `pkg-config --cflags apr-1` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Networking.o Networking.cpp
+
+${OBJECTDIR}/SoundManager.o: SoundManager.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags allegro-5.0` `pkg-config --cflags allegro_acodec-5.0` `pkg-config --cflags allegro_audio-5.0` `pkg-config --cflags allegro_color-5.0` `pkg-config --cflags allegro_dialog-5.0` `pkg-config --cflags allegro_font-5.0` `pkg-config --cflags allegro_image-5.0` `pkg-config --cflags allegro_main-5.0` `pkg-config --cflags allegro_memfile-5.0` `pkg-config --cflags allegro_physfs-5.0` `pkg-config --cflags allegro_primitives-5.0` `pkg-config --cflags allegro_ttf-5.0` `pkg-config --cflags apr-1` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SoundManager.o SoundManager.cpp
 
 ${OBJECTDIR}/StrNmbrFieldToArray.o: StrNmbrFieldToArray.cpp
 	${MKDIR} -p ${OBJECTDIR}

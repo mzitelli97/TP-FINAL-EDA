@@ -37,6 +37,11 @@ ItemInfo GraphicGuard::IAm()
     return {NO_ITEM_CLICK, nullptr};
 }
 
+void GraphicGuard::setInitialized(bool setInitialized)
+{
+    this->initialized=setInitialized;
+}
+
 void GraphicGuard::setPosition(CardLocation location)
 {
     /*Convert logic location to graphic location*/
@@ -53,6 +58,6 @@ void GraphicGuard::setPosition(CardLocation location)
 }
 void GraphicGuard::draw()
 {
-   // if(image != nullptr && initialized)
+    if(image != nullptr && initialized)
         al_draw_scaled_bitmap(image,0,0,al_get_bitmap_width(image),al_get_bitmap_height(image),min.x,min.y,width,height,0);
 }

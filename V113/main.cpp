@@ -14,6 +14,7 @@
 #include <cstdlib>
 #include "BurgleBrosModel.h"
 #include "BurgleBrosView.h"
+#include "BurgleBrosSound.h"
 #include "LibsInit.h"
 #include "GUI.h"
 using namespace std;
@@ -28,6 +29,7 @@ int main(int argc, char** argv) {
     BurgleBrosView view;
     BurgleBrosController controller;
     GUI gui;
+    BurgleBrosSound sound;
     view.ViewInit(&model);
     view.update(&model);
     
@@ -36,8 +38,9 @@ int main(int argc, char** argv) {
     controller.attachView(&view);
     gui.atachController(&controller);
     model.attachController(&controller);
+    model.attachSoundManager(&sound);
     
-    while(true)
+    while(gui.gameStillPlaying())
     {
         if(gui.hayEvento())
             gui.parseEvento();

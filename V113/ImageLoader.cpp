@@ -3,19 +3,19 @@
 
 string button2Str(buttonAction _button)
 {
-    string revalue;
+    string retVal;
     
     switch (_button)
     {
-        case ZOOM_BUTTON: revalue="Zoom";break;
-        case FULLSCREEN_BUTTON: revalue="Full screen";break;
-        case MUTE_BUTTON:revalue="Mute";break;
-        case UNMUTE_BUTTON:revalue="Unmute";break;
-        case HELP_BUTTON:revalue="Help";break;
+        case ZOOM_BUTTON: retVal = "Zoom"; break;
+        case FULLSCREEN_BUTTON: retVal = "Full screen"; break;
+        case MUTE_BUTTON: retVal = "Mute"; break;
+        case UNMUTE_BUTTON: retVal = "Unmute"; break;
+        case HELP_BUTTON: retVal = "Help"; break;
+        case QUIT_BUTTON: retVal = "Quit"; break;
     }
     
-    return revalue;
-     
+    return retVal;
 }
 
 ImageLoader::ImageLoader()
@@ -189,7 +189,7 @@ bool ImageLoader::loadLoots()
 bool ImageLoader::loadButton()
 {
 	bool retVal = false;
-	for (unsigned int i = (unsigned int)ZOOM_BUTTON; i <= (unsigned int)HELP_BUTTON; i++)
+	for (unsigned int i = (unsigned int)ZOOM_BUTTON; i <= (unsigned int)QUIT_BUTTON; i++)
 	{
 		string fullPath = ((string)IMAGE_FOLDER + (string)BUTTON_SUBFOLDER + button2Str((buttonAction)i) + IMAGE_EXTENSION);
 		ALLEGRO_BITMAP *bitmapTemp = al_load_bitmap(fullPath.c_str());
