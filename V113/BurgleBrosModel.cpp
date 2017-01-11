@@ -239,6 +239,10 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         movingPlayer->setPosition(locationToMove);
         view->update(this);
         
+        CardLocation downstairsLocationToMove={locationToMove.floor-1, locationToMove.row, locationToMove.column};
+        if(prevLocation==downstairsLocationToMove && !tokens.isThereADownstairToken(locationToMove))
+            tokens.placeDownstairToken(locationToMove);
+        
         //ver si aca tiene que ir algo mas antes de los cambios por cartas
         
         //Cambios segun la carta a la que me movi
@@ -269,11 +273,11 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         {
                if(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_FINGERPRINT) )//Si hay tokens disponibles
                {
-                  std::vector<string> msgToShow(ENTER_FINGERPRINT_TEXT);  //Esto contiene el título del cartelito, subtitulo y texto, por eso vector
+                  std::vector<string> msgToShow({ENTER_FINGERPRINT_TEXT,USE_HACK_TOKEN_TEXTB,TRIGGER_ALARM_TEXTB});  //Esto contiene el título del cartelito, subtitulo y texto, por eso vector
                   string userChoice = controller->askForSpentOK(msgToShow);
-                  if(userChoice==msgToShow[3])// clickeo "yes"
+                  if(userChoice==USE_HACK_TOKEN_TEXTB)// clickeo "yes"
                        tokens.removeOneHackTokenOf(COMPUTER_ROOM_FINGERPRINT);
-                  else if(userChoice==msgToShow[4])//clickeo "no" 
+                  else if(userChoice==TRIGGER_ALARM_TEXTB)//clickeo "no" 
                   {
                         tokens.triggerAlarm(locationToMove);
                         setGuardsNewPath(locationToMove.floor); //Así se pone el dado a donde tiene que ir, este lo necesitaba desde el guardia
