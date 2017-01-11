@@ -10,6 +10,7 @@
 #include "Model.h"
 #include "View.h"
 #include "Controller.h"
+#include "SoundManager.h"
 
 /*typedef enum{OTHER_PLAYER_ACTION, THIS_PLAYER_ACTION} ActionOrigin;
 typedef struct{
@@ -51,6 +52,7 @@ class BurgleBrosModel : public Model
         void moveGuard(unsigned int floor);
         void attachView(View * view);
         void attachController(Controller * controller);
+        void attachSoundManager(SoundManager * soundManager);
 	~BurgleBrosModel();
     private:
         void checkTurns();
@@ -68,6 +70,7 @@ class BurgleBrosModel : public Model
 	BurgleBrosDices dice;
         View * view;
         Controller * controller;
+        SoundManager * soundManager;
 };
 #endif
 

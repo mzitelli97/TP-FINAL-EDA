@@ -55,6 +55,10 @@ void BurgleBrosModel::attachController(Controller * controller)
 {
     this->controller = controller;
 }
+void BurgleBrosModel::attachSoundManager(SoundManager * soundManager)
+{
+    this->soundManager=soundManager;
+}
 vector<wall> BurgleBrosModel::getInfo2DrawWalls()
 {
     vector<wall> aux;
