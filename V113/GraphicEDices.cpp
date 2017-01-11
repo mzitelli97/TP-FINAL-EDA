@@ -44,6 +44,8 @@ void GraphicEDices::setPosition(unsigned int number)
     {
         width += DICE_WIDTH/2;
         height += DICE_HEIGHT/2;
+        min.x -= DICE_WIDTH;
+        max.x -= DICE_WIDTH;
     }
     if(width < height) width = height;
     else height = width;

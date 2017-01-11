@@ -45,6 +45,7 @@ BurgleBrosView::BurgleBrosView() {
     al_destroy_font(font);
     al_set_target_backbuffer(display);
     onZoom = false;
+    floorZoomed = NO_FLOOR_ZOOMED;
     
     #ifdef ICON
     ALLEGRO_BITMAP *icon = al_load_bitmap(ICON);                              //Falta checkear.
@@ -293,23 +294,6 @@ void BurgleBrosView::updateTokens(BurgleBrosModel* model)
     list<list<GraphicItem *>>::iterator it_itemType;
     it_itemType = deleteList(SECOND_LAYER, TOKENS_LIST);
     
-    /*For test*/
-    Info2DrawTokens aux = {ALARM_TOKEN, {1,1,0}};
-    info_tokens.push_back(aux);
-    aux = {KEYPAD_TOKEN, {1,1,0}};
-    info_tokens.push_back(aux);
-    aux = {HACK_TOKEN, {1,1,0}};
-    info_tokens.push_back(aux);
-    aux = {STEALTH_TOKEN, {1,1,0}};
-    info_tokens.push_back(aux);
-    aux = {SAFE_TOKEN, {1,1,0}};
-    info_tokens.push_back(aux);
-    aux = {PERSIAN_KITTY_TOKEN, {1,1,0}};
-    info_tokens.push_back(aux);
-    aux = {DOWNSTAIRS_TOKEN, {1,1,0}};
-    info_tokens.push_back(aux);
-    /***********/
-    
     map<CardLocation, unsigned int> tokensCount;
     
     list<Info2DrawTokens>::iterator it;
@@ -541,6 +525,8 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
     }
     
 }
+
+
 
 void BurgleBrosView::cheatCards()
 {
