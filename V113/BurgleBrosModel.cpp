@@ -268,15 +268,15 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
                if(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_FINGERPRINT) )//Si hay tokens disponibles
                {
                   std::vector<string> msgToShow(ENTER_FINGERPRINT_TEXT);  //Esto contiene el título del cartelito, subtitulo y texto, por eso vector
-                  bool userChoice = controller->askForSpentOK(msgToShow);
-                  if(userChoice)
+                  string userChoice = controller->askForSpentOK(msgToShow);
+                  /*if(userChoice)
                        tokens.removeOneHackTokenOf(COMPUTER_ROOM_FINGERPRINT);
                   else
                   {
                         tokens.triggerAlarm(locationToMove);
                         setGuardsNewPath(locationToMove.floor); //Así se pone el dado a donde tiene que ir, este lo necesitaba desde el guardia
                   }
-               }
+               }*/
                else
                {
                    tokens.triggerAlarm(locationToMove);
