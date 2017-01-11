@@ -33,7 +33,7 @@ GraphicGuardCards::~GraphicGuardCards() {
 ItemInfo GraphicGuardCards::IAm()
 {
     ItemInfo retVal;
-    retVal.type = GUARD_CARDS;
+    retVal.type = GUARD_CARDS_CLICK;
     retVal.info = &floor;
     return retVal;
 }

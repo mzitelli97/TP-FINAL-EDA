@@ -30,7 +30,7 @@ GraphicGDie::~GraphicGDie() {
 
 ItemInfo GraphicGDie::IAm()
 {
-    return {NO_ITEM, nullptr};
+    return {NO_ITEM_CLICK, nullptr};
 }
 
 void GraphicGDie::setPosition(CardLocation location)

@@ -33,7 +33,7 @@ void GraphicMenuItem::setOption(string option)
 ItemInfo GraphicMenuItem::IAm()
 {
     ItemInfo retVal;
-    retVal.type = MENU_ITEM;
+    retVal.type = MENU_ITEM_CLICK;
     retVal.info = &properties;
     return retVal;
 }

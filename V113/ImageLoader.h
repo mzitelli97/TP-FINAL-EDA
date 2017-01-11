@@ -18,13 +18,14 @@ using namespace std;
 #define TILES_SUBFOLDER "Tiles/"
 #define TOKENS_SUBFOLDER "Tokens/"
 #define DICES_SUBFOLDER "Dices/"
+#define BUTTON_SUBFOLDER "Button/"
 #define IMAGE_EXTENSION ".png"
 
 #define DICE_MAX_NUMBER 6
 
 /* Estos irian en otros lados, pero por ahora quedan aca*/
 /********************************************************/
-
+typedef enum{ZOOM_BUTTON,FULLSCREEN_BUTTON,MUTE_BUTTON,UNMUTE_BUTTON,HELP_BUTTON, QUIT_BUTTON} buttonAction;
 typedef enum { RED_DICE, WHITE_DICE} DiceColor;
 
 /********************************************************/	
@@ -36,6 +37,7 @@ public:
 	ImageLoader();
 	bool initImages();
 	ALLEGRO_BITMAP * getGuardImage();
+        ALLEGRO_BITMAP * getImageP(buttonAction _button);
 	ALLEGRO_BITMAP * getImageP(CardName tile);
 	ALLEGRO_BITMAP * getImageP(unsigned int safeNumber);
 	ALLEGRO_BITMAP * getImageP(CardLocation guardCard);
@@ -52,6 +54,7 @@ private:
 	bool loadCharactersCards();
 	bool loadCharactersFigures();
 	bool loadTokens();
+        bool loadButton();
 	bool loadLoots();
 	bool loadGuard();
 	bool loadTiles();
@@ -64,6 +67,7 @@ private:
 	map<unsigned int, ALLEGRO_BITMAP *> safeNumbers;
 	map<CardLocation, ALLEGRO_BITMAP *> guardCards;
 	map<Loot, ALLEGRO_BITMAP *> loots;
+        map<buttonAction,ALLEGRO_BITMAP *> button;
 	map<Token, ALLEGRO_BITMAP *> tokens;
 	map<CharacterName, ALLEGRO_BITMAP *> characterCards;
 	map<CharacterName, ALLEGRO_BITMAP *> character;

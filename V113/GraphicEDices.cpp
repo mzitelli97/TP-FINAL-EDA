@@ -32,7 +32,7 @@ GraphicEDices::~GraphicEDices() {
 
 ItemInfo GraphicEDices::IAm()
 {
-    ItemInfo retVal = {EXTRA_DICE, nullptr};
+    ItemInfo retVal = {EXTRA_DICE_CLICK, nullptr};
     return retVal;
 }
 

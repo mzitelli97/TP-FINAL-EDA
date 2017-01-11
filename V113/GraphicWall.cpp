@@ -28,7 +28,7 @@ GraphicWall::~GraphicWall() {
 
 ItemInfo GraphicWall::IAm()
 {
-    return {NO_ITEM, nullptr};
+    return {NO_ITEM_CLICK, nullptr};
 }
 
 void GraphicWall::setLocation(CardLocation front, CardLocation rear)
