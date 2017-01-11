@@ -31,7 +31,7 @@ GraphicToken::~GraphicToken() {
 
 ItemInfo GraphicToken::IAm() 
 {
-    return {NO_ITEM, nullptr};
+    return {NO_ITEM_CLICK, nullptr};
 }
 
 void GraphicToken::setPosition(CardLocation location, unsigned int number)

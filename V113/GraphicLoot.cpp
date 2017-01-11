@@ -37,7 +37,7 @@ GraphicLoot::GraphicLoot(ALLEGRO_BITMAP * backImage)
 ItemInfo GraphicLoot::IAm()
 {
     ItemInfo retVal;
-    retVal.type = LOOT_CARDS;
+    retVal.type = LOOT_CARDS_CLICK;
     retVal.info = &owner;
     return retVal;
 }

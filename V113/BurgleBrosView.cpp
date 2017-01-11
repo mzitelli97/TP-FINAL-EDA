@@ -251,7 +251,7 @@ void BurgleBrosView::update(Model* auxModel)
 }
 ItemInfo BurgleBrosView::itemFromClick(Point point)
 {
-    ItemInfo retVal = {NO_ITEM, nullptr};
+    ItemInfo retVal = {NO_ITEM_CLICK, nullptr};
     bool layer_flag = false;                                                                    //to exit outer loop
     list<list<list<GraphicItem *>>>::reverse_iterator it_layers;
     list<list<GraphicItem *>>::iterator it_itemType;
@@ -311,7 +311,7 @@ void BurgleBrosView::updateLoots(BurgleBrosModel * model)
 {
     list<Info2DrawLoot> aux = model->getInfo2DrawLoot();
     
-    list<list<GraphicItem *>>::iterator itemsList = deleteList(FIRST_LAYER, LOOT_CARDS);
+    list<list<GraphicItem *>>::iterator itemsList = deleteList(FIRST_LAYER, LOOT_SHOW_LIST);
     for(list<Info2DrawLoot>::iterator newInfo = aux.begin() ; newInfo!= aux.end(); newInfo++)
     {
         GraphicLoot *p = new GraphicLoot(newInfo->owner, imageLoader.getImageP(newInfo->loot));
@@ -470,7 +470,7 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
     onZoom ^= true;
     floorZoomed = floor;
     BurgleBrosModel * model = (BurgleBrosModel *) auxModel;
-    list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) TILE);
+    list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) TILES_LIST);
     for(unsigned int i=0; i < BOARD_STANDARD_FLOORS * FLOOR_RAWS * FLOOR_COLUMNS ; i++, it++)
     {
         GraphicTile * tile = dynamic_cast<GraphicTile *>(*it);
@@ -530,7 +530,7 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
 
 void BurgleBrosView::cheatCards()
 {
-    list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) TILE);
+    list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) TILES_LIST);
     for(unsigned int i=0; i < BOARD_STANDARD_FLOORS * FLOOR_RAWS * FLOOR_COLUMNS ; i++, it++)
     {
         GraphicTile * tile = dynamic_cast<GraphicTile *>(*it);

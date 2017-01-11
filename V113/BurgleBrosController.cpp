@@ -68,20 +68,20 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
             {
    /*For the other cases it may be necessary functions like point2Guard, point2Player, to recognize which
     graphic item was clicked, ex., which of the guardCard(floor), which playerCard, which playerLoot, which button*/
-                case TILE:
+                case TILE_CLICK:
                     auxLocation = (CardLocation *)temp.info;
                     view->showMenu(modelPointer->getPosibleActions(modelPointer->getPlayerOnTurn(), *auxLocation), aux, *auxLocation);
                     if(*auxLocation == aux1)
                         view->zoomFloor(0,modelPointer);
                     view->update(modelPointer);
                     break;
-                case MENU_ITEM:
+                case MENU_ITEM_CLICK:
                     menuInfo = (auxInfo *)temp.info;
                     interpretAction(menuInfo->option, menuInfo->location);
                     //view->eraseMenu();
                     view->update(modelPointer);
                     break;
-                case LOOT_CARDS:
+                case LOOT_CARDS_CLICK:
                     auxPlayer = (ActionOrigin *)temp.info;
                     /*if(*auxPlayer == THIS_PLAYER_ACTION)
                         view->zoomFloor(0,modelPointer);
@@ -90,10 +90,10 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                     else view->zoomFloor(2,modelPointer);
                     view->update(modelPointer);*/
                     break;
-                case GUARD_CARDS:
+                case GUARD_CARDS_CLICK:
                     guardFloor = (unsigned int *)temp.info;
                     cout<<*guardFloor<<endl;
-                case CHAR_CARD:
+                case CHAR_CARD_CLICK:
                     auxPlayer = (ActionOrigin *)temp.info;
                     if(*auxPlayer == THIS_PLAYER_ACTION)
                     {
