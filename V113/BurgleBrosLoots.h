@@ -24,6 +24,7 @@ public:
 	BurgleBrosLoots();
 	Info2DrawLoot getLootInfo(unsigned int nmbrOfLoot);
 	unsigned int getCurrentLoots();
+        bool isLootDrawn(Loot loot);
         bool isGoldBarOnFloor();
         void setGoldBardLocation(CardLocation safeLocation);
         bool canPlayerPickUpGoldBarOnFloor(ActionOrigin whichPlayer, CardLocation playerLocation);
