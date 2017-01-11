@@ -20,9 +20,11 @@ typedef struct{
 
 /*Mensajes para dialog box tienen:  TITULO             SUBTITULO        TEXTO */
 #define ENTER_FINGERPRINT_TEXT  {  "Alert",        "Confirm Action",   "You have entered a Fingerprint tile, so you will trigger an alarm unless you use a hack token. Use token?" , "yes", "no"}
-#define ENTER_LASER_ACTION_TEXT {  "Alert",        "Confirm Action",   "You have entered a Laser tile, so you can spend and extra action to avoid triggering an alarm. Spend another action?"}
-#define ENTER_LASER_TOKEN_TEXT  {  "Alert",        "Confirm Action",   "You have entered a Laser tile, so you can use a hack token to avoid triggering an alarm. Use token?"}
 
+#define LASER_TEXT   "Alert",        "Confirm Action",   "You have entered a Laser tile, you can either spend and extra action or use a hack token to avoid triggering an alarm"
+#define SPEND_ACTION_TEXTB "spend action"
+#define USE_HACK_TOKEN_TEXTB "use hack token"
+#define TRIGGER_ALARM_TEXTB "trigger alarm"
 
 class BurgleBrosModel : public Model
 {

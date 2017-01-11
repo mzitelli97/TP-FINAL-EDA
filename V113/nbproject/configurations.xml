@@ -38,6 +38,7 @@
       <itemPath>Controller.h</itemPath>
       <itemPath>EventData.h</itemPath>
       <itemPath>GUI.h</itemPath>
+      <itemPath>GraphicButton.h</itemPath>
       <itemPath>ImageLoader.h</itemPath>
       <itemPath>LibsInit.h</itemPath>
       <itemPath>Model.h</itemPath>
@@ -89,6 +90,7 @@
       </logicalFolder>
       <itemPath>Controller.cpp</itemPath>
       <itemPath>GUI.cpp</itemPath>
+      <itemPath>GraphicButton.cpp</itemPath>
       <itemPath>ImageLoader.cpp</itemPath>
       <itemPath>LibsInit.cpp</itemPath>
       <itemPath>Model.cpp</itemPath>
@@ -303,6 +305,10 @@
       </item>
       <item path="GUI.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="GraphicButton.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicButton.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="GraphicEDices.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="GraphicEDices.h" ex="false" tool="3" flavor2="0">
@@ -461,6 +467,10 @@
       <item path="GUI.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="GUI.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GraphicButton.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GraphicButton.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="GraphicEDices.cpp" ex="false" tool="1" flavor2="0">
       </item>

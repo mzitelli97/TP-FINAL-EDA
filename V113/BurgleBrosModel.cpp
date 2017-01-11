@@ -261,7 +261,7 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         if( newCardType==KEYPAD && !tokens.isThereAToken(locationToMove,KEYPAD_TOKEN))
             cout<<"tirar dados"<<endl;//hay que ver como hacemos la funcion 
         
-        if( newCardType==FINGERPRINT)
+        if( newCardType==FINGERPRINT)//hay que arreglar el tema de cuando hace click en la cruz del native message
         {
                if(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_FINGERPRINT) )//Si hay tokens disponibles
                {
@@ -284,8 +284,26 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
           
          
         if(newCardType==LASER)
-            cout<<"gasto una action mas, un hack token o activo alarma";
-        //
+        {   
+            if( !(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_LASER)) && !(movingPlayer->getcurrentActions()) )
+                tokens.triggerAlarm(locationToMove);
+            else
+            {
+                std::vector<string> msgToShow({LASER_TEXT,TRIGGER_ALARM_TEXTB}); 
+                if(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_LASER))
+                    msgToShow.push_back(USE_HACK_TOKEN_TEXTB);
+                if(movingPlayer->getcurrentActions())
+                    msgToShow.push_back(SPEND_ACTION_TEXTB);
+                string userChoice=controller->askForSpentOK(msgToShow);
+                if(userChoice==TRIGGER_ALARM_TEXTB)
+                    tokens.triggerAlarm(locationToMove);
+                else if(userChoice==USE_HACK_TOKEN_TEXTB)
+                    tokens.removeOneHackTokenOf(COMPUTER_ROOM_LASER);
+                else if(userChoice==SPEND_ACTION_TEXTB)
+                    movingPlayer->decActions();
+            }
+        }    
+        
         if( newCardType==MOTION)
             ;//hay que marcar que se entro en este turno y si sale en el mismo turno tiene que gastar un token o activar una alarma, en el proximo ya puede salir
         if( newCardType==SCANNER_DETECTOR && movingPlayer->carriesLoot())

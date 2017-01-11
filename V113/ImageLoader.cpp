@@ -1,11 +1,27 @@
 #include "ImageLoader.h"
 #include <iostream>
 
-
+string button2Str(buttonAction _button)
+{
+    string revalue;
+    
+    switch (_button)
+    {
+        case ZOOM_BUTTON: revalue="Zoom";break;
+        case FULLSCREEN_BUTTON: revalue="Full screen";break;
+        case MUTE_BUTTON:revalue="Mute";break;
+        case UNMUTE_BUTTON:revalue="Unmute";break;
+        case HELP_BUTTON:revalue="Help";break;
+    }
+    
+    return revalue;
+     
+}
 
 ImageLoader::ImageLoader()
 {
 }
+
 string ImageLoader::getError()
 {
 	return errormsg;
@@ -52,6 +68,10 @@ ALLEGRO_BITMAP *ImageLoader::getImageP(DiceColor color, unsigned int number)
     }
     return nullptr;                  //ver bien!!!!
 }
+ALLEGRO_BITMAP * ImageLoader::getImageP(buttonAction _button)
+{
+    return this->button[_button];
+}
 ALLEGRO_BITMAP *ImageLoader::getImageBackP(CardName tile)
 {
 	return tileBack;
@@ -66,7 +86,7 @@ ALLEGRO_BITMAP *ImageLoader::getImageBackP(Loot loot)
 }
 bool ImageLoader::initImages()
 {
-	if (loadCharactersCards() && loadCharactersFigures() && loadTokens() && loadLoots() && loadGuard() && loadTiles() && loadWhiteDices() && loadRedDices())
+	if (loadCharactersCards() && loadCharactersFigures() && loadTokens() && loadLoots() && loadGuard() && loadTiles() && loadWhiteDices() && loadRedDices() && loadButton())
 		initOk = true;
 	else
 		initOk = false;
@@ -162,6 +182,28 @@ bool ImageLoader::loadLoots()
 		{
 			errormsg = "The image: " + fullPath + " could not be loaded.\n";
 			retVal = false;
+		}
+	}
+	return retVal;
+}
+bool ImageLoader::loadButton()
+{
+	bool retVal = false;
+	for (unsigned int i = (unsigned int)ZOOM_BUTTON; i <= (unsigned int)HELP_BUTTON; i++)
+	{
+		string fullPath = ((string)IMAGE_FOLDER + (string)BUTTON_SUBFOLDER + button2Str((buttonAction)i) + IMAGE_EXTENSION);
+		ALLEGRO_BITMAP *bitmapTemp = al_load_bitmap(fullPath.c_str());
+		if (bitmapTemp != nullptr)
+		{
+			pair<buttonAction, ALLEGRO_BITMAP *> pairTemp((buttonAction)i, bitmapTemp);
+			button.insert(pairTemp);
+			retVal = true;
+		}
+		else
+		{
+			errormsg = "The image: " + fullPath + " could not be loaded.\n";
+                        retVal= false;
+                        break;
 		}
 	}
 	return retVal;

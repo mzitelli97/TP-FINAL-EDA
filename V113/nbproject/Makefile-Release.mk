@@ -49,6 +49,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/Controller.o \
 	${OBJECTDIR}/EventData.o \
 	${OBJECTDIR}/GUI.o \
+	${OBJECTDIR}/GraphicButton.o \
 	${OBJECTDIR}/GraphicEDices.o \
 	${OBJECTDIR}/GraphicGDie.o \
 	${OBJECTDIR}/GraphicGuard.o \
@@ -165,6 +166,11 @@ ${OBJECTDIR}/GUI.o: GUI.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GUI.o GUI.cpp
+
+${OBJECTDIR}/GraphicButton.o: GraphicButton.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GraphicButton.o GraphicButton.cpp
 
 ${OBJECTDIR}/GraphicEDices.o: GraphicEDices.cpp
 	${MKDIR} -p ${OBJECTDIR}

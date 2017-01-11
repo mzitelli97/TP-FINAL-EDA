@@ -70,7 +70,7 @@ void GraphicPlayerCard::draw()
 ItemInfo GraphicPlayerCard::IAm()
 {
     ItemInfo retVal;
-    retVal.type = CHAR_CARD;
+    retVal.type = CHAR_CARD_CLICK;
     retVal.info = &whichPlayer;
     return retVal;
 }
