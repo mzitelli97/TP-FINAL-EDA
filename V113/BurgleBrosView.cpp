@@ -452,7 +452,10 @@ string BurgleBrosView::MessageBox(vector<string> &msg)
     //cout<<msg[2+aux]<<endl;
     return msg[2+aux];
 }
-
+int BurgleBrosView::yesNoMessageBox(vector<string> &msg)
+{
+    return al_show_native_message_box(display, msg[0].c_str(),msg[1].c_str(),msg[2].c_str(),nullptr, ALLEGRO_MESSAGEBOX_YES_NO);
+}
 
 void BurgleBrosView::showMenu(list<string> options, Point click, CardLocation tile)
 {

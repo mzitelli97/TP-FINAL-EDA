@@ -26,6 +26,7 @@ public:
     GUI(const GUI& orig);
     bool hayEvento(void);
     void parseEvento(void);
+    bool gameStillPlaying();
     void atachController (BurgleBrosController * Controller);
     virtual ~GUI();
     

@@ -21,6 +21,7 @@ BurgleBrosController::BurgleBrosController()
 {
     modelPointer=nullptr;
     view=nullptr;
+    gameIsOver=false;
 }
 
 BurgleBrosController::BurgleBrosController(const BurgleBrosController& orig) {
@@ -35,6 +36,10 @@ void BurgleBrosController::attachView(BurgleBrosView *view)
 {
     if(view!=nullptr)
         this->view=view;
+}
+bool BurgleBrosController::checkIfGameFinished()
+{
+    return gameIsOver;
 }
 string BurgleBrosController::askForSpentOK(vector<string> &message)
 {
@@ -56,6 +61,7 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
         if( p2MouseData != nullptr)
         {
             ItemInfo temp;
+            vector<string> exitMsg={"Quit","Confirm quit", "You have pressed the quit button. Are you sure you wanna quit?"};
             Point aux={(double)p2MouseData->getX(), (double)p2MouseData->getY()};
             temp=view->itemFromClick(aux);
             //location=view->point2Location(aux);
@@ -97,6 +103,13 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                     floor = (unsigned int *)temp.info;
                     view->zoomFloor(*floor,modelPointer);
                     view->update(modelPointer);
+                    break;
+                case EXIT_BUTTON_CLICK:
+                    if(view->yesNoMessageBox(exitMsg)==1)
+                    {
+                        gameIsOver=true;
+                        quitCause=USER_QUIT;
+                    }
                     break;
                 default:
                     break;

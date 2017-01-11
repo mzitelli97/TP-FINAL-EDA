@@ -35,7 +35,10 @@ void GUI::atachController(BurgleBrosController* Controller)
     this->Controller=Controller;
 }
 
-
+bool GUI::gameStillPlaying()
+{
+    return !(Controller->checkIfGameFinished());
+}
 bool GUI::hayEvento()
 {
     bool retVal=false;

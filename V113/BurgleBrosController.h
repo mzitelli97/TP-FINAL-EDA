@@ -18,12 +18,17 @@
 #include "EventData.h"
 #include "Controller.h"
 
+typedef enum{USER_QUIT, GAME_WON}QuitCause;
+
+
+
 class BurgleBrosController:public Controller {
 public:
     BurgleBrosController();
     BurgleBrosController(const BurgleBrosController& orig);
     void attachModel(BurgleBrosModel *gamePointer);
     void attachView(BurgleBrosView *view);
+    bool checkIfGameFinished();
     void parseMouseEvent(EventData *mouseEvent);
     virtual string askForSpentOK(vector<string> &message);
     virtual ~BurgleBrosController();
@@ -31,6 +36,8 @@ private:
     void interpretAction(string action, CardLocation location);
     BurgleBrosModel *modelPointer;
     BurgleBrosView *view;
+    bool gameIsOver;
+    QuitCause quitCause;
 };
 
 #endif /* BURGLEBROSCONTROLLER_H */

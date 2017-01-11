@@ -45,6 +45,7 @@ public:
     void zoomFloor(unsigned int floor, Model * auxModel);
     void zoomLoot(ActionOrigin owner);
     string MessageBox(vector<string> &message);
+    int yesNoMessageBox(vector<string> &message);
     void cheatCards();
     virtual ~BurgleBrosView();
 private:

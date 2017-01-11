@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
     model.attachController(&controller);
     model.attachSoundManager(&sound);
     
-    while(true)
+    while(gui.gameStillPlaying())
     {
         if(gui.hayEvento())
             gui.parseEvento();
