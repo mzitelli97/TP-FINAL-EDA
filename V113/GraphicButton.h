@@ -27,9 +27,8 @@ public:
     void setZoomFloor(unsigned int floor);
     buttonAction getButtonIdentifier();
     void toggleMute();
+    void setLocation();
     ItemInfo IAm() override;
-    void draw() override;
-
     virtual ~GraphicButton();
     
 private:

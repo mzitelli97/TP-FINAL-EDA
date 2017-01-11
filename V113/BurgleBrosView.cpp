@@ -26,6 +26,7 @@
 #include "GraphicMenuItem.h"
 #include "GraphicWall.h"
 #include "allegro5/allegro_native_dialog.h"
+#include "GraphicButton.h"
 
 #define SCREEN_W 1800
 #define SCREEN_H 900
@@ -107,6 +108,14 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     
     //creo una lista de Buttons
     list<GraphicItem* > auxButtons_list;
+    
+    for(int i = 0; i < BOARD_STANDARD_FLOORS; i++)
+    {
+        GraphicButton *auxButton = new GraphicButton(imageLoader.getImageP(ZOOM_BUTTON), nullptr, ZOOM_BUTTON, al_get_display_width(display), al_get_display_height(display));
+        auxButton->setZoomFloor(i);
+        auxButton->setLocation();
+        auxButtons_list.push_back(auxButton);
+    }
     //creo una lista de graphicCharacterscards
     list<GraphicItem* > auxCharactersCards_list;
     
@@ -518,13 +527,18 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
     it = accessGraphicItems(SECOND_LAYER, STATIC_ITEMS);
     advance(it,NUMBER_OF_WALLS * floor);
     vector<wall> infoWalls = model->getInfo2DrawWalls();
-    for(int i = NUMBER_OF_WALLS * floor; i < NUMBER_OF_WALLS; it++, i++)
+    for(int i = 0; i < NUMBER_OF_WALLS; it++, i++)
     {
         GraphicWall * wall = dynamic_cast<GraphicWall *> (*it);
         wall->toggleZoom();
-        wall->setLocation(infoWalls[i].FrontCard, infoWalls[i].RearCard);
+        wall->setLocation(infoWalls[i+NUMBER_OF_WALLS * floor].FrontCard, infoWalls[i+NUMBER_OF_WALLS * floor].RearCard);
     }
     
+    it = accessGraphicItems(FIRST_LAYER, BUTTONS_LIST);
+    advance(it, floor);
+    GraphicButton * button = dynamic_cast<GraphicButton *> (*it);
+    button->toggleZoom();
+    button->setLocation();
 }
 
 

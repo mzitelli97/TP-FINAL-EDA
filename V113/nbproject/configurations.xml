@@ -18,6 +18,7 @@
         <itemPath>BurgleBrosView.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="Graphics" projectFiles="true">
+        <itemPath>GraphicButton.h</itemPath>
         <itemPath>GraphicEDices.h</itemPath>
         <itemPath>GraphicGDie.h</itemPath>
         <itemPath>GraphicGuard.h</itemPath>
@@ -38,7 +39,6 @@
       <itemPath>Controller.h</itemPath>
       <itemPath>EventData.h</itemPath>
       <itemPath>GUI.h</itemPath>
-      <itemPath>GraphicButton.h</itemPath>
       <itemPath>ImageLoader.h</itemPath>
       <itemPath>LibsInit.h</itemPath>
       <itemPath>Model.h</itemPath>
@@ -71,6 +71,7 @@
         <itemPath>MouseED.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="Graphics" projectFiles="true">
+        <itemPath>GraphicButton.cpp</itemPath>
         <itemPath>GraphicEDices.cpp</itemPath>
         <itemPath>GraphicGDie.cpp</itemPath>
         <itemPath>GraphicGuard.cpp</itemPath>
@@ -90,7 +91,6 @@
       </logicalFolder>
       <itemPath>Controller.cpp</itemPath>
       <itemPath>GUI.cpp</itemPath>
-      <itemPath>GraphicButton.cpp</itemPath>
       <itemPath>ImageLoader.cpp</itemPath>
       <itemPath>LibsInit.cpp</itemPath>
       <itemPath>Model.cpp</itemPath>

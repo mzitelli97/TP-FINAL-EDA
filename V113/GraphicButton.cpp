@@ -12,8 +12,9 @@
  */
 
 #include "GraphicButton.h"
-#include "ImageLoader.h"
-#include "GraphicItem.h"
+
+#define BUTTON_WIDTH 20.0//(totalWidth/)
+#define BUTTON_HEIGHT 20.0//(totalHeight)
 
 GraphicButton::GraphicButton() {
 }
@@ -22,14 +23,13 @@ GraphicButton::GraphicButton(const GraphicButton& orig) {
 }
 
 GraphicButton::GraphicButton(ALLEGRO_BITMAP * buttonImage,ALLEGRO_BITMAP * unMuteimage, buttonAction identifier, unsigned int width, unsigned int height)
-
 {
     this->info=nullptr;          //Por ahora dejo esto asi
     this->button=identifier;
     this->image=buttonImage;
     this->image_2=unMuteimage;
     setScreenDimentions(width,height);
-    
+    zoomed = false;
 }
 
 
@@ -51,17 +51,10 @@ buttonAction GraphicButton::getButtonIdentifier()
     return button;
 }
 
-void GraphicButton::draw() {
-
-    //if(image != nullptr)
-     //   al_draw_scaled_bitmap(image,0,0,al_get_bitmap_width(image),al_get_bitmap_height(image),min.x,min.y,width,height,0);
-}
-
 void GraphicButton::setZoomFloor(unsigned int floor)
 {
     this->zoomFloor=floor;
 }
-
 
 void GraphicButton::toggleMute()
 {
@@ -70,5 +63,17 @@ void GraphicButton::toggleMute()
     if(button==UNMUTE_BUTTON)
         button=MUTE_BUTTON;
 }
+
+void GraphicButton::setLocation()
+{
+    logic2GraphicCardLocation({zoomFloor,3,3});
+    min.x += (width + 10.0);
+    min.y += (height - BUTTON_HEIGHT);
+    width = BUTTON_WIDTH;
+    height = BUTTON_HEIGHT;
+    max.x = min.x + width;
+    max.y = min.y + height;
+}
+
 GraphicButton::~GraphicButton() {
 }

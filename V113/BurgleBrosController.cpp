@@ -62,8 +62,8 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
             CardLocation * auxLocation;
             ActionOrigin * auxPlayer;
             auxInfo * menuInfo;
-            CardLocation aux1 = {0,3,3};
-            unsigned int * guardFloor;
+            CardLocation aux1 = {1,3,3};
+            unsigned int * floor;
             switch(temp.type)
             {
    /*For the other cases it may be necessary functions like point2Guard, point2Player, to recognize which
@@ -71,28 +71,20 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                 case TILE_CLICK:
                     auxLocation = (CardLocation *)temp.info;
                     view->showMenu(modelPointer->getPosibleActions(modelPointer->getPlayerOnTurn(), *auxLocation), aux, *auxLocation);
-                    if(*auxLocation == aux1)
-                        view->zoomFloor(0,modelPointer);
                     view->update(modelPointer);
                     break;
                 case MENU_ITEM_CLICK:
                     menuInfo = (auxInfo *)temp.info;
                     interpretAction(menuInfo->option, menuInfo->location);
-                    //view->eraseMenu();
                     view->update(modelPointer);
                     break;
                 case LOOT_CARDS_CLICK:
                     auxPlayer = (ActionOrigin *)temp.info;
-                    /*if(*auxPlayer == THIS_PLAYER_ACTION)
-                        view->zoomFloor(0,modelPointer);
-                    else if(*auxPlayer == OTHER_PLAYER_ACTION)
-                        view->zoomFloor(1,modelPointer);
-                    else view->zoomFloor(2,modelPointer);
-                    view->update(modelPointer);*/
                     break;
                 case GUARD_CARDS_CLICK:
-                    guardFloor = (unsigned int *)temp.info;
-                    cout<<*guardFloor<<endl;
+                    floor = (unsigned int *)temp.info;
+                    cout<<*floor<<endl;
+                    break;
                 case CHAR_CARD_CLICK:
                     auxPlayer = (ActionOrigin *)temp.info;
                     if(*auxPlayer == THIS_PLAYER_ACTION)
@@ -100,6 +92,12 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                         view->cheatCards();
                         view->update(modelPointer);
                     }
+                    break;
+                case ZOOM_CLICK:
+                    floor = (unsigned int *)temp.info;
+                    view->zoomFloor(*floor,modelPointer);
+                    view->update(modelPointer);
+                    break;
                 default:
                     break;
             }
