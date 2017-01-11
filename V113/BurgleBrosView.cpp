@@ -121,6 +121,7 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     
     GraphicLoot * auxLoot = new GraphicLoot(imageLoader.getImageBackP(infoLoot.front().loot));
     auxLoot->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
+    auxLoot->setPosition(0);
     auxLoot_list.push_back(auxLoot);
     
     //creo una lista para extra_dies
@@ -310,12 +311,14 @@ void BurgleBrosView::updateTokens(BurgleBrosModel* model)
 void BurgleBrosView::updateLoots(BurgleBrosModel * model)
 {
     list<Info2DrawLoot> aux = model->getInfo2DrawLoot();
+    map<ActionOrigin, unsigned int> lootsCount;
     
     list<list<GraphicItem *>>::iterator itemsList = deleteList(FIRST_LAYER, LOOT_CARDS);
     for(list<Info2DrawLoot>::iterator newInfo = aux.begin() ; newInfo!= aux.end(); newInfo++)
     {
         GraphicLoot *p = new GraphicLoot(newInfo->owner, imageLoader.getImageP(newInfo->loot));
         p->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
+        p->setPosition(lootsCount[newInfo->owner]++);
         itemsList->push_back((GraphicItem *) p);
     }
     

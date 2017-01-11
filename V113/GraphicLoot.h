@@ -18,18 +18,16 @@
 
 class GraphicLoot: public GraphicItem {
 public:
-    //GraphicLoot();
     GraphicLoot(ActionOrigin owner, ALLEGRO_BITMAP * image);
     
     GraphicLoot(ALLEGRO_BITMAP * backImage);
     GraphicLoot(const GraphicLoot& orig);
-    ActionOrigin GetOwner();
+    ActionOrigin getOwner();
     void setOwner(ActionOrigin owner);
     virtual ItemInfo IAm();
-    virtual void draw();
+    void setPosition(unsigned int quantity);
     virtual ~GraphicLoot();
 private:
-    void setPosition();
     bool isVisible;
     ActionOrigin owner;
 };
