@@ -403,20 +403,14 @@ void BurgleBrosView::updateExtraDices(BurgleBrosModel* model)
     vector<unsigned int> info_dices = model->getInfo2DrawExtraDices();
     list<list<GraphicItem *>>::iterator it_itemType;
     it_itemType = deleteList(FIRST_LAYER, EXTRA_DICES_LIST);
-    
-    /*For test*//*
-    info_dices[0] = 1;
-    info_dices[1] = 5;
-    info_dices[2] = 2;
-    info_dices[3] = 6;*/
-    /**********/
-    
+       
     for( int i = 0; i < info_dices.size(); i++)
     {
         if(info_dices[i] != 0)      //if its 0 it means there is no such extra die
         {
             GraphicEDices * dice = new GraphicEDices(imageLoader.getImageP(WHITE_DICE, info_dices[i]));
             dice->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
+            if(onZoom) dice->toggleZoom();
             dice->setPosition(i);
             it_itemType->push_back(dice);
         }
@@ -490,9 +484,7 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
     {
         GraphicTile * tile = dynamic_cast<GraphicTile *>(*it);
         if(tile->getLocation().floor == floor)
-        {
             tile->toggleZoom();
-        }
     }
 
     it = accessGraphicItems(SECOND_LAYER, PLAYER_INFO_LIST);

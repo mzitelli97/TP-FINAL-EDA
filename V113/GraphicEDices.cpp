@@ -21,8 +21,6 @@
 GraphicEDices::GraphicEDices(ALLEGRO_BITMAP * image)
 {
     this->image = image;
-    //width = 50;
-    //height = 50;
     zoomed = false;
 }
 
@@ -42,6 +40,11 @@ void GraphicEDices::setPosition(unsigned int number)
 {
     width = DICE_WIDTH;
     height = DICE_HEIGHT;
+    if(zoomed)
+    {
+        width += DICE_WIDTH/2;
+        height += DICE_HEIGHT/2;
+    }
     if(width < height) width = height;
     else height = width;
     
