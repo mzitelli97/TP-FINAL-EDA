@@ -16,6 +16,11 @@
 #define BUTTON_WIDTH 20.0//(totalWidth/)
 #define BUTTON_HEIGHT 20.0//(totalHeight)
 
+#define QUIT_CENTER_X   (39*(totalWidth/40))
+#define QUIT_CENTER_Y   (totalWidth/50)
+#define QUIT_WIDTH      (totalWidth/50)
+#define QUIT_HEIGHT     (totalWidth/60)
+
 GraphicButton::GraphicButton() {
 }
 
@@ -30,6 +35,22 @@ GraphicButton::GraphicButton(ALLEGRO_BITMAP * buttonImage,ALLEGRO_BITMAP * unMut
     this->image_2=unMuteimage;
     setScreenDimentions(width,height);
     zoomed = false;
+    switch(button)
+    {
+        case QUIT_BUTTON:
+            center.x=QUIT_CENTER_X;
+            center.y=QUIT_CENTER_Y;
+            this->width=QUIT_WIDTH;
+            this->height=QUIT_HEIGHT; 
+            min.x=center.x - (this->width)/2;
+            max.x=center.x + (this->width)/2;
+            min.y=center.y - (this->height)/2;
+            max.y=center.y + (this->height)/2;
+            break;
+        default:
+            break;
+    }
+    
 }
 
 

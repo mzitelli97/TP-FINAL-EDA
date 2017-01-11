@@ -116,6 +116,8 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
         auxButton->setLocation();
         auxButtons_list.push_back(auxButton);
     }
+    GraphicButton *auxButton = new GraphicButton(imageLoader.getImageP(QUIT_BUTTON), nullptr, QUIT_BUTTON, al_get_display_width(display), al_get_display_height(display));
+    auxButtons_list.push_back(auxButton);
     //creo una lista de graphicCharacterscards
     list<GraphicItem* > auxCharactersCards_list;
     
