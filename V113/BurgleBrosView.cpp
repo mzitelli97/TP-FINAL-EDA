@@ -368,7 +368,7 @@ void BurgleBrosView::updateGuards(BurgleBrosModel* model)
         /*Here update all things related to a guard on a floor*/
         Info2DrawGuard info_guard = model->getInfo2DrawGuard(i);
         
-        if(*guard != NULL)
+        if(*guard != NULL )
         {
             /*Suppose the first item is the guard item*/
             GraphicGuard * guard_item = dynamic_cast<GraphicGuard*> (*guard);
@@ -381,7 +381,9 @@ void BurgleBrosView::updateGuards(BurgleBrosModel* model)
                 guard++;
             }
             guard++;    //point to next floor
+            guard_item->setInitialized(info_guard.initialized);
             guard_item->setPosition(info_guard.position);
+            guard_die->setInitialized(info_guard.initialized);
             guard_die->setPosition(info_guard.diePosition);
             guard_die->setNumber(imageLoader.getImageP(RED_DICE, info_guard.dieNumber));
 

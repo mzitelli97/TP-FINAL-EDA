@@ -38,13 +38,13 @@ BurgleBrosModel::BurgleBrosModel()
     guards[0].init();
     list<CardLocation> path = board.getShortestPath(guards[0].getPosition(), guards[0].getTargetPosition());
     guards[0].setNewPathToTarget(path );
-    
+    /*
     guards[1].init();
     path = board.getShortestPath(guards[1].getPosition(), guards[1].getTargetPosition());
     guards[1].setNewPathToTarget(path );
     guards[2].init();
     path = board.getShortestPath(guards[2].getPosition(), guards[2].getTargetPosition());
-    guards[2].setNewPathToTarget(path );
+    guards[2].setNewPathToTarget(path );*/
     
 }
 void BurgleBrosModel::attachView(View * view)
@@ -237,6 +237,15 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         }    
         movingPlayer->decActions();
         movingPlayer->setPosition(locationToMove);
+        
+        /*Si me moví a otro piso y en ese piso el guardia no estaba inicializado, lo inicializo*/
+        if(!guards[movingPlayer->getPosition().floor].checkIfInitialized())
+        {
+            guards[movingPlayer->getPosition().floor].init();
+            list<CardLocation> path = board.getShortestPath(guards[movingPlayer->getPosition().floor].getPosition(), guards[movingPlayer->getPosition().floor].getTargetPosition());
+            guards[movingPlayer->getPosition().floor].setNewPathToTarget(path);
+        }
+        
         view->update(this);
         
         CardLocation downstairsLocationToMove={locationToMove.floor-1, locationToMove.row, locationToMove.column};
@@ -406,7 +415,7 @@ bool BurgleBrosModel::GuardInCamera()
     bool GuardOnCamera=false;
     for(unsigned int i=0; i<BOARD_STANDARD_FLOORS; ++i)
     {
-        if(board.getCardType(guards[i].getPosition())== CAMERA && board.isCardVisible(guards[i].getPosition()))//chequeo que la camara este dada vuelta
+        if(guards[i].checkIfInitialized() && board.getCardType(guards[i].getPosition())== CAMERA && board.isCardVisible(guards[i].getPosition()))//chequeo que la camara este dada vuelta
         {    
             GuardOnCamera=true;
             break;

@@ -20,6 +20,7 @@ GraphicGDie::GraphicGDie(ALLEGRO_BITMAP* image)
 {
     this->image = image;
     zoomed = false;
+    initialized=0;
 }
 
 GraphicGDie::GraphicGDie(const GraphicGDie& orig) {
@@ -32,7 +33,15 @@ ItemInfo GraphicGDie::IAm()
 {
     return {NO_ITEM_CLICK, nullptr};
 }
-
+void GraphicGDie::setInitialized(bool state)
+{
+    this->initialized=state;
+}
+void GraphicGDie::draw()
+{
+    if(initialized)
+        al_draw_scaled_bitmap(image,0,0,al_get_bitmap_width(image),al_get_bitmap_height(image),min.x,min.y,width,height,0);
+}
 void GraphicGDie::setPosition(CardLocation location)
 {
     /*Convert logic location to graphic location*/
