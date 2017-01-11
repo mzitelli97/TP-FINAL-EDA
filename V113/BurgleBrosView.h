@@ -46,7 +46,7 @@ public:
     //CardLocation point2Location(Point aux);    //Asume que el click fue en un tile, sino devuelve location 3 3 3
     void eraseMenu();
     void zoomFloor(unsigned int floor, Model * auxModel);
-    bool yesNoMessageBox(vector<string> &message);
+    string MessageBox(vector<string> &message);
     void cheatCards();
     virtual ~BurgleBrosView();
 private:

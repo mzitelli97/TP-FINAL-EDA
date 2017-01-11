@@ -260,18 +260,16 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         //Si quiero entrar a un keypad y no esta abierto tengo que tirar los dados (el numero de dados se corresponde con los intentos en el mismo turno)
         if( newCardType==KEYPAD && !tokens.isThereAToken(locationToMove,KEYPAD_TOKEN))
             cout<<"tirar dados"<<endl;//hay que ver como hacemos la funcion 
-        if( newCardType==FINGERPRINT)
-            cout<<"gasto un token del room o activo alarma"<<endl;
-        //DIEGO: Javi de vuelta, te dejo un mini ejemplo para usar el askforspent ok que quedó ayer y los tokens
+        
         if( newCardType==FINGERPRINT)
         {
                if(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_FINGERPRINT) )//Si hay tokens disponibles
                {
                   std::vector<string> msgToShow(ENTER_FINGERPRINT_TEXT);  //Esto contiene el título del cartelito, subtitulo y texto, por eso vector
-                  bool userChoice = controller->askForSpentOK(msgToShow);
-                  if(userChoice)
+                  string userChoice = controller->askForSpentOK(msgToShow);
+                  if(userChoice==msgToShow[3])// clickeo "yes"
                        tokens.removeOneHackTokenOf(COMPUTER_ROOM_FINGERPRINT);
-                  else
+                  else if(userChoice==msgToShow[4])//clickeo "no" 
                   {
                         tokens.triggerAlarm(locationToMove);
                         setGuardsNewPath(locationToMove.floor); //Así se pone el dado a donde tiene que ir, este lo necesitaba desde el guardia
@@ -497,7 +495,11 @@ bool BurgleBrosModel::isCrackSafePossible(ActionOrigin playerId, CardLocation sa
     if(p->isItsTurn()&& board.getCardType(p->getPosition())==SAFE && p->getPosition()==safe)
     {
         if(board.canSafeBeCracked(safe.floor) && !board.isSafeCracked(safe.floor))
+        {
             retVal=true;
+            if(getP2OtherPlayer(playerId)->hasLoot(CURSED_GOBLET) && getP2OtherPlayer(playerId)->getPosition()!=safe)
+                retVal=false;
+        }  
     }
     return retVal;
 }

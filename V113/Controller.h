@@ -22,7 +22,7 @@ class Controller {
 public:
     Controller();
     Controller(const Controller& orig);
-    virtual bool askForSpentOK(vector<string> &message)=0;
+    virtual string askForSpentOK(vector<string> &message)=0;
     virtual ~Controller();
 private:
 

@@ -36,11 +36,11 @@ void BurgleBrosController::attachView(BurgleBrosView *view)
     if(view!=nullptr)
         this->view=view;
 }
-bool BurgleBrosController::askForSpentOK(vector<string> &message)
+string BurgleBrosController::askForSpentOK(vector<string> &message)
 {
-    bool retVal;
+    string retVal;
     //Parar timers que controlan el timeout
-    retVal=view->yesNoMessageBox(message);  //Bloqueante
+    retVal=view->MessageBox(message);  //Bloqueante
     
     //Manda por network el spent ok con yes o no
     return retVal;
