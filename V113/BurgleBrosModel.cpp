@@ -254,11 +254,21 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
             movingPlayer->decLives();//OJO SI PIERDE NO HACE NADA POR AHORA!!!!!!!!!!!!!
         //Si me movi a un deadbolt tengo que gastar 3 acciones para entrar o vuelvo a donde estaba
         if( newCardType==DEADBOLT && locationToMove!=guards[locationToMove.floor].getPosition() && locationToMove!=getP2OtherPlayer(playerId)->getPosition())
-        {       //DIEGO: Soy javi, creo que también faltaría agregar si hay alguien en el deabolt (eran 3 acciones si no habia nadie en el deadbolt). En ismoveposible está si lo queres pegar, un if enorme
-            //JAVI:soy diego,creo que esto mas lo de isMovePosible() ya cubre todos los casos excepto el caso en el que podes gastar las 3 acciones, que hay que preguntar
+        {   
             if(movingPlayer->getcurrentActions()<3 && !cardWasVisible)
                 movingPlayer->setPosition(prevLocation);
-            //else //Pregunto si quiere gastar 3 acciones para entrar
+            else 
+            {
+                std::vector<string> msgToShow({DEADBOLT_TEXT,SPEND_ACTIONS_TEXTB,GET_BACK_TEXTB});
+                string userChoice = controller->askForSpentOK(msgToShow);
+                if(userChoice==SPEND_ACTIONS_TEXTB)
+                {
+                    for(unsigned int i=0;i<3;++i)
+                        movingPlayer->decActions();
+                }
+                else if(userChoice==GET_BACK_TEXTB)
+                    movingPlayer->setPosition(prevLocation);
+            }
                 
         }    
         //Si quiero entrar a un keypad y no esta abierto tengo que tirar los dados (el numero de dados se corresponde con los intentos en el mismo turno)
@@ -271,9 +281,9 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
                {
                   std::vector<string> msgToShow({ENTER_FINGERPRINT_TEXT,USE_HACK_TOKEN_TEXTB,TRIGGER_ALARM_TEXTB});  //Esto contiene el título del cartelito, subtitulo y texto, por eso vector
                   string userChoice = controller->askForSpentOK(msgToShow);
-                  if(userChoice==USE_HACK_TOKEN_TEXTB)// clickeo "yes"
+                  if(userChoice==USE_HACK_TOKEN_TEXTB)// clickeo "use hack token" 
                        tokens.removeOneHackTokenOf(COMPUTER_ROOM_FINGERPRINT);
-                  else if(userChoice==TRIGGER_ALARM_TEXTB)//clickeo "no" 
+                  else if(userChoice==TRIGGER_ALARM_TEXTB)//clickeo "trigger alarm"
                   {
                         tokens.triggerAlarm(locationToMove);
                         setGuardsNewPath(locationToMove.floor); //Así se pone el dado a donde tiene que ir, este lo necesitaba desde el guardia
