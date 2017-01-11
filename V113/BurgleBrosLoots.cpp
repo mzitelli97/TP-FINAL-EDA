@@ -45,6 +45,16 @@ void BurgleBrosLoots::shuffleDeck()
 {
     shuffle(lootDeck.begin(), lootDeck.end(), default_random_engine(rand()));
 }
+bool BurgleBrosLoots::isLootDrawn(Loot loot)
+{
+    bool retVal=false;
+    for(unsigned int i=0; i<currentLoots; i++)
+    {
+        if(lootInfo[i].loot==loot)
+            retVal=true;
+    }
+    return retVal;
+}
 Loot BurgleBrosLoots::getLoot(ActionOrigin owner)
 {
     Loot aux=lootDeck[0];

@@ -495,7 +495,11 @@ bool BurgleBrosModel::isCrackSafePossible(ActionOrigin playerId, CardLocation sa
     if(p->isItsTurn()&& board.getCardType(p->getPosition())==SAFE && p->getPosition()==safe)
     {
         if(board.canSafeBeCracked(safe.floor) && !board.isSafeCracked(safe.floor))
+        {
             retVal=true;
+            if(getP2OtherPlayer(playerId)->hasLoot(CURSED_GOBLET) && getP2OtherPlayer(playerId)->getPosition()!=safe)
+                retVal=false;
+        }  
     }
     return retVal;
 }
