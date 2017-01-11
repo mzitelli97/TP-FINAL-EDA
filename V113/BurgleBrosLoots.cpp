@@ -35,7 +35,7 @@ unsigned int BurgleBrosLoots::getCurrentLoots()
 BurgleBrosLoots::BurgleBrosLoots()
 {
     currentLoots=0;
-    for(unsigned int i= TIARA; i < NUMBER_OF_LOOTS; i++)
+    for(unsigned int i= TIARA; i < TIARA + NUMBER_OF_LOOTS; i++)
         lootDeck.push_back((Loot) i);
     lootDeck.push_back(GOLD_BAR);  //Hay 2 barras de oro en el mazo.
     shuffleDeck();
