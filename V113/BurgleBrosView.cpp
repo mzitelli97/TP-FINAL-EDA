@@ -324,10 +324,6 @@ void BurgleBrosView::updateTokens(BurgleBrosModel* model)
 void BurgleBrosView::updateLoots(BurgleBrosModel * model)
 {
     list<Info2DrawLoot> aux = model->getInfo2DrawLoot();
-    Info2DrawLoot loot = {TIARA, THIS_PLAYER_ACTION};
-    aux.push_back(loot);
-    loot = {PERSIAN_KITTY, OTHER_PLAYER_ACTION};
-    aux.push_back(loot);
     
     list<list<GraphicItem *>>::iterator itemsList = deleteList(FIRST_LAYER, LOOT_CARDS);
     for(list<Info2DrawLoot>::iterator newInfo = aux.begin() ; newInfo!= aux.end(); newInfo++)
