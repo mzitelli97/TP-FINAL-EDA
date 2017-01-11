@@ -327,7 +327,10 @@ bool BurgleBrosModel::addDieToSafe(ActionOrigin playerId, CardLocation safe)
     {
         p->decActions();
         p->decActions();
-        dice.addDieToSafe(safe.floor);
+        dice.addDieToSafe(safe.floor); 
+        checkTurns();
+        view->update(this);
+        retVal=true;
     }
     return retVal;
 }
@@ -351,6 +354,8 @@ bool BurgleBrosModel::crackSafe(ActionOrigin playerId, CardLocation safe)
             p->attachLoot(lootGotten);
             if(lootGotten==GOLD_BAR)
                 loots.setGoldBardLocation(safe);
+            if(lootGotten==CURSED_GOBLET && p->getCurrLifes()>1)
+                p->decLives();
             board.setSafeCracked(safe.floor);
             triggerSilentAlarm(safe.floor);
         }
