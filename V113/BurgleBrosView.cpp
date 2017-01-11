@@ -118,12 +118,7 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
             
     //creo una lista para graphicLoots
     list<GraphicItem* > auxLoot_list;
-    
-    GraphicLoot * auxLoot = new GraphicLoot(imageLoader.getImageBackP(infoLoot.front().loot));
-    auxLoot->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
-    auxLoot->setPosition(0);
-    auxLoot_list.push_back(auxLoot);
-    
+       
     //creo una lista para extra_dies
     list<GraphicItem* > auxExtraDies_list;
     
@@ -187,6 +182,7 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
 
     //creo una lista de static item
     list<GraphicItem *> auxStaticItem_list;
+    /*Paredes de todos los pisos*/
     for(int i = 0; i < NUMBER_OF_WALLS * BOARD_STANDARD_FLOORS; i++)
     {
         GraphicWall * wall_i = new GraphicWall;
@@ -194,7 +190,11 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
         wall_i->setLocation(infoWalls[i].FrontCard, infoWalls[i].RearCard);
         auxStaticItem_list.push_back(wall_i);
     }
-    
+    /*Mazo de loots (loot boca abajo, en el medio)*/
+    GraphicLoot * auxLoot = new GraphicLoot(imageLoader.getImageBackP(infoLoot.front().loot));
+    auxLoot->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
+    auxLoot->setPosition(0);
+    auxStaticItem_list.push_back(auxLoot);
 
     //**********push sobre la segunda capa 
     it_layers->push_back(auxToken_list);
@@ -217,8 +217,7 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
 void BurgleBrosView::update(Model* auxModel)
 {
     /*Update all*/
-    BurgleBrosModel * model = (BurgleBrosModel *) auxModel; 
-    //string aux;
+    BurgleBrosModel * model = (BurgleBrosModel *) auxModel;
     updateTiles(model);
     updateTokens(model);
     updateCharacters(model);
@@ -248,7 +247,6 @@ void BurgleBrosView::update(Model* auxModel)
         }
     }
     al_flip_display();
-    //cin>>aux;
 }
 ItemInfo BurgleBrosView::itemFromClick(Point point)
 {
@@ -312,7 +310,7 @@ void BurgleBrosView::updateLoots(BurgleBrosModel * model)
 {
     list<Info2DrawLoot> aux = model->getInfo2DrawLoot();
     map<ActionOrigin, unsigned int> lootsCount;
-    
+       
     list<list<GraphicItem *>>::iterator itemsList = deleteList(FIRST_LAYER, LOOT_SHOW_LIST);
     for(list<Info2DrawLoot>::iterator newInfo = aux.begin() ; newInfo!= aux.end(); newInfo++)
     {
