@@ -13,7 +13,6 @@
 
 #include "GraphicWall.h"
 #define RADIX (totalWidth/270.0)
-
 #define BROWN al_map_rgb(166,94,46)
 
 GraphicWall::GraphicWall()
