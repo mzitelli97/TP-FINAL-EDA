@@ -30,6 +30,7 @@ private:
     unsigned int lives;
     unsigned int actions;
     Point actionsPos;
+    Point namePos;
     string name;
     ALLEGRO_BITMAP * stealthToken; 
     ActionOrigin whichPlayer;

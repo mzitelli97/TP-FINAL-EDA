@@ -18,9 +18,10 @@
 #define CARD_WIDTH (totalWidth/9.0)
 #define CARD_HEIGHT (totalHeight/5.4)
 #define SEPARATION (totalWidth/90.0)
-#define ACTIONS_SEPARATION (50)
-
+#define ACTIONS_SEPARATION (30)
+#define NAME_SEPARATION (20)
 #define ACTIONS_COLOR (al_map_rgb(255,255,255))
+#define NAME_COLOR (al_map_rgb(255,255,255))
 
 GraphicPlayerCard::GraphicPlayerCard(ALLEGRO_BITMAP * image, ALLEGRO_BITMAP * stealthTokenImg, unsigned int lives, std::string name, ActionOrigin whichPlayer,unsigned int width,unsigned int height)
 {
@@ -63,6 +64,8 @@ void GraphicPlayerCard::setPosition()
     max.y = min.y + height;
     actionsPos.x=min.x;
     actionsPos.y=min.y-ACTIONS_SEPARATION; 
+    namePos.x=min.x;
+    namePos.y=max.y+NAME_SEPARATION; 
 }
 void GraphicPlayerCard::setFont(ALLEGRO_FONT * font)
 {
@@ -94,6 +97,7 @@ void GraphicPlayerCard::draw()
         char buffer[25];
         sprintf(buffer,"Actions: %d",actions);
         al_draw_text(font,ACTIONS_COLOR, actionsPos.x, actionsPos.y, ALLEGRO_ALIGN_LEFT, buffer);
+        al_draw_text(font,NAME_COLOR, namePos.x, namePos.y, ALLEGRO_ALIGN_LEFT, name.c_str());
     }
 }
 ItemInfo GraphicPlayerCard::IAm()

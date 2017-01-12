@@ -28,7 +28,9 @@ BurgleBrosModel::BurgleBrosModel()
     myPlayer.pickRandomPlayer();
     otherPlayer.pickRandomPlayer(myPlayer.getCharacter());
     myPlayer.setTurn(true);
+    myPlayer.setName("PEPE");
     otherPlayer.setTurn(false);
+    otherPlayer.setName("COQUI");
     
     guards[0].init();
     list<CardLocation> path = board.getShortestPath(guards[0].getPosition(), guards[0].getTargetPosition());

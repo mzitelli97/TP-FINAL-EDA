@@ -129,7 +129,7 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     //creo una lista de graphicCharacterscards
     list<GraphicItem* > auxCharactersCards_list;
     
-    GraphicPlayerCard *auxCharactersCardsThis_element=new GraphicPlayerCard(imageLoader.getImageP(infoThisPlayer.character,true),imageLoader.getImageP(STEALTH_TOKEN), infoThisPlayer.lives,infoOtherPlayer.name, THIS_PLAYER_ACTION,al_get_display_width(display),al_get_display_height(display)); // con true devuelve la carta
+    GraphicPlayerCard *auxCharactersCardsThis_element=new GraphicPlayerCard(imageLoader.getImageP(infoThisPlayer.character,true),imageLoader.getImageP(STEALTH_TOKEN), infoThisPlayer.lives,infoThisPlayer.name, THIS_PLAYER_ACTION,al_get_display_width(display),al_get_display_height(display)); // con true devuelve la carta
     GraphicPlayerCard *auxCharactersCardsOther_element=new GraphicPlayerCard(imageLoader.getImageP(infoOtherPlayer.character,true),imageLoader.getImageP(STEALTH_TOKEN), infoOtherPlayer.lives,infoOtherPlayer.name, OTHER_PLAYER_ACTION,al_get_display_width(display),al_get_display_height(display)); // con true devuelve la carta
    auxCharactersCardsThis_element->setFont(actionsFont);
    auxCharactersCardsOther_element->setFont(actionsFont);
