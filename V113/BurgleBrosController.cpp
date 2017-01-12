@@ -140,6 +140,8 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
         modelPointer->crackSafe(modelPointer->getPlayerOnTurn(),location);
     else if(action=="CREATE ALARM")
         modelPointer->createAlarm(modelPointer->getPlayerOnTurn(),location);
+    else if(action=="PLACE CROW")
+        modelPointer->placeCrow(modelPointer->getPlayerOnTurn(),location);
 }
 
 BurgleBrosController::~BurgleBrosController() {
