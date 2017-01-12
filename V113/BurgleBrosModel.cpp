@@ -205,7 +205,13 @@ ActionOrigin BurgleBrosModel::getPlayerOnTurn()
     else
         return OTHER_PLAYER_ACTION;
 }
-
+bool BurgleBrosModel::pass(ActionOrigin playerId)
+{
+    while(getP2Player(playerId)->getcurrentActions())
+        getP2Player(playerId)->decActions();
+    checkTurns();
+    view->update(this);
+}
 bool BurgleBrosModel::peek(ActionOrigin playerId, CardLocation locationToPeek)
 {
     bool retVal=false;
