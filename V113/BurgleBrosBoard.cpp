@@ -19,13 +19,14 @@ BurgleBrosBoard::BurgleBrosBoard()
 }
 void BurgleBrosBoard::initBoard()
 {
-	vector<CardName> firstFloor, secondFloor, thirdFloor;
-	getEachFloorTiles(&firstFloor, &secondFloor, &thirdFloor);
-        //firstFloor[0]=DEADBOLT;
-        //firstFloor[4]=LAVATORY;
-	floors[0].initFloor(0, firstFloor);
-	floors[1].initFloor(1, secondFloor);
-	floors[2].initFloor(2, thirdFloor);
+    motion=false;
+    vector<CardName> firstFloor, secondFloor, thirdFloor;
+    getEachFloorTiles(&firstFloor, &secondFloor, &thirdFloor);
+    firstFloor[0]=MOTION;
+    firstFloor[4]=COMPUTER_ROOM_MOTION;
+    floors[0].initFloor(0, firstFloor);
+    floors[1].initFloor(1, secondFloor);
+    floors[2].initFloor(2, thirdFloor);
 }
 void BurgleBrosBoard::initBoard(string startInfo)
 {
@@ -357,4 +358,19 @@ bool BurgleBrosBoard::  isCardDownstairs(CardLocation source, CardLocation desti
             retVal=true;
     }
     return retVal;
+}
+
+void BurgleBrosBoard::activateMotion() 
+{
+    motion=true;
+}
+
+void BurgleBrosBoard::deActivateMotion() 
+{
+    motion=false;
+}
+
+bool BurgleBrosBoard::isMotionActivated() 
+{
+    return motion;
 }

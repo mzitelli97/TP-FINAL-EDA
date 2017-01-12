@@ -258,6 +258,28 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
             guards[movingPlayer->getPosition().floor].setNewPathToTarget(path);
         }
         
+        //Cambios segun el lugar desde el que me muevo
+        if(board.getCardType(prevLocation)==MOTION && board.isMotionActivated())
+        {
+            if(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_MOTION))
+            {
+                std::vector<string> msgToShow({MOTION_TEXT,USE_HACK_TOKEN_TEXTB,TRIGGER_ALARM_TEXTB});//STAY????
+                string userChoice = controller->askForSpentOK(msgToShow);
+                if(userChoice==USE_HACK_TOKEN_TEXTB)
+                    tokens.removeOneHackTokenOf(COMPUTER_ROOM_MOTION);
+                else if(userChoice==TRIGGER_ALARM_TEXTB)
+                    tokens.triggerAlarm(prevLocation);
+            }
+            else 
+                tokens.triggerAlarm(prevLocation);
+            board.deActivateMotion();//OJO, SI SE AGREGA LA OPCION STAY ESTO TIENE QUE IR EN LOS OTROS CASOS Y NO ACA
+        }
+            
+        
+        
+        
+        
+        
         view->update(this);
         if(locationToMove==guards[locationToMove.floor].getPosition() && board.getCardType(locationToMove)!= LAVATORY)
             movingPlayer->decLives();
@@ -268,7 +290,14 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         
         //ver si aca tiene que ir algo mas antes de los cambios por cartas
         
-        //Cambios segun la carta a la que me movi
+        
+        
+        
+
+        
+        
+        //Cambios segun el tipo de carta al que me movi
+        
         //Si me movi a un atrium y hay un guard arriba o abajo se activa una alarma
         if(newCardType==ATRIUM &&
                 ( (locationToMove.floor>0 && board.isCardDownstairs(locationToMove,guards[locationToMove.floor-1].getPosition()) ) || ( locationToMove.floor<2 && board.isCardUpstairs(locationToMove,guards[locationToMove.floor+1].getPosition()) ) ) )
@@ -372,7 +401,7 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         }    
         
         if( newCardType==MOTION)
-            ;//hay que marcar que se entro en este turno y si sale en el mismo turno tiene que gastar un token o activar una alarma, en el proximo ya puede salir
+            board.activateMotion();//hay que marcar que se entro en este turno y si sale en el mismo turno tiene que gastar un token o activar una alarma, en el proximo ya puede salir
         if( newCardType==SCANNER_DETECTOR && movingPlayer->carriesLoot())
             tokens.triggerAlarm(locationToMove);
         if(newCardType==THERMO && movingPlayer->getcurrentActions()==0)
@@ -382,7 +411,7 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
             CardLocation downStairsLocation={locationToMove.floor-1,locationToMove.row,locationToMove.column};
             movingPlayer->setPosition(downStairsLocation);
         }
-        //SACAR EL CASO DEL LAVATORY CUANDO HAGO STEALTH--
+
         checkTurns();
         view->update(this);
         retVal=true;
@@ -498,6 +527,7 @@ void BurgleBrosModel::checkTurns()
         otherPlayer.setTurn(true);
         playerSpentFreeAction=false;
         dice.resetKeypadsDice();
+        board.deActivateMotion();
     }
     if(otherPlayer.isItsTurn() && otherPlayer.getcurrentActions() == 0)
     {
@@ -509,6 +539,7 @@ void BurgleBrosModel::checkTurns()
         myPlayer.setTurn(true);
         playerSpentFreeAction=false;
         dice.resetKeypadsDice();
+        board.deActivateMotion();
     }
 }
 

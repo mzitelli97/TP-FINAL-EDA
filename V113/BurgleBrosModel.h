@@ -24,6 +24,7 @@ typedef struct{
 #define LASER_TEXT   "Alert",        "Confirm Action",   "You have entered a Laser tile, you can either spend and extra action or use a hack token to avoid triggering an alarm"
 #define DEADBOLT_TEXT "Alert",  "Confirm action", "You moved to a deadbolt, in order to enter you must spend 3 actions, otherwise you will go back to your previous tile"
 #define LAVATORY_TEXT "Alert",        "Confirm Action",   "You have encountered a guard! Luckily you are in the lavatory so you can choose between using one of the stealth tokens in it or one of your own"
+#define MOTION_TEXT "Alert",        "Confirm Action",   "You are leaving an activated motion sensor. An alarm will be triggered unless you use a hack token"
 #define USE_LAVATORY_TOKEN_TEXTB "Use Lavatory stealth token"
 #define USE_MY_STEALTH_TOKEN_TEXTB "Use one of my stealth tokens"
 #define SPEND_ACTIONS_TEXTB "Spend actions"
