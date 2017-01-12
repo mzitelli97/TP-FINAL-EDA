@@ -65,6 +65,9 @@ private:
     ImageLoader imageLoader;
     bool onZoom;
     int floorZoomed;
+    int guardZoomed;
+    ActionOrigin lootZoomed;
+    ActionOrigin playerZoomed;
 
 };
 

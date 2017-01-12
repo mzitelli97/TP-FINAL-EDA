@@ -28,10 +28,11 @@
 #include "allegro5/allegro_native_dialog.h"
 #include "GraphicButton.h"
 
-#define SCREEN_W 1800
-#define SCREEN_H 900
+#define SCREEN_W 1250
+#define SCREEN_H 650
 #define TITLE_H al_get_bitmap_height(backScreen)/20.0
 #define NO_FLOOR_ZOOMED -1
+#define NO_GUARD_ZOOMED -1
 
 BurgleBrosView::BurgleBrosView() {
     imageLoader.initImages();           //Falta checkear.
@@ -47,6 +48,9 @@ BurgleBrosView::BurgleBrosView() {
     al_set_target_backbuffer(display);
     onZoom = false;
     floorZoomed = NO_FLOOR_ZOOMED;
+    guardZoomed = NO_GUARD_ZOOMED;
+    playerZoomed = NON_PLAYER;
+    lootZoomed = NON_PLAYER;
     
     #ifdef ICON
     ALLEGRO_BITMAP *icon = al_load_bitmap(ICON);                              //Falta checkear.
@@ -327,6 +331,8 @@ void BurgleBrosView::updateLoots(BurgleBrosModel * model)
     {
         GraphicLoot *p = new GraphicLoot(newInfo->owner, imageLoader.getImageP(newInfo->loot));
         p->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
+        if(onZoom && (newInfo->owner == lootZoomed)) 
+            p->toggleZoom();
         p->setPosition(lootsCount[newInfo->owner]++);
         itemsList->push_back((GraphicItem *) p);
     }
@@ -486,6 +492,9 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
 {
     onZoom ^= true;
     floorZoomed = floor;
+    guardZoomed = NO_GUARD_ZOOMED;
+    lootZoomed = NON_PLAYER;
+    playerZoomed = NON_PLAYER;
     BurgleBrosModel * model = (BurgleBrosModel *) auxModel;
     list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) TILES_LIST);
     for(unsigned int i=0; i < BOARD_STANDARD_FLOORS * FLOOR_RAWS * FLOOR_COLUMNS ; i++, it++)
@@ -548,6 +557,14 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
     button->setLocation();
 }
 
+void BurgleBrosView::zoomLoot(ActionOrigin owner)
+{
+    if(owner != NON_PLAYER) onZoom ^= true;
+    floorZoomed = NO_FLOOR_ZOOMED;
+    guardZoomed = NO_GUARD_ZOOMED;
+    lootZoomed = owner;
+    playerZoomed = NON_PLAYER;
+}
 
 
 void BurgleBrosView::cheatCards()

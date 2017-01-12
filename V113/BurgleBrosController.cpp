@@ -86,6 +86,8 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                     break;
                 case LOOT_CARDS_CLICK:
                     auxPlayer = (ActionOrigin *)temp.info;
+                    view->zoomLoot(*auxPlayer);
+                    view->update(modelPointer);
                     break;
                 case GUARD_CARDS_CLICK:
                     floor = (unsigned int *)temp.info;

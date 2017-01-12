@@ -44,16 +44,27 @@ ItemInfo GraphicLoot::IAm()
 
 void GraphicLoot::setPosition(unsigned int quantity)
 {
-    if(owner == THIS_PLAYER_ACTION)
-            min.x = 4 * SPACE_X + CARD_WIDTH + quantity * CARD_WIDTH/2;
-    else if (owner == OTHER_PLAYER_ACTION)
-            min.x = totalWidth - SPACE_X * 4 - CARD_WIDTH * 2 - quantity * CARD_WIDTH/2;
-    else min.x = 4 * SPACE_X + 3 * CARD_WIDTH + CARD_WIDTH/10.0;
-    min.y = totalHeight - SPACE_Y - CARD_HEIGHT;
-    max.x = min.x + CARD_WIDTH;
-    max.y = min.y + CARD_HEIGHT;
-    width = max.x - min.x;
-    height = max.y - min.y;
+    if(zoomed)
+    {
+        width = CARD_WIDTH * 2;
+        height = CARD_HEIGHT * 2;
+        min.x = (quantity + 1) * CARD_WIDTH/2.0 + quantity * width;
+        min.y = CARD_HEIGHT / 2.0;
+    }
+    else
+    {
+        width = CARD_WIDTH;
+        height = CARD_HEIGHT;
+        if(owner == THIS_PLAYER_ACTION)
+            min.x = 4 * SPACE_X + width + quantity * width/2;
+        else if (owner == OTHER_PLAYER_ACTION)
+            min.x = totalWidth - SPACE_X * 4 - width * 2 - quantity * width/2;
+        else min.x = 4 * SPACE_X + 3 * width + width/10.0;
+        min.y = totalHeight - SPACE_Y - height;
+    }
+    
+    max.x = min.x + width;
+    max.y = min.y + height;
 
 }
 ActionOrigin GraphicLoot::getOwner()
