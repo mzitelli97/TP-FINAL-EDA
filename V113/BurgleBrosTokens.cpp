@@ -73,9 +73,9 @@ unsigned int BurgleBrosTokens::howManyTokensOnCPURoom(CardName cpuRoom)
 {
     return computerRoomsInfo[cpuRoom];
 }
-pair<bool, CardLocation> BurgleBrosTokens::getKeypadToken()
+list<CardLocation> BurgleBrosTokens::getKeypadTokens()
 {
-    return keypad;
+    return keypadTokens;
 }
 unsigned int BurgleBrosTokens::howManyAlarmsOnFloor(unsigned int floor)
 {
@@ -87,6 +87,24 @@ unsigned int BurgleBrosTokens::howManyAlarmsOnFloor(unsigned int floor)
     }
     return count;
 }
+
+bool BurgleBrosTokens::isThereAKeypadToken(CardLocation location)
+{
+    bool retVal=false;
+    for(list<CardLocation>:: iterator it=keypadTokens.begin(); it != keypadTokens.end(); it ++)       //Recorro la lista de keypadTokens
+    {
+        if( *it == location)                            
+            retVal=true;
+    }
+    return retVal;
+}
+
+void BurgleBrosTokens::putKeyPadToken(CardLocation location) 
+{
+    if(!isThereAKeypadToken(location))
+        keypadTokens.push_back(location);
+}
+
 bool BurgleBrosTokens::isThereAToken(CardLocation location, Token whichToken)
 {
     bool retVal=false;

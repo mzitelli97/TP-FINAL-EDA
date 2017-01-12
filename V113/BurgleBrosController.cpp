@@ -111,6 +111,9 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                         quitCause=USER_QUIT;
                     }
                     break;
+                case PASS_BUTTON:
+                    modelPointer->pass(modelPointer->getPlayerOnTurn());
+                    break;
                 default:
                     break;
             }

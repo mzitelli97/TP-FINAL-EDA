@@ -2,6 +2,8 @@
 #include "BurgleBrosView.h"
 #include <unistd.h>
 #include <vector>
+
+#define KEYPAD_CRACK_NUMBER 6
 typedef struct
 {
     CardLocation target;
@@ -96,23 +98,26 @@ list<Info2DrawTokens> BurgleBrosModel::getInfo2DrawTokens()
     unsigned int aux= tokens.howManyTokensOnCPURoom((CardName)COMPUTER_ROOM_FINGERPRINT);
     unsigned int  i,j;
     Info2DrawTokens toPush;
+    
+    toPush.token=DOWNSTAIRS_TOKEN;
     for(vector<CardLocation>::iterator it=downstairsTokens.begin(); it!=downstairsTokens.end(); it++)
     {
         toPush.position=*it;
-        toPush.token=DOWNSTAIRS_TOKEN;
         retVal.push_back(toPush);
     }
+    
+    toPush.token=ALARM_TOKEN;
     for(list<CardLocation>::iterator it=auxList.begin(); it!=auxList.end(); it++)
     {
         toPush.position=*it;
-        toPush.token=ALARM_TOKEN;
         retVal.push_back(toPush);
     }
+    
     auxList = tokens.getCrackedCards();
+    toPush.token= SAFE_TOKEN;
     for(list<CardLocation>::iterator it=auxList.begin(); it!=auxList.end(); it++)
     {
         toPush.position=*it;
-        toPush.token= SAFE_TOKEN;
         retVal.push_back(toPush);
     }
 /*    auxList = tokens.getStealthTokensOnFloor();
@@ -122,12 +127,16 @@ list<Info2DrawTokens> BurgleBrosModel::getInfo2DrawTokens()
         toPush.token= STEALTH_TOKEN;
         retVal.push_back(toPush);
     }*/
-    if(tokens.getKeypadToken().first)
+    
+    //keypad tokens
+    auxList= tokens.getKeypadTokens();
+    toPush.token= KEYPAD_TOKEN;
+    for(list<CardLocation>::iterator it=auxList.begin(); it!=auxList.end(); ++it)    
     {
-        toPush.position= tokens.getKeypadToken().second;
-        toPush.token= KEYPAD_TOKEN;
+        toPush.position=*it;
         retVal.push_back(toPush);
     }
+
     
     for(i=0; i < aux; i++)
     {
@@ -291,9 +300,18 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
                 
         }    
         //Si quiero entrar a un keypad y no esta abierto tengo que tirar los dados (el numero de dados se corresponde con los intentos en el mismo turno)
-        if( newCardType==KEYPAD && !tokens.isThereAToken(locationToMove,KEYPAD_TOKEN))
-            cout<<"tirar dados"<<endl;//hay que ver como hacemos la funcion 
-        
+        if( newCardType==KEYPAD && !tokens.isThereAKeypadToken(locationToMove))
+        {
+            
+            bool keyCracked=dice.throwDiceForKeypad(locationToMove);
+            if(keyCracked)
+                tokens.putKeyPadToken(locationToMove);
+            else
+            {
+                dice.addDieToKeypad(locationToMove);
+                movingPlayer->setPosition(prevLocation);
+            }
+        }
         if( newCardType==FINGERPRINT)//hay que arreglar el tema de cuando hace click en la cruz del native message
         {
                if(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_FINGERPRINT) )//Si hay tokens disponibles
@@ -450,6 +468,7 @@ void BurgleBrosModel::checkTurns()
             myPlayer.setActions(INIT_NMBR_OF_LIVES-1);
         moveGuard(myPlayer.getPosition().floor);
         otherPlayer.setTurn(true);
+        dice.resetKeypadsDice();
     }
     if(otherPlayer.isItsTurn() && otherPlayer.getcurrentActions() == 0)
     {
@@ -459,6 +478,7 @@ void BurgleBrosModel::checkTurns()
             otherPlayer.setActions(INIT_NMBR_OF_LIVES-1);
         moveGuard(otherPlayer.getPosition().floor);
         myPlayer.setTurn(true);
+        dice.resetKeypadsDice();
     }
 }
 
@@ -499,8 +519,7 @@ void BurgleBrosModel::checkTurns()
  bool BurgleBrosModel:: isPeekPosible(ActionOrigin player, CardLocation tile)
 {
     bool retVal=false;
-    BurgleBrosPlayer* p;
-    p = getP2Player(player);
+    BurgleBrosPlayer* p=getP2Player(player);
     if(p->isItsTurn() && (!board.isCardVisible(tile)))
     {
         if(board.adjacentCards(p->getPosition(),tile))
