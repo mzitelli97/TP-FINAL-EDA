@@ -54,6 +54,10 @@ void BurgleBrosGuard::init()
     initialized=true;
     position = drawCardTarget();            //Toma una carta objetivo, allí se posicionara el guard
     currentTarget = drawCardTarget();       //La siguiente carta objetivo es hacia donde se dirige.
+    /*CardLocation aux={0,1,0};
+    CardLocation auxa={0,0,0};
+    position=aux;
+    currentTarget=auxa;*/
 }
 
 
