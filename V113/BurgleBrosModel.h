@@ -45,13 +45,15 @@ class BurgleBrosModel : public Model
         bool peek(ActionOrigin playerId, CardLocation locationToPeek);
         bool move(ActionOrigin playerId, CardLocation locationToMove);
         bool addToken(ActionOrigin playerId, CardLocation locationToAddToken);
-        bool addDieToSafe(ActionOrigin playerId, CardLocation safe);
         bool crackSafe(ActionOrigin playerId, CardLocation safe);
+        bool addDieToSafe(ActionOrigin playerId, CardLocation safe);
+        bool createAlarm(ActionOrigin playerId, CardLocation tile);
         bool isMovePosible(ActionOrigin playerId,CardLocation tileToMove);  //Pregunta si una movida es posible
         bool isPeekPosible(ActionOrigin player, CardLocation tile);         //Pregunta si un peek es posible
         bool isAddTokenPosible(ActionOrigin player, CardLocation tile);
         bool isAddDieToSafePossible(ActionOrigin player, CardLocation tile);
         bool isCrackSafePossible(ActionOrigin playerId, CardLocation safe);
+        bool isCreateAlarmPossible(ActionOrigin playerId, CardLocation tile);
         list<string> getPosibleActions(ActionOrigin player, CardLocation tile);   //Devuelve que acciones puede realizar el jugador indicado en esa tile
         void moveGuard(unsigned int floor);
         void attachView(View * view);
@@ -63,6 +65,7 @@ class BurgleBrosModel : public Model
         void triggerSilentAlarm(unsigned int floor);
         bool GuardInCamera();
         void setGuardsNewPath(unsigned int floor);
+        bool playerSpentFreeAction;
         BurgleBrosPlayer * getP2Player(ActionOrigin playerId);
         BurgleBrosPlayer * getP2OtherPlayer(ActionOrigin playerId);
         BurgleBrosPlayer myPlayer;

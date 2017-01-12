@@ -13,8 +13,8 @@
 
 #include "GraphicButton.h"
 
-#define BUTTON_WIDTH (totalWidth/68.3)
-#define BUTTON_HEIGHT (totalHeight/38.0)
+#define BUTTON_WIDTH (totalWidth/50.0) //68.3
+#define BUTTON_HEIGHT BUTTON_WIDTH//(totalHeight/38.0)
 
 #define QUIT_CENTER_X   (39*(totalWidth/40))
 #define QUIT_CENTER_Y   (totalWidth/60)
@@ -107,7 +107,7 @@ void GraphicButton::setLocation()
     if(button == ZOOM_BUTTON)
     {
         logic2GraphicCardLocation({zoomFloor,3,3});
-        min.x += (width + 10.0);
+        min.x += (width + BUTTON_WIDTH/3.5);
         min.y += (height - BUTTON_HEIGHT);
         width = BUTTON_WIDTH;
         height = BUTTON_HEIGHT;

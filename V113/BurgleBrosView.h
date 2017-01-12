@@ -65,6 +65,7 @@ private:
     vector<GraphicItem*> walls;
     ALLEGRO_DISPLAY * display;
     ALLEGRO_BITMAP * backScreen;
+    ALLEGRO_FONT * actionsFont;
     ImageLoader imageLoader;
     bool onZoom;
     int floorZoomed;

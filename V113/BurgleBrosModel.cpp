@@ -28,25 +28,14 @@ BurgleBrosModel::BurgleBrosModel()
     myPlayer.pickRandomPlayer();
     otherPlayer.pickRandomPlayer(myPlayer.getCharacter());
     myPlayer.setTurn(true);
+    myPlayer.setName("PEPE");
     otherPlayer.setTurn(false);
-    /*
-    CardLocation aux = {0,1,2};
-    guards[0].setPosition(aux);
-    aux = {1,1,2};
-    guards[1].setPosition(aux);
-    aux = {2,2,2};
-    guards[2].setPosition(aux);*/
+    otherPlayer.setName("COQUI");
     
     guards[0].init();
     list<CardLocation> path = board.getShortestPath(guards[0].getPosition(), guards[0].getTargetPosition());
     guards[0].setNewPathToTarget(path );
-    /*
-    guards[1].init();
-    path = board.getShortestPath(guards[1].getPosition(), guards[1].getTargetPosition());
-    guards[1].setNewPathToTarget(path );
-    guards[2].init();
-    path = board.getShortestPath(guards[2].getPosition(), guards[2].getTargetPosition());
-    guards[2].setNewPathToTarget(path );*/
+    playerSpentFreeAction=false;
     
 }
 void BurgleBrosModel::attachView(View * view)
@@ -188,16 +177,12 @@ Info2DrawGuard BurgleBrosModel::getInfo2DrawGuard(unsigned int floor)
 Info2DrawPlayer BurgleBrosModel:: getInfo2DrawPlayer(ActionOrigin player)
 {
     Info2DrawPlayer info;
-    BurgleBrosPlayer p;
-    
-    if(player==THIS_PLAYER_ACTION)        
-        p=myPlayer;
-    else 
-        p=otherPlayer;
-    info.name=p.getName();
-    info.character=p.getCharacter();
-    info.lives=p.getCurrLifes();
-    info.position=p.getPosition();
+    BurgleBrosPlayer * p = getP2Player(player);
+    info.name=p->getName();
+    info.character=p->getCharacter();
+    info.lives=p->getCurrLifes();
+    info.position=p->getPosition();
+    info.currActions=p->getcurrentActions();
     return info;
 }
 
@@ -232,10 +217,14 @@ bool BurgleBrosModel::pass(ActionOrigin playerId)
 bool BurgleBrosModel::peek(ActionOrigin playerId, CardLocation locationToPeek)
 {
     bool retVal=false;
+    BurgleBrosPlayer *p=getP2Player(playerId);
     if(isPeekPosible(playerId, locationToPeek))
     {
         board.setCardVisible(locationToPeek);
-        getP2Player(playerId)->decActions();
+        if(p->getCharacter() == THE_HAWK && playerSpentFreeAction==false && board.isAWallBetween(p->getPosition(), locationToPeek))
+            playerSpentFreeAction=true;
+        else
+            p->decActions();
         checkTurns();
         view->update(this);
         retVal=true;
@@ -441,7 +430,18 @@ bool BurgleBrosModel::crackSafe(ActionOrigin playerId, CardLocation safe)
     return retVal;        
 }
 
-
+bool BurgleBrosModel::createAlarm(ActionOrigin playerId, CardLocation tile)
+{
+    bool retVal=false;
+    if(isCreateAlarmPossible(playerId,tile))
+    {
+        playerSpentFreeAction=true;
+        tokens.triggerAlarm(tile);
+        setGuardsNewPath(tile.floor);
+        retVal=true;
+    }
+    return retVal;
+}
 
 
 
@@ -476,6 +476,7 @@ void BurgleBrosModel::checkTurns()
             myPlayer.setActions(INIT_NMBR_OF_LIVES-1);
         moveGuard(myPlayer.getPosition().floor);
         otherPlayer.setTurn(true);
+        playerSpentFreeAction=false;
         dice.resetKeypadsDice();
     }
     if(otherPlayer.isItsTurn() && otherPlayer.getcurrentActions() == 0)
@@ -486,6 +487,7 @@ void BurgleBrosModel::checkTurns()
             otherPlayer.setActions(INIT_NMBR_OF_LIVES-1);
         moveGuard(otherPlayer.getPosition().floor);
         myPlayer.setTurn(true);
+        playerSpentFreeAction=false;
         dice.resetKeypadsDice();
     }
 }
@@ -581,6 +583,15 @@ bool BurgleBrosModel::isCrackSafePossible(ActionOrigin playerId, CardLocation sa
     }
     return retVal;
 }
+bool BurgleBrosModel::isCreateAlarmPossible(ActionOrigin playerId, CardLocation tile)
+{
+    bool retVal=false;
+    BurgleBrosPlayer* p=getP2Player(playerId);
+    if(p->isItsTurn() && p->getCharacter() == THE_JUICER && playerSpentFreeAction==false && board.adjacentCards(p->getPosition(),tile))
+        retVal=true;
+    return retVal;
+}
+
 list<string> BurgleBrosModel::getPosibleActions(ActionOrigin player, CardLocation tile)
 {
     list<string> aux;
@@ -594,6 +605,8 @@ list<string> BurgleBrosModel::getPosibleActions(ActionOrigin player, CardLocatio
         aux.push_back("ADD DIE");
     if(isCrackSafePossible(player, tile))
         aux.push_back("CRACK");
+    if(isCreateAlarmPossible(player,tile))
+        aux.push_back("CREATE ALARM");
     return aux;
 }
  
@@ -639,9 +652,11 @@ void BurgleBrosModel::moveGuard(unsigned int floor)
             if(board.getCardType(guards[floor].getPosition()) == ATRIUM && (board.isCardDownstairs(guards[floor].getPosition(), otherPlayer.getPosition()) || board.isCardUpstairs(guards[floor].getPosition(), otherPlayer.getPosition())))
                 otherPlayer.decLives();
             if(board.getCardType(guards[floor].getPosition()) == CAMERA && board.getCardType(myPlayer.getPosition()) == CAMERA && board.isCardVisible(myPlayer.getPosition()))
-            {    tokens.triggerAlarm(myPlayer.getPosition()); setGuardsNewPath(myPlayer.getPosition().floor);   }
+                if(board.getCardType(guards[floor].getPosition()) != board.getCardType(myPlayer.getPosition()))
+                {   tokens.triggerAlarm(myPlayer.getPosition()); setGuardsNewPath(myPlayer.getPosition().floor); }
             if(board.getCardType(guards[floor].getPosition()) == CAMERA && board.getCardType(otherPlayer.getPosition()) == CAMERA && board.isCardVisible(otherPlayer.getPosition()))
-            {    tokens.triggerAlarm(otherPlayer.getPosition()); setGuardsNewPath(otherPlayer.getPosition().floor);   }
+                if(board.getCardType(guards[floor].getPosition()) != board.getCardType(otherPlayer.getPosition()))
+                {   tokens.triggerAlarm(otherPlayer.getPosition()); setGuardsNewPath(otherPlayer.getPosition().floor); }
         }
         /*Si un player esta sobre un atrium dado vuelta, y el guardia pasa un piso arriba o abajo de ese player, este pierde una vida*/
         if(board.getCardType(myPlayer.getPosition()) == ATRIUM && board.isCardVisible(myPlayer.getPosition()) && (board.isCardDownstairs(myPlayer.getPosition(), guards[floor].getPosition()) || board.isCardUpstairs(myPlayer.getPosition(), guards[floor].getPosition())))

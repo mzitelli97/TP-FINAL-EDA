@@ -27,10 +27,12 @@
 #include "GraphicWall.h"
 #include "allegro5/allegro_native_dialog.h"
 #include "GraphicButton.h"
+#include <time.h>
 
 #define SCREEN_W 1250
 #define SCREEN_H 670
 #define TITLE_H al_get_bitmap_height(backScreen)/20.0
+#define ACTIONS_FONT_H al_get_bitmap_height(backScreen)/50.0
 #define NO_FLOOR_ZOOMED -1
 #define NO_GUARD_ZOOMED -1
 
@@ -40,7 +42,7 @@ BurgleBrosView::BurgleBrosView() {
     display =al_create_display(SCREEN_W,SCREEN_H);           //Falta checkear.
     backScreen = al_load_bitmap("fondo.jpg");
     al_draw_scaled_bitmap(backScreen,0,0,al_get_bitmap_width(backScreen),al_get_bitmap_height(backScreen),0,0,al_get_display_width(display),al_get_display_height(display),0);
-    
+    actionsFont=al_load_font("fonts.ttf",ACTIONS_FONT_H,0);
     ALLEGRO_FONT * font = al_load_font("title.ttf",TITLE_H,0);
     al_set_target_bitmap(backScreen);
     al_draw_text(font,al_map_rgb(0,0,0),al_get_bitmap_width(backScreen)/2.0,TITLE_H/2,ALLEGRO_ALIGN_CENTER, "EDA BURGLE BROS");
@@ -120,17 +122,18 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
         auxButton->setLocation();
         auxButtons_list.push_back(auxButton);
     }
-    GraphicButton *auxButton = new GraphicButton(imageLoader.getImageP(MUTE_BUTTON), nullptr, QUIT_BUTTON, al_get_display_width(display), al_get_display_height(display));
+    GraphicButton *auxButton = new GraphicButton(imageLoader.getImageP(QUIT_BUTTON), nullptr, QUIT_BUTTON, al_get_display_width(display), al_get_display_height(display));
     auxButtons_list.push_back(auxButton);
-    auxButton = new GraphicButton(imageLoader.getImageP(MUTE_BUTTON), nullptr, PASS_BUTTON, al_get_display_width(display), al_get_display_height(display));
+    auxButton = new GraphicButton(imageLoader.getImageP(PASS_BUTTON), nullptr, PASS_BUTTON, al_get_display_width(display), al_get_display_height(display));
     auxButtons_list.push_back(auxButton);
     
     //creo una lista de graphicCharacterscards
     list<GraphicItem* > auxCharactersCards_list;
     
-    GraphicPlayerCard *auxCharactersCardsThis_element=new GraphicPlayerCard(imageLoader.getImageP(infoThisPlayer.character,true),imageLoader.getImageP(STEALTH_TOKEN), infoThisPlayer.lives,infoOtherPlayer.name, THIS_PLAYER_ACTION,al_get_display_width(display),al_get_display_height(display)); // con true devuelve la carta
+    GraphicPlayerCard *auxCharactersCardsThis_element=new GraphicPlayerCard(imageLoader.getImageP(infoThisPlayer.character,true),imageLoader.getImageP(STEALTH_TOKEN), infoThisPlayer.lives,infoThisPlayer.name, THIS_PLAYER_ACTION,al_get_display_width(display),al_get_display_height(display)); // con true devuelve la carta
     GraphicPlayerCard *auxCharactersCardsOther_element=new GraphicPlayerCard(imageLoader.getImageP(infoOtherPlayer.character,true),imageLoader.getImageP(STEALTH_TOKEN), infoOtherPlayer.lives,infoOtherPlayer.name, OTHER_PLAYER_ACTION,al_get_display_width(display),al_get_display_height(display)); // con true devuelve la carta
-   
+   auxCharactersCardsThis_element->setFont(actionsFont);
+   auxCharactersCardsOther_element->setFont(actionsFont);
     auxCharactersCards_list.push_back((GraphicItem *) auxCharactersCardsThis_element);
     auxCharactersCards_list.push_back((GraphicItem *) auxCharactersCardsOther_element);
             
@@ -235,6 +238,9 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
 void BurgleBrosView::update(Model* auxModel)
 {
     /*Update all*/
+    clock_t  before,after;
+    
+    before=clock();
     BurgleBrosModel * model = (BurgleBrosModel *) auxModel;
     updateTiles(model);
     updateTokens(model);
@@ -243,12 +249,15 @@ void BurgleBrosView::update(Model* auxModel)
     updateLoots(model);
     updateGuards(model);
     updateExtraDices(model);
+    after=clock();
+    cout << "Update tardó: "<< ((double)(after-before))/(double)CLOCKS_PER_SEC<< " segundos."<<endl; 
     /*Draw all*/
     al_draw_scaled_bitmap(backScreen,0,0,al_get_bitmap_width(backScreen),al_get_bitmap_height(backScreen),0,0,al_get_display_width(display),al_get_display_height(display),0);
     list<list<list<GraphicItem *>>>::iterator it_layers;
     list<list<GraphicItem *>>::iterator it_itemType;
     list<GraphicItem *>::iterator it_items;
     //cout << "hola" << endl;
+    before=clock();
     for( it_layers = graphicInterface.begin(); it_layers != graphicInterface.end(); it_layers++)
     {
         //cout << "hola1" << endl;
@@ -265,6 +274,8 @@ void BurgleBrosView::update(Model* auxModel)
         }
     }
     al_flip_display();
+    after=clock();
+    cout << "Draw tardó: "<< ((double)(after-before))/(double)CLOCKS_PER_SEC << " segundos."<<endl; 
 }
 ItemInfo BurgleBrosView::itemFromClick(Point point)
 {
@@ -377,7 +388,7 @@ void BurgleBrosView::updateCharacterCards(BurgleBrosModel *model) {
     {
         if(onZoom && playerZoomed == THIS_PLAYER_ACTION) gPlayerCard->setZoom(true);
         else gPlayerCard->setZoom(false);
-        gPlayerCard->setLives(player.lives);
+        gPlayerCard->setLivesAndActions(player.lives,player.currActions);
     }
     //SecondPlayer
     player = model->getInfo2DrawPlayer(OTHER_PLAYER_ACTION);
@@ -386,7 +397,7 @@ void BurgleBrosView::updateCharacterCards(BurgleBrosModel *model) {
     {
         if(onZoom && playerZoomed == OTHER_PLAYER_ACTION) gPlayerCard->setZoom(true);
         else gPlayerCard->setZoom(false);
-        gPlayerCard->setLives(player.lives);
+        gPlayerCard->setLivesAndActions(player.lives,player.currActions);
     }
 }
 void BurgleBrosView::updateGuards(BurgleBrosModel* model)

@@ -18,7 +18,10 @@
 #define CARD_WIDTH (totalWidth/9.0)
 #define CARD_HEIGHT (totalHeight/5.4)
 #define SEPARATION (totalWidth/90.0)
-
+#define ACTIONS_SEPARATION (totalHeight/76.0)
+#define NAME_SEPARATION (totalHeight/76.0)
+#define ACTIONS_COLOR (al_map_rgb(255,255,255))
+#define NAME_COLOR (al_map_rgb(255,255,255))
 
 GraphicPlayerCard::GraphicPlayerCard(ALLEGRO_BITMAP * image, ALLEGRO_BITMAP * stealthTokenImg, unsigned int lives, std::string name, ActionOrigin whichPlayer,unsigned int width,unsigned int height)
 {
@@ -29,10 +32,12 @@ GraphicPlayerCard::GraphicPlayerCard(ALLEGRO_BITMAP * image, ALLEGRO_BITMAP * st
     setScreenDimentions(width, height);
     stealthToken= stealthTokenImg;
 }
-void  GraphicPlayerCard:: setLives(unsigned int livesNumber)
+void  GraphicPlayerCard:: setLivesAndActions(unsigned int livesNumber,unsigned int actions)
 {   
     if(livesNumber<4 && livesNumber>0)
         lives=livesNumber;
+    if(actions<=4)
+        this->actions=actions;
 }
 
 void GraphicPlayerCard::setPosition()
@@ -53,12 +58,19 @@ void GraphicPlayerCard::setPosition()
         else 
             min.x = totalWidth - STEALTH_TOKEN_WIDTH - width;
         min.y = totalHeight - STEALTH_TOKEN_HEIGHT - height;
+        
     }
     max.x = min.x + width;
     max.y = min.y + height;
-    
+    actionsPos.x=min.x;
+    actionsPos.y=min.y - ACTIONS_SEPARATION - font->height; 
+    namePos.x=min.x;
+    namePos.y=max.y + NAME_SEPARATION; 
 }
-
+void GraphicPlayerCard::setFont(ALLEGRO_FONT * font)
+{
+    this->font=font;
+}
 void GraphicPlayerCard::draw()
 {
     setPosition();
@@ -69,6 +81,7 @@ void GraphicPlayerCard::draw()
         for(unsigned int i=0; i <(lives-1); i++)
             al_draw_scaled_bitmap(stealthToken,0,0,al_get_bitmap_width(stealthToken),al_get_bitmap_height(stealthToken),
                     min.x + width + SEPARATION, min.y + i * STEALTH_TOKEN_HEIGHT,STEALTH_TOKEN_WIDTH,STEALTH_TOKEN_HEIGHT,0);
+        
     }
     else
     {
@@ -77,6 +90,14 @@ void GraphicPlayerCard::draw()
         for(unsigned int i=0; i <(lives-1); i++)
             al_draw_scaled_bitmap(stealthToken,0,0,al_get_bitmap_width(stealthToken),al_get_bitmap_height(stealthToken),
                     min.x - STEALTH_TOKEN_WIDTH - SEPARATION,min.y + i * STEALTH_TOKEN_HEIGHT,STEALTH_TOKEN_WIDTH,STEALTH_TOKEN_HEIGHT,0);
+        
+    }
+    if(font != nullptr)
+    {
+        char buffer[25];
+        sprintf(buffer,"Actions: %d",actions);
+        al_draw_text(font,ACTIONS_COLOR, actionsPos.x, actionsPos.y, ALLEGRO_ALIGN_LEFT, buffer);
+        al_draw_text(font,NAME_COLOR, namePos.x, namePos.y, ALLEGRO_ALIGN_LEFT, name.c_str());
     }
 }
 ItemInfo GraphicPlayerCard::IAm()
