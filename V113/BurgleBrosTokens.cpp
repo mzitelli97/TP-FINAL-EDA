@@ -116,6 +116,9 @@ bool BurgleBrosTokens::isThereAToken(CardLocation location, Token whichToken)
         case ALARM_TOKEN:
             retVal=isThereAnAlarmToken(location);
             break;
+        case CROW_TOKEN:
+            retVal=isThereACrowToken(location);
+            break;
     }
     return retVal;
 }
@@ -203,6 +206,20 @@ bool BurgleBrosTokens::isSafeOpened(unsigned int floor)
 pair<bool, CardLocation> BurgleBrosTokens::getPersianKittyToken()
 {
     return persianKitty;
+}
+bool BurgleBrosTokens::isThereACrowToken(CardLocation  location)
+{
+    bool retVal=false;
+    if(crowToken.first && crowToken.second==location)
+        retVal=true;
+    return retVal;
+}
+
+
+void BurgleBrosTokens::placeCrowToken(CardLocation location)
+{
+    crowToken.first=true;
+    crowToken.second=location;
 }
 pair<bool, CardLocation> BurgleBrosTokens::getCrowToken()
 {
