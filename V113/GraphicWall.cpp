@@ -17,7 +17,6 @@
 
 GraphicWall::GraphicWall()
 {
-    zoomed = false;
 }
 
 GraphicWall::GraphicWall(const GraphicWall& orig) {

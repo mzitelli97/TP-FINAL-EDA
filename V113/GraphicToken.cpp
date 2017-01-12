@@ -20,7 +20,6 @@ GraphicToken::GraphicToken() {
 GraphicToken::GraphicToken(ALLEGRO_BITMAP* image)
 {
     this->image = image;
-    zoomed = false;
 }
 
 GraphicToken::GraphicToken(const GraphicToken& orig) {

@@ -22,7 +22,6 @@ GraphicPlayer::GraphicPlayer(ALLEGRO_BITMAP * image, CardLocation location,unsig
     this->image = image;
     setScreenDimentions(width,height);
     setLocation(location);
-    zoomed = false;
 }
 
 GraphicPlayer::GraphicPlayer(const GraphicPlayer& orig) {

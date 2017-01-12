@@ -13,8 +13,8 @@
 
 #include "GraphicButton.h"
 
-#define BUTTON_WIDTH 20.0//(totalWidth/)
-#define BUTTON_HEIGHT 20.0//(totalHeight)
+#define BUTTON_WIDTH (totalWidth/68.3)
+#define BUTTON_HEIGHT (totalHeight/38.0)
 
 #define QUIT_CENTER_X   (39*(totalWidth/40))
 #define QUIT_CENTER_Y   (totalWidth/60)
@@ -104,13 +104,16 @@ void GraphicButton::toggleMute()
 
 void GraphicButton::setLocation()
 {
-    logic2GraphicCardLocation({zoomFloor,3,3});
-    min.x += (width + 10.0);
-    min.y += (height - BUTTON_HEIGHT);
-    width = BUTTON_WIDTH;
-    height = BUTTON_HEIGHT;
-    max.x = min.x + width;
-    max.y = min.y + height;
+    if(button == ZOOM_BUTTON)
+    {
+        logic2GraphicCardLocation({zoomFloor,3,3});
+        min.x += (width + 10.0);
+        min.y += (height - BUTTON_HEIGHT);
+        width = BUTTON_WIDTH;
+        height = BUTTON_HEIGHT;
+        max.x = min.x + width;
+        max.y = min.y + height;
+    }
 }
 
 GraphicButton::~GraphicButton() {

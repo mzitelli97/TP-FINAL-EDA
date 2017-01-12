@@ -44,6 +44,8 @@ public:
     void eraseMenu();
     void zoomFloor(unsigned int floor, Model * auxModel);
     void zoomLoot(ActionOrigin owner);
+    void zoomPlayerCard(ActionOrigin player);
+    void zoomGuardDeck(unsigned int floor);
     string MessageBox(vector<string> &message);
     int yesNoMessageBox(vector<string> &message);
     void cheatCards();

@@ -21,7 +21,6 @@
 GraphicEDices::GraphicEDices(ALLEGRO_BITMAP * image)
 {
     this->image = image;
-    zoomed = false;
 }
 
 GraphicEDices::GraphicEDices(const GraphicEDices& orig) {

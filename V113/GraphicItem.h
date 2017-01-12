@@ -43,12 +43,11 @@ class GraphicItem {
 public:
     GraphicItem();
     GraphicItem(const GraphicItem& orig);
-    GraphicItem(Point min, Point max);
-    GraphicItem(Point center, double width, double height);
-    void setScreenDimentions(unsigned int totalWidth, unsigned int totalHeight);
     virtual ~GraphicItem();
+    void setScreenDimentions(unsigned int totalWidth, unsigned int totalHeight);
     bool isPointIn(Point point);
     bool isZoomed();
+    void setZoom(bool zoom);
     virtual void draw();
     virtual void toggleZoom();
     virtual ItemInfo IAm() = 0;

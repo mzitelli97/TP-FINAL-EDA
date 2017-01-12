@@ -13,28 +13,11 @@
 
 #include "GraphicItem.h"
 
-GraphicItem::GraphicItem() {
+GraphicItem::GraphicItem()
+{
+    zoomed = false;
 }
 
-GraphicItem::GraphicItem(Point min, Point max)
-{
-    this->min = min;
-    this->max = max;
-    center.x = (min.x+max.x)/2.0;
-    center.y = (min.y+max.y)/2.0;
-    width = max.x-min.x;
-    height = max.y-min.y;
-}
-GraphicItem::GraphicItem(Point center, double width, double height)
-{
-    this->width=width;
-    this->height=height;
-    this->center =center;
-    max.x=center.x + (width/2.0);
-    min.x=center.x - (width/2.0);
-    max.y=center.y + (height/2.0);
-    min.y=center.y - (height/2.0);
-}
 bool GraphicItem::isPointIn(Point point)
 {
     bool retVal=false;
@@ -63,6 +46,12 @@ void GraphicItem::toggleZoom()
 {
     zoomed ^= true;
 }
+
+void GraphicItem::setZoom(bool zoom)
+{
+    zoomed = zoom;
+}
+
 
 void GraphicItem::logic2GraphicCardLocation(CardLocation location)
 {
