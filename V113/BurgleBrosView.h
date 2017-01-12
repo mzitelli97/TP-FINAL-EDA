@@ -51,6 +51,7 @@ public:
 private:
     list<GraphicItem *>::iterator accessGraphicItems(Layers layer, unsigned int itemType);
     list<list<GraphicItem *>>::iterator deleteList(Layers layer, unsigned int itemList);
+    void updateButtons(BurgleBrosModel *model);
     void updateCharacters(BurgleBrosModel *model);
     void updateCharacterCards(BurgleBrosModel *model);
     void updateTiles(BurgleBrosModel * model);

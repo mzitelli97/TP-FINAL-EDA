@@ -17,9 +17,14 @@
 #define BUTTON_HEIGHT 20.0//(totalHeight)
 
 #define QUIT_CENTER_X   (39*(totalWidth/40))
-#define QUIT_CENTER_Y   (totalWidth/50)
+#define QUIT_CENTER_Y   (totalWidth/60)
 #define QUIT_WIDTH      (totalWidth/50)
 #define QUIT_HEIGHT     (totalWidth/60)
+
+#define PASS_CENTER_X   (19*(totalWidth/20))
+#define PASS_CENTER_Y   (2*(totalHeight/3))
+#define PASS_WIDTH      (totalWidth/20)
+#define PASS_HEIGHT     (totalHeight/30)
 
 GraphicButton::GraphicButton() {
 }
@@ -47,6 +52,16 @@ GraphicButton::GraphicButton(ALLEGRO_BITMAP * buttonImage,ALLEGRO_BITMAP * unMut
             min.y=center.y - (this->height)/2;
             max.y=center.y + (this->height)/2;
             break;
+        case PASS_BUTTON:
+            center.x=PASS_CENTER_X;
+            center.y=PASS_CENTER_Y;
+            this->width=PASS_WIDTH;
+            this->height=PASS_HEIGHT; 
+            min.x=center.x - (this->width)/2;
+            max.x=center.x + (this->width)/2;
+            min.y=center.y - (this->height)/2;
+            max.y=center.y + (this->height)/2;
+            break;
         default:
             break;
     }
@@ -65,6 +80,8 @@ ItemInfo GraphicButton::IAm()
         return {ZOOM_CLICK,&zoomFloor};
     if(button == QUIT_BUTTON)
         return {EXIT_BUTTON_CLICK,nullptr};
+    if(button == PASS_BUTTON)
+        return {PASS_BUTTON_CLICK,nullptr};
 }
 
 buttonAction GraphicButton::getButtonIdentifier()

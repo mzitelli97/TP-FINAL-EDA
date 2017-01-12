@@ -6,6 +6,8 @@
 #define FLOOR_2_INIT_DICE 3
 #define FLOOR_3_INIT_DICE 4
 
+#define NUMBER_OF_CARDS_TO_PLAY 10 //Cuando se juega de a 2 jugadores se toman solo 10 cartas de juego
+
 using namespace std;
 typedef struct{
     CardLocation position;
