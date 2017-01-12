@@ -80,6 +80,8 @@ ItemInfo GraphicButton::IAm()
         return {ZOOM_CLICK,&zoomFloor};
     if(button == QUIT_BUTTON)
         return {EXIT_BUTTON_CLICK,nullptr};
+    if(button == PASS_BUTTON)
+        return {PASS_BUTTON_CLICK,nullptr};
 }
 
 buttonAction GraphicButton::getButtonIdentifier()
