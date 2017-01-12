@@ -127,7 +127,7 @@ bool BurgleBrosTokens::isThereAnAlarmToken(CardLocation location)
         if( *it == location)                            
             retVal=true;
     }
-    return true;
+    return retVal;
 }
 
 bool BurgleBrosTokens::isThereADownstairToken(CardLocation location)

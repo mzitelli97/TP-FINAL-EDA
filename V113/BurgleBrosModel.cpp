@@ -216,10 +216,18 @@ ActionOrigin BurgleBrosModel::getPlayerOnTurn()
 }
 bool BurgleBrosModel::pass(ActionOrigin playerId)
 {
-    while(getP2Player(playerId)->getcurrentActions())
-        getP2Player(playerId)->decActions();
-    checkTurns();
-    view->update(this);
+    bool retVal=false;
+    BurgleBrosPlayer * p=getP2Player(playerId);
+    if(p->isItsTurn())
+    {
+        while(p->getcurrentActions())
+            p->decActions();
+        if(board.getCardType(p->getPosition()) == THERMO)
+        {   tokens.triggerAlarm(p->getPosition()); setGuardsNewPath(p->getPosition().floor);}
+        checkTurns();
+        view->update(this);
+    }
+    return retVal;
 }
 bool BurgleBrosModel::peek(ActionOrigin playerId, CardLocation locationToPeek)
 {
@@ -276,7 +284,7 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
             movingPlayer->decLives();//OJO SI PIERDE NO HACE NADA POR AHORA!!!!!!!!!!!!!
         //Si me movi a una camara y hay un guardia en otra camara activo una alarma en donde estoy
         if( newCardType==CAMERA && GuardInCamera() && locationToMove!= guards[locationToMove.floor].getPosition() ) 
-            tokens.triggerAlarm(locationToMove);
+            {tokens.triggerAlarm(locationToMove); setGuardsNewPath(locationToMove.floor);}
         //Si me movi a un foyer y hay un guardia en un tile adyacente me ve (a menos que haya una pared)
         if( newCardType== FOYER && board.adjacentCards(locationToMove, guards[locationToMove.floor].getPosition() ) )
             movingPlayer->decLives();//OJO SI PIERDE NO HACE NADA POR AHORA!!!!!!!!!!!!!
@@ -337,7 +345,7 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         if(newCardType==LASER)
         {   
             if( !(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_LASER)) && !(movingPlayer->getcurrentActions()) )
-                tokens.triggerAlarm(locationToMove);
+                {tokens.triggerAlarm(locationToMove); setGuardsNewPath(locationToMove.floor);}
             else
             {
                 std::vector<string> msgToShow({LASER_TEXT,TRIGGER_ALARM_TEXTB}); 
@@ -347,7 +355,7 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
                     msgToShow.push_back(SPEND_ACTION_TEXTB);
                 string userChoice=controller->askForSpentOK(msgToShow);
                 if(userChoice==TRIGGER_ALARM_TEXTB)
-                    tokens.triggerAlarm(locationToMove);
+                {    tokens.triggerAlarm(locationToMove); setGuardsNewPath(locationToMove.floor);}
                 else if(userChoice==USE_HACK_TOKEN_TEXTB)
                     tokens.removeOneHackTokenOf(COMPUTER_ROOM_LASER);
                 else if(userChoice==SPEND_ACTION_TEXTB)
@@ -610,6 +618,12 @@ void BurgleBrosModel::moveGuard(unsigned int floor)
     bool targetReached=false;
     if(stepsToMove>6)
         stepsToMove=6;  //No puede moverse más de 6 pasos.
+    if(tokens.isThereAnAlarmToken(guards[floor].getPosition()))
+    {
+        tokens.turnOffAlarm(guards[floor].getPosition());
+        setGuardsNewPath(floor);
+    }
+    
     while(stepsToMove!=0)
     {
         stepsToMove--;
@@ -684,8 +698,8 @@ void BurgleBrosModel::setGuardsNewPath(unsigned int floor)
             newTargetLocation = it->target;
         }
     }
-    else        //Si no había alarmas, se toma una carta 
-        newTargetLocation = guards[floor].drawCardTarget();
+    else        //Si no había alarmas, se toma una carta  que no sea en la que esté parado
+        while((newTargetLocation = guards[floor].drawCardTarget()) == guards[floor].getPosition());
     guards[floor].setNewTarget(newTargetLocation);
     list<CardLocation> temp = board.getShortestPath(guards[floor].getPosition(), newTargetLocation);
     guards[floor].setNewPathToTarget(temp);
