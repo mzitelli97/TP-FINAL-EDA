@@ -266,6 +266,8 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         }
         
         view->update(this);
+        if(locationToMove==guards[locationToMove.floor].getPosition() && board.getCardType(locationToMove)!= LAVATORY)
+            movingPlayer->decLives();
         
         CardLocation downstairsLocationToMove={locationToMove.floor-1, locationToMove.row, locationToMove.column};
         if(prevLocation==downstairsLocationToMove && !tokens.isThereADownstairToken(locationToMove))
@@ -358,6 +360,23 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
                     movingPlayer->decActions();
             }
         }    
+        if(newCardType==LAVATORY)
+        {
+            if(!cardWasVisible)
+                tokens.lavatoryRevealed(locationToMove);
+
+            if(locationToMove==guards[locationToMove.floor].getPosition() && tokens.isThereAStealthToken(locationToMove))
+            {
+                vector<string>msgToShow({LAVATORY_TEXT,USE_LAVATORY_TOKEN_TEXTB,USE_MY_STEALTH_TOKEN_TEXTB});
+                string userChoice = controller->askForSpentOK(msgToShow);
+                if(userChoice ==USE_MY_STEALTH_TOKEN_TEXTB)
+                    movingPlayer->decLives();
+                else if(userChoice ==USE_LAVATORY_TOKEN_TEXTB)
+                    tokens.useLavatoryToken();
+            }    
+            else if(locationToMove==guards[locationToMove.floor].getPosition() && !tokens.isThereAStealthToken(locationToMove))
+                movingPlayer->decLives();
+        }    
         
         if( newCardType==MOTION)
             ;//hay que marcar que se entro en este turno y si sale en el mismo turno tiene que gastar un token o activar una alarma, en el proximo ya puede salir
@@ -370,6 +389,7 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
             CardLocation downStairsLocation={locationToMove.floor-1,locationToMove.row,locationToMove.column};
             movingPlayer->setPosition(downStairsLocation);
         }
+        //SACAR EL CASO DEL LAVATORY CUANDO HAGO STEALTH--
         checkTurns();
         view->update(this);
         retVal=true;
