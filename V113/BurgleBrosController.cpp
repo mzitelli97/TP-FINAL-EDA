@@ -86,6 +86,8 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                     break;
                 case LOOT_CARDS_CLICK:
                     auxPlayer = (ActionOrigin *)temp.info;
+                    view->zoomLoot(*auxPlayer);
+                    view->update(modelPointer);
                     break;
                 case GUARD_CARDS_CLICK:
                     floor = (unsigned int *)temp.info;
@@ -94,10 +96,10 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                 case CHAR_CARD_CLICK:
                     auxPlayer = (ActionOrigin *)temp.info;
                     if(*auxPlayer == THIS_PLAYER_ACTION)
-                    {
                         view->cheatCards();
-                        view->update(modelPointer);
-                    }
+                    else if (*auxPlayer == OTHER_PLAYER_ACTION)
+                        view->zoomPlayerCard(*auxPlayer);
+                    view->update(modelPointer);
                     break;
                 case ZOOM_CLICK:
                     floor = (unsigned int *)temp.info;
@@ -110,6 +112,9 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                         gameIsOver=true;
                         quitCause=USER_QUIT;
                     }
+                    break;
+                case PASS_BUTTON_CLICK:
+                    modelPointer->pass(modelPointer->getPlayerOnTurn());
                     break;
                 default:
                     break;
@@ -133,6 +138,8 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
         modelPointer->addDieToSafe(modelPointer->getPlayerOnTurn(),location);
     else if(action=="CRACK")
         modelPointer->crackSafe(modelPointer->getPlayerOnTurn(),location);
+    else if(action=="CREATE ALARM")
+        modelPointer->createAlarm(modelPointer->getPlayerOnTurn(),location);
 }
 
 BurgleBrosController::~BurgleBrosController() {

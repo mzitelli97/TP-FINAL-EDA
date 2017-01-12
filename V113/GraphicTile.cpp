@@ -20,7 +20,6 @@ GraphicTile::GraphicTile(ALLEGRO_BITMAP * front,ALLEGRO_BITMAP * back,CardLocati
     this->back = back;
     this->location=location;
     Visible = false;
-    zoomed = false;
     setScreenDimentions(width, height);
     setPosition(location);
 }

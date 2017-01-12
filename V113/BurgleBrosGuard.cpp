@@ -88,7 +88,8 @@ string BurgleBrosGuard::getInitGPos()
 }
 void BurgleBrosGuard::incDiceNumber()
 {
-    diceNumber++;
+    if(diceNumber < 6)
+        diceNumber++;
 }
 CardLocation BurgleBrosGuard::getTopCard()
 {
@@ -133,6 +134,8 @@ void BurgleBrosGuard::initCardDeck()
 
 CardLocation BurgleBrosGuard::drawCardTarget()
 {
+    if(shownDeck.size() == NUMBER_OF_CARDS_TO_PLAY) //Si ya usé todas las cartas con las que estoy jugando ( 10 para 2 personas) se baraja de vuelta.
+    {    initCardDeck();    incDiceNumber();    }
     list<CardLocation>::iterator it = cardDeck.begin();
     CardLocation aux = *it;
     cardDeck.pop_front();

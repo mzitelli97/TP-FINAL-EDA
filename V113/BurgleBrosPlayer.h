@@ -16,7 +16,7 @@ typedef struct{
     CharacterName character;
     unsigned int lives;
     string name;
-    
+    unsigned int currActions;
 }Info2DrawPlayer;
 
 
@@ -43,6 +43,7 @@ public:
         void pickRandomPlayer(CharacterName exceptThis);
         list<Loot> getLootsCarried();
         void attachLoot(Loot loot);
+        void setName(string name);
         void decLives();
 	~BurgleBrosPlayer();
 private:

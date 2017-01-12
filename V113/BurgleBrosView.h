@@ -44,6 +44,8 @@ public:
     void eraseMenu();
     void zoomFloor(unsigned int floor, Model * auxModel);
     void zoomLoot(ActionOrigin owner);
+    void zoomPlayerCard(ActionOrigin player);
+    void zoomGuardDeck(unsigned int floor);
     string MessageBox(vector<string> &message);
     int yesNoMessageBox(vector<string> &message);
     void cheatCards();
@@ -51,6 +53,7 @@ public:
 private:
     list<GraphicItem *>::iterator accessGraphicItems(Layers layer, unsigned int itemType);
     list<list<GraphicItem *>>::iterator deleteList(Layers layer, unsigned int itemList);
+    void updateButtons(BurgleBrosModel *model);
     void updateCharacters(BurgleBrosModel *model);
     void updateCharacterCards(BurgleBrosModel *model);
     void updateTiles(BurgleBrosModel * model);
@@ -62,9 +65,13 @@ private:
     vector<GraphicItem*> walls;
     ALLEGRO_DISPLAY * display;
     ALLEGRO_BITMAP * backScreen;
+    ALLEGRO_FONT * actionsFont;
     ImageLoader imageLoader;
     bool onZoom;
     int floorZoomed;
+    int guardZoomed;
+    ActionOrigin lootZoomed;
+    ActionOrigin playerZoomed;
 
 };
 

@@ -27,11 +27,14 @@
 #include "GraphicWall.h"
 #include "allegro5/allegro_native_dialog.h"
 #include "GraphicButton.h"
+#include <time.h>
 
-#define SCREEN_W 1800
-#define SCREEN_H 900
+#define SCREEN_W 1250
+#define SCREEN_H 670
 #define TITLE_H al_get_bitmap_height(backScreen)/20.0
+#define ACTIONS_FONT_H al_get_bitmap_height(backScreen)/50.0
 #define NO_FLOOR_ZOOMED -1
+#define NO_GUARD_ZOOMED -1
 
 BurgleBrosView::BurgleBrosView() {
     imageLoader.initImages();           //Falta checkear.
@@ -39,7 +42,7 @@ BurgleBrosView::BurgleBrosView() {
     display =al_create_display(SCREEN_W,SCREEN_H);           //Falta checkear.
     backScreen = al_load_bitmap("fondo.jpg");
     al_draw_scaled_bitmap(backScreen,0,0,al_get_bitmap_width(backScreen),al_get_bitmap_height(backScreen),0,0,al_get_display_width(display),al_get_display_height(display),0);
-    
+    actionsFont=al_load_font("fonts.ttf",ACTIONS_FONT_H,0);
     ALLEGRO_FONT * font = al_load_font("title.ttf",TITLE_H,0);
     al_set_target_bitmap(backScreen);
     al_draw_text(font,al_map_rgb(0,0,0),al_get_bitmap_width(backScreen)/2.0,TITLE_H/2,ALLEGRO_ALIGN_CENTER, "EDA BURGLE BROS");
@@ -47,6 +50,9 @@ BurgleBrosView::BurgleBrosView() {
     al_set_target_backbuffer(display);
     onZoom = false;
     floorZoomed = NO_FLOOR_ZOOMED;
+    guardZoomed = NO_GUARD_ZOOMED;
+    playerZoomed = NON_PLAYER;
+    lootZoomed = NON_PLAYER;
     
     #ifdef ICON
     ALLEGRO_BITMAP *icon = al_load_bitmap(ICON);                              //Falta checkear.
@@ -118,12 +124,16 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     }
     GraphicButton *auxButton = new GraphicButton(imageLoader.getImageP(QUIT_BUTTON), nullptr, QUIT_BUTTON, al_get_display_width(display), al_get_display_height(display));
     auxButtons_list.push_back(auxButton);
+    auxButton = new GraphicButton(imageLoader.getImageP(PASS_BUTTON), nullptr, PASS_BUTTON, al_get_display_width(display), al_get_display_height(display));
+    auxButtons_list.push_back(auxButton);
+    
     //creo una lista de graphicCharacterscards
     list<GraphicItem* > auxCharactersCards_list;
     
-    GraphicPlayerCard *auxCharactersCardsThis_element=new GraphicPlayerCard(imageLoader.getImageP(infoThisPlayer.character,true),imageLoader.getImageP(STEALTH_TOKEN), infoThisPlayer.lives,infoOtherPlayer.name, THIS_PLAYER_ACTION,al_get_display_width(display),al_get_display_height(display)); // con true devuelve la carta
+    GraphicPlayerCard *auxCharactersCardsThis_element=new GraphicPlayerCard(imageLoader.getImageP(infoThisPlayer.character,true),imageLoader.getImageP(STEALTH_TOKEN), infoThisPlayer.lives,infoThisPlayer.name, THIS_PLAYER_ACTION,al_get_display_width(display),al_get_display_height(display)); // con true devuelve la carta
     GraphicPlayerCard *auxCharactersCardsOther_element=new GraphicPlayerCard(imageLoader.getImageP(infoOtherPlayer.character,true),imageLoader.getImageP(STEALTH_TOKEN), infoOtherPlayer.lives,infoOtherPlayer.name, OTHER_PLAYER_ACTION,al_get_display_width(display),al_get_display_height(display)); // con true devuelve la carta
-   
+   auxCharactersCardsThis_element->setFont(actionsFont);
+   auxCharactersCardsOther_element->setFont(actionsFont);
     auxCharactersCards_list.push_back((GraphicItem *) auxCharactersCardsThis_element);
     auxCharactersCards_list.push_back((GraphicItem *) auxCharactersCardsOther_element);
             
@@ -228,6 +238,9 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
 void BurgleBrosView::update(Model* auxModel)
 {
     /*Update all*/
+    clock_t  before,after;
+    
+    before=clock();
     BurgleBrosModel * model = (BurgleBrosModel *) auxModel;
     updateTiles(model);
     updateTokens(model);
@@ -236,12 +249,15 @@ void BurgleBrosView::update(Model* auxModel)
     updateLoots(model);
     updateGuards(model);
     updateExtraDices(model);
+    after=clock();
+    cout << "Update tardó: "<< ((double)(after-before))/(double)CLOCKS_PER_SEC<< " segundos."<<endl; 
     /*Draw all*/
     al_draw_scaled_bitmap(backScreen,0,0,al_get_bitmap_width(backScreen),al_get_bitmap_height(backScreen),0,0,al_get_display_width(display),al_get_display_height(display),0);
     list<list<list<GraphicItem *>>>::iterator it_layers;
     list<list<GraphicItem *>>::iterator it_itemType;
     list<GraphicItem *>::iterator it_items;
     //cout << "hola" << endl;
+    before=clock();
     for( it_layers = graphicInterface.begin(); it_layers != graphicInterface.end(); it_layers++)
     {
         //cout << "hola1" << endl;
@@ -258,6 +274,8 @@ void BurgleBrosView::update(Model* auxModel)
         }
     }
     al_flip_display();
+    after=clock();
+    cout << "Draw tardó: "<< ((double)(after-before))/(double)CLOCKS_PER_SEC << " segundos."<<endl; 
 }
 ItemInfo BurgleBrosView::itemFromClick(Point point)
 {
@@ -312,7 +330,7 @@ void BurgleBrosView::updateTokens(BurgleBrosModel* model)
         GraphicToken * token = new GraphicToken(imageLoader.getImageP(it->token));
         token->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
         if(onZoom && it->position.floor == floorZoomed)
-            token->toggleZoom();
+            token->setZoom(true);
         token->setPosition(it->position, tokensCount[it->position]++);
         it_itemType->push_back(token);
     }
@@ -327,9 +345,16 @@ void BurgleBrosView::updateLoots(BurgleBrosModel * model)
     {
         GraphicLoot *p = new GraphicLoot(newInfo->owner, imageLoader.getImageP(newInfo->loot));
         p->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
+        if(onZoom && (newInfo->owner == lootZoomed)) 
+            p->setZoom(true);
         p->setPosition(lootsCount[newInfo->owner]++);
         itemsList->push_back((GraphicItem *) p);
+        if(newInfo->loot == GOLD_BAR) newInfo++;        //always after a goldBar there is another goldBar
     }
+    
+}
+void BurgleBrosView::updateButtons(BurgleBrosModel *model)
+{
     
 }
 void BurgleBrosView::updateCharacters(BurgleBrosModel *model) {
@@ -338,31 +363,48 @@ void BurgleBrosView::updateCharacters(BurgleBrosModel *model) {
     Info2DrawPlayer player = model->getInfo2DrawPlayer(THIS_PLAYER_ACTION);
     GraphicPlayer* gPlayer = dynamic_cast<GraphicPlayer*> (*it); //ASUMI QUE EL PRIMERO ES THIS_PLAYER
     if(gPlayer!=NULL)//VER EL ORDEN DE LAS COSAS, DEBERIA ANDAR IGUAL
+    {
+        if(onZoom && player.position.floor == floorZoomed) gPlayer->setZoom(true);
+        else gPlayer->setZoom(false);
         gPlayer->setLocation(player.position);
+    }
     //Second Player
     player = model->getInfo2DrawPlayer(OTHER_PLAYER_ACTION);
     gPlayer = dynamic_cast<GraphicPlayer*> (*(++it));
     if(gPlayer!=NULL)
+    {
+        if(onZoom && player.position.floor == floorZoomed) gPlayer->setZoom(true);
+        else gPlayer->setZoom(false);
         gPlayer->setLocation(player.position);
+    }
 }
- 
+
 void BurgleBrosView::updateCharacterCards(BurgleBrosModel *model) {
     Info2DrawPlayer player = model->getInfo2DrawPlayer(THIS_PLAYER_ACTION);
     //FirstPlayer
     list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, CHARACTER_CARDS_LIST);
     GraphicPlayerCard* gPlayerCard = dynamic_cast<GraphicPlayerCard *> (*it);
     if(gPlayerCard!=NULL)
-        gPlayerCard->setLives(player.lives);
+    {
+        if(onZoom && playerZoomed == THIS_PLAYER_ACTION) gPlayerCard->setZoom(true);
+        else gPlayerCard->setZoom(false);
+        gPlayerCard->setLivesAndActions(player.lives,player.currActions);
+    }
     //SecondPlayer
     player = model->getInfo2DrawPlayer(OTHER_PLAYER_ACTION);
     gPlayerCard = dynamic_cast<GraphicPlayerCard *> (*(++it));
-    if(gPlayerCard!=NULL)    
-        gPlayerCard->setLives(player.lives);
+    if(gPlayerCard!=NULL)
+    {
+        if(onZoom && playerZoomed == OTHER_PLAYER_ACTION) gPlayerCard->setZoom(true);
+        else gPlayerCard->setZoom(false);
+        gPlayerCard->setLivesAndActions(player.lives,player.currActions);
+    }
 }
 void BurgleBrosView::updateGuards(BurgleBrosModel* model)
 {
     list<GraphicItem *>:: iterator guard = accessGraphicItems(SECOND_LAYER, (unsigned int) GUARD_INFO_LIST);
     list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) GUARD_CARDS_LIST);
+    bool zoom;
     for(int i = 0; i < BOARD_STANDARD_FLOORS; i++)
     {
         /*Here update all things related to a guard on a floor*/
@@ -381,8 +423,13 @@ void BurgleBrosView::updateGuards(BurgleBrosModel* model)
                 guard++;
             }
             guard++;    //point to next floor
+            if(onZoom && i == floorZoomed) 
+                zoom = true;
+            else zoom = false;
+            guard_item->setZoom(zoom);
             guard_item->setInitialized(info_guard.initialized);
             guard_item->setPosition(info_guard.position);
+            guard_die->setZoom(zoom);
             guard_die->setInitialized(info_guard.initialized);
             guard_die->setPosition(info_guard.diePosition);
             guard_die->setNumber(imageLoader.getImageP(RED_DICE, info_guard.dieNumber));
@@ -486,6 +533,10 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
 {
     onZoom ^= true;
     floorZoomed = floor;
+    guardZoomed = NO_GUARD_ZOOMED;
+    lootZoomed = NON_PLAYER;
+    playerZoomed = NON_PLAYER;
+    eraseMenu();
     BurgleBrosModel * model = (BurgleBrosModel *) auxModel;
     list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) TILES_LIST);
     for(unsigned int i=0; i < BOARD_STANDARD_FLOORS * FLOOR_RAWS * FLOOR_COLUMNS ; i++, it++)
@@ -493,42 +544,6 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
         GraphicTile * tile = dynamic_cast<GraphicTile *>(*it);
         if(tile->getLocation().floor == floor)
             tile->toggleZoom();
-    }
-
-    it = accessGraphicItems(SECOND_LAYER, PLAYER_INFO_LIST);
-    //First Player
-    Info2DrawPlayer player = model->getInfo2DrawPlayer(THIS_PLAYER_ACTION);
-    GraphicPlayer* gPlayer = dynamic_cast<GraphicPlayer*> (*it); //ASUMI QUE EL PRIMERO ES THIS_PLAYER
-    if(gPlayer!=NULL)
-    {
-        if(player.position.floor == floor)
-            gPlayer->toggleZoom();
-    }
-    //Second Player
-    player = model->getInfo2DrawPlayer(OTHER_PLAYER_ACTION);
-    gPlayer = dynamic_cast<GraphicPlayer*> (*(++it));
-    if(gPlayer!=NULL)
-    {
-        if(player.position.floor == floor)
-            gPlayer->toggleZoom();
-    }
-    
-    it = accessGraphicItems(SECOND_LAYER, (unsigned int) GUARD_INFO_LIST);
-    Info2DrawGuard info_guard = model->getInfo2DrawGuard(floor);
-    advance(it, floor * 2);  //advance to the items of the floor zoomed
-    if(*it != NULL)
-    {
-        /*Suppose the first item is the guard item*/
-        GraphicGuard * guard_item = dynamic_cast<GraphicGuard*> (*it);
-        GraphicGDie * guard_die = dynamic_cast<GraphicGDie*> (*(++it));
-        if( guard_item == nullptr)
-        {
-            /*It means the die was the first*/
-            guard_item = dynamic_cast<GraphicGuard*>(*it);
-            guard_die = dynamic_cast<GraphicGDie*> (*(--it));
-        }
-        guard_item->toggleZoom();
-        guard_die->toggleZoom();
     }
     
     it = accessGraphicItems(SECOND_LAYER, STATIC_ITEMS);
@@ -546,6 +561,24 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
     GraphicButton * button = dynamic_cast<GraphicButton *> (*it);
     button->toggleZoom();
     button->setLocation();
+}
+
+void BurgleBrosView::zoomLoot(ActionOrigin owner)
+{
+    if(owner != NON_PLAYER) onZoom ^= true;
+    floorZoomed = NO_FLOOR_ZOOMED;
+    guardZoomed = NO_GUARD_ZOOMED;
+    lootZoomed = owner;
+    playerZoomed = NON_PLAYER;
+}
+
+void BurgleBrosView::zoomPlayerCard(ActionOrigin player)
+{
+    if(player != NON_PLAYER) onZoom ^= true;
+    floorZoomed = NO_FLOOR_ZOOMED;
+    guardZoomed = NO_GUARD_ZOOMED;
+    lootZoomed = NON_PLAYER;
+    playerZoomed = player;
 }
 
 
