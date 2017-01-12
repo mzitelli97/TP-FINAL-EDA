@@ -88,6 +88,13 @@ list<Info2DrawTokens> BurgleBrosModel::getInfo2DrawTokens()
     unsigned int  i,j;
     Info2DrawTokens toPush;
     
+    if(tokens.getCrowToken().first)
+    {    
+        toPush.token=CROW_TOKEN;
+        toPush.position=tokens.getCrowToken().second;
+        retVal.push_back(toPush);
+    }
+    
     toPush.token=DOWNSTAIRS_TOKEN;
     for(vector<CardLocation>::iterator it=downstairsTokens.begin(); it!=downstairsTokens.end(); it++)
     {
@@ -491,6 +498,16 @@ bool BurgleBrosModel::createAlarm(ActionOrigin playerId, CardLocation tile)
     }
     return retVal;
 }
+bool BurgleBrosModel::placeCrow(ActionOrigin playerId, CardLocation tile)
+{
+    bool retVal=false;
+    if(isPlaceCrowPossible(playerId,tile))
+    {
+        tokens.placeCrowToken(tile);
+        playerSpentFreeAction=true;
+    }
+    return retVal;
+}
 
 
 
@@ -642,7 +659,18 @@ bool BurgleBrosModel::isCreateAlarmPossible(ActionOrigin playerId, CardLocation 
         retVal=true;
     return retVal;
 }
-
+bool BurgleBrosModel::isPlaceCrowPossible(ActionOrigin playerId, CardLocation tile)
+{
+    bool retVal=false;
+    BurgleBrosPlayer* p=getP2Player(playerId);
+    if(p->getCharacter()== THE_RAVEN && tile.floor == p->getPosition().floor && board.getShortestPathLength(p->getPosition(), tile) <= 2 && playerSpentFreeAction==false)
+    {
+        retVal=true;
+        if(tokens.getCrowToken().first && tokens.getCrowToken().second==tile)
+            retVal=false;
+    }
+    return retVal;
+}
 list<string> BurgleBrosModel::getPosibleActions(ActionOrigin player, CardLocation tile)
 {
     list<string> aux;
@@ -658,6 +686,8 @@ list<string> BurgleBrosModel::getPosibleActions(ActionOrigin player, CardLocatio
         aux.push_back("CRACK");
     if(isCreateAlarmPossible(player,tile))
         aux.push_back("CREATE ALARM");
+    if(isPlaceCrowPossible(player,tile))
+        aux.push_back("PLACE CROW");
     return aux;
 }
  
@@ -727,7 +757,7 @@ void BurgleBrosModel::moveGuard(unsigned int floor)
             setGuardsNewPath(floor);
         }
         /*Si había un crow token en el tile donde se encuentra*/
-        if(tokens.isThereAToken(guards[floor].getPosition(), CROW_TOKEN) && stepsToMove > 1)
+        if(tokens.isThereAToken(guards[floor].getPosition(), CROW_TOKEN) && stepsToMove > 0)
             stepsToMove--;
         view->update(this);
         //sleep(1.0);         //Esto despues cambiará (es bloqueante)

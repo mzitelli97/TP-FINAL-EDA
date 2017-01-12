@@ -41,12 +41,14 @@ public:
     bool isSafeOpened(unsigned int floor);
     unsigned int howManyAlarmsOnFloor(unsigned int floor);       
     unsigned int howManyTokensOnCPURoom(CardName cpuRoom);
+    void placeCrowToken(CardLocation location);
     bool isThereAKeypadToken(CardLocation location);
     void putKeyPadToken(CardLocation location);//no se fija que el location sea un keypad (discutir)
     bool isThereAToken(CardLocation location, Token whichToken); //FALTA DESARROLLAR
     bool isThereADownstairToken(CardLocation location);
     bool isThereAnAlarmToken(CardLocation location);
     bool isThereAStealthToken(CardLocation location);
+    bool isThereACrowToken(CardLocation  location);
     ~BurgleBrosTokens();
 private:
     list<CardLocation> alarms;	
@@ -54,7 +56,6 @@ private:
     pair<CardLocation, unsigned int> stealthTokensOnFloor;
     vector<CardLocation> downstairs;
     map<CardName, unsigned int> computerRoomsInfo;
-    //pair<bool, CardLocation>keypad;        //El bool representa si está el token en el tablero.
     list<CardLocation>keypadTokens;
     pair<bool, CardLocation> persianKitty;  //El bool representa si está el token en el tablero.
     pair<bool, CardLocation> crowToken;     //El bool representa si está el token en el tablero.
