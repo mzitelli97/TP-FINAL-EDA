@@ -29,7 +29,10 @@ void BurgleBrosPlayer::getToDaChoppa()
     isOnTheBoard=false;
 }
 
-
+void BurgleBrosPlayer::setName(string name)
+{
+    this->name=name;
+}
 
 void BurgleBrosPlayer::pickRandomPlayer()
 {

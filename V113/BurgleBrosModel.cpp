@@ -175,16 +175,12 @@ Info2DrawGuard BurgleBrosModel::getInfo2DrawGuard(unsigned int floor)
 Info2DrawPlayer BurgleBrosModel:: getInfo2DrawPlayer(ActionOrigin player)
 {
     Info2DrawPlayer info;
-    BurgleBrosPlayer p;
-    
-    if(player==THIS_PLAYER_ACTION)        
-        p=myPlayer;
-    else 
-        p=otherPlayer;
-    info.name=p.getName();
-    info.character=p.getCharacter();
-    info.lives=p.getCurrLifes();
-    info.position=p.getPosition();
+    BurgleBrosPlayer * p = getP2Player(player);
+    info.name=p->getName();
+    info.character=p->getCharacter();
+    info.lives=p->getCurrLifes();
+    info.position=p->getPosition();
+    info.currActions=p->getcurrentActions();
     return info;
 }
 

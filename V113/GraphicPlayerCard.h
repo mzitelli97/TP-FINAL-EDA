@@ -19,18 +19,21 @@
 
 class GraphicPlayerCard : public GraphicItem{
 public:
-    GraphicPlayerCard(ALLEGRO_BITMAP * image, ALLEGRO_BITMAP * stealthTokenImg, unsigned int lives, std::string name, ActionOrigin whichPlayer,unsigned int width,unsigned int height);
-    void setLives(unsigned int livesNumber);
+    GraphicPlayerCard(ALLEGRO_BITMAP * image, ALLEGRO_BITMAP * stealthTokenImg,unsigned int lives, std::string name, ActionOrigin whichPlayer,unsigned int width,unsigned int height);
+    void setLivesAndActions(unsigned int livesNumber,unsigned int actions);
+    void setFont(ALLEGRO_FONT * font);
     ItemInfo IAm() override;
     void draw() override;
     virtual ~GraphicPlayerCard() {};
 private:
     void setPosition();
     unsigned int lives;
+    unsigned int actions;
+    Point actionsPos;
     string name;
     ALLEGRO_BITMAP * stealthToken; 
     ActionOrigin whichPlayer;
-
+    ALLEGRO_FONT * font;
 };
 
 #endif /* GRAPHICPLAYERCARD_H */
