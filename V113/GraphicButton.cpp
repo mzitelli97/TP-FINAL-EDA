@@ -13,16 +13,20 @@
 
 #include "GraphicButton.h"
 
-#define BUTTON_WIDTH (totalWidth/50.0) //68.3
-#define BUTTON_HEIGHT BUTTON_WIDTH//(totalHeight/38.0)
+#define BUTTON_WIDTH (totalWidth/50.0)
+#define BUTTON_HEIGHT BUTTON_WIDTH          //to make it a square
 
 #define QUIT_CENTER_X   (39*(totalWidth/40))
 #define QUIT_CENTER_Y   (totalWidth/60)
-#define QUIT_WIDTH      (totalWidth/50)
-#define QUIT_HEIGHT     (totalWidth/60)
 
-#define PASS_CENTER_X   (19*(totalWidth/20))
-#define PASS_CENTER_Y   (2*(totalHeight/3))
+#define HELP_CENTER_X   (38*(totalWidth/40))
+#define HELP_CENTER_Y   (totalWidth/60)
+
+#define MUTE_CENTER_X   (37*(totalWidth/40))
+#define MUTE_CENTER_Y   (totalWidth/60)
+
+#define PASS_CENTER_X   (34*(totalWidth/40))
+#define PASS_CENTER_Y   (totalWidth/60)
 #define PASS_WIDTH      (totalWidth/20)
 #define PASS_HEIGHT     (totalHeight/30)
 
@@ -45,26 +49,34 @@ GraphicButton::GraphicButton(ALLEGRO_BITMAP * buttonImage,ALLEGRO_BITMAP * unMut
         case QUIT_BUTTON:
             center.x=QUIT_CENTER_X;
             center.y=QUIT_CENTER_Y;
-            this->width=QUIT_WIDTH;
-            this->height=QUIT_HEIGHT; 
-            min.x=center.x - (this->width)/2;
-            max.x=center.x + (this->width)/2;
-            min.y=center.y - (this->height)/2;
-            max.y=center.y + (this->height)/2;
+            this->width=BUTTON_WIDTH;
+            this->height=BUTTON_HEIGHT; 
             break;
         case PASS_BUTTON:
             center.x=PASS_CENTER_X;
             center.y=PASS_CENTER_Y;
             this->width=PASS_WIDTH;
             this->height=PASS_HEIGHT; 
-            min.x=center.x - (this->width)/2;
-            max.x=center.x + (this->width)/2;
-            min.y=center.y - (this->height)/2;
-            max.y=center.y + (this->height)/2;
+            break;
+        case HELP_BUTTON:
+            center.x = HELP_CENTER_X;
+            center.y = HELP_CENTER_Y;
+            this->width = BUTTON_WIDTH;
+            this->height = BUTTON_HEIGHT;
+            break;
+        case MUTE_BUTTON:
+            center.x = MUTE_CENTER_X;
+            center.y = MUTE_CENTER_Y;
+            this->width = BUTTON_WIDTH;
+            this->height = BUTTON_HEIGHT;
             break;
         default:
             break;
     }
+    min.x=center.x - (this->width)/2;
+        max.x=center.x + (this->width)/2;
+        min.y=center.y - (this->height)/2;
+        max.y=center.y + (this->height)/2;
     
 }
 

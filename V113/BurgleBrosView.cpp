@@ -126,6 +126,10 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     auxButtons_list.push_back(auxButton);
     auxButton = new GraphicButton(imageLoader.getImageP(PASS_BUTTON), nullptr, PASS_BUTTON, al_get_display_width(display), al_get_display_height(display));
     auxButtons_list.push_back(auxButton);
+    auxButton = new GraphicButton(imageLoader.getImageP(HELP_BUTTON), nullptr, HELP_BUTTON, al_get_display_width(display), al_get_display_height(display));
+    auxButtons_list.push_back(auxButton);
+    auxButton = new GraphicButton(imageLoader.getImageP(MUTE_BUTTON), nullptr, MUTE_BUTTON, al_get_display_width(display), al_get_display_height(display));
+    auxButtons_list.push_back(auxButton);
     
     //creo una lista de graphicCharacterscards
     list<GraphicItem* > auxCharactersCards_list;
@@ -172,26 +176,17 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     //creo una lista para guardInfo
     list<GraphicItem *> auxGuardInfo_list;
     
-    /***********For test***************/
-    GraphicGDie * auxGuardDie = new GraphicGDie(imageLoader.getImageP(RED_DICE, 2));
-    auxGuardDie->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
-    GraphicGuard * auxGuard = new GraphicGuard(imageLoader.getGuardImage());
-    auxGuard->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
-    auxGuardInfo_list.push_back(auxGuard);
-    auxGuardInfo_list.push_back(auxGuardDie);
-    auxGuardDie = new GraphicGDie(imageLoader.getImageP(RED_DICE, 2));
-    auxGuardDie->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
-    auxGuard = new GraphicGuard(imageLoader.getGuardImage());
-    auxGuard->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
-    auxGuardInfo_list.push_back(auxGuard);
-    auxGuardInfo_list.push_back(auxGuardDie);
-    auxGuardDie = new GraphicGDie(imageLoader.getImageP(RED_DICE, 2));
-    auxGuardDie->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
-    auxGuard = new GraphicGuard(imageLoader.getGuardImage());
-    auxGuard->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
-    auxGuardInfo_list.push_back(auxGuard);
-    auxGuardInfo_list.push_back(auxGuardDie);
-    /********************************/
+    GraphicGDie * auxGuardDie;
+    GraphicGuard * auxGuard;
+    for(int i = 0; i < BOARD_STANDARD_FLOORS; i++)
+    {
+        auxGuardDie = new GraphicGDie(imageLoader.getImageP(RED_DICE, 2));
+        auxGuardDie->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
+        auxGuard = new GraphicGuard(imageLoader.getGuardImage());
+        auxGuard->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
+        auxGuardInfo_list.push_back(auxGuard);
+        auxGuardInfo_list.push_back(auxGuardDie);
+    }
     
     //creo una lista de graphicPlayer
     list<GraphicItem *> auxPlayer_list;
@@ -565,8 +560,11 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
     button->toggleZoom();
     button->setLocation();
     advance(it,BOARD_STANDARD_FLOORS-floor);
-    button = dynamic_cast<GraphicButton *> (*it);
-    button->toggleZoom();
+    for(int i = 0; i < 4; i++, it++)
+    {
+        button = dynamic_cast<GraphicButton *> (*it);
+        button->toggleZoom();
+    }
 }
 
 void BurgleBrosView::zoomLoot(ActionOrigin owner)
