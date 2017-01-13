@@ -538,6 +538,8 @@ void BurgleBrosModel::checkTurns()
 {
     if(myPlayer.isItsTurn() && myPlayer.getcurrentActions() == 0)
     {
+        if(board.getCardType(myPlayer.getPosition()) == THERMO)
+            tokens.triggerAlarm(myPlayer.getPosition());
         myPlayer.setTurn(false);
         myPlayer.setActions(INIT_NMBR_OF_LIVES);
         if(myPlayer.hasLoot(MIRROR))
@@ -550,6 +552,8 @@ void BurgleBrosModel::checkTurns()
     }
     if(otherPlayer.isItsTurn() && otherPlayer.getcurrentActions() == 0)
     {
+        if(board.getCardType(myPlayer.getPosition()) == THERMO)
+            tokens.triggerAlarm(myPlayer.getPosition());
         otherPlayer.setTurn(false);
         otherPlayer.setActions(INIT_NMBR_OF_LIVES);
         if(otherPlayer.hasLoot(MIRROR))
