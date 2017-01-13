@@ -385,6 +385,7 @@ CardLocation BurgleBrosFloor::getKittyMovingPos(CardLocation playerPos)
     prevCard.resize(numberOfCards, NO_PREVIOUS);
     set<pair<unsigned int, int> > cardQueue;
     cardQueue.insert(make_pair(minDist[sourceCard], sourceCard));  //Parto del vértice sourceCard.
+    int auxCard;
     while (!pathToTargetObtained && !cardQueue.empty())             
     {
         unsigned int dist = cardQueue.begin()->first;
@@ -407,6 +408,7 @@ CardLocation BurgleBrosFloor::getKittyMovingPos(CardLocation playerPos)
                 aux.floor=floorNumber;
                 if(isAnAlarmTile(getCardType(aux)) && aux!= playerPos)
                 {
+                    auxCard = B;
                     pathToTargetObtained=true;
                     target=aux;
                     break;
@@ -414,7 +416,7 @@ CardLocation BurgleBrosFloor::getKittyMovingPos(CardLocation playerPos)
 	    }
         }
     }
-    int auxCard;
+    
     for ( ; auxCard != NO_PREVIOUS; auxCard = prevCard[auxCard])
     {    
         CardLocation temp = {floorNumber, (unsigned int)auxCard/FLOOR_COLUMNS,(unsigned int)auxCard%FLOOR_COLUMNS};

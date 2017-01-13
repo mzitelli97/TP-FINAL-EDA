@@ -868,6 +868,7 @@ void BurgleBrosModel::handlePersianKittyMov(ActionOrigin playerId)
         persianKittyToken.first = true;
         persianKittyToken.second = board.getKittyMovingPos(p->getPosition());
         tokens.placePersianKittyToken(persianKittyToken);
+        view->update(this);
     }
 }
 void BurgleBrosModel::handleChihuahuaMove(ActionOrigin playerId)
@@ -877,6 +878,7 @@ void BurgleBrosModel::handleChihuahuaMove(ActionOrigin playerId)
     {
         tokens.triggerAlarm(p->getPosition());
         setGuardsNewPath(p->getPosition().floor);
+        view->update(this);
     }
 }
 BurgleBrosModel::~BurgleBrosModel()
