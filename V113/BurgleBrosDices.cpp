@@ -19,7 +19,7 @@
 #define DIE_MIN_VAL 1
 #define DIE_MAX_VAL 6
 
-#define INIT_SAFE_DICE_COUNT 1      //Empieza con 1 solo dado para el safe
+#define INIT_SAFE_DICE_COUNT 0      //Empieza con 0 solo dado para el safe
 #define INIT_KEYPAD_DICE_COUNT 1 
 
 
@@ -70,7 +70,9 @@ void BurgleBrosDices::addDieToKeypad(CardLocation keypadLocation)
 void BurgleBrosDices::addDieToSafe(unsigned int safeFloor)
 {
     if(diceForSafe[safeFloor] < MAX_NMBR_OF_EXTRA_DICES)
-        diceForSafe[safeFloor]++;
+    {   diceForSafe[safeFloor]++;
+        dice[diceForSafe[safeFloor]-1]= DIE_MIN_VAL;       //Para que aparezca en la pantalla
+    }
 }
 void BurgleBrosDices::resetKeypadsDice()
 {
