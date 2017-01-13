@@ -88,6 +88,13 @@ list<Info2DrawTokens> BurgleBrosModel::getInfo2DrawTokens()
     unsigned int  i,j;
     Info2DrawTokens toPush;
     
+    if(tokens.getCrowToken().first)
+    {    
+        toPush.token=CROW_TOKEN;
+        toPush.position=tokens.getCrowToken().second;
+        retVal.push_back(toPush);
+    }
+    
     toPush.token=DOWNSTAIRS_TOKEN;
     for(vector<CardLocation>::iterator it=downstairsTokens.begin(); it!=downstairsTokens.end(); it++)
     {
@@ -225,9 +232,11 @@ bool BurgleBrosModel::peek(ActionOrigin playerId, CardLocation locationToPeek)
             playerSpentFreeAction=true;
         else
             p->decActions();
+        if(board.getCardType(locationToPeek)==LAVATORY)
+            tokens.lavatoryRevealed(locationToPeek); 
         checkTurns();
         view->update(this);
-        retVal=true;
+        retVal=true;      
     }
     return retVal;  
 }
@@ -258,7 +267,31 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
             guards[movingPlayer->getPosition().floor].setNewPathToTarget(path);
         }
         
+        //Cambios segun el lugar desde el que me muevo
+        if(board.getCardType(prevLocation)==MOTION && board.isMotionActivated())
+        {
+            if(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_MOTION))
+            {
+                std::vector<string> msgToShow({MOTION_TEXT,USE_HACK_TOKEN_TEXTB,TRIGGER_ALARM_TEXTB});//STAY????
+                string userChoice = controller->askForSpentOK(msgToShow);
+                if(userChoice==USE_HACK_TOKEN_TEXTB)
+                    tokens.removeOneHackTokenOf(COMPUTER_ROOM_MOTION);
+                else if(userChoice==TRIGGER_ALARM_TEXTB)
+                    tokens.triggerAlarm(prevLocation);
+            }
+            else 
+                tokens.triggerAlarm(prevLocation);
+            board.deActivateMotion();//OJO, SI SE AGREGA LA OPCION STAY ESTO TIENE QUE IR EN LOS OTROS CASOS Y NO ACA
+        }
+            
+        
+        
+        
+        
+        
         view->update(this);
+        if(locationToMove==guards[locationToMove.floor].getPosition() && board.getCardType(locationToMove)!= LAVATORY)
+            movingPlayer->decLives();
         
         CardLocation downstairsLocationToMove={locationToMove.floor-1, locationToMove.row, locationToMove.column};
         if(prevLocation==downstairsLocationToMove && !tokens.isThereADownstairToken(locationToMove))
@@ -266,7 +299,14 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         
         //ver si aca tiene que ir algo mas antes de los cambios por cartas
         
-        //Cambios segun la carta a la que me movi
+        
+        
+        
+
+        
+        
+        //Cambios segun el tipo de carta al que me movi
+        
         //Si me movi a un atrium y hay un guard arriba o abajo se activa una alarma
         if(newCardType==ATRIUM &&
                 ( (locationToMove.floor>0 && board.isCardDownstairs(locationToMove,guards[locationToMove.floor-1].getPosition()) ) || ( locationToMove.floor<2 && board.isCardUpstairs(locationToMove,guards[locationToMove.floor+1].getPosition()) ) ) )
@@ -351,9 +391,26 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
                     movingPlayer->decActions();
             }
         }    
+        if(newCardType==LAVATORY)
+        {
+            if(!cardWasVisible)
+                tokens.lavatoryRevealed(locationToMove);
+
+            if(locationToMove==guards[locationToMove.floor].getPosition() && tokens.isThereAStealthToken(locationToMove))
+            {
+                vector<string>msgToShow({LAVATORY_TEXT,USE_LAVATORY_TOKEN_TEXTB,USE_MY_STEALTH_TOKEN_TEXTB});
+                string userChoice = controller->askForSpentOK(msgToShow);
+                if(userChoice ==USE_MY_STEALTH_TOKEN_TEXTB)
+                    movingPlayer->decLives();
+                else if(userChoice ==USE_LAVATORY_TOKEN_TEXTB)
+                    tokens.useLavatoryToken();
+            }    
+            else if(locationToMove==guards[locationToMove.floor].getPosition() && !tokens.isThereAStealthToken(locationToMove))
+                movingPlayer->decLives();
+        }    
         
         if( newCardType==MOTION)
-            ;//hay que marcar que se entro en este turno y si sale en el mismo turno tiene que gastar un token o activar una alarma, en el proximo ya puede salir
+            board.activateMotion();//hay que marcar que se entro en este turno y si sale en el mismo turno tiene que gastar un token o activar una alarma, en el proximo ya puede salir
         if( newCardType==SCANNER_DETECTOR && movingPlayer->carriesLoot())
             tokens.triggerAlarm(locationToMove);
         if(newCardType==THERMO && movingPlayer->getcurrentActions()==0)
@@ -363,6 +420,7 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
             CardLocation downStairsLocation={locationToMove.floor-1,locationToMove.row,locationToMove.column};
             movingPlayer->setPosition(downStairsLocation);
         }
+
         checkTurns();
         view->update(this);
         retVal=true;
@@ -442,6 +500,16 @@ bool BurgleBrosModel::createAlarm(ActionOrigin playerId, CardLocation tile)
     }
     return retVal;
 }
+bool BurgleBrosModel::placeCrow(ActionOrigin playerId, CardLocation tile)
+{
+    bool retVal=false;
+    if(isPlaceCrowPossible(playerId,tile))
+    {
+        tokens.placeCrowToken(tile);
+        playerSpentFreeAction=true;
+    }
+    return retVal;
+}
 
 
 
@@ -478,6 +546,7 @@ void BurgleBrosModel::checkTurns()
         otherPlayer.setTurn(true);
         playerSpentFreeAction=false;
         dice.resetKeypadsDice();
+        board.deActivateMotion();
     }
     if(otherPlayer.isItsTurn() && otherPlayer.getcurrentActions() == 0)
     {
@@ -489,6 +558,7 @@ void BurgleBrosModel::checkTurns()
         myPlayer.setTurn(true);
         playerSpentFreeAction=false;
         dice.resetKeypadsDice();
+        board.deActivateMotion();
     }
 }
 
@@ -591,7 +661,18 @@ bool BurgleBrosModel::isCreateAlarmPossible(ActionOrigin playerId, CardLocation 
         retVal=true;
     return retVal;
 }
-
+bool BurgleBrosModel::isPlaceCrowPossible(ActionOrigin playerId, CardLocation tile)
+{
+    bool retVal=false;
+    BurgleBrosPlayer* p=getP2Player(playerId);
+    if(p->getCharacter()== THE_RAVEN && tile.floor == p->getPosition().floor && board.getShortestPathLength(p->getPosition(), tile) <= 2 && playerSpentFreeAction==false)
+    {
+        retVal=true;
+        if(tokens.getCrowToken().first && tokens.getCrowToken().second==tile)
+            retVal=false;
+    }
+    return retVal;
+}
 list<string> BurgleBrosModel::getPosibleActions(ActionOrigin player, CardLocation tile)
 {
     list<string> aux;
@@ -607,6 +688,8 @@ list<string> BurgleBrosModel::getPosibleActions(ActionOrigin player, CardLocatio
         aux.push_back("CRACK");
     if(isCreateAlarmPossible(player,tile))
         aux.push_back("CREATE ALARM");
+    if(isPlaceCrowPossible(player,tile))
+        aux.push_back("PLACE CROW");
     return aux;
 }
  
@@ -676,7 +759,7 @@ void BurgleBrosModel::moveGuard(unsigned int floor)
             setGuardsNewPath(floor);
         }
         /*Si había un crow token en el tile donde se encuentra*/
-        if(tokens.isThereAToken(guards[floor].getPosition(), CROW_TOKEN) && stepsToMove > 1)
+        if(tokens.isThereAToken(guards[floor].getPosition(), CROW_TOKEN) && stepsToMove > 0)
             stepsToMove--;
         view->update(this);
         //sleep(1.0);         //Esto despues cambiará (es bloqueante)

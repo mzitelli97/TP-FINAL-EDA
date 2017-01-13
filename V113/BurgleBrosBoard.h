@@ -20,7 +20,6 @@ public:
 	void getWalls(vector<wall> &vector);
 	BurgleBrosCard getCardCopy(CardLocation location);
 	BurgleBrosCard getCardCopy(std::string location);
-        bool neighbours(CardLocation cardA,CardLocation cardB);//Desarrollar
 	void setCardVisible(CardLocation location);
 	void setCardVisible(std::string location);
 	bool isCardVisible(CardLocation location);
@@ -42,6 +41,9 @@ public:
         list<CardLocation> tilesWithCracked(vector<unsigned int> &dice, unsigned int safeFloor);    //Devuelve todas las cartas que tienen el mismo safe number que algun dado que salio, y estan en misma fila o columna que el safe de su piso
         list<CardLocation> getShortestPath(CardLocation source, CardLocation destination);//DESARROLLAR
         unsigned int getShortestPathLength(CardLocation source, CardLocation destination);//DESARROLLAR
+        void activateMotion();
+        void deActivateMotion();
+        bool isMotionActivated();
 	void testBoard();
 	~BurgleBrosBoard();
 private:
@@ -49,5 +51,6 @@ private:
 	void startInfoToVector(std::string &startInfo, std::vector<CardName> *CardNames);
 	void getEachFloorTiles(std::vector<CardName> *firstFloor, std::vector<CardName> *secondFloor, std::vector<CardName> *thirdFloor);
 	BurgleBrosFloor floors[BOARD_STANDARD_FLOORS];
+        bool motion;
 };
 #endif

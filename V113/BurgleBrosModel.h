@@ -23,6 +23,10 @@ typedef struct{
 #define ENTER_FINGERPRINT_TEXT    "Alert",        "Confirm Action",   "You have entered a Fingerprint tile, so you will trigger an alarm unless you use a hack token"
 #define LASER_TEXT   "Alert",        "Confirm Action",   "You have entered a Laser tile, you can either spend and extra action or use a hack token to avoid triggering an alarm"
 #define DEADBOLT_TEXT "Alert",  "Confirm action", "You moved to a deadbolt, in order to enter you must spend 3 actions, otherwise you will go back to your previous tile"
+#define LAVATORY_TEXT "Alert",        "Confirm Action",   "You have encountered a guard! Luckily you are in the lavatory so you can choose between using one of the stealth tokens in it or one of your own"
+#define MOTION_TEXT "Alert",        "Confirm Action",   "You are leaving an activated motion sensor. An alarm will be triggered unless you use a hack token"
+#define USE_LAVATORY_TOKEN_TEXTB "Use Lavatory stealth token"
+#define USE_MY_STEALTH_TOKEN_TEXTB "Use one of my stealth tokens"
 #define SPEND_ACTIONS_TEXTB "Spend actions"
 #define GET_BACK_TEXTB  "Go back"
 #define SPEND_ACTION_TEXTB "Spend action"
@@ -48,12 +52,14 @@ class BurgleBrosModel : public Model
         bool crackSafe(ActionOrigin playerId, CardLocation safe);
         bool addDieToSafe(ActionOrigin playerId, CardLocation safe);
         bool createAlarm(ActionOrigin playerId, CardLocation tile);
+        bool placeCrow(ActionOrigin playerId, CardLocation tile);
         bool isMovePosible(ActionOrigin playerId,CardLocation tileToMove);  //Pregunta si una movida es posible
         bool isPeekPosible(ActionOrigin player, CardLocation tile);         //Pregunta si un peek es posible
         bool isAddTokenPosible(ActionOrigin player, CardLocation tile);
         bool isAddDieToSafePossible(ActionOrigin player, CardLocation tile);
         bool isCrackSafePossible(ActionOrigin playerId, CardLocation safe);
         bool isCreateAlarmPossible(ActionOrigin playerId, CardLocation tile);
+        bool isPlaceCrowPossible(ActionOrigin playerId, CardLocation tile);
         list<string> getPosibleActions(ActionOrigin player, CardLocation tile);   //Devuelve que acciones puede realizar el jugador indicado en esa tile
         void moveGuard(unsigned int floor);
         void attachView(View * view);
