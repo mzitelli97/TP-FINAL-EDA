@@ -349,7 +349,10 @@ void BurgleBrosView::updateLoots(BurgleBrosModel * model)
             p->setZoom(true);
         p->setPosition(lootsCount[newInfo->owner]++);
         itemsList->push_back((GraphicItem *) p);
-        if(newInfo->loot == GOLD_BAR) newInfo++;        //always after a goldBar there is another goldBar
+        if(newInfo->loot == GOLD_BAR)
+        {
+            //newInfo++;        //always after a goldBar there is another goldBar
+        }
     }
     
 }
@@ -561,6 +564,9 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
     GraphicButton * button = dynamic_cast<GraphicButton *> (*it);
     button->toggleZoom();
     button->setLocation();
+    advance(it,BOARD_STANDARD_FLOORS-floor);
+    button = dynamic_cast<GraphicButton *> (*it);
+    button->toggleZoom();
 }
 
 void BurgleBrosView::zoomLoot(ActionOrigin owner)
@@ -570,6 +576,10 @@ void BurgleBrosView::zoomLoot(ActionOrigin owner)
     guardZoomed = NO_GUARD_ZOOMED;
     lootZoomed = owner;
     playerZoomed = NON_PLAYER;
+    list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) BUTTONS_LIST);
+    advance(it,BOARD_STANDARD_FLOORS);
+    GraphicButton * button = dynamic_cast<GraphicButton *> (*it);
+    button->toggleZoom();
 }
 
 void BurgleBrosView::zoomPlayerCard(ActionOrigin player)
@@ -579,6 +589,23 @@ void BurgleBrosView::zoomPlayerCard(ActionOrigin player)
     guardZoomed = NO_GUARD_ZOOMED;
     lootZoomed = NON_PLAYER;
     playerZoomed = player;
+    list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) BUTTONS_LIST);
+    advance(it,BOARD_STANDARD_FLOORS);
+    GraphicButton * button = dynamic_cast<GraphicButton *> (*it);
+    button->toggleZoom();
+}
+
+void BurgleBrosView::zoomGuardDeck(unsigned int floor)
+{
+    onZoom ^= true;
+    floorZoomed = NO_FLOOR_ZOOMED;
+    guardZoomed = floor;
+    lootZoomed = NON_PLAYER;
+    playerZoomed = NON_PLAYER;
+    list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) BUTTONS_LIST);
+    advance(it,BOARD_STANDARD_FLOORS);
+    GraphicButton * button = dynamic_cast<GraphicButton *> (*it);
+    button->toggleZoom();
 }
 
 

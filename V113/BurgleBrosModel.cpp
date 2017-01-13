@@ -116,13 +116,13 @@ list<Info2DrawTokens> BurgleBrosModel::getInfo2DrawTokens()
         toPush.position=*it;
         retVal.push_back(toPush);
     }
-    /*auxList = tokens.getStealthTokensOnFloor();
-    for(list<CardLocation>::iterator it=auxList.begin(); it!=auxList.end(); it++)
+    pair<CardLocation, unsigned int> temp = tokens.getStealthTokensOnFloor();
+    for(unsigned int i=0; i < temp.second; i++)
     {
-        toPush.position=*it;
+        toPush.position=temp.first;
         toPush.token= STEALTH_TOKEN;
         retVal.push_back(toPush);
-    }*/
+    }
     
     //keypad tokens
     auxList= tokens.getKeypadTokens();
@@ -549,6 +549,8 @@ void BurgleBrosModel::checkTurns()
 {
     if(myPlayer.isItsTurn() && myPlayer.getcurrentActions() == 0)
     {
+        if(board.getCardType(myPlayer.getPosition()) == THERMO)
+            tokens.triggerAlarm(myPlayer.getPosition());
         myPlayer.setTurn(false);
         myPlayer.setActions(INIT_NMBR_OF_LIVES);
         if(myPlayer.hasLoot(MIRROR))
@@ -561,6 +563,8 @@ void BurgleBrosModel::checkTurns()
     }
     if(otherPlayer.isItsTurn() && otherPlayer.getcurrentActions() == 0)
     {
+        if(board.getCardType(myPlayer.getPosition()) == THERMO)
+            tokens.triggerAlarm(myPlayer.getPosition());
         otherPlayer.setTurn(false);
         otherPlayer.setActions(INIT_NMBR_OF_LIVES);
         if(otherPlayer.hasLoot(MIRROR))
@@ -655,7 +659,7 @@ bool BurgleBrosModel::isCrackSafePossible(ActionOrigin playerId, CardLocation sa
     p = getP2Player(playerId);
     if(p->isItsTurn()&& board.getCardType(p->getPosition())==SAFE && p->getPosition()==safe)
     {
-        if(board.canSafeBeCracked(safe.floor) && !board.isSafeCracked(safe.floor))
+        if(board.canSafeBeCracked(safe.floor) && !board.isSafeCracked(safe.floor) && dice.getSafeDiceCount(safe.floor)!= 0)
         {
             retVal=true;
             if(getP2OtherPlayer(playerId)->hasLoot(CURSED_GOBLET) && getP2OtherPlayer(playerId)->getPosition()!=safe)
@@ -730,7 +734,10 @@ void BurgleBrosModel::moveGuard(unsigned int floor)
         tokens.turnOffAlarm(guards[floor].getPosition());
         setGuardsNewPath(floor);
     }
-    
+    if(myPlayer.getCharacter()== THE_ACROBAT && myPlayer.getPosition() == guards[floor].getPosition())
+        myPlayer.decLives();
+    if(otherPlayer.getCharacter()== THE_ACROBAT && otherPlayer.getPosition() == guards[floor].getPosition())
+        otherPlayer.decLives();
     while(stepsToMove!=0)
     {
         stepsToMove--;
