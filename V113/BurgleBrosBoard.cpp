@@ -23,7 +23,7 @@ void BurgleBrosBoard::initBoard()
     vector<CardName> firstFloor, secondFloor, thirdFloor;
     getEachFloorTiles(&firstFloor, &secondFloor, &thirdFloor);
     //firstFloor[0]=MOTION;
-    //firstFloor[4]=LAVATORY;
+    //firstFloor[5]=LASER;
     floors[0].initFloor(0, firstFloor);
     floors[1].initFloor(1, secondFloor);
     floors[2].initFloor(2, thirdFloor);
