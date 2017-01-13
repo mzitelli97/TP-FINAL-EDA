@@ -116,13 +116,13 @@ list<Info2DrawTokens> BurgleBrosModel::getInfo2DrawTokens()
         toPush.position=*it;
         retVal.push_back(toPush);
     }
-    /*auxList = tokens.getStealthTokensOnFloor();
-    for(list<CardLocation>::iterator it=auxList.begin(); it!=auxList.end(); it++)
+    pair<CardLocation, unsigned int> temp = tokens.getStealthTokensOnFloor();
+    for(unsigned int i=0; i < temp.second; i++)
     {
-        toPush.position=*it;
+        toPush.position=temp.first;
         toPush.token= STEALTH_TOKEN;
         retVal.push_back(toPush);
-    }*/
+    }
     
     //keypad tokens
     auxList= tokens.getKeypadTokens();
