@@ -374,3 +374,23 @@ bool BurgleBrosBoard::isMotionActivated()
 {
     return motion;
 }
+bool BurgleBrosBoard::canKittyMove(CardLocation ownerPos)
+{
+    bool retVal=false;
+    CardLocation aux;
+    aux.floor= ownerPos.floor;
+    for(aux.row=0; aux.row<FLOOR_RAWS; aux.row++)
+    {
+        for(aux.column=0; aux.column<FLOOR_RAWS; aux.column++)
+        {
+            if(isAnAlarmTile(getCardType(aux)) && ownerPos!=aux)    //Si hay una tile de alarma en el piso y no es en la que está parado el chabon
+                retVal=true;
+        }
+    }
+    return retVal;
+}
+
+CardLocation BurgleBrosBoard::getKittyMovingPos(CardLocation ownerPos)
+{
+    return floors[ownerPos.floor].getKittyMovingPos(ownerPos);
+}

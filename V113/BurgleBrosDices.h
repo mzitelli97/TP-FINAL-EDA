@@ -33,6 +33,8 @@ public:
     void addDieToSafe(unsigned int safeFloor);
     void addDieToKeypad(CardLocation keypadLocation);
     void resetKeypadsDice();
+    bool persianKittyShallMove();
+    bool chihuahuaBarks();
     unsigned int throwADie();
     
     virtual ~BurgleBrosDices();

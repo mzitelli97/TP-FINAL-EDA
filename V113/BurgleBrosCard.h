@@ -27,7 +27,7 @@ std::string cardLocationToProtocol(CardLocation &cardLocation);		//(0,0,0) (floo
 CardLocation protocolToCardLocation(std::string location);
 CardLocation getRandomCardLocation();
 CardLocation getRandomCardLocation(unsigned int inThisFloor);
-
+bool isAnAlarmTile(CardName tile);
 
 typedef struct{
     CardLocation location;

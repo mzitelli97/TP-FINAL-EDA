@@ -563,6 +563,7 @@ void BurgleBrosModel::checkTurns()
             myPlayer.setActions(INIT_NMBR_OF_LIVES-1);
         moveGuard(myPlayer.getPosition().floor);
         otherPlayer.setTurn(true);
+        handlePersianKittyMov(OTHER_PLAYER_ACTION);
         playerSpentFreeAction=false;
         dice.resetKeypadsDice();
         board.deActivateMotion();
@@ -577,6 +578,7 @@ void BurgleBrosModel::checkTurns()
             otherPlayer.setActions(INIT_NMBR_OF_LIVES-1);
         moveGuard(otherPlayer.getPosition().floor);
         myPlayer.setTurn(true);
+        handlePersianKittyMov(THIS_PLAYER_ACTION);
         playerSpentFreeAction=false;
         dice.resetKeypadsDice();
         board.deActivateMotion();
@@ -853,7 +855,19 @@ void BurgleBrosModel::triggerSilentAlarm(unsigned int floor)
     }
 }
 
-
+void BurgleBrosModel::handlePersianKittyMov(ActionOrigin playerId)
+{
+    BurgleBrosPlayer *p=getP2Player(playerId);
+    if(p->isItsTurn() && p->hasLoot(PERSIAN_KITTY) && board.canKittyMove(p->getPosition()) && dice.persianKittyShallMove())   
+    {
+        p->persianKittyEscaped();
+        loots.persianKittyEscaped();
+        pair<bool, CardLocation> persianKittyToken;
+        persianKittyToken.first = true;
+        persianKittyToken.second = board.getKittyMovingPos(p->getPosition());
+        tokens.placePersianKittyToken(persianKittyToken);
+    }
+}
 
 BurgleBrosModel::~BurgleBrosModel()
 {

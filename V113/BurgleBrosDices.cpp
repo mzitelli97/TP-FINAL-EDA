@@ -113,6 +113,26 @@ bool BurgleBrosDices::throwDiceForKeypadWithExtraDie(CardLocation keypadLocation
     }
     return retVal;
 }
+bool BurgleBrosDices::persianKittyShallMove()
+{
+    bool retVal=false;
+    dice[0]=DIE_MIN_VAL+rand()%DIE_MAX_VAL;
+    for(unsigned int i=1; i<MAX_NMBR_OF_EXTRA_DICES  ; i++)
+            dice[i]=NO_DIE;
+    if(dice[0] < 3)
+        retVal=true;
+    return retVal;
+}
+bool BurgleBrosDices::chihuahuaBarks()
+{
+    bool retVal=false;
+    dice[0]=DIE_MIN_VAL+rand()%DIE_MAX_VAL;
+    for(unsigned int i=1; i<MAX_NMBR_OF_EXTRA_DICES  ; i++)
+            dice[i]=NO_DIE;
+    if(dice[0] == 6)
+        retVal=true;
+    return retVal;
+}
 
 vector<unsigned int> BurgleBrosDices::getCurrDice()
 {

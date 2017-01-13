@@ -69,6 +69,7 @@ class BurgleBrosModel : public Model
 	~BurgleBrosModel();
     private:
         void checkTurns();
+        void handlePersianKittyMov(ActionOrigin playerId);
         void triggerSilentAlarm(unsigned int floor);
         bool GuardInCamera();
         void setGuardsNewPath(unsigned int floor);
