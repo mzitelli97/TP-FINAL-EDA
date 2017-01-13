@@ -77,6 +77,7 @@ Loot BurgleBrosLoots::getLoot(ActionOrigin owner)
         goldBarOnFloor.first=true;
     }
     currentLoots++;
+    return aux;
 }
 bool BurgleBrosLoots::isGoldBarOnFloor()
 {

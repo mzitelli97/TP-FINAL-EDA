@@ -139,6 +139,47 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
         modelPointer->createAlarm(modelPointer->getPlayerOnTurn(),location);
     else if(action=="PLACE CROW")
         modelPointer->placeCrow(modelPointer->getPlayerOnTurn(),location);
+    else if(action=="ASK FOR TIARA")
+        modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,TIARA);
+    else if(action=="ASK FOR PERSIAN KITTY")
+        modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,PERSIAN_KITTY);
+    else if(action=="ASK FOR PAITING")
+        modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,PAINTING);
+    else if(action=="ASK FOR MIRROR")
+        modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,MIRROR);
+    else if(action=="ASK FOR KEYCARD")
+        modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,KEYCARD);
+    else if(action=="ASK FOR ISOTOPE")
+        modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,ISOTOPE);
+    else if(action=="ASK FOR GEMSTONE")
+        modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,GEMSTONE);
+    else if(action=="ASK FOR CURSED GOBLET")
+        modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,CURSED_GOBLET);
+    else if(action=="ASK FOR CHIHUAHUA")
+        modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,CHIHUAHUA);
+    else if(action=="ASK FOR GOLD BAR")
+        modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,GOLD_BAR);
+    else if(action=="OFFER TIARA")
+        modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,TIARA);
+    else if(action=="OFFER PERSIAN KITTY")
+        modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,PERSIAN_KITTY);
+    else if(action=="OFFER PAITING")
+        modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,PAINTING);
+    else if(action=="OFFER MIRROR")
+        modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,MIRROR);
+    else if(action=="AOFFER KEYCARD")
+        modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,KEYCARD);
+    else if(action=="OFFER ISOTOPE")
+        modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,ISOTOPE);
+    else if(action=="OFFER GEMSTONE")
+        modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,GEMSTONE);
+    else if(action=="OFFER CURSED GOBLET")
+        modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,CURSED_GOBLET);
+    else if(action=="OFFER CHIHUAHUA")
+        modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,CHIHUAHUA);
+    else if(action=="OFFER GOLD BAR")
+        modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,GOLD_BAR);
+    
 }
 
 BurgleBrosController::~BurgleBrosController() {

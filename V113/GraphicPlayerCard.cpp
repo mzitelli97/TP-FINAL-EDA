@@ -22,6 +22,8 @@
 #define NAME_SEPARATION (totalHeight/76.0)
 #define ACTIONS_COLOR (al_map_rgb(255,255,255))
 #define NAME_COLOR (al_map_rgb(255,255,255))
+#define RADIX (totalWidth/270.0)
+#define GREEN (al_map_rgb(0,150,0))
 
 GraphicPlayerCard::GraphicPlayerCard(ALLEGRO_BITMAP * image, ALLEGRO_BITMAP * stealthTokenImg, unsigned int lives, std::string name, ActionOrigin whichPlayer,unsigned int width,unsigned int height)
 {
@@ -71,26 +73,30 @@ void GraphicPlayerCard::setFont(ALLEGRO_FONT * font)
 {
     this->font=font;
 }
+
+void GraphicPlayerCard::setTurn(bool turn)
+{
+    this->turn = turn;
+}
+
 void GraphicPlayerCard::draw()
 {
     setPosition();
+    al_draw_scaled_bitmap(image,0,0,al_get_bitmap_width(image),al_get_bitmap_height(image),
+                min.x,min.y,width,height,0);
+    if(turn)
+        al_draw_rounded_rectangle(min.x,min.y,max.x,max.y,RADIX,RADIX,GREEN,5.0);
     if(whichPlayer==THIS_PLAYER_ACTION)
     {
-        al_draw_scaled_bitmap(image,0,0,al_get_bitmap_width(image),al_get_bitmap_height(image),
-                min.x,min.y,width,height,0);
         for(unsigned int i=0; i <(lives-1); i++)
             al_draw_scaled_bitmap(stealthToken,0,0,al_get_bitmap_width(stealthToken),al_get_bitmap_height(stealthToken),
-                    min.x + width + SEPARATION, min.y + i * STEALTH_TOKEN_HEIGHT,STEALTH_TOKEN_WIDTH,STEALTH_TOKEN_HEIGHT,0);
-        
+                    min.x + width + SEPARATION, min.y + i * STEALTH_TOKEN_HEIGHT,STEALTH_TOKEN_WIDTH,STEALTH_TOKEN_HEIGHT,0);   
     }
     else
     {
-        al_draw_scaled_bitmap(image,0,0,al_get_bitmap_width(image),al_get_bitmap_height(image),
-                min.x,min.y,width,height,0);
         for(unsigned int i=0; i <(lives-1); i++)
             al_draw_scaled_bitmap(stealthToken,0,0,al_get_bitmap_width(stealthToken),al_get_bitmap_height(stealthToken),
-                    min.x - STEALTH_TOKEN_WIDTH - SEPARATION,min.y + i * STEALTH_TOKEN_HEIGHT,STEALTH_TOKEN_WIDTH,STEALTH_TOKEN_HEIGHT,0);
-        
+                    min.x - STEALTH_TOKEN_WIDTH - SEPARATION,min.y + i * STEALTH_TOKEN_HEIGHT,STEALTH_TOKEN_WIDTH,STEALTH_TOKEN_HEIGHT,0);   
     }
     if(font != nullptr)
     {

@@ -17,6 +17,7 @@ typedef struct{
     unsigned int lives;
     string name;
     unsigned int currActions;
+    bool turn;
 }Info2DrawPlayer;
 
 

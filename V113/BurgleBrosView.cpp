@@ -136,8 +136,10 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     
     GraphicPlayerCard *auxCharactersCardsThis_element=new GraphicPlayerCard(imageLoader.getImageP(infoThisPlayer.character,true),imageLoader.getImageP(STEALTH_TOKEN), infoThisPlayer.lives,infoThisPlayer.name, THIS_PLAYER_ACTION,al_get_display_width(display),al_get_display_height(display)); // con true devuelve la carta
     GraphicPlayerCard *auxCharactersCardsOther_element=new GraphicPlayerCard(imageLoader.getImageP(infoOtherPlayer.character,true),imageLoader.getImageP(STEALTH_TOKEN), infoOtherPlayer.lives,infoOtherPlayer.name, OTHER_PLAYER_ACTION,al_get_display_width(display),al_get_display_height(display)); // con true devuelve la carta
-   auxCharactersCardsThis_element->setFont(actionsFont);
-   auxCharactersCardsOther_element->setFont(actionsFont);
+    auxCharactersCardsThis_element->setFont(actionsFont);
+    auxCharactersCardsOther_element->setFont(actionsFont);
+    auxCharactersCardsThis_element->setTurn(infoThisPlayer.turn);
+    auxCharactersCardsOther_element->setTurn(infoOtherPlayer.turn);
     auxCharactersCards_list.push_back((GraphicItem *) auxCharactersCardsThis_element);
     auxCharactersCards_list.push_back((GraphicItem *) auxCharactersCardsOther_element);
             
@@ -387,6 +389,7 @@ void BurgleBrosView::updateCharacterCards(BurgleBrosModel *model) {
         if(onZoom && playerZoomed == THIS_PLAYER_ACTION) gPlayerCard->setZoom(true);
         else gPlayerCard->setZoom(false);
         gPlayerCard->setLivesAndActions(player.lives,player.currActions);
+        gPlayerCard->setTurn(player.turn);
     }
     //SecondPlayer
     player = model->getInfo2DrawPlayer(OTHER_PLAYER_ACTION);
@@ -396,6 +399,7 @@ void BurgleBrosView::updateCharacterCards(BurgleBrosModel *model) {
         if(onZoom && playerZoomed == OTHER_PLAYER_ACTION) gPlayerCard->setZoom(true);
         else gPlayerCard->setZoom(false);
         gPlayerCard->setLivesAndActions(player.lives,player.currActions);
+        gPlayerCard->setTurn(player.turn);
     }
 }
 void BurgleBrosView::updateGuards(BurgleBrosModel* model)

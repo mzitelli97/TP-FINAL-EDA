@@ -2,6 +2,7 @@
 #include "BurgleBrosView.h"
 #include <unistd.h>
 #include <vector>
+#include <algorithm>
 
 #define KEYPAD_CRACK_NUMBER 6
 typedef struct
@@ -190,6 +191,7 @@ Info2DrawPlayer BurgleBrosModel:: getInfo2DrawPlayer(ActionOrigin player)
     info.lives=p->getCurrLifes();
     info.position=p->getPosition();
     info.currActions=p->getcurrentActions();
+    info.turn = p->isItsTurn();
     return info;
 }
 
@@ -528,13 +530,39 @@ bool BurgleBrosModel::placeCrow(ActionOrigin playerId, CardLocation tile)
     return retVal;
 }
 
+bool BurgleBrosModel::askForLoot(ActionOrigin playerId, CardLocation tile, Loot loot)
+{
+    bool retVal = false;
+    if(isAskForLootPossible(playerId,tile,loot))
+    {
+        std::vector<string> msgToShow({ASK_FOR_LOOT_TEXT+loot2Str(loot),ACCEPT_TEXTB,DECLINE_TEXTB}); 
+        string userChoice=controller->askForSpentOK(msgToShow);
+        if(userChoice==ACCEPT_TEXTB)
+        {    
+            getP2Player(playerId)->attachLoot(loot);
+            //getP2OtherPlayer(playerId)->
+        }
+        //else if(userChoice==DECLINE_TEXTB)
+            //tokens.removeOneHackTokenOf(COMPUTER_ROOM_LASER);
+    }
+}
 
-
-
-
-
-
-
+bool BurgleBrosModel::offerLoot(ActionOrigin playerId, CardLocation tile, Loot loot)
+{
+    bool retVal = false;
+    if(isOfferLootPossible(playerId,tile,loot))
+    {
+        std::vector<string> msgToShow({OFFER_LOOT_TEXT+loot2Str(loot),ACCEPT_TEXTB,DECLINE_TEXTB}); 
+        string userChoice=controller->askForSpentOK(msgToShow);
+        if(userChoice==ACCEPT_TEXTB)
+        {    
+            getP2OtherPlayer(playerId)->attachLoot(loot);
+            //getP2Player(playerId)->
+        }
+        //else if(userChoice==DECLINE_TEXTB)
+            //tokens.removeOneHackTokenOf(COMPUTER_ROOM_LASER);
+    }
+}
 
 
 bool BurgleBrosModel::GuardInCamera() 
@@ -694,6 +722,36 @@ bool BurgleBrosModel::isPlaceCrowPossible(ActionOrigin playerId, CardLocation ti
     }
     return retVal;
 }
+
+bool BurgleBrosModel::isAskForLootPossible(ActionOrigin playerId, CardLocation tile, Loot loot)
+{
+    bool retVal = false;
+    BurgleBrosPlayer * p = getP2Player(playerId);
+    BurgleBrosPlayer * o = getP2OtherPlayer(playerId);
+    if(p->isItsTurn() && p->getPosition() == tile && o->getPosition() == tile && o->hasLoot(loot))
+    {
+        retVal = true;
+        if(loot == GOLD_BAR && p->hasLoot(loot))
+            retVal = false;
+    }
+    return retVal;
+}
+
+bool BurgleBrosModel::isOfferLootPossible(ActionOrigin playerId, CardLocation tile, Loot loot)
+{
+    bool retVal = false;
+    BurgleBrosPlayer * p = getP2Player(playerId);
+    BurgleBrosPlayer * o = getP2OtherPlayer(playerId);
+    if(p->isItsTurn() && p->getPosition() == tile && o->getPosition() == tile && p->hasLoot(loot))
+    {
+        retVal = true;
+        if(loot == GOLD_BAR && o->hasLoot(loot))
+            retVal = false;
+    }
+    return retVal;
+}
+
+
 list<string> BurgleBrosModel::getPosibleActions(ActionOrigin player, CardLocation tile)
 {
     list<string> aux;
@@ -711,6 +769,19 @@ list<string> BurgleBrosModel::getPosibleActions(ActionOrigin player, CardLocatio
         aux.push_back("CREATE ALARM");
     if(isPlaceCrowPossible(player,tile))
         aux.push_back("PLACE CROW");
+    for(int i = (int)TIARA; i <= (int)GOLD_BAR; i++)
+    {
+        string ask = "ASK FOR ";
+        string offer = "OFFER ";
+        ask += loot2Str((Loot)i);
+        offer += loot2Str((Loot)i);
+        transform(ask.begin(), ask.end(), ask.begin(), ::toupper);
+        transform(offer.begin(), offer.end(), offer.begin(), ::toupper);
+        if(isAskForLootPossible(player,tile,(Loot)i))
+            aux.push_back(ask);
+        if(isOfferLootPossible(player,tile,(Loot)i))
+            aux.push_back(offer);
+    }
     return aux;
 }
  

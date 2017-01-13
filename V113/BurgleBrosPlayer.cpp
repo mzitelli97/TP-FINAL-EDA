@@ -82,7 +82,10 @@ bool BurgleBrosPlayer::hasLoot(Loot loot)
     for(list<Loot>::iterator it=lootCarried.begin(); it != lootCarried.end(); it++)
     {
         if(*it == loot)
+        {
             retVal=true;
+            break;
+        }
     }
     return retVal;
 }
