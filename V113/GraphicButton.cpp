@@ -27,8 +27,8 @@
 
 #define PASS_CENTER_X   (34*(totalWidth/40))
 #define PASS_CENTER_Y   (totalWidth/60)
-#define PASS_WIDTH      (totalWidth/20)
-#define PASS_HEIGHT     (totalHeight/30)
+#define PASS_WIDTH      (totalWidth/15)
+#define PASS_HEIGHT     (totalHeight/20)
 
 GraphicButton::GraphicButton() {
 }

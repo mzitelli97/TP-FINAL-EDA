@@ -122,9 +122,9 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
         auxButton->setLocation();
         auxButtons_list.push_back(auxButton);
     }
-    GraphicButton *auxButton = new GraphicButton(imageLoader.getImageP(QUIT_BUTTON), nullptr, QUIT_BUTTON, al_get_display_width(display), al_get_display_height(display));
+    GraphicButton *auxButton = new GraphicButton(imageLoader.getImageP(PASS_BUTTON), nullptr, PASS_BUTTON, al_get_display_width(display), al_get_display_height(display));
     auxButtons_list.push_back(auxButton);
-    auxButton = new GraphicButton(imageLoader.getImageP(PASS_BUTTON), nullptr, PASS_BUTTON, al_get_display_width(display), al_get_display_height(display));
+    auxButton = new GraphicButton(imageLoader.getImageP(QUIT_BUTTON), nullptr, QUIT_BUTTON, al_get_display_width(display), al_get_display_height(display));
     auxButtons_list.push_back(auxButton);
     auxButton = new GraphicButton(imageLoader.getImageP(HELP_BUTTON), nullptr, HELP_BUTTON, al_get_display_width(display), al_get_display_height(display));
     auxButtons_list.push_back(auxButton);
@@ -575,9 +575,13 @@ void BurgleBrosView::zoomLoot(ActionOrigin owner)
     lootZoomed = owner;
     playerZoomed = NON_PLAYER;
     list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) BUTTONS_LIST);
-    advance(it,BOARD_STANDARD_FLOORS);
-    GraphicButton * button = dynamic_cast<GraphicButton *> (*it);
-    button->toggleZoom();
+    advance(it,BOARD_STANDARD_FLOORS+1);
+    GraphicButton * button;
+    for(int i = 0; i < 3; i++, it++)
+    {
+        button = dynamic_cast<GraphicButton *> (*it);
+        button->toggleZoom();
+    }
 }
 
 void BurgleBrosView::zoomPlayerCard(ActionOrigin player)
@@ -588,9 +592,13 @@ void BurgleBrosView::zoomPlayerCard(ActionOrigin player)
     lootZoomed = NON_PLAYER;
     playerZoomed = player;
     list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) BUTTONS_LIST);
-    advance(it,BOARD_STANDARD_FLOORS);
-    GraphicButton * button = dynamic_cast<GraphicButton *> (*it);
-    button->toggleZoom();
+    advance(it,BOARD_STANDARD_FLOORS+1);
+    GraphicButton * button;
+    for(int i = 0; i < 3; i++, it++)
+    {
+        button = dynamic_cast<GraphicButton *> (*it);
+        button->toggleZoom();
+    }
 }
 
 void BurgleBrosView::zoomGuardDeck(unsigned int floor)
@@ -601,9 +609,13 @@ void BurgleBrosView::zoomGuardDeck(unsigned int floor)
     lootZoomed = NON_PLAYER;
     playerZoomed = NON_PLAYER;
     list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) BUTTONS_LIST);
-    advance(it,BOARD_STANDARD_FLOORS);
-    GraphicButton * button = dynamic_cast<GraphicButton *> (*it);
-    button->toggleZoom();
+    advance(it,BOARD_STANDARD_FLOORS+1);
+    GraphicButton * button;
+    for(int i = 0; i < 3; i++, it++)
+    {
+        button = dynamic_cast<GraphicButton *> (*it);
+        button->toggleZoom();
+    }
 }
 
 
