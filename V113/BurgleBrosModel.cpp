@@ -772,11 +772,7 @@ void BurgleBrosModel::moveGuard(unsigned int floor)
         else if(guards[floor].getPosition() == otherPlayer.getPosition())
             otherPlayer.decLives();
         if(board.isCardVisible(guards[floor].getPosition()))
-        {   /*Si el guardia se encuentra sobre un atrium, es visible y un jugador está arriba o debajo del guardia, ese jugador pierde una vida */
-            if(board.getCardType(guards[floor].getPosition()) == ATRIUM && (board.isCardDownstairs(guards[floor].getPosition(), myPlayer.getPosition()) || board.isCardUpstairs(guards[floor].getPosition(), myPlayer.getPosition())))
-                myPlayer.decLives();
-            if(board.getCardType(guards[floor].getPosition()) == ATRIUM && (board.isCardDownstairs(guards[floor].getPosition(), otherPlayer.getPosition()) || board.isCardUpstairs(guards[floor].getPosition(), otherPlayer.getPosition())))
-                otherPlayer.decLives();
+        {   
             if(board.getCardType(guards[floor].getPosition()) == CAMERA && board.getCardType(myPlayer.getPosition()) == CAMERA && board.isCardVisible(myPlayer.getPosition()))
                 if(board.getCardType(guards[floor].getPosition()) != board.getCardType(myPlayer.getPosition()))
                 {   tokens.triggerAlarm(myPlayer.getPosition()); setGuardsNewPath(myPlayer.getPosition().floor); }

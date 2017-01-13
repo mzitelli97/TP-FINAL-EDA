@@ -60,6 +60,7 @@ class BurgleBrosModel : public Model
         bool isCrackSafePossible(ActionOrigin playerId, CardLocation safe);
         bool isCreateAlarmPossible(ActionOrigin playerId, CardLocation tile);
         bool isPlaceCrowPossible(ActionOrigin playerId, CardLocation tile);
+        bool isPickLootPossible(ActionOrigin playerId, CardLocation tile);
         list<string> getPosibleActions(ActionOrigin player, CardLocation tile);   //Devuelve que acciones puede realizar el jugador indicado en esa tile
         void moveGuard(unsigned int floor);
         void attachView(View * view);
