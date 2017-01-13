@@ -369,6 +369,62 @@ unsigned int indexToInt(CardLocation &i )
 {
     return i.row*FLOOR_COLUMNS+i.column;
 }
+CardLocation BurgleBrosFloor::getKittyMovingPos(CardLocation playerPos)
+{
+    unsigned int sourceCard = indexToInt(playerPos);
+    vector<unsigned int> minDist;
+    vector<int> prevCard;
+    CardLocation target;
+    list<CardLocation> path;
+    int numberOfCards = FLOOR_RAWS * FLOOR_COLUMNS; //El numero de cartas siempre es fijo
+    bool pathToTargetObtained=false;
+    minDist.clear();                       
+    minDist.resize(numberOfCards, std::numeric_limits<int>::max());      //Pongo todas las etiquetas de djikstra en infinito, como trabajo con ints, le pongo max.
+    minDist[sourceCard] = 0;                                        //La distancia desde el vertice que partí hacia si mismo es 0.
+    prevCard.clear();                               
+    prevCard.resize(numberOfCards, NO_PREVIOUS);
+    set<pair<unsigned int, int> > cardQueue;
+    cardQueue.insert(make_pair(minDist[sourceCard], sourceCard));  //Parto del vértice sourceCard.
+    int auxCard;
+    while (!pathToTargetObtained && !cardQueue.empty())             
+    {
+        unsigned int dist = cardQueue.begin()->first;
+        int A = cardQueue.begin()->second;
+        cardQueue.erase(cardQueue.begin());
+        vector<unsigned int> &neighbors = adjacentList[A];
+        vector<unsigned int>::iterator neighbor_iter = neighbors.begin();
+        for (neighbor_iter = neighbors.begin();neighbor_iter != neighbors.end();neighbor_iter++)
+        {
+            
+            unsigned int B = *neighbor_iter;
+            unsigned int totalDist = dist + 1; //El peso de entre dos vértices siempre es 1 para nuestro grafo.
+            if (totalDist < minDist[B]) {
+	        cardQueue.erase(std::make_pair(minDist[B], B));
+ 
+	        minDist[B] = totalDist;
+	        prevCard[B] = A;
+	        cardQueue.insert(std::make_pair(minDist[B], B));
+                CardLocation aux= intToIndex(B);
+                aux.floor=floorNumber;
+                if(isAnAlarmTile(getCardType(aux)) && aux!= playerPos)
+                {
+                    auxCard = B;
+                    pathToTargetObtained=true;
+                    target=aux;
+                    break;
+                }
+	    }
+        }
+    }
+    
+    for ( ; auxCard != NO_PREVIOUS; auxCard = prevCard[auxCard])
+    {    
+        CardLocation temp = {floorNumber, (unsigned int)auxCard/FLOOR_COLUMNS,(unsigned int)auxCard%FLOOR_COLUMNS};
+        path.push_front(temp);
+    }
+    path.pop_front(); // Desecho la carta de la que partió
+    return path.front();    //Devuelvo para el primer tile que se mueve.
+}
 
 BurgleBrosFloor::~BurgleBrosFloor()
 {

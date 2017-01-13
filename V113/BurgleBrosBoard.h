@@ -39,11 +39,13 @@ public:
         bool isCardDownstairs(CardLocation source, CardLocation destination);
         bool canSafeBeCracked(unsigned int safeFloor); //Si están visibles todas las cartas en la misma fila y columna que el safe devuelve true
         list<CardLocation> tilesWithCracked(vector<unsigned int> &dice, unsigned int safeFloor);    //Devuelve todas las cartas que tienen el mismo safe number que algun dado que salio, y estan en misma fila o columna que el safe de su piso
-        list<CardLocation> getShortestPath(CardLocation source, CardLocation destination);//DESARROLLAR
-        unsigned int getShortestPathLength(CardLocation source, CardLocation destination);//DESARROLLAR
+        list<CardLocation> getShortestPath(CardLocation source, CardLocation destination);
+        unsigned int getShortestPathLength(CardLocation source, CardLocation destination);
         void activateMotion();
         void deActivateMotion();
         bool isMotionActivated();
+        bool canKittyMove(CardLocation ownerPos);       //VER CON LO QUE RESPONDAN EN EL FORO
+        CardLocation getKittyMovingPos(CardLocation ownerPos);
 	void testBoard();
 	~BurgleBrosBoard();
 private:

@@ -49,6 +49,10 @@ bool operator==(const CardLocation &l, const CardLocation &r)
 	else
 		return false;
 }
+bool isAnAlarmTile(CardName tile)
+{
+    return (tile==FINGERPRINT || tile == LASER || tile == MOTION || tile == SCANNER_DETECTOR || tile == THERMO || tile == CAMERA);
+}
 CardLocation getRandomCardLocation()
 {
     CardLocation retVal;

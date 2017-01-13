@@ -38,6 +38,7 @@ public:
         CardLocation getSafeLocation();
 	CardName getCardType(CardLocation location);
 	CardName getCardType(unsigned int number);
+        CardLocation getKittyMovingPos(CardLocation location); // Dice para donde va ir el persian kitty si se tiran mal los dados
 	void testFloor();
 
 	~BurgleBrosFloor();

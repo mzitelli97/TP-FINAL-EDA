@@ -117,6 +117,17 @@ Loot BurgleBrosLoots::pickGoldBarOnFloor(ActionOrigin owner)
     goldBarOnFloor.first=false;
     return GOLD_BAR;
 }
+void BurgleBrosLoots::persianKittyEscaped()
+{
+    unsigned int i;
+    for(i=0; i<currentLoots;i++)
+    {
+        if(lootInfo[i].loot==PERSIAN_KITTY)
+            break;
+    }
+    lootInfo[i].owner=NON_PLAYER;
+}
+
 
 BurgleBrosLoots::~BurgleBrosLoots()
 {

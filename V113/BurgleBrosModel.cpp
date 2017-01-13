@@ -95,7 +95,13 @@ list<Info2DrawTokens> BurgleBrosModel::getInfo2DrawTokens()
         toPush.position=tokens.getCrowToken().second;
         retVal.push_back(toPush);
     }
-    
+    pair<bool, CardLocation> auxiliar= tokens.getPersianKittyToken();
+    if(auxiliar.first)
+    {
+        toPush.token=PERSIAN_KITTY_TOKEN;
+        toPush.position=auxiliar.second;
+        retVal.push_back(toPush);
+    }
     toPush.token=DOWNSTAIRS_TOKEN;
     for(vector<CardLocation>::iterator it=downstairsTokens.begin(); it!=downstairsTokens.end(); it++)
     {
@@ -591,6 +597,8 @@ void BurgleBrosModel::checkTurns()
             myPlayer.setActions(INIT_NMBR_OF_LIVES-1);
         moveGuard(myPlayer.getPosition().floor);
         otherPlayer.setTurn(true);
+        handlePersianKittyMov(OTHER_PLAYER_ACTION);
+        handleChihuahuaMove(OTHER_PLAYER_ACTION);
         playerSpentFreeAction=false;
         dice.resetKeypadsDice();
         board.deActivateMotion();
@@ -605,6 +613,8 @@ void BurgleBrosModel::checkTurns()
             otherPlayer.setActions(INIT_NMBR_OF_LIVES-1);
         moveGuard(otherPlayer.getPosition().floor);
         myPlayer.setTurn(true);
+        handlePersianKittyMov(THIS_PLAYER_ACTION);
+        handleChihuahuaMove(THIS_PLAYER_ACTION);
         playerSpentFreeAction=false;
         dice.resetKeypadsDice();
         board.deActivateMotion();
@@ -924,8 +934,30 @@ void BurgleBrosModel::triggerSilentAlarm(unsigned int floor)
     }
 }
 
-
-
+void BurgleBrosModel::handlePersianKittyMov(ActionOrigin playerId)
+{
+    BurgleBrosPlayer *p=getP2Player(playerId);
+    if(p->isItsTurn() && p->hasLoot(PERSIAN_KITTY) && board.canKittyMove(p->getPosition()) && dice.persianKittyShallMove())   
+    {
+        p->persianKittyEscaped();
+        loots.persianKittyEscaped();
+        pair<bool, CardLocation> persianKittyToken;
+        persianKittyToken.first = true;
+        persianKittyToken.second = board.getKittyMovingPos(p->getPosition());
+        tokens.placePersianKittyToken(persianKittyToken);
+        view->update(this);
+    }
+}
+void BurgleBrosModel::handleChihuahuaMove(ActionOrigin playerId)
+{
+    BurgleBrosPlayer *p=getP2Player(playerId);
+    if(p->isItsTurn() && p->hasLoot(CHIHUAHUA) && dice.chihuahuaBarks())
+    {
+        tokens.triggerAlarm(p->getPosition());
+        setGuardsNewPath(p->getPosition().floor);
+        view->update(this);
+    }
+}
 BurgleBrosModel::~BurgleBrosModel()
 {
 }

@@ -225,6 +225,11 @@ pair<bool, CardLocation> BurgleBrosTokens::getCrowToken()
 {
     return crowToken;
 }
+void BurgleBrosTokens::placePersianKittyToken(pair<bool, CardLocation> persianKittyToken)
+{
+    this->persianKitty=persianKittyToken;
+}
+
 BurgleBrosTokens::~BurgleBrosTokens()
 {
 }

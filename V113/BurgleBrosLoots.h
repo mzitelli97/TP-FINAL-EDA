@@ -27,6 +27,7 @@ public:
         bool isLootDrawn(Loot loot);
         bool isGoldBarOnFloor();
         void setGoldBardLocation(CardLocation safeLocation);
+        void persianKittyEscaped();
         bool canPlayerPickUpGoldBarOnFloor(ActionOrigin whichPlayer, CardLocation playerLocation);
         Loot pickGoldBarOnFloor(ActionOrigin owner);
         Loot getLoot(ActionOrigin owner); //Devuelve el loot que estaba en la cima de la pila y guarda en su info interna el loot que sac� y a que jugador le pertenece.
