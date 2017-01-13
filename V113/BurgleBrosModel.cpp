@@ -232,9 +232,11 @@ bool BurgleBrosModel::peek(ActionOrigin playerId, CardLocation locationToPeek)
             playerSpentFreeAction=true;
         else
             p->decActions();
+        if(board.getCardType(locationToPeek)==LAVATORY)
+            tokens.lavatoryRevealed(locationToPeek); 
         checkTurns();
         view->update(this);
-        retVal=true;
+        retVal=true;      
     }
     return retVal;  
 }
