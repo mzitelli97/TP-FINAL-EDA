@@ -731,9 +731,28 @@ void BurgleBrosModel::moveGuard(unsigned int floor)
     {
         stepsToMove--;
         targetReached = guards[floor].step();
-        if(guards[floor].getPosition() == myPlayer.getPosition())   //Si el guardia entra al tile del player, el mismo pierde una vida.
+        
+        if(guards[floor].getPosition() == myPlayer.getPosition() && board.getCardType(myPlayer.getPosition())==LAVATORY && tokens.isThereAStealthToken(myPlayer.getPosition()))
+        {
+            vector<string>msgToShow({LAVATORY_TEXT,USE_LAVATORY_TOKEN_TEXTB,USE_MY_STEALTH_TOKEN_TEXTB});
+            string userChoice = controller->askForSpentOK(msgToShow);
+            if(userChoice ==USE_MY_STEALTH_TOKEN_TEXTB)
+                myPlayer.decLives();
+            else if(userChoice ==USE_LAVATORY_TOKEN_TEXTB)
+                tokens.useLavatoryToken();
+        }
+        else if(guards[floor].getPosition() == myPlayer.getPosition())   //Si el guardia entra al tile del player, el mismo pierde una vida.
             myPlayer.decLives();
-        if(guards[floor].getPosition() == otherPlayer.getPosition())
+        if(guards[floor].getPosition() == otherPlayer.getPosition() && board.getCardType(otherPlayer.getPosition())==LAVATORY && tokens.isThereAStealthToken(otherPlayer.getPosition()))
+        {
+            vector<string>msgToShow({LAVATORY_TEXT,USE_LAVATORY_TOKEN_TEXTB,USE_MY_STEALTH_TOKEN_TEXTB});
+            string userChoice = controller->askForSpentOK(msgToShow);
+            if(userChoice ==USE_MY_STEALTH_TOKEN_TEXTB)
+                otherPlayer.decLives();
+            else if(userChoice ==USE_LAVATORY_TOKEN_TEXTB)
+                tokens.useLavatoryToken();
+        }
+        else if(guards[floor].getPosition() == otherPlayer.getPosition())
             otherPlayer.decLives();
         if(board.isCardVisible(guards[floor].getPosition()))
         {   /*Si el guardia se encuentra sobre un atrium, es visible y un jugador está arriba o debajo del guardia, ese jugador pierde una vida */
