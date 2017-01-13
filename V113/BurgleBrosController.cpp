@@ -64,16 +64,12 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
             vector<string> exitMsg={"Quit","Confirm quit", "You have pressed the quit button. Are you sure you wanna quit?"};
             Point aux={(double)p2MouseData->getX(), (double)p2MouseData->getY()};
             temp=view->itemFromClick(aux);
-            //location=view->point2Location(aux);
             CardLocation * auxLocation;
             ActionOrigin * auxPlayer;
             auxInfo * menuInfo;
-            CardLocation aux1 = {1,3,3};
             unsigned int * floor;
             switch(temp.type)
             {
-   /*For the other cases it may be necessary functions like point2Guard, point2Player, to recognize which
-    graphic item was clicked, ex., which of the guardCard(floor), which playerCard, which playerLoot, which button*/
                 case TILE_CLICK:
                     auxLocation = (CardLocation *)temp.info;
                     view->showMenu(modelPointer->getPosibleActions(modelPointer->getPlayerOnTurn(), *auxLocation), aux, *auxLocation);
@@ -114,6 +110,7 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                     }
                     break;
                 case PASS_BUTTON_CLICK:
+                    view->eraseMenu();
                     modelPointer->pass(modelPointer->getPlayerOnTurn());
                     break;
                 default:
