@@ -288,7 +288,11 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         if(movingPlayer->getCharacter()==THE_ACROBAT && locationToMove==guards[locationToMove.floor].getPosition())
             movingPlayer->setActions(movingPlayer->getcurrentActions()+1);
         
-        
+        //cambios segun loot
+        if(movingPlayer->hasLoot(GEMSTONE) && locationToMove==playerNotMoving->getPosition())
+            movingPlayer->decActions();
+        if(movingPlayer->hasLoot(TIARA) && board.adjacentCards(locationToMove,guards[locationToMove.floor].getPosition()))
+            movingPlayer->decLives();
         
         
         view->update(this);
@@ -381,7 +385,7 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         if( newCardType==MOTION)
             board.activateMotion();//hay que marcar que se entro en este turno y si sale en el mismo turno tiene que gastar un token o activar una alarma, en el proximo ya puede salir
          
-        if(newCardType==LASER)
+        if(newCardType==LASER && !movingPlayer->hasLoot(MIRROR))
         {   
             if( !(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_LASER)) && !(movingPlayer->getcurrentActions()) )
                 {tokens.triggerAlarm(locationToMove); setGuardsNewPath(locationToMove.floor);}
@@ -424,8 +428,10 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
         
         if( newCardType==SCANNER_DETECTOR && movingPlayer->carriesLoot())
             tokens.triggerAlarm(locationToMove);
-        if(newCardType==THERMO && movingPlayer->getcurrentActions()==0)
+        
+        if(newCardType==THERMO && ( movingPlayer->getcurrentActions()==0 || movingPlayer->hasLoot(ISOTOPE)))
             tokens.triggerAlarm(locationToMove);
+        
         if(newCardType==WALKAWAY && !cardWasVisible && locationToMove.floor>0)
         {   
             CardLocation downStairsLocation={locationToMove.floor-1,locationToMove.row,locationToMove.column};
