@@ -94,7 +94,13 @@ list<Info2DrawTokens> BurgleBrosModel::getInfo2DrawTokens()
         toPush.position=tokens.getCrowToken().second;
         retVal.push_back(toPush);
     }
-    
+    pair<bool, CardLocation> auxiliar= tokens.getPersianKittyToken();
+    if(auxiliar.first)
+    {
+        toPush.token=PERSIAN_KITTY_TOKEN;
+        toPush.position=auxiliar.second;
+        retVal.push_back(toPush);
+    }
     toPush.token=DOWNSTAIRS_TOKEN;
     for(vector<CardLocation>::iterator it=downstairsTokens.begin(); it!=downstairsTokens.end(); it++)
     {
