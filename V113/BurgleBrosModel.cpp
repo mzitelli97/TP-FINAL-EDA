@@ -723,7 +723,10 @@ void BurgleBrosModel::moveGuard(unsigned int floor)
         tokens.turnOffAlarm(guards[floor].getPosition());
         setGuardsNewPath(floor);
     }
-    
+    if(myPlayer.getCharacter()== THE_ACROBAT && myPlayer.getPosition() == guards[floor].getPosition())
+        myPlayer.decLives();
+    if(otherPlayer.getCharacter()== THE_ACROBAT && otherPlayer.getPosition() == guards[floor].getPosition())
+        otherPlayer.decLives();
     while(stepsToMove!=0)
     {
         stepsToMove--;
