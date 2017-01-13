@@ -564,6 +564,7 @@ void BurgleBrosModel::checkTurns()
         moveGuard(myPlayer.getPosition().floor);
         otherPlayer.setTurn(true);
         handlePersianKittyMov(OTHER_PLAYER_ACTION);
+        handleChihuahuaMove(OTHER_PLAYER_ACTION);
         playerSpentFreeAction=false;
         dice.resetKeypadsDice();
         board.deActivateMotion();
@@ -579,6 +580,7 @@ void BurgleBrosModel::checkTurns()
         moveGuard(otherPlayer.getPosition().floor);
         myPlayer.setTurn(true);
         handlePersianKittyMov(THIS_PLAYER_ACTION);
+        handleChihuahuaMove(THIS_PLAYER_ACTION);
         playerSpentFreeAction=false;
         dice.resetKeypadsDice();
         board.deActivateMotion();
@@ -868,7 +870,15 @@ void BurgleBrosModel::handlePersianKittyMov(ActionOrigin playerId)
         tokens.placePersianKittyToken(persianKittyToken);
     }
 }
-
+void BurgleBrosModel::handleChihuahuaMove(ActionOrigin playerId)
+{
+    BurgleBrosPlayer *p=getP2Player(playerId);
+    if(p->isItsTurn() && p->hasLoot(CHIHUAHUA) && dice.chihuahuaBarks())
+    {
+        tokens.triggerAlarm(p->getPosition());
+        setGuardsNewPath(p->getPosition().floor);
+    }
+}
 BurgleBrosModel::~BurgleBrosModel()
 {
 }
