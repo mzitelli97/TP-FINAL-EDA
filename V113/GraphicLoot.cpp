@@ -31,7 +31,6 @@ GraphicLoot::GraphicLoot(ALLEGRO_BITMAP * backImage)
     isVisible=false;
     image = backImage;
     this->owner = NON_PLAYER;
-    zoomed = false;
 }
 ItemInfo GraphicLoot::IAm()
 {
@@ -43,7 +42,7 @@ ItemInfo GraphicLoot::IAm()
 
 void GraphicLoot::setPosition(unsigned int quantity)
 {
-    if(zoomed)
+    if(zoomed && owner != NON_PLAYER)
     {
         width = CARD_WIDTH * 2;
         height = CARD_HEIGHT * 2;
