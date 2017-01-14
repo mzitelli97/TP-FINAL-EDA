@@ -547,6 +547,8 @@ bool BurgleBrosModel::askForLoot(ActionOrigin playerId, CardLocation tile, Loot 
         {    
             getP2Player(playerId)->attachLoot(loot);
             getP2OtherPlayer(playerId)->deattachLoot(loot);
+            loots.setNewLootOwner(loot,playerId);
+            view->update(this);
         }
     }
 }
@@ -562,6 +564,8 @@ bool BurgleBrosModel::offerLoot(ActionOrigin playerId, CardLocation tile, Loot l
         {    
             getP2OtherPlayer(playerId)->attachLoot(loot);
             getP2Player(playerId)->deattachLoot(loot);
+            loots.setNewLootOwner(loot,playerId==THIS_PLAYER_ACTION?OTHER_PLAYER_ACTION:THIS_PLAYER_ACTION);
+            view->update(this);
         }
     }
 }

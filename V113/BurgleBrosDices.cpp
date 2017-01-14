@@ -70,8 +70,10 @@ void BurgleBrosDices::addDieToKeypad(CardLocation keypadLocation)
 void BurgleBrosDices::addDieToSafe(unsigned int safeFloor)
 {
     if(diceForSafe[safeFloor] < MAX_NMBR_OF_EXTRA_DICES)
-    {   diceForSafe[safeFloor]++;
-        dice[diceForSafe[safeFloor]-1]= DIE_MIN_VAL;       //Para que aparezca en la pantalla
+    {   
+        diceForSafe[safeFloor]++;
+        for(int i = 0; i < diceForSafe[safeFloor]; i++)
+            dice[i]= DIE_MIN_VAL;       //Para que aparezca en la pantalla
         for(unsigned int i=diceForSafe[safeFloor]; i<MAX_NMBR_OF_EXTRA_DICES  ; i++)
             dice[i]=NO_DIE;
     }
