@@ -102,18 +102,52 @@ bool BurgleBrosLoots::canPlayerPickUpGoldBarOnFloor(ActionOrigin whichPlayer, Ca
     return retVal;
 }
 
-Loot BurgleBrosLoots::pickGoldBarOnFloor(ActionOrigin owner)
+Loot BurgleBrosLoots::pickGoldBarOnFloor(ActionOrigin owner, CardLocation playerLocation)
 {
-    unsigned int i;
-    for(i=0; i<currentLoots;i++)
+    if(canPlayerPickUpGoldBarOnFloor(owner,playerLocation))
     {
-        if(lootInfo[i].owner==NON_PLAYER)       //no checkea si es un gold bar, podria ser el persian kitty
-            break;
-    }
-    lootInfo[i].owner=owner;
-    goldBarOnFloor.first=false;
+        unsigned int i;
+        for(i=0; i<currentLoots;i++)
+        {
+            if(lootInfo[i].owner==NON_PLAYER && lootInfo[i].loot==GOLD_BAR)       
+                break;
+        }
+        lootInfo[i].owner=owner;
+        goldBarOnFloor.first=false;
+    }    
     return GOLD_BAR;
 }
+
+bool BurgleBrosLoots::canPlayerPickUpKitty(ActionOrigin whichPlayer, CardLocation playerLocation) 
+{
+    bool retVal=false;
+    if(persianKitty.first && playerLocation==persianKitty.second)
+        retVal=true;
+    return retVal;
+
+}
+
+Loot BurgleBrosLoots::pickUpKitty(ActionOrigin owner,CardLocation playerLocation) 
+{
+    if(canPlayerPickUpKitty(owner,playerLocation))
+    {
+        unsigned int i;
+        for(i=0; i<currentLoots;i++)
+        {
+            if(lootInfo[i].loot==PERSIAN_KITTY)       
+                break;
+        }
+        lootInfo[i].owner=owner;
+        persianKitty.first=false;
+    }    
+    return PERSIAN_KITTY;
+}
+
+
+
+
+
+
 
 void BurgleBrosLoots::setNewLootOwner(Loot loot, ActionOrigin playerId) 
 {
