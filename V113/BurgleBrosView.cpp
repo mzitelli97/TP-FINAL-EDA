@@ -517,7 +517,7 @@ void BurgleBrosView::showMenu(list<string> options, Point click, CardLocation ti
     int i = 0;
     for( it = options.begin(); it != options.end(); i++, it++)
     {
-        GraphicMenuItem * option_i = new GraphicMenuItem({click.x,click.y+i*20}, tile);
+        GraphicMenuItem * option_i = new GraphicMenuItem(click, tile, i);
         option_i->setOption(*it);
         option_i->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
         if(onZoom) option_i->toggleZoom();

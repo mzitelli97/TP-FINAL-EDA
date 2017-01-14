@@ -2,15 +2,18 @@
 
 #define WHITE al_map_rgb(255,255,255)
 #define BLACK al_map_rgb(0,0,0)
+#define MENU_ITEM_WIDTH 150.0
+#define MENU_ITEM_HEIGHT 20.0
 
-GraphicMenuItem::GraphicMenuItem(Point point, CardLocation tile)
+GraphicMenuItem::GraphicMenuItem(Point point, CardLocation tile, int number)
 {
 	min = point;
         this->properties.location = tile;
         font = al_load_font("fonts.ttf",10,0);
         //definir alto y ancho del cuadrado
-        width = 100;
-        height = 20;
+        width = MENU_ITEM_WIDTH;
+        height = MENU_ITEM_HEIGHT;
+        min.y += number * height;
         max.x = min.x + width;
         max.y = min.y + height;
 }

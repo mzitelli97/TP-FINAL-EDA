@@ -43,7 +43,6 @@ GraphicButton::GraphicButton(ALLEGRO_BITMAP * buttonImage,ALLEGRO_BITMAP * unMut
     this->image=buttonImage;
     this->image_2=unMuteimage;
     setScreenDimentions(width,height);
-    zoomed = false;
     switch(button)
     {
         case QUIT_BUTTON:

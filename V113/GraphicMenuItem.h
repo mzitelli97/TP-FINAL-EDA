@@ -13,7 +13,7 @@ typedef struct
 
 class GraphicMenuItem : public GraphicItem{
 public:
-    GraphicMenuItem(Point point, CardLocation tile);
+    GraphicMenuItem(Point point, CardLocation tile, int number);
     virtual ~GraphicMenuItem();
     void setOption(string option);
     virtual void draw();
