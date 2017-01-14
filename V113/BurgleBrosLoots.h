@@ -15,7 +15,7 @@ typedef enum{OTHER_PLAYER_ACTION, THIS_PLAYER_ACTION, NON_PLAYER} ActionOrigin;
 typedef struct
 {
 	Loot loot;
-	ActionOrigin owner;//no es BurgleBrosPlayer por problemas con includes, pero siempre desreferenciar a menos que sea null.
+	ActionOrigin owner;
 }Info2DrawLoot;
 
 class BurgleBrosLoots
