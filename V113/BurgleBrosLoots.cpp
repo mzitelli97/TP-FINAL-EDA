@@ -79,10 +79,7 @@ Loot BurgleBrosLoots::getLoot(ActionOrigin owner)
     currentLoots++;
     return aux;
 }
-bool BurgleBrosLoots::isGoldBarOnFloor()
-{
-    return goldBarOnFloor.first;
-}
+
 void BurgleBrosLoots::setGoldBardLocation(CardLocation safeLocation)
 {
     goldBarOnFloor.second=safeLocation;
@@ -117,15 +114,19 @@ Loot BurgleBrosLoots::pickGoldBarOnFloor(ActionOrigin owner)
     goldBarOnFloor.first=false;
     return GOLD_BAR;
 }
-void BurgleBrosLoots::persianKittyEscaped()
+
+void BurgleBrosLoots::setNewLootOwner(Loot loot, ActionOrigin playerId) 
 {
     unsigned int i;
     for(i=0; i<currentLoots;i++)
     {
-        if(lootInfo[i].loot==PERSIAN_KITTY)
+        if(lootInfo[i].loot==loot)
             break;
     }
-    lootInfo[i].owner=NON_PLAYER;
+    lootInfo[i].owner=playerId;
+    if(loot==PERSIAN_KITTY && playerId==NON_PLAYER)
+        persianKitty.first=true;
+    
 }
 
 

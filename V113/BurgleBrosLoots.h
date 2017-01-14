@@ -25,9 +25,8 @@ public:
 	Info2DrawLoot getLootInfo(unsigned int nmbrOfLoot);
 	unsigned int getCurrentLoots();
         bool isLootDrawn(Loot loot);
-        bool isGoldBarOnFloor();
         void setGoldBardLocation(CardLocation safeLocation);
-        void persianKittyEscaped();
+        void setNewLootOwner(Loot loot,ActionOrigin playerId);
         bool canPlayerPickUpGoldBarOnFloor(ActionOrigin whichPlayer, CardLocation playerLocation);
         Loot pickGoldBarOnFloor(ActionOrigin owner);
         Loot getLoot(ActionOrigin owner); //Devuelve el loot que estaba en la cima de la pila y guarda en su info interna el loot que sac� y a que jugador le pertenece.
@@ -38,7 +37,7 @@ private:
 	Info2DrawLoot lootInfo[MAX_LOOTS_IN_A_GAME];
         pair<bool,CardLocation> goldBarOnFloor;
 	unsigned int currentLoots;
-	CardLocation persianKittyLocation;
+	pair<bool,CardLocation> persianKitty;//bool=true si esta suelto
 };
 #endif
 
