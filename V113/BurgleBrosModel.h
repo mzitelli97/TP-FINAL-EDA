@@ -57,6 +57,7 @@ class BurgleBrosModel : public Model
         bool addDieToSafe(ActionOrigin playerId, CardLocation safe);
         bool createAlarm(ActionOrigin playerId, CardLocation tile);
         bool placeCrow(ActionOrigin playerId, CardLocation tile);
+        bool pickLoot(ActionOrigin playerId, CardLocation tile, Loot loot);
         bool askForLoot(ActionOrigin playerId, CardLocation tile, Loot loot);
         bool offerLoot(ActionOrigin playerId, CardLocation tile, Loot loot);
         bool isMovePosible(ActionOrigin playerId,CardLocation tileToMove);  //Pregunta si una movida es posible
@@ -66,7 +67,7 @@ class BurgleBrosModel : public Model
         bool isCrackSafePossible(ActionOrigin playerId, CardLocation safe);
         bool isCreateAlarmPossible(ActionOrigin playerId, CardLocation tile);
         bool isPlaceCrowPossible(ActionOrigin playerId, CardLocation tile);
-        bool isPickLootPossible(ActionOrigin playerId, CardLocation tile);
+        bool isPickLootPossible(ActionOrigin playerId, CardLocation tile, Loot loot);
         bool isAskForLootPossible(ActionOrigin playerId, CardLocation tile, Loot loot);
         bool isOfferLootPossible(ActionOrigin playerId, CardLocation tile, Loot loot);
         list<string> getPosibleActions(ActionOrigin player, CardLocation tile);   //Devuelve que acciones puede realizar el jugador indicado en esa tile

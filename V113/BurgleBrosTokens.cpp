@@ -65,6 +65,11 @@ list<CardLocation> BurgleBrosTokens::getCrackedCards()
 {
     return crackedCards;
 }
+bool BurgleBrosTokens::isThereAPersianKittyToken(CardLocation  location)
+{
+    return (persianKitty.first && persianKitty.second==location);
+}
+
 pair<CardLocation, unsigned int> BurgleBrosTokens::getStealthTokensOnFloor()
 {
     return stealthTokensOnFloor;
