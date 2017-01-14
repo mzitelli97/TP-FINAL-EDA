@@ -110,7 +110,7 @@ Loot BurgleBrosLoots::pickGoldBarOnFloor(ActionOrigin owner)
     unsigned int i;
     for(i=0; i<currentLoots;i++)
     {
-        if(lootInfo[i].owner==NON_PLAYER)
+        if(lootInfo[i].owner==NON_PLAYER)       //no checkea si es un gold bar, podria ser el persian kitty
             break;
     }
     lootInfo[i].owner=owner;

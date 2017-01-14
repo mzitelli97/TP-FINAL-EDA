@@ -76,15 +76,16 @@ void BurgleBrosPlayer::decActions()
     if(currentActions > 0)
         currentActions--;
 }
-void BurgleBrosPlayer::persianKittyEscaped()
+void BurgleBrosPlayer::deattachLoot(Loot loot)
 {
-    list<Loot>::iterator itToPKitty;
     for(list<Loot>::iterator it=lootCarried.begin(); it != lootCarried.end(); it++)
     {
-        if(*it == PERSIAN_KITTY)
-            itToPKitty=it;
+        if(*it == loot)
+        {
+            lootCarried.erase(it);
+            break;
+        }            
     }
-    lootCarried.erase(itToPKitty);
 }
 
 

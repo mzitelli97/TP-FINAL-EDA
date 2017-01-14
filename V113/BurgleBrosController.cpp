@@ -114,6 +114,8 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                     modelPointer->pass(modelPointer->getPlayerOnTurn());
                     break;
                 default:
+                    view->eraseMenu();
+                    view->update(modelPointer);
                     break;
             }
         }
@@ -167,7 +169,7 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
         modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,PAINTING);
     else if(action=="OFFER MIRROR")
         modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,MIRROR);
-    else if(action=="AOFFER KEYCARD")
+    else if(action=="OFFER KEYCARD")
         modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,KEYCARD);
     else if(action=="OFFER ISOTOPE")
         modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,ISOTOPE);

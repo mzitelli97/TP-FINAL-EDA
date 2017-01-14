@@ -546,10 +546,8 @@ bool BurgleBrosModel::askForLoot(ActionOrigin playerId, CardLocation tile, Loot 
         if(userChoice==ACCEPT_TEXTB)
         {    
             getP2Player(playerId)->attachLoot(loot);
-            //getP2OtherPlayer(playerId)->
+            getP2OtherPlayer(playerId)->deattachLoot(loot);
         }
-        //else if(userChoice==DECLINE_TEXTB)
-            //tokens.removeOneHackTokenOf(COMPUTER_ROOM_LASER);
     }
 }
 
@@ -563,10 +561,8 @@ bool BurgleBrosModel::offerLoot(ActionOrigin playerId, CardLocation tile, Loot l
         if(userChoice==ACCEPT_TEXTB)
         {    
             getP2OtherPlayer(playerId)->attachLoot(loot);
-            //getP2Player(playerId)->
+            getP2Player(playerId)->deattachLoot(loot);
         }
-        //else if(userChoice==DECLINE_TEXTB)
-            //tokens.removeOneHackTokenOf(COMPUTER_ROOM_LASER);
     }
 }
 
@@ -597,7 +593,7 @@ void BurgleBrosModel::checkTurns()
             myPlayer.setActions(INIT_NMBR_OF_LIVES-1);
         moveGuard(myPlayer.getPosition().floor);
         otherPlayer.setTurn(true);
-        handlePersianKittyMov(OTHER_PLAYER_ACTION);
+        handlePersianKittyMove(OTHER_PLAYER_ACTION);
         handleChihuahuaMove(OTHER_PLAYER_ACTION);
         playerSpentFreeAction=false;
         dice.resetKeypadsDice();
@@ -613,7 +609,7 @@ void BurgleBrosModel::checkTurns()
             otherPlayer.setActions(INIT_NMBR_OF_LIVES-1);
         moveGuard(otherPlayer.getPosition().floor);
         myPlayer.setTurn(true);
-        handlePersianKittyMov(THIS_PLAYER_ACTION);
+        handlePersianKittyMove(THIS_PLAYER_ACTION);
         handleChihuahuaMove(THIS_PLAYER_ACTION);
         playerSpentFreeAction=false;
         dice.resetKeypadsDice();
@@ -699,14 +695,13 @@ bool BurgleBrosModel::isAddDieToSafePossible(ActionOrigin player, CardLocation t
 bool BurgleBrosModel::isCrackSafePossible(ActionOrigin playerId, CardLocation safe)
 {
     bool retVal=false;
-    BurgleBrosPlayer* p;
-    p = getP2Player(playerId);
+    BurgleBrosPlayer* p = getP2Player(playerId);
     if(p->isItsTurn()&& board.getCardType(p->getPosition())==SAFE && p->getPosition()==safe)
     {
         if(board.canSafeBeCracked(safe.floor) && !board.isSafeCracked(safe.floor) && dice.getSafeDiceCount(safe.floor)!= 0)
         {
             retVal=true;
-            if(getP2OtherPlayer(playerId)->hasLoot(CURSED_GOBLET) && getP2OtherPlayer(playerId)->getPosition()!=safe)
+            if(getP2OtherPlayer(playerId)->hasLoot(KEYCARD) && getP2OtherPlayer(playerId)->getPosition()!=safe)
                 retVal=false;
         }  
     }
@@ -934,12 +929,12 @@ void BurgleBrosModel::triggerSilentAlarm(unsigned int floor)
     }
 }
 
-void BurgleBrosModel::handlePersianKittyMov(ActionOrigin playerId)
+void BurgleBrosModel::handlePersianKittyMove(ActionOrigin playerId)
 {
     BurgleBrosPlayer *p=getP2Player(playerId);
     if(p->isItsTurn() && p->hasLoot(PERSIAN_KITTY) && board.canKittyMove(p->getPosition()) && dice.persianKittyShallMove())   
     {
-        p->persianKittyEscaped();
+        p->deattachLoot(PERSIAN_KITTY);
         loots.persianKittyEscaped();
         pair<bool, CardLocation> persianKittyToken;
         persianKittyToken.first = true;

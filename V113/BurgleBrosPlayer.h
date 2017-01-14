@@ -44,7 +44,7 @@ public:
         void pickRandomPlayer(CharacterName exceptThis);
         list<Loot> getLootsCarried();
         void attachLoot(Loot loot);
-        void persianKittyEscaped();
+        void deattachLoot(Loot loot);
         void setName(string name);
         void decLives();
 	~BurgleBrosPlayer();
