@@ -702,9 +702,12 @@ bool BurgleBrosModel::isCrackSafePossible(ActionOrigin playerId, CardLocation sa
     BurgleBrosPlayer* p = getP2Player(playerId);
     if(p->isItsTurn()&& board.getCardType(p->getPosition())==SAFE && p->getPosition()==safe)
     {
-        if(board.canSafeBeCracked(safe.floor) && !board.isSafeCracked(safe.floor) && dice.getSafeDiceCount(safe.floor)!= 0)
+        if(board.canSafeBeCracked(safe.floor) && !board.isSafeCracked(safe.floor))
         {
-            retVal=true;
+            if(dice.getSafeDiceCount(safe.floor)!= 0)
+                retVal=true;
+            else if (p->getCharacter()==THE_PETERMAN && dice.getSafeDiceCount(safe.floor)==0)
+                retVal=true;
             if(getP2OtherPlayer(playerId)->hasLoot(KEYCARD) && getP2OtherPlayer(playerId)->getPosition()!=safe)
                 retVal=false;
         }  
