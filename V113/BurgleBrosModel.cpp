@@ -935,7 +935,7 @@ void BurgleBrosModel::handlePersianKittyMove(ActionOrigin playerId)
     if(p->isItsTurn() && p->hasLoot(PERSIAN_KITTY) && board.canKittyMove(p->getPosition()) && dice.persianKittyShallMove())   
     {
         p->deattachLoot(PERSIAN_KITTY);
-        loots.persianKittyEscaped();
+        loots.setNewLootOwner(PERSIAN_KITTY,NON_PLAYER);
         pair<bool, CardLocation> persianKittyToken;
         persianKittyToken.first = true;
         persianKittyToken.second = board.getKittyMovingPos(p->getPosition());
