@@ -114,23 +114,29 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     
     //creo una lista de Buttons
     list<GraphicItem* > auxButtons_list;
-    
+    GraphicButton *auxButton;
     for(int i = 0; i < BOARD_STANDARD_FLOORS; i++)
     {
-        GraphicButton *auxButton = new GraphicButton(imageLoader.getImageP(ZOOM_BUTTON), nullptr, ZOOM_BUTTON, al_get_display_width(display), al_get_display_height(display));
+        auxButton = new GraphicButton(imageLoader.getImageP(ZOOM_BUTTON), nullptr, ZOOM_BUTTON, al_get_display_width(display), al_get_display_height(display));
         auxButton->setZoomFloor(i);
         auxButton->setLocation();
         auxButtons_list.push_back(auxButton);
     }
-    GraphicButton *auxButton = new GraphicButton(imageLoader.getImageP(PASS_BUTTON), nullptr, PASS_BUTTON, al_get_display_width(display), al_get_display_height(display));
+    for(int i = (int)MUTE_BUTTON; i <= (int)QUIT_BUTTON; i++)
+    {
+        auxButton = new GraphicButton(imageLoader.getImageP((buttonAction)i), nullptr, (buttonAction)i, al_get_display_width(display), al_get_display_height(display));
+        auxButtons_list.push_back(auxButton);
+        if(i == (int)MUTE_BUTTON) i++;          //this is because there are the MUTE and the UNMUTE buttons
+    }
+    /*auxButton = new GraphicButton(imageLoader.getImageP(PASS_BUTTON), nullptr, PASS_BUTTON, al_get_display_width(display), al_get_display_height(display));
     auxButtons_list.push_back(auxButton);
     auxButton = new GraphicButton(imageLoader.getImageP(QUIT_BUTTON), nullptr, QUIT_BUTTON, al_get_display_width(display), al_get_display_height(display));
     auxButtons_list.push_back(auxButton);
     auxButton = new GraphicButton(imageLoader.getImageP(HELP_BUTTON), nullptr, HELP_BUTTON, al_get_display_width(display), al_get_display_height(display));
     auxButtons_list.push_back(auxButton);
     auxButton = new GraphicButton(imageLoader.getImageP(MUTE_BUTTON), nullptr, MUTE_BUTTON, al_get_display_width(display), al_get_display_height(display));
-    auxButtons_list.push_back(auxButton);
-    
+    auxButtons_list.push_back(auxButton);*/
+      
     //creo una lista de graphicCharacterscards
     list<GraphicItem* > auxCharactersCards_list;
     
@@ -558,17 +564,19 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
         wall->setLocation(infoWalls[i+NUMBER_OF_WALLS * floor].FrontCard, infoWalls[i+NUMBER_OF_WALLS * floor].RearCard);
     }
     
+    Info2DrawPlayer player = model->getInfo2DrawPlayer(model->getPlayerOnTurn());
     it = accessGraphicItems(FIRST_LAYER, BUTTONS_LIST);
-    advance(it, floor);
+    advance(it, floor);                                             //go to the zoom icon of the floor zoomed
     GraphicButton * button = dynamic_cast<GraphicButton *> (*it);
     button->toggleZoom();
     button->setLocation();
-    advance(it,BOARD_STANDARD_FLOORS-floor);
-    for(int i = 0; i < 4; i++, it++)
+    advance(it,BOARD_STANDARD_FLOORS-floor);                            //go to the rest of the buttons
+    for(int i = (int)MUTE_BUTTON; i <= (int)QUIT_BUTTON; i++, it++)
     {
         button = dynamic_cast<GraphicButton *> (*it);
         button->toggleZoom();
-    }
+        if(i == (int)MUTE_BUTTON) i++;         //this is because there are the MUTE and the UNMUTE buttons
+    }   
 }
 
 void BurgleBrosView::zoomLoot(ActionOrigin owner)
@@ -579,13 +587,17 @@ void BurgleBrosView::zoomLoot(ActionOrigin owner)
     lootZoomed = owner;
     playerZoomed = NON_PLAYER;
     list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) BUTTONS_LIST);
-    advance(it,BOARD_STANDARD_FLOORS+1);
+    advance(it,BOARD_STANDARD_FLOORS);      //the zoom buttons do not appear here
     GraphicButton * button;
-    for(int i = 0; i < 3; i++, it++)
+    for(int i = (int)MUTE_BUTTON; i <= (int)QUIT_BUTTON; i++, it++)
     {
-        button = dynamic_cast<GraphicButton *> (*it);
-        button->toggleZoom();
-    }
+        if( i != (int)PASS_BUTTON)      //the pass button do not appear here
+        {
+            button = dynamic_cast<GraphicButton *> (*it);
+            button->toggleZoom();
+            if(i == (int)MUTE_BUTTON) i++;         //this is because there are the MUTE and the UNMUTE buttons
+        }
+    }   
 }
 
 void BurgleBrosView::zoomPlayerCard(ActionOrigin player)
@@ -596,13 +608,17 @@ void BurgleBrosView::zoomPlayerCard(ActionOrigin player)
     lootZoomed = NON_PLAYER;
     playerZoomed = player;
     list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) BUTTONS_LIST);
-    advance(it,BOARD_STANDARD_FLOORS+1);
+    advance(it,BOARD_STANDARD_FLOORS);      //the zoom buttons do not appear here
     GraphicButton * button;
-    for(int i = 0; i < 3; i++, it++)
+    for(int i = (int)MUTE_BUTTON; i <= (int)QUIT_BUTTON; i++, it++)
     {
-        button = dynamic_cast<GraphicButton *> (*it);
-        button->toggleZoom();
-    }
+        if( i != (int)PASS_BUTTON)      //the pass button do not appear here
+        {
+            button = dynamic_cast<GraphicButton *> (*it);
+            button->toggleZoom();
+            if(i == (int)MUTE_BUTTON) i++;         //this is because there are the MUTE and the UNMUTE buttons
+        }
+    }   
 }
 
 void BurgleBrosView::zoomGuardDeck(unsigned int floor)
@@ -613,13 +629,17 @@ void BurgleBrosView::zoomGuardDeck(unsigned int floor)
     lootZoomed = NON_PLAYER;
     playerZoomed = NON_PLAYER;
     list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) BUTTONS_LIST);
-    advance(it,BOARD_STANDARD_FLOORS+1);
+    advance(it,BOARD_STANDARD_FLOORS);      //the zoom buttons do not appear here
     GraphicButton * button;
-    for(int i = 0; i < 3; i++, it++)
+    for(int i = (int)MUTE_BUTTON; i <= (int)QUIT_BUTTON; i++, it++)
     {
-        button = dynamic_cast<GraphicButton *> (*it);
-        button->toggleZoom();
-    }
+        if( i != (int)PASS_BUTTON)      //the pass button do not appear here
+        {
+            button = dynamic_cast<GraphicButton *> (*it);
+            button->toggleZoom();
+            if(i == (int)MUTE_BUTTON) i++;         //this is because there are the MUTE and the UNMUTE buttons
+        }
+    }   
 }
 
 

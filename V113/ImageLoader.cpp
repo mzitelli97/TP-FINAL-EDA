@@ -8,7 +8,7 @@ string button2Str(buttonAction _button)
     switch (_button)
     {
         case ZOOM_BUTTON: retVal = "Zoom"; break;
-        case FULLSCREEN_BUTTON: retVal = "Full screen"; break;
+        //case FULLSCREEN_BUTTON: retVal = "Full screen"; break;
         case MUTE_BUTTON: retVal = "Mute"; break;
         case UNMUTE_BUTTON: retVal = "Unmute"; break;
         case HELP_BUTTON: retVal = "Help"; break;

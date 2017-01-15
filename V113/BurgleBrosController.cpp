@@ -14,6 +14,7 @@
 #include "BurgleBrosController.h"
 #include "MouseED.h"
 #include "GraphicMenuItem.h"
+#include <algorithm>
 
 using namespace std;
 
@@ -87,7 +88,8 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                     break;
                 case GUARD_CARDS_CLICK:
                     floor = (unsigned int *)temp.info;
-                    cout<<*floor<<endl;
+                    //view->zoomGuardDeck(*floor);
+                    view->update(modelPointer);
                     break;
                 case CHAR_CARD_CLICK:
                     auxPlayer = (ActionOrigin *)temp.info;
@@ -141,7 +143,29 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
         modelPointer->createAlarm(modelPointer->getPlayerOnTurn(),location);
     else if(action=="PLACE CROW")
         modelPointer->placeCrow(modelPointer->getPlayerOnTurn(),location);
-    else if(action=="ASK FOR TIARA")
+    else
+    {
+        for(int i = (int)TIARA; i <= (int)GOLD_BAR; i++)
+        {
+            string ask = "ASK FOR ";
+            string offer = "OFFER ";
+            ask += loot2Str((Loot)i);
+            offer += loot2Str((Loot)i);
+            transform(ask.begin(), ask.end(), ask.begin(), ::toupper);
+            transform(offer.begin(), offer.end(), offer.begin(), ::toupper);
+            if(action==ask)
+            {
+                modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,(Loot)i);
+                break;
+            }
+            if(action==offer)
+            {
+                modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,(Loot)i);
+                break;
+            }
+        }
+    }
+    /*else if(action=="ASK FOR TIARA")
         modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,TIARA);
     else if(action=="ASK FOR PERSIAN KITTY")
         modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,PERSIAN_KITTY);
@@ -180,7 +204,7 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
     else if(action=="OFFER CHIHUAHUA")
         modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,CHIHUAHUA);
     else if(action=="OFFER GOLD BAR")
-        modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,GOLD_BAR);
+        modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,GOLD_BAR);*/
     
 }
 
