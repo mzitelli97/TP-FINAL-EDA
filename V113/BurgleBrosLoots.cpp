@@ -39,6 +39,7 @@ BurgleBrosLoots::BurgleBrosLoots()
         lootDeck.push_back((Loot) i);
     lootDeck.push_back(GOLD_BAR);  //Hay 2 barras de oro en el mazo.
     shuffleDeck();
+    lootDeck.front()=GOLD_BAR;
     goldBarOnFloor.first=false;
 }
 void BurgleBrosLoots::shuffleDeck()

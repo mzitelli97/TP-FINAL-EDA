@@ -790,9 +790,11 @@ bool BurgleBrosModel::isPickLootPossible(ActionOrigin playerId, CardLocation til
 {
     bool retVal = false;
     BurgleBrosPlayer * p = getP2Player(playerId);
-    if(p->isItsTurn() && tokens.isThereAPersianKittyToken(tile) || loots.canPlayerPickUpGoldBarOnFloor(playerId,tile))
+    if(p->isItsTurn() && p->getPosition()==tile)
     {
-        if(lootToPick == PERSIAN_KITTY || lootToPick == GOLD_BAR)
+        if(lootToPick == PERSIAN_KITTY && tokens.isThereAPersianKittyToken(tile))
+            retVal=true;
+        else if(lootToPick == GOLD_BAR && loots.canPlayerPickUpGoldBarOnFloor(playerId,tile))
             retVal=true;
     }
     return retVal;
