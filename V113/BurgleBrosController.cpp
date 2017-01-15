@@ -143,6 +143,10 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
         modelPointer->createAlarm(modelPointer->getPlayerOnTurn(),location);
     else if(action=="PLACE CROW")
         modelPointer->placeCrow(modelPointer->getPlayerOnTurn(),location);
+    else if(action=="PICK UP KITTY")
+        modelPointer->pickLoot(modelPointer->getPlayerOnTurn(), location, PERSIAN_KITTY);
+    else if(action=="PICK UP GOLD BAR")
+        modelPointer->pickLoot(modelPointer->getPlayerOnTurn(), location, GOLD_BAR);
     else
     {
         for(int i = (int)TIARA; i <= (int)GOLD_BAR; i++)
@@ -205,7 +209,6 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
         modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,CHIHUAHUA);
     else if(action=="OFFER GOLD BAR")
         modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,GOLD_BAR);*/
-    
 }
 
 BurgleBrosController::~BurgleBrosController() {

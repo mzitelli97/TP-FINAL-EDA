@@ -49,6 +49,7 @@ public:
     bool isThereAnAlarmToken(CardLocation location);
     bool isThereAStealthToken(CardLocation location);
     bool isThereACrowToken(CardLocation  location);
+    bool isThereAPersianKittyToken(CardLocation  location);
     void placePersianKittyToken(pair<bool, CardLocation> persianKittyToken);
     ~BurgleBrosTokens();
 private:

@@ -535,6 +535,30 @@ bool BurgleBrosModel::placeCrow(ActionOrigin playerId, CardLocation tile)
     }
     return retVal;
 }
+bool BurgleBrosModel::pickLoot(ActionOrigin playerId, CardLocation tile, Loot lootToPick)
+{
+    bool retVal=false;
+    BurgleBrosPlayer *p= getP2Player(playerId);
+    if(isPickLootPossible(playerId,tile, lootToPick))
+    {
+        if(lootToPick==PERSIAN_KITTY)          //Si es el persian kitty
+        {
+            pair<bool, CardLocation> kittyInfo;
+            kittyInfo.first= false;
+            tokens.placePersianKittyToken(kittyInfo);
+            loots.setNewLootOwner(PERSIAN_KITTY, playerId);
+            p->attachLoot(PERSIAN_KITTY);
+            retVal=true;
+        }
+        else if(lootToPick==GOLD_BAR)
+        {
+            loots.pickGoldBarOnFloor(playerId, tile);
+            p->attachLoot(GOLD_BAR);
+            retVal=true;
+        }
+    }
+    return retVal;
+}
 
 bool BurgleBrosModel::askForLoot(ActionOrigin playerId, CardLocation tile, Loot loot)
 {
@@ -702,9 +726,12 @@ bool BurgleBrosModel::isCrackSafePossible(ActionOrigin playerId, CardLocation sa
     BurgleBrosPlayer* p = getP2Player(playerId);
     if(p->isItsTurn()&& board.getCardType(p->getPosition())==SAFE && p->getPosition()==safe)
     {
-        if(board.canSafeBeCracked(safe.floor) && !board.isSafeCracked(safe.floor) && dice.getSafeDiceCount(safe.floor)!= 0)
+        if(board.canSafeBeCracked(safe.floor) && !board.isSafeCracked(safe.floor))
         {
-            retVal=true;
+            if(dice.getSafeDiceCount(safe.floor)!= 0)
+                retVal=true;
+            else if (p->getCharacter()==THE_PETERMAN && dice.getSafeDiceCount(safe.floor)==0)
+                retVal=true;
             if(getP2OtherPlayer(playerId)->hasLoot(KEYCARD) && getP2OtherPlayer(playerId)->getPosition()!=safe)
                 retVal=false;
         }  
@@ -759,7 +786,17 @@ bool BurgleBrosModel::isOfferLootPossible(ActionOrigin playerId, CardLocation ti
     }
     return retVal;
 }
-
+bool BurgleBrosModel::isPickLootPossible(ActionOrigin playerId, CardLocation tile , Loot lootToPick)
+{
+    bool retVal = false;
+    BurgleBrosPlayer * p = getP2Player(playerId);
+    if(p->isItsTurn() && tokens.isThereAPersianKittyToken(tile) || loots.canPlayerPickUpGoldBarOnFloor(playerId,tile))
+    {
+        if(lootToPick == PERSIAN_KITTY || lootToPick == GOLD_BAR)
+            retVal=true;
+    }
+    return retVal;
+}
 
 list<string> BurgleBrosModel::getPosibleActions(ActionOrigin player, CardLocation tile)
 {
@@ -791,6 +828,10 @@ list<string> BurgleBrosModel::getPosibleActions(ActionOrigin player, CardLocatio
         if(isOfferLootPossible(player,tile,(Loot)i))
             aux.push_back(offer);
     }
+    if(isPickLootPossible(player, tile,PERSIAN_KITTY))
+        aux.push_back("PICK UP KITTY");
+    if(isPickLootPossible(player, tile, GOLD_BAR))
+        aux.push_back("PICK UP GOLD BAR");
     return aux;
 }
  
