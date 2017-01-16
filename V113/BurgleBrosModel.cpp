@@ -32,7 +32,7 @@ BurgleBrosModel::BurgleBrosModel()
     myPlayer.setName("PEPE");
     otherPlayer.setTurn(false);
     otherPlayer.setName("COQUI");
-    
+    gameFinished=false;
     guards[0].init();
     list<CardLocation> path = board.getShortestPath(guards[0].getPosition(), guards[0].getTargetPosition());
     guards[0].setNewPathToTarget(path );
@@ -593,7 +593,22 @@ bool BurgleBrosModel::offerLoot(ActionOrigin playerId, CardLocation tile, Loot l
         }
     }
 }
-
+bool BurgleBrosModel::escape(ActionOrigin playerId, CardLocation stairTile)
+{
+    bool retVal=false;
+    BurgleBrosPlayer *p = getP2Player(playerId);
+    if(isEscapePossible(playerId,stairTile))
+    {   
+        while(p->getcurrentActions())
+            p->decActions();
+        p->getToDaChoppa(); 
+        view->update(this);
+        checkTurns();
+        view->update(this);
+        retVal=true;
+    }
+    return retVal;
+}
 
 bool BurgleBrosModel::GuardInCamera() 
 {
@@ -620,7 +635,10 @@ void BurgleBrosModel::checkTurns()
         if(myPlayer.hasLoot(MIRROR))
             myPlayer.setActions(INIT_NMBR_OF_LIVES-1);
         moveGuard(myPlayer.getPosition().floor);
-        otherPlayer.setTurn(true);
+        if(!otherPlayer.isOnHelicopter())
+            otherPlayer.setTurn(true);
+        else
+            myPlayer.setTurn(true);
         handlePersianKittyMove(OTHER_PLAYER_ACTION);
         handleChihuahuaMove(OTHER_PLAYER_ACTION);
         playerSpentFreeAction=false;
@@ -636,14 +654,33 @@ void BurgleBrosModel::checkTurns()
         if(otherPlayer.hasLoot(MIRROR))
             otherPlayer.setActions(INIT_NMBR_OF_LIVES-1);
         moveGuard(otherPlayer.getPosition().floor);
-        myPlayer.setTurn(true);
+        if(!myPlayer.isOnHelicopter())
+            myPlayer.setTurn(true);
+        else
+            otherPlayer.setTurn(true);
         handlePersianKittyMove(THIS_PLAYER_ACTION);
         handleChihuahuaMove(THIS_PLAYER_ACTION);
         playerSpentFreeAction=false;
         dice.resetKeypadsDice();
         board.deActivateMotion();
     }
+    checkIfWonOrLost();
 }
+
+void BurgleBrosModel::checkIfWonOrLost()
+{
+    if(myPlayer.isOnHelicopter() && otherPlayer.isOnHelicopter())
+    {
+        gameFinished=true;
+        finishMsg= "WON";
+    }
+    /*else if(myPlayer.getCurrLifes()==0 || otherPlayer.getCurrLifes()==0)
+    {
+        gameFinished=true;
+        finishMsg= "LOST";
+    }*/
+}
+
 
  bool BurgleBrosModel::isMovePosible(ActionOrigin playerId,CardLocation tileToMove)
  {
@@ -799,6 +836,22 @@ bool BurgleBrosModel::isPickLootPossible(ActionOrigin playerId, CardLocation til
     }
     return retVal;
 }
+bool BurgleBrosModel::isEscapePossible(ActionOrigin playerId, CardLocation tile)
+{
+    bool retVal = false;
+    BurgleBrosPlayer * p = getP2Player(playerId);
+    BurgleBrosPlayer * o = getP2OtherPlayer(playerId);
+    if(p->isItsTurn() && p->getPosition()==tile && board.getCardType(tile)==STAIR && tile.floor==2 && tokens.areAllSafesOpen())
+    {
+        if(!loots.areLootsOnFloor())    //Si no hay ningun loot en el piso, se puede escapar
+            retVal=true;
+        else if(p->hasLoot(GOLD_BAR) && !o->hasLoot(GOLD_BAR))  //Si el que se escapar tiene un gold bar y el otro no la agarró todavia, puede escapar.
+            retVal=true;
+        else if(!o->isOnHelicopter() && tokens.getPersianKittyToken().first)    //Si se quiere escapar, el persian kitty está en el piso, pero el otro jugador todavia no subio al heli, puede.
+            retVal=true;
+    }
+    return retVal;
+}
 
 list<string> BurgleBrosModel::getPosibleActions(ActionOrigin player, CardLocation tile)
 {
@@ -834,6 +887,8 @@ list<string> BurgleBrosModel::getPosibleActions(ActionOrigin player, CardLocatio
         aux.push_back("PICK UP KITTY");
     if(isPickLootPossible(player, tile, GOLD_BAR))
         aux.push_back("PICK UP GOLD BAR");
+    if(isEscapePossible(player,tile))
+        aux.push_back("ESCAPE");
     return aux;
 }
  

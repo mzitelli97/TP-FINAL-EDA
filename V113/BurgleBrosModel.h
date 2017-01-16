@@ -60,6 +60,7 @@ class BurgleBrosModel : public Model
         bool pickLoot(ActionOrigin playerId, CardLocation tile, Loot loot);
         bool askForLoot(ActionOrigin playerId, CardLocation tile, Loot loot);
         bool offerLoot(ActionOrigin playerId, CardLocation tile, Loot loot);
+        bool escape(ActionOrigin playerId, CardLocation stairTile);
         bool isMovePosible(ActionOrigin playerId,CardLocation tileToMove);  //Pregunta si una movida es posible
         bool isPeekPosible(ActionOrigin player, CardLocation tile);         //Pregunta si un peek es posible
         bool isAddTokenPosible(ActionOrigin player, CardLocation tile);
@@ -70,6 +71,7 @@ class BurgleBrosModel : public Model
         bool isPickLootPossible(ActionOrigin playerId, CardLocation tile, Loot loot);
         bool isAskForLootPossible(ActionOrigin playerId, CardLocation tile, Loot loot);
         bool isOfferLootPossible(ActionOrigin playerId, CardLocation tile, Loot loot);
+        bool isEscapePossible(ActionOrigin playerId, CardLocation tile);
         list<string> getPosibleActions(ActionOrigin player, CardLocation tile);   //Devuelve que acciones puede realizar el jugador indicado en esa tile
         void moveGuard(unsigned int floor);
         void attachView(View * view);
@@ -78,6 +80,7 @@ class BurgleBrosModel : public Model
 	~BurgleBrosModel();
     private:
         void checkTurns();
+        void checkIfWonOrLost();
         void handlePersianKittyMove(ActionOrigin playerId);
         void handleChihuahuaMove(ActionOrigin playerId);
         void triggerSilentAlarm(unsigned int floor);
@@ -96,6 +99,8 @@ class BurgleBrosModel : public Model
         View * view;
         Controller * controller;
         SoundManager * soundManager;
+        bool gameFinished;
+        string finishMsg; //Si el juego terminó indica como termino (por ejemplo WON, LOST o MODEL ERROR:"(errormsg)"
 };
 #endif
 

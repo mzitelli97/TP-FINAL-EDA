@@ -31,6 +31,7 @@ public:
         bool canPlayerPickUpKitty(ActionOrigin whichPlayer, CardLocation playerLocation);
         Loot pickGoldBarOnFloor(ActionOrigin owner,CardLocation playerLocation);
         Loot pickUpKitty(ActionOrigin owner,CardLocation playerLocation);
+        bool areLootsOnFloor();
         Loot getLoot(ActionOrigin owner); //Devuelve el loot que estaba en la cima de la pila y guarda en su info interna el loot que sac� y a que jugador le pertenece.
 	~BurgleBrosLoots();
 private:

@@ -39,6 +39,7 @@ public:
     void addCrackTokenOn(CardLocation location);
     void addCrackTokenOn(list<CardLocation> &location);
     bool isSafeOpened(unsigned int floor);
+    bool areAllSafesOpen();
     unsigned int howManyAlarmsOnFloor(unsigned int floor);       
     unsigned int howManyTokensOnCPURoom(CardName cpuRoom);
     void placeCrowToken(CardLocation location);

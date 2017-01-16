@@ -143,7 +143,16 @@ Loot BurgleBrosLoots::pickUpKitty(ActionOrigin owner,CardLocation playerLocation
     return PERSIAN_KITTY;
 }
 
-
+bool BurgleBrosLoots::areLootsOnFloor()
+{
+    bool retVal=false;
+    for(unsigned int i=0; i<currentLoots;i++)
+    {
+        if(lootInfo[i].owner==NON_PLAYER)
+            retVal=true;
+    }
+    return retVal;
+}
 
 
 

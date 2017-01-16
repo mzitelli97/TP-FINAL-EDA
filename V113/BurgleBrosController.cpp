@@ -147,6 +147,8 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
         modelPointer->pickLoot(modelPointer->getPlayerOnTurn(), location, PERSIAN_KITTY);
     else if(action=="PICK UP GOLD BAR")
         modelPointer->pickLoot(modelPointer->getPlayerOnTurn(), location, GOLD_BAR);
+    else if(action=="ESCAPE")
+        modelPointer->escape(modelPointer->getPlayerOnTurn(),location);
     else
     {
         for(int i = (int)TIARA; i <= (int)GOLD_BAR; i++)

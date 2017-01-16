@@ -62,6 +62,11 @@ CardLocation BurgleBrosPlayer::getPosition()
 {
     return position;
 }
+bool BurgleBrosPlayer::isOnHelicopter()
+{
+    return isOnTheHelicopter;
+}
+
 void BurgleBrosPlayer::setTurn(bool isPlayersTurn)
 {
     this->isPlayersTurn=isPlayersTurn;
