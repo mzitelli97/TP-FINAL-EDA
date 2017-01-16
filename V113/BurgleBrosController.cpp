@@ -73,7 +73,7 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
             {
                 case TILE_CLICK:
                     auxLocation = (CardLocation *)temp.info;
-                    view->showMenu(modelPointer->getPosibleActions(modelPointer->getPlayerOnTurn(), *auxLocation), aux, *auxLocation);
+                    view->showMenu(modelPointer->getPosibleActionsToTile(modelPointer->getPlayerOnTurn(), *auxLocation), aux, *auxLocation);
                     view->update(modelPointer);
                     break;
                 case MENU_ITEM_CLICK:
@@ -88,7 +88,7 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                     break;
                 case GUARD_CARDS_CLICK:
                     floor = (unsigned int *)temp.info;
-                    //view->zoomGuardDeck(*floor);
+                    view->showMenu(modelPointer->getPosibleActionsToGuard(modelPointer->getPlayerOnTurn(), *floor), aux, *floor);
                     view->update(modelPointer);
                     break;
                 case CHAR_CARD_CLICK:
@@ -147,6 +147,8 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
         modelPointer->pickLoot(modelPointer->getPlayerOnTurn(), location, GOLD_BAR);
     else if(action=="ESCAPE")
         modelPointer->escape(modelPointer->getPlayerOnTurn(),location);
+    else if(action=="PEEK TOP CARD")
+        modelPointer->peekGuardsCard(modelPointer->getPlayerOnTurn(),location.floor);
     else
     {
         for(int i = (int)TIARA; i <= (int)GOLD_BAR; i++)

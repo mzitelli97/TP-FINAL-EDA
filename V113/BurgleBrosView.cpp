@@ -443,6 +443,7 @@ void BurgleBrosView::updateGuards(BurgleBrosModel* model)
             guard_die->setNumber(imageLoader.getImageP(RED_DICE, info_guard.dieNumber));
 
             GraphicGuardCards * it_cards = dynamic_cast<GraphicGuardCards *> (*it);
+            it_cards->setTopOfNonVisibleDeck(info_guard.isTopOfNotShownDeckVisible, imageLoader.getImageP(info_guard.topOfNotShownDeck));
             it_cards->clearShownCards();
             while(!info_guard.shownDeck.empty())
             {         
@@ -519,6 +520,23 @@ void BurgleBrosView::showMenu(list<string> options, Point click, CardLocation ti
     list<list<GraphicItem *>>::iterator menu_items;
     menu_items = deleteList(THIRD_LAYER,(unsigned int) MENU_ITEM_LIST);
     
+    list<string>::iterator it;
+    int i = 0;
+    for( it = options.begin(); it != options.end(); i++, it++)
+    {
+        GraphicMenuItem * option_i = new GraphicMenuItem(click, tile, i);
+        option_i->setOption(*it);
+        option_i->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
+        if(onZoom) option_i->toggleZoom();
+        menu_items->push_back((GraphicItem *) option_i);
+    }
+}
+void BurgleBrosView::showMenu(list<string> options, Point click, unsigned int floor)
+{
+    list<list<GraphicItem *>>::iterator menu_items;
+    menu_items = deleteList(THIRD_LAYER,(unsigned int) MENU_ITEM_LIST);
+    CardLocation tile;
+    tile.floor=floor;
     list<string>::iterator it;
     int i = 0;
     for( it = options.begin(); it != options.end(); i++, it++)

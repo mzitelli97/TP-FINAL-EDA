@@ -185,6 +185,8 @@ Info2DrawGuard BurgleBrosModel::getInfo2DrawGuard(unsigned int floor)
         info.position=guards[floor].getPosition();
         info.shownDeck=guards[floor].getShownDeck();
         info.initialized=guards[floor].checkIfInitialized();
+        info.isTopOfNotShownDeckVisible=guards[floor].isTopOfNotShownDeckVisible();
+        info.topOfNotShownDeck=guards[floor].getTopCard();
     }
     return info;
 }
@@ -571,6 +573,30 @@ bool BurgleBrosModel::pickLoot(ActionOrigin playerId, CardLocation tile, Loot lo
     return retVal;
 }
 
+bool BurgleBrosModel::peekGuardsCard(ActionOrigin playerId, unsigned int guardsFloor)
+{
+    bool retVal = false;
+    if(isPeekGuardsCardPossible(playerId, guardsFloor))
+    {
+        guards[guardsFloor].setTopOfNotShownDeckVisible(true);      //Muestro la carta de arriba
+        view->update(this);
+        vector<string>msgToShow({SPOTTER_SPECIAL_ACTION_TEXT,SPOTTER_TOP,SPOTTER_BOTTOM});
+        string userChoice = controller->askForSpentOK(msgToShow);   //Le pregunto si la quiere arriba o abajo
+        if(userChoice==SPOTTER_TOP)
+        {
+            guards[guardsFloor].setTopOfNotShownDeckVisible(false); //Si la quería arriba no hago nada y dejo de mostrarla.
+        }
+        else
+        {
+            guards[guardsFloor].setTopOfNotShownDeckVisible(false);
+            guards[guardsFloor].pushTopCardToTheBottom();
+        }
+        
+        retVal=true;
+    }
+    return retVal;
+}
+
 bool BurgleBrosModel::askForLoot(ActionOrigin playerId, CardLocation tile, Loot loot)
 {
     bool retVal = false;
@@ -863,8 +889,16 @@ bool BurgleBrosModel::isEscapePossible(ActionOrigin playerId, CardLocation tile)
     }
     return retVal;
 }
+bool BurgleBrosModel::isPeekGuardsCardPossible(ActionOrigin playerId, unsigned int guardsFloor)
+{
+    bool retVal = false;
+    BurgleBrosPlayer * p = getP2Player(playerId);
+    if(p->isItsTurn() && p->getCharacter()== THE_SPOTTER && p->getPosition().floor == guardsFloor)
+        retVal=true;
+    return retVal;
+}
 
-list<string> BurgleBrosModel::getPosibleActions(ActionOrigin player, CardLocation tile)
+list<string> BurgleBrosModel::getPosibleActionsToTile(ActionOrigin player, CardLocation tile)
 {
     list<string> aux;
     if(isMovePosible(player, tile))
@@ -900,6 +934,13 @@ list<string> BurgleBrosModel::getPosibleActions(ActionOrigin player, CardLocatio
         aux.push_back("PICK UP GOLD BAR");
     if(isEscapePossible(player,tile))
         aux.push_back("ESCAPE");
+    return aux;
+}
+list<string> BurgleBrosModel::getPosibleActionsToGuard(ActionOrigin player, unsigned int guardsFloor)
+{
+    list<string> aux;
+    if(isPeekGuardsCardPossible(player, guardsFloor))
+        aux.push_back("PEEK TOP CARD");
     return aux;
 }
  

@@ -15,7 +15,8 @@ typedef struct{
     CardLocation diePosition;
     list<CardLocation> shownDeck;
     bool initialized;
-    
+    bool isTopOfNotShownDeckVisible;
+    CardLocation topOfNotShownDeck;
 }Info2DrawGuard;
 
 class BurgleBrosGuard
@@ -33,6 +34,9 @@ public:
 	CardLocation getTargetPosition();
         void init();
         void incDiceNumber();
+        bool isTopOfNotShownDeckVisible();
+        void pushTopCardToTheBottom();
+        void setTopOfNotShownDeckVisible(bool whichState);
         bool step();                                        //DESARROLLAR (devuelve 1 si llego al objetivo)
         void setNewTarget(CardLocation alarm);              //DESARROLLAR
         void setNewPathToTarget(list<CardLocation> &pathToTarget);   //DESARROLLAR
@@ -49,6 +53,7 @@ private:
 	
 	void shuffleDecks();
         bool initialized;
+        bool topOfNotShownDeckVisible;      //Indica si está visible la primer carta del mazo de las que no fueron mostradas ( para el special ability del spotter).
 	list<CardLocation> cardDeck;
 	list<CardLocation> shownDeck;
 	CardLocation currentTarget;

@@ -11,6 +11,7 @@ static void vector2List(vector<CardLocation> &vector, list<CardLocation> &list )
 BurgleBrosGuard::BurgleBrosGuard()
 {
     initialized=false;
+    topOfNotShownDeckVisible=false;
 }
 bool BurgleBrosGuard::step()
 {
@@ -45,9 +46,29 @@ BurgleBrosGuard::BurgleBrosGuard(unsigned int floor)
     initialized=false;
     initCardDeck();
     isGuardsTurn=false;
-    
+    topOfNotShownDeckVisible=false;
     diceNumber = 2+floor;
 }
+
+void BurgleBrosGuard::setTopOfNotShownDeckVisible(bool whichState)
+{
+    topOfNotShownDeckVisible=whichState;
+}
+bool BurgleBrosGuard::isTopOfNotShownDeckVisible()
+{
+    return topOfNotShownDeckVisible;
+}
+
+
+void BurgleBrosGuard::pushTopCardToTheBottom()
+{/*Si la carta estaba en el top del mazo ( posición cero) va hacia su nueva posición, que depende de con cuantas cartas estemos jugando:*/
+    unsigned int newPos = NUMBER_OF_CARDS_TO_PLAY-shownDeck.size(); //Por ejemplo si saqué 6 cartas, jugabamos con 10, su posición nueva va a ser la 4:
+    CardLocation topCard = cardDeck.front();
+    list<CardLocation>::iterator it=cardDeck.begin();
+    advance(it,newPos);
+    cardDeck.insert(it, topCard);
+    cardDeck.pop_front();
+}   
 
 void BurgleBrosGuard::init() 
 {
@@ -130,13 +151,23 @@ void BurgleBrosGuard::initCardDeck()
 
 CardLocation BurgleBrosGuard::drawCardTarget()
 {
-    if(shownDeck.size() == NUMBER_OF_CARDS_TO_PLAY) //Si ya usé todas las cartas con las que estoy jugando ( 10 para 2 personas) se baraja de vuelta.
-    {    initCardDeck();    incDiceNumber();    }
-    list<CardLocation>::iterator it = cardDeck.begin();
-    CardLocation aux = *it;
-    cardDeck.pop_front();
-    shownDeck.push_front(aux);
-    currentTarget = aux;
+    CardLocation aux;
+    if(shownDeck.size() == NUMBER_OF_CARDS_TO_PLAY-1) //Si me falta 1 para usar todas las cartas con las que estoy jugando ( 10 para 2 personas) se baraja de vuelta al sacar la primera
+    {    
+        aux=cardDeck.front();            //Guardo la primera.
+        initCardDeck();                             //Barajo de vuelta y saco esa carta que antes era la que quedaba.
+        drawCardTarget(aux);
+        currentTarget = aux;
+        incDiceNumber();    
+    }
+    else            //Sino, agarro la primera del cardDeck y se la pongo al shownDeck.
+    {
+        aux = cardDeck.front();
+        cardDeck.pop_front();
+        shownDeck.push_front(aux);
+        currentTarget = aux;
+    }
+    
     return aux;
 }
 bool BurgleBrosGuard::drawCardTarget(CardLocation targetCard)

@@ -21,6 +21,7 @@ GraphicGuardCards::GraphicGuardCards(ALLEGRO_BITMAP * image, unsigned int floor)
 {
     this->image = image;
     this->floor = floor;
+    topOfNonVisibleDeckShown=false;
 }
 
 GraphicGuardCards::GraphicGuardCards(const GraphicGuardCards& orig) {
@@ -46,7 +47,11 @@ void GraphicGuardCards::clearShownCards()
 {
     cards.clear();
 }
-
+void GraphicGuardCards::setTopOfNonVisibleDeck(bool visible, ALLEGRO_BITMAP *target)
+{
+    topOfNonVisibleDeckShown=visible;
+    topOfNonVisibleDeckTarget=target;
+}
 
 void GraphicGuardCards::draw()
 {
@@ -64,4 +69,7 @@ void GraphicGuardCards::draw()
     if(image != nullptr)
         al_draw_scaled_bitmap(image,0,0,al_get_bitmap_width(image),al_get_bitmap_width(image),
                 min.x - SEPARATION - CARD_WIDTH, min.y, width, height, 0);
+    if(topOfNonVisibleDeckShown && topOfNonVisibleDeckTarget !=NULL)
+        al_draw_scaled_bitmap(topOfNonVisibleDeckTarget,0,0,al_get_bitmap_width(topOfNonVisibleDeckTarget),al_get_bitmap_width(topOfNonVisibleDeckTarget),
+                min.x - (SEPARATION + CARD_WIDTH) / 2.0, min.y + CARD_HEIGHT / 2.0, width, height, 0);
 }

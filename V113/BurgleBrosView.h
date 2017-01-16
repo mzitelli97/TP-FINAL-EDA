@@ -41,6 +41,7 @@ public:
     virtual void update(Model * model);
     void ViewInit(BurgleBrosModel* model);
     void showMenu(list<string> options, Point click, CardLocation tile);
+    void showMenu(list<string> options, Point click, unsigned int floor);
     void eraseMenu();
     void zoomFloor(unsigned int floor, Model * auxModel);
     void zoomLoot(ActionOrigin owner);

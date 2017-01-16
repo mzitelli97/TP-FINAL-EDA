@@ -27,6 +27,7 @@ typedef struct{
 #define MOTION_TEXT                 "Alert",        "Confirm Action", "You are leaving an activated motion sensor. An alarm will be triggered unless you use a hack token"
 #define OFFER_LOOT_TEXT             "Loot Offer",   "Confirm Offer",  "The other player offers you the loot: "
 #define ASK_FOR_LOOT_TEXT           "Loot Request", "Confirm Request","The other player ask you for the loot: "
+#define SPOTTER_SPECIAL_ACTION_TEXT "Spotter guard peek", "Complete action", "You have spotted the top of the guard deck. Would you like to let it on the top or put it at the bottom?"
 #define ACCEPT_TEXTB "Accept"
 #define DECLINE_TEXTB "Decline"
 #define USE_LAVATORY_TOKEN_TEXTB "Use Lavatory stealth token"
@@ -36,6 +37,8 @@ typedef struct{
 #define SPEND_ACTION_TEXTB "Spend action"
 #define USE_HACK_TOKEN_TEXTB "Use hack token"
 #define TRIGGER_ALARM_TEXTB "Trigger alarm"
+#define SPOTTER_TOP         "Top"
+#define SPOTTER_BOTTOM      "Bottom"
 
 class BurgleBrosModel : public Model
 {
@@ -63,6 +66,7 @@ class BurgleBrosModel : public Model
         bool askForLoot(ActionOrigin playerId, CardLocation tile, Loot loot);
         bool offerLoot(ActionOrigin playerId, CardLocation tile, Loot loot);
         bool escape(ActionOrigin playerId, CardLocation stairTile);
+        bool peekGuardsCard(ActionOrigin playerId, unsigned int guardsFloor);
         bool isMovePosible(ActionOrigin playerId,CardLocation tileToMove);  //Pregunta si una movida es posible
         bool isPeekPosible(ActionOrigin player, CardLocation tile);         //Pregunta si un peek es posible
         bool isAddTokenPosible(ActionOrigin player, CardLocation tile);
@@ -74,7 +78,9 @@ class BurgleBrosModel : public Model
         bool isAskForLootPossible(ActionOrigin playerId, CardLocation tile, Loot loot);
         bool isOfferLootPossible(ActionOrigin playerId, CardLocation tile, Loot loot);
         bool isEscapePossible(ActionOrigin playerId, CardLocation tile);
-        list<string> getPosibleActions(ActionOrigin player, CardLocation tile);   //Devuelve que acciones puede realizar el jugador indicado en esa tile
+        bool isPeekGuardsCardPossible(ActionOrigin playerId, unsigned int guardsFloor);
+        list<string> getPosibleActionsToTile(ActionOrigin player, CardLocation tile);   //Devuelve que acciones puede realizar el jugador indicado en esa tile
+        list<string> getPosibleActionsToGuard(ActionOrigin player, unsigned int guardsFloor); 
         void moveGuard(unsigned int floor);
         void attachView(View * view);
         void attachController(Controller * controller);

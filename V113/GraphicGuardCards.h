@@ -26,11 +26,12 @@ public:
     void push_top_card(ALLEGRO_BITMAP * card);
     void clearShownCards();
     virtual void draw() override;
-
+    void setTopOfNonVisibleDeck(bool visible, ALLEGRO_BITMAP *target);
 private:
     list<ALLEGRO_BITMAP *> cards;
     unsigned int floor;
-
+    bool topOfNonVisibleDeckShown;
+    ALLEGRO_BITMAP * topOfNonVisibleDeckTarget;
 };
 
 #endif /* GRAPHICGUARDCARDS_H */
