@@ -214,6 +214,17 @@ ActionOrigin BurgleBrosModel::getPlayerOnTurn()
     else
         return OTHER_PLAYER_ACTION;
 }
+
+bool BurgleBrosModel::hasGameFinished()
+{
+    return gameFinished;
+}
+string BurgleBrosModel::getFinishMsg()
+{
+    return finishMsg;
+}
+
+
 bool BurgleBrosModel::pass(ActionOrigin playerId)
 {
     bool retVal=false;

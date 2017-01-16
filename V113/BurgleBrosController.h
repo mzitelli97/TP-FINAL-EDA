@@ -20,7 +20,7 @@
 
 typedef enum{USER_QUIT, GAME_WON}QuitCause;
 
-
+#define DEFAULT_WIN_MSG "WON!","You have won the game","Now that youve won the game, you can choose if either play again or quit.","Play again","Quit"
 
 class BurgleBrosController:public Controller {
 public:
@@ -34,6 +34,7 @@ public:
     virtual ~BurgleBrosController();
 private:
     void interpretAction(string action, CardLocation location);
+    void checkGameStatus();
     BurgleBrosModel *modelPointer;
     BurgleBrosView *view;
     bool gameIsOver;

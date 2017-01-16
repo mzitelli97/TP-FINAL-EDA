@@ -136,6 +136,7 @@ BurgleBrosPlayer::BurgleBrosPlayer()
     position.row=0;
     position.column=0;
     lives=INIT_NMBR_OF_LIVES;
+    isOnTheHelicopter=false;
 }
 
 BurgleBrosPlayer::~BurgleBrosPlayer()

@@ -49,6 +49,8 @@ class BurgleBrosModel : public Model
 	list<Info2DrawTokens> getInfo2DrawTokens();
         vector<unsigned int> getInfo2DrawExtraDices();
         ActionOrigin getPlayerOnTurn();
+        bool hasGameFinished();
+        string getFinishMsg();
         bool pass(ActionOrigin playerId);
         bool peek(ActionOrigin playerId, CardLocation locationToPeek);
         bool move(ActionOrigin playerId, CardLocation locationToMove);

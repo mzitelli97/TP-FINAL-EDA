@@ -122,9 +122,7 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
             }
         }
     }
-    
-    
-    
+    checkGameStatus();
 }
 void BurgleBrosController::interpretAction(string action, CardLocation location)
 {
@@ -212,6 +210,21 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
     else if(action=="OFFER GOLD BAR")
         modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,GOLD_BAR);*/
 }
+
+void BurgleBrosController::checkGameStatus()
+{
+    if(modelPointer->hasGameFinished())
+    {
+        string aux = modelPointer->getFinishMsg();
+        if(aux=="WON")
+        {
+            vector<string> auxmsg({DEFAULT_WIN_MSG});
+            while(1)
+                view->MessageBox(auxmsg);
+        }
+    }
+}
+
 
 BurgleBrosController::~BurgleBrosController() {
 }
