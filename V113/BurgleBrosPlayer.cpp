@@ -27,6 +27,7 @@ void BurgleBrosPlayer::getToDaChoppa()
 {
     isOnTheHelicopter=true;
     isOnTheBoard=false;
+    //position = {3,4,4}; this does not work, do something to dont show the player anymore
 }
 
 void BurgleBrosPlayer::setName(string name)

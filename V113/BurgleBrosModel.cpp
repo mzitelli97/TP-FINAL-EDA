@@ -591,7 +591,7 @@ bool BurgleBrosModel::peekGuardsCard(ActionOrigin playerId, unsigned int guardsF
             guards[guardsFloor].setTopOfNotShownDeckVisible(false);
             guards[guardsFloor].pushTopCardToTheBottom();
         }
-        
+        getP2Player(playerId)->decActions();
         retVal=true;
     }
     return retVal;

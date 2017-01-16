@@ -52,7 +52,7 @@ public:
     virtual void toggleZoom();
     virtual ItemInfo IAm() = 0;
 protected:
-    void logic2GraphicCardLocation(CardLocation location);
+    bool logic2GraphicCardLocation(CardLocation location);
     ALLEGRO_BITMAP * image;
     Point min;
     Point max;

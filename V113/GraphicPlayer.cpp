@@ -28,16 +28,17 @@ GraphicPlayer::GraphicPlayer(const GraphicPlayer& orig) {
 }
 void GraphicPlayer::setLocation(CardLocation location)
 {
-    logic2GraphicCardLocation(location);
-    
-    max.x = max.x - width/2;
-    min.y = min.y + height/4.5;
-    
-    
-    center.x= (min.x+max.x)/2;
-    center.y= (min.y+max.y)/2;
-    width = max.x-min.x;
-    height = max.y- min.y;
+    if(logic2GraphicCardLocation(location))
+    {
+        max.x = max.x - width/2;
+        min.y = min.y + height/4.5;
+
+
+        center.x= (min.x+max.x)/2;
+        center.y= (min.y+max.y)/2;
+        width = max.x-min.x;
+        height = max.y- min.y;
+    }
 }
 
 GraphicPlayer::~GraphicPlayer() {
