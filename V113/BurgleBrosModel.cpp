@@ -227,11 +227,11 @@ string BurgleBrosModel::getFinishMsg()
 }
 
 
-bool BurgleBrosModel::pass(PlayerId playerId)
+void BurgleBrosModel::pass(PlayerId playerId)
 {
-    bool retVal=false;
+    bool actionOk=false;
     BurgleBrosPlayer * p=getP2Player(playerId);
-    if(p->isItsTurn())
+    if(p->isItsTurn() && !gameFinished)
     {
         while(p->getcurrentActions())
             p->decActions();
@@ -239,14 +239,16 @@ bool BurgleBrosModel::pass(PlayerId playerId)
         {   tokens.triggerAlarm(p->getPosition()); setGuardsNewPath(p->getPosition().floor);}
         checkTurns();
         view->update(this);
+        actionOk=true;
     }
-    return retVal;
+    if(actionOk==false)
+    {   gameFinished=true; finishMsg = "ERROR: BBModel error: A pass action was called when it wasnt possible to do it!"; }
 }
-bool BurgleBrosModel::peek(PlayerId playerId, CardLocation locationToPeek)
+void BurgleBrosModel::peek(PlayerId playerId, CardLocation locationToPeek)
 {
-    bool retVal=false;
+    bool actionOk=false;
     BurgleBrosPlayer *p=getP2Player(playerId);
-    if(isPeekPosible(playerId, locationToPeek))
+    if(isPeekPosible(playerId, locationToPeek) && !gameFinished)
     {
         board.setCardVisible(locationToPeek);
         if(p->getCharacter() == THE_HAWK && playerSpentFreeAction==false && board.isAWallBetween(p->getPosition(), locationToPeek))
@@ -257,15 +259,16 @@ bool BurgleBrosModel::peek(PlayerId playerId, CardLocation locationToPeek)
             tokens.lavatoryRevealed(locationToPeek); 
         checkTurns();
         view->update(this);
-        retVal=true;      
+        actionOk=true;      
     }
-    return retVal;  
+    if(actionOk==false)
+    {   gameFinished=true; finishMsg = "ERROR: BBModel error :A peek action was called when it wasnt possible to do it!"; }
 }
-bool BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMove)
+void BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMove)
 {
-    bool retVal=false;
+    bool actionOk=false;
 
-    if(isMovePosible(playerId, locationToMove))
+    if(isMovePosible(playerId, locationToMove) && !gameFinished)
     {
         BurgleBrosPlayer* movingPlayer=getP2Player(playerId);
         BurgleBrosPlayer* playerNotMoving=getP2OtherPlayer(playerId);
@@ -461,13 +464,14 @@ bool BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMove)
 
         checkTurns();
         view->update(this);
-        retVal=true;
+        actionOk=true;
     }
-    return retVal;
+    if(actionOk==false)
+    {   gameFinished=true; finishMsg = "ERROR: BBModel error: A peek action was called when it wasnt possible to do it!"; }
 }
-bool BurgleBrosModel::addToken(PlayerId playerId, CardLocation locationToAddToken)
+void BurgleBrosModel::addToken(PlayerId playerId, CardLocation locationToAddToken)
 {
-    bool retVal=false;
+    bool actionOk=false;
     BurgleBrosPlayer* movingPlayer=getP2Player(playerId);
     if(isAddTokenPosible(playerId, locationToAddToken))
     {
@@ -475,30 +479,32 @@ bool BurgleBrosModel::addToken(PlayerId playerId, CardLocation locationToAddToke
         movingPlayer->decActions();
         checkTurns();
         view->update(this);
-        retVal=true;
+        actionOk=true;
     }
-    return retVal;
+    if(actionOk==false)
+    {   gameFinished=true; finishMsg = "ERROR: BBModel error: An add token action was called when it wasnt possible to do it!"; }
 }
-bool BurgleBrosModel::addDieToSafe(PlayerId playerId, CardLocation safe)
+void BurgleBrosModel::addDieToSafe(PlayerId playerId, CardLocation safe)
 {
-    bool retVal=false;
+    bool actionOk=false;
     BurgleBrosPlayer* p= getP2Player(playerId);
-    if(isAddDieToSafePossible(playerId, safe))
+    if(isAddDieToSafePossible(playerId, safe) && !gameFinished)
     {
         p->decActions();
         p->decActions();
         dice.addDieToSafe(safe.floor); 
         checkTurns();
         view->update(this);
-        retVal=true;
+        actionOk=true;
     }
-    return retVal;
+    if(actionOk==false)
+    {   gameFinished=true; finishMsg = "ERROR: BBModel error: An add die to safe action was called when it wasnt possible to do it!"; }
 }
-bool BurgleBrosModel::crackSafe(PlayerId playerId, CardLocation safe)
+void BurgleBrosModel::crackSafe(PlayerId playerId, CardLocation safe)
 {
-    bool retVal=false;
+    bool actionOk=false;
     BurgleBrosPlayer* p= getP2Player(playerId);
-    if(isCrackSafePossible(playerId,safe))
+    if(isCrackSafePossible(playerId,safe) && !gameFinished)
     {
         p->decActions();                //Cuesta una acción hacer un creack
         vector<unsigned int> aux;
@@ -521,38 +527,42 @@ bool BurgleBrosModel::crackSafe(PlayerId playerId, CardLocation safe)
         }
         view->update(this);
         checkTurns();
-        retVal=true;
+        actionOk=true;
     }
-    return retVal;        
+    if(actionOk==false)
+    {   gameFinished=true; finishMsg = "ERROR: BBModel error: A crack safe action was called when it wasnt possible to do it!"; }
 }
 
-bool BurgleBrosModel::createAlarm(PlayerId playerId, CardLocation tile)
+void BurgleBrosModel::createAlarm(PlayerId playerId, CardLocation tile)
 {
-    bool retVal=false;
-    if(isCreateAlarmPossible(playerId,tile))
+    bool actionOk=false;
+    if(isCreateAlarmPossible(playerId,tile) && !gameFinished)
     {
         playerSpentFreeAction=true;
         tokens.triggerAlarm(tile);
         setGuardsNewPath(tile.floor);
-        retVal=true;
+        actionOk=true;
     }
-    return retVal;
+    if(actionOk==false)
+    {   gameFinished=true; finishMsg = "ERROR: BBModel error: A create alarm action was called when it wasnt possible to do it!"; }
 }
-bool BurgleBrosModel::placeCrow(PlayerId playerId, CardLocation tile)
+void BurgleBrosModel::placeCrow(PlayerId playerId, CardLocation tile)
 {
-    bool retVal=false;
-    if(isPlaceCrowPossible(playerId,tile))
+    bool actionOk=false;
+    if(isPlaceCrowPossible(playerId,tile) && !gameFinished)
     {
         tokens.placeCrowToken(tile);
         playerSpentFreeAction=true;
+        actionOk=true;
     }
-    return retVal;
+    if(actionOk==false)
+    {   gameFinished=true; finishMsg = "ERROR: BBModel error: A place crow action was called when it wasnt possible to do it!"; }
 }
-bool BurgleBrosModel::pickLoot(PlayerId playerId, CardLocation tile, Loot lootToPick)
+void BurgleBrosModel::pickLoot(PlayerId playerId, CardLocation tile, Loot lootToPick)
 {
-    bool retVal=false;
+    bool actionOk=false;
     BurgleBrosPlayer *p= getP2Player(playerId);
-    if(isPickLootPossible(playerId,tile, lootToPick))
+    if(isPickLootPossible(playerId,tile, lootToPick) && !gameFinished)
     {
         if(lootToPick==PERSIAN_KITTY)          //Si es el persian kitty
         {
@@ -561,22 +571,23 @@ bool BurgleBrosModel::pickLoot(PlayerId playerId, CardLocation tile, Loot lootTo
             tokens.placePersianKittyToken(kittyInfo);
             loots.setNewLootOwner(PERSIAN_KITTY, playerId);
             p->attachLoot(PERSIAN_KITTY);
-            retVal=true;
+            actionOk=true;
         }
         else if(lootToPick==GOLD_BAR)
         {
             loots.pickGoldBarOnFloor(playerId, tile);
             p->attachLoot(GOLD_BAR);
-            retVal=true;
+            actionOk=true;
         }
     }
-    return retVal;
+    if(actionOk==false)
+    {   gameFinished=true; finishMsg = "ERROR: BBModel error: A pick loot action was called when it wasnt possible to do it!"; }
 }
 
-bool BurgleBrosModel::peekGuardsCard(PlayerId playerId, unsigned int guardsFloor)
+void BurgleBrosModel::peekGuardsCard(PlayerId playerId, unsigned int guardsFloor)
 {
-    bool retVal = false;
-    if(isPeekGuardsCardPossible(playerId, guardsFloor))
+    bool actionOk = false;
+    if(isPeekGuardsCardPossible(playerId, guardsFloor) && !gameFinished)
     {
         guards[guardsFloor].setTopOfNotShownDeckVisible(true);      //Muestro la carta de arriba
         view->update(this);
@@ -592,15 +603,16 @@ bool BurgleBrosModel::peekGuardsCard(PlayerId playerId, unsigned int guardsFloor
             guards[guardsFloor].pushTopCardToTheBottom();
         }
         getP2Player(playerId)->decActions();
-        retVal=true;
+        actionOk=true;
     }
-    return retVal;
+    if(actionOk==false)
+    {   gameFinished=true; finishMsg = "ERROR: BBModel error: A peek guards card action was called when it wasnt possible to do it!"; }
 }
 
-bool BurgleBrosModel::askForLoot(PlayerId playerId, CardLocation tile, Loot loot)
+void BurgleBrosModel::askForLoot(PlayerId playerId, CardLocation tile, Loot loot)
 {
-    bool retVal = false;
-    if(isAskForLootPossible(playerId,tile,loot))
+    bool actionOk = false;
+    if(isAskForLootPossible(playerId,tile,loot) && !gameFinished)
     {
         std::vector<string> msgToShow({ASK_FOR_LOOT_TEXT+loot2Str(loot),ACCEPT_TEXTB,DECLINE_TEXTB}); 
         string userChoice=controller->askForSpentOK(msgToShow);
@@ -611,13 +623,16 @@ bool BurgleBrosModel::askForLoot(PlayerId playerId, CardLocation tile, Loot loot
             loots.setNewLootOwner(loot,playerId);
             view->update(this);
         }
+        actionOk=true;
     }
+    if(actionOk==false)
+    {   gameFinished=true; finishMsg = "ERROR: BBModel error: An ask for loot action was called when it wasnt possible to do it!"; }
 }
 
-bool BurgleBrosModel::offerLoot(PlayerId playerId, CardLocation tile, Loot loot)
+void BurgleBrosModel::offerLoot(PlayerId playerId, CardLocation tile, Loot loot)
 {
-    bool retVal = false;
-    if(isOfferLootPossible(playerId,tile,loot))
+    bool actionOk = false;
+    if(isOfferLootPossible(playerId,tile,loot) && !gameFinished)
     {
         std::vector<string> msgToShow({OFFER_LOOT_TEXT+loot2Str(loot),ACCEPT_TEXTB,DECLINE_TEXTB}); 
         string userChoice=controller->askForSpentOK(msgToShow);
@@ -628,13 +643,16 @@ bool BurgleBrosModel::offerLoot(PlayerId playerId, CardLocation tile, Loot loot)
             loots.setNewLootOwner(loot,playerId==THIS_PLAYER?OTHER_PLAYER:THIS_PLAYER);
             view->update(this);
         }
+        actionOk=true;
     }
+    if(actionOk==false)
+    {   gameFinished=true; finishMsg = "ERROR: BBModel error: An offer loot action was called when it wasnt possible to do it!"; }
 }
-bool BurgleBrosModel::escape(PlayerId playerId, CardLocation stairTile)
+void BurgleBrosModel::escape(PlayerId playerId, CardLocation stairTile)
 {
-    bool retVal=false;
+    bool actionOk=false;
     BurgleBrosPlayer *p = getP2Player(playerId);
-    if(isEscapePossible(playerId,stairTile))
+    if(isEscapePossible(playerId,stairTile) && !gameFinished)
     {   
         while(p->getcurrentActions())
             p->decActions();
@@ -642,9 +660,10 @@ bool BurgleBrosModel::escape(PlayerId playerId, CardLocation stairTile)
         view->update(this);
         checkTurns();
         view->update(this);
-        retVal=true;
+        actionOk=true;
     }
-    return retVal;
+    if(actionOk==false)
+    {   gameFinished=true; finishMsg = "ERROR: BBModel error: An escape action was called when it wasnt possible to do it!"; }
 }
 
 bool BurgleBrosModel::GuardInCamera() 

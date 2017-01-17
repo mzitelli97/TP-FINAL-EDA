@@ -50,19 +50,19 @@ class BurgleBrosModel : public Model
 	list<Info2DrawTokens> getInfo2DrawTokens();
         vector<unsigned int> getInfo2DrawExtraDices();
         /* Acciones que se puede llamar públicamente*/
-        bool pass(PlayerId playerId);
-        bool peek(PlayerId playerId, CardLocation locationToPeek);
-        bool move(PlayerId playerId, CardLocation locationToMove);
-        bool addToken(PlayerId playerId, CardLocation locationToAddToken);
-        bool crackSafe(PlayerId playerId, CardLocation safe);
-        bool addDieToSafe(PlayerId playerId, CardLocation safe);
-        bool createAlarm(PlayerId playerId, CardLocation tile);
-        bool placeCrow(PlayerId playerId, CardLocation tile);
-        bool pickLoot(PlayerId playerId, CardLocation tile, Loot loot);
-        bool askForLoot(PlayerId playerId, CardLocation tile, Loot loot);
-        bool offerLoot(PlayerId playerId, CardLocation tile, Loot loot);
-        bool escape(PlayerId playerId, CardLocation stairTile);
-        bool peekGuardsCard(PlayerId playerId, unsigned int guardsFloor);
+        void pass(PlayerId playerId);
+        void peek(PlayerId playerId, CardLocation locationToPeek);
+        void move(PlayerId playerId, CardLocation locationToMove);
+        void addToken(PlayerId playerId, CardLocation locationToAddToken);
+        void crackSafe(PlayerId playerId, CardLocation safe);
+        void addDieToSafe(PlayerId playerId, CardLocation safe);
+        void createAlarm(PlayerId playerId, CardLocation tile);
+        void placeCrow(PlayerId playerId, CardLocation tile);
+        void pickLoot(PlayerId playerId, CardLocation tile, Loot loot);
+        void askForLoot(PlayerId playerId, CardLocation tile, Loot loot);
+        void offerLoot(PlayerId playerId, CardLocation tile, Loot loot);
+        void escape(PlayerId playerId, CardLocation stairTile);
+        void peekGuardsCard(PlayerId playerId, unsigned int guardsFloor);
         /*Prueba para ver si se pueden realizar ciertas acciones*/
         bool isMovePosible(PlayerId playerId,CardLocation tileToMove);  //Pregunta si una movida es posible
         bool isPeekPosible(PlayerId player, CardLocation tile);         //Pregunta si un peek es posible
