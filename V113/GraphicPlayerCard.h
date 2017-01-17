@@ -19,7 +19,7 @@
 
 class GraphicPlayerCard : public GraphicItem{
 public:
-    GraphicPlayerCard(ALLEGRO_BITMAP * image, ALLEGRO_BITMAP * stealthTokenImg,unsigned int lives, std::string name, ActionOrigin whichPlayer,unsigned int width,unsigned int height);
+    GraphicPlayerCard(ALLEGRO_BITMAP * image, ALLEGRO_BITMAP * stealthTokenImg,unsigned int lives, std::string name, PlayerId whichPlayer,unsigned int width,unsigned int height);
     void setLivesAndActions(unsigned int livesNumber,unsigned int actions);
     void setFont(ALLEGRO_FONT * font);
     void setTurn(bool turn);
@@ -35,7 +35,7 @@ private:
     Point namePos;
     string name;
     ALLEGRO_BITMAP * stealthToken; 
-    ActionOrigin whichPlayer;
+    PlayerId whichPlayer;
     ALLEGRO_FONT * font;
 };
 

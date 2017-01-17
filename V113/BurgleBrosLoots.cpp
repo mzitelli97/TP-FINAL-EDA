@@ -55,7 +55,7 @@ bool BurgleBrosLoots::isLootDrawn(Loot loot)
     }
     return retVal;
 }
-Loot BurgleBrosLoots::getLoot(ActionOrigin owner)
+Loot BurgleBrosLoots::getLoot(PlayerId owner)
 {
     Loot aux=lootDeck[0];
     lootDeck.erase(lootDeck.begin());
@@ -84,13 +84,13 @@ void BurgleBrosLoots::setGoldBardLocation(CardLocation safeLocation)
 {
     goldBarOnFloor.second=safeLocation;
 }
-bool BurgleBrosLoots::canPlayerPickUpGoldBarOnFloor(ActionOrigin whichPlayer, CardLocation playerLocation)
+bool BurgleBrosLoots::canPlayerPickUpGoldBarOnFloor(PlayerId whichPlayer, CardLocation playerLocation)
 {
     bool retVal=false;
     if(goldBarOnFloor.first)        //Si hay una gold bar en el piso
     {
         unsigned int i;
-        ActionOrigin playerWhoAlreadyCarriesAGoldBar;
+        PlayerId playerWhoAlreadyCarriesAGoldBar;
         for(i=0; i<currentLoots;i++)
         {
             if(lootInfo[i].loot==GOLD_BAR && lootInfo[i].owner != NON_PLAYER)
@@ -102,7 +102,7 @@ bool BurgleBrosLoots::canPlayerPickUpGoldBarOnFloor(ActionOrigin whichPlayer, Ca
     return retVal;
 }
 
-Loot BurgleBrosLoots::pickGoldBarOnFloor(ActionOrigin owner, CardLocation playerLocation)
+Loot BurgleBrosLoots::pickGoldBarOnFloor(PlayerId owner, CardLocation playerLocation)
 {
     if(canPlayerPickUpGoldBarOnFloor(owner,playerLocation))
     {
@@ -118,7 +118,7 @@ Loot BurgleBrosLoots::pickGoldBarOnFloor(ActionOrigin owner, CardLocation player
     return GOLD_BAR;
 }
 
-bool BurgleBrosLoots::canPlayerPickUpKitty(ActionOrigin whichPlayer, CardLocation playerLocation) 
+bool BurgleBrosLoots::canPlayerPickUpKitty(PlayerId whichPlayer, CardLocation playerLocation) 
 {
     bool retVal=false;
     if(persianKitty.first && playerLocation==persianKitty.second)
@@ -127,7 +127,7 @@ bool BurgleBrosLoots::canPlayerPickUpKitty(ActionOrigin whichPlayer, CardLocatio
 
 }
 
-Loot BurgleBrosLoots::pickUpKitty(ActionOrigin owner,CardLocation playerLocation) 
+Loot BurgleBrosLoots::pickUpKitty(PlayerId owner,CardLocation playerLocation) 
 {
     if(canPlayerPickUpKitty(owner,playerLocation))
     {
@@ -158,7 +158,7 @@ bool BurgleBrosLoots::areLootsOnFloor()
 
 
 
-void BurgleBrosLoots::setNewLootOwner(Loot loot, ActionOrigin playerId) 
+void BurgleBrosLoots::setNewLootOwner(Loot loot, PlayerId playerId) 
 {
     unsigned int i;
     for(i=0; i<currentLoots;i++)

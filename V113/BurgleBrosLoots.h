@@ -11,11 +11,11 @@ typedef enum { TIARA = 0x30, PERSIAN_KITTY, PAINTING, MIRROR, KEYCARD, ISOTOPE, 
 #define MAX_LOOTS_IN_A_GAME 4
 using namespace std;
 string loot2Str(Loot loot);
-typedef enum{OTHER_PLAYER_ACTION, THIS_PLAYER_ACTION, NON_PLAYER} ActionOrigin;
+typedef enum{THIS_PLAYER, OTHER_PLAYER, NON_PLAYER} PlayerId;
 typedef struct
 {
 	Loot loot;
-	ActionOrigin owner;
+	PlayerId owner;
 }Info2DrawLoot;
 
 class BurgleBrosLoots
@@ -26,13 +26,13 @@ public:
 	unsigned int getCurrentLoots();
         bool isLootDrawn(Loot loot);
         void setGoldBardLocation(CardLocation safeLocation);
-        void setNewLootOwner(Loot loot,ActionOrigin playerId);
-        bool canPlayerPickUpGoldBarOnFloor(ActionOrigin whichPlayer, CardLocation playerLocation);
-        bool canPlayerPickUpKitty(ActionOrigin whichPlayer, CardLocation playerLocation);
-        Loot pickGoldBarOnFloor(ActionOrigin owner,CardLocation playerLocation);
-        Loot pickUpKitty(ActionOrigin owner,CardLocation playerLocation);
+        void setNewLootOwner(Loot loot,PlayerId playerId);
+        bool canPlayerPickUpGoldBarOnFloor(PlayerId whichPlayer, CardLocation playerLocation);
+        bool canPlayerPickUpKitty(PlayerId whichPlayer, CardLocation playerLocation);
+        Loot pickGoldBarOnFloor(PlayerId owner,CardLocation playerLocation);
+        Loot pickUpKitty(PlayerId owner,CardLocation playerLocation);
         bool areLootsOnFloor();
-        Loot getLoot(ActionOrigin owner); //Devuelve el loot que estaba en la cima de la pila y guarda en su info interna el loot que sac� y a que jugador le pertenece.
+        Loot getLoot(PlayerId owner); //Devuelve el loot que estaba en la cima de la pila y guarda en su info interna el loot que sac� y a que jugador le pertenece.
 	~BurgleBrosLoots();
 private:
 	void shuffleDeck();

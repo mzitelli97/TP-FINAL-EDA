@@ -25,7 +25,7 @@
 #define RADIX (totalWidth/270.0)
 #define GREEN (al_map_rgb(0,150,0))
 
-GraphicPlayerCard::GraphicPlayerCard(ALLEGRO_BITMAP * image, ALLEGRO_BITMAP * stealthTokenImg, unsigned int lives, std::string name, ActionOrigin whichPlayer,unsigned int width,unsigned int height)
+GraphicPlayerCard::GraphicPlayerCard(ALLEGRO_BITMAP * image, ALLEGRO_BITMAP * stealthTokenImg, unsigned int lives, std::string name, PlayerId whichPlayer,unsigned int width,unsigned int height)
 {
     this->image=image;
     this->lives=lives;
@@ -55,7 +55,7 @@ void GraphicPlayerCard::setPosition()
     {
         width = CARD_WIDTH;
         height = CARD_HEIGHT;
-        if(whichPlayer == THIS_PLAYER_ACTION)
+        if(whichPlayer == THIS_PLAYER)
             min.x = STEALTH_TOKEN_WIDTH;
         else 
             min.x = totalWidth - STEALTH_TOKEN_WIDTH - width;
@@ -86,7 +86,7 @@ void GraphicPlayerCard::draw()
                 min.x,min.y,width,height,0);
     if(turn)
         al_draw_rounded_rectangle(min.x,min.y,max.x,max.y,RADIX,RADIX,GREEN,5.0);
-    if(whichPlayer==THIS_PLAYER_ACTION)
+    if(whichPlayer==THIS_PLAYER)
     {
         for(unsigned int i=0; i <(lives-1); i++)
             al_draw_scaled_bitmap(stealthToken,0,0,al_get_bitmap_width(stealthToken),al_get_bitmap_height(stealthToken),

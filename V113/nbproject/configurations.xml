@@ -32,20 +32,20 @@
         <itemPath>GraphicTile.h</itemPath>
         <itemPath>GraphicToken.h</itemPath>
         <itemPath>GraphicWall.h</itemPath>
+        <itemPath>ImageLoader.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="Networking" projectFiles="true">
         <itemPath>NetworkInterface.h</itemPath>
         <itemPath>Networking.h</itemPath>
+        <itemPath>StrNmbrFieldToArray.h</itemPath>
       </logicalFolder>
       <itemPath>Controller.h</itemPath>
       <itemPath>EventData.h</itemPath>
       <itemPath>GUI.h</itemPath>
-      <itemPath>ImageLoader.h</itemPath>
       <itemPath>LibsInit.h</itemPath>
       <itemPath>Model.h</itemPath>
       <itemPath>MouseED.h</itemPath>
       <itemPath>SoundManager.h</itemPath>
-      <itemPath>StrNmbrFieldToArray.h</itemPath>
       <itemPath>View.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -87,18 +87,18 @@
         <itemPath>GraphicTile.cpp</itemPath>
         <itemPath>GraphicToken.cpp</itemPath>
         <itemPath>GraphicWall.cpp</itemPath>
+        <itemPath>ImageLoader.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="Networking" projectFiles="true">
         <itemPath>NetworkInterface.cpp</itemPath>
         <itemPath>Networking.cpp</itemPath>
+        <itemPath>StrNmbrFieldToArray.cpp</itemPath>
       </logicalFolder>
       <itemPath>Controller.cpp</itemPath>
       <itemPath>GUI.cpp</itemPath>
-      <itemPath>ImageLoader.cpp</itemPath>
       <itemPath>LibsInit.cpp</itemPath>
       <itemPath>Model.cpp</itemPath>
       <itemPath>SoundManager.cpp</itemPath>
-      <itemPath>StrNmbrFieldToArray.cpp</itemPath>
       <itemPath>View.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>

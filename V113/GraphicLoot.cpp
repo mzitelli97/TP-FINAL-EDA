@@ -20,7 +20,7 @@
 
 
 
-GraphicLoot::GraphicLoot(ActionOrigin owner, ALLEGRO_BITMAP * image) 
+GraphicLoot::GraphicLoot(PlayerId owner, ALLEGRO_BITMAP * image) 
 {
     this->image = image;
     this->owner = owner;
@@ -53,9 +53,9 @@ void GraphicLoot::setPosition(unsigned int quantity)
     {
         width = CARD_WIDTH;
         height = CARD_HEIGHT;
-        if(owner == THIS_PLAYER_ACTION)
+        if(owner == THIS_PLAYER)
             min.x = 4 * SPACE_X + width + quantity * width/2;
-        else if (owner == OTHER_PLAYER_ACTION)
+        else if (owner == OTHER_PLAYER)
             min.x = totalWidth - SPACE_X * 4 - width * 2 - quantity * width/2;
         else min.x = 4 * SPACE_X + 3 * width + width/10.0;
         min.y = totalHeight - SPACE_Y - height;
@@ -65,11 +65,11 @@ void GraphicLoot::setPosition(unsigned int quantity)
     max.y = min.y + height;
 
 }
-ActionOrigin GraphicLoot::getOwner()
+PlayerId GraphicLoot::getOwner()
 {
     return owner;
 }
-void GraphicLoot::setOwner(ActionOrigin owner)
+void GraphicLoot::setOwner(PlayerId owner)
 {
     this->owner=owner;
 }

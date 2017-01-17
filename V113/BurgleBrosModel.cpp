@@ -190,7 +190,7 @@ Info2DrawGuard BurgleBrosModel::getInfo2DrawGuard(unsigned int floor)
     }
     return info;
 }
-Info2DrawPlayer BurgleBrosModel:: getInfo2DrawPlayer(ActionOrigin player)
+Info2DrawPlayer BurgleBrosModel:: getInfo2DrawPlayer(PlayerId player)
 {
     Info2DrawPlayer info;
     BurgleBrosPlayer * p = getP2Player(player);
@@ -209,12 +209,12 @@ vector<unsigned int> BurgleBrosModel::getInfo2DrawExtraDices()
     return dice.getCurrDice();
 }
 
-ActionOrigin BurgleBrosModel::getPlayerOnTurn()
+PlayerId BurgleBrosModel::getPlayerOnTurn()
 {
     if(myPlayer.isItsTurn())
-        return THIS_PLAYER_ACTION;
+        return THIS_PLAYER;
     else
-        return OTHER_PLAYER_ACTION;
+        return OTHER_PLAYER;
 }
 
 bool BurgleBrosModel::hasGameFinished()
@@ -227,7 +227,7 @@ string BurgleBrosModel::getFinishMsg()
 }
 
 
-bool BurgleBrosModel::pass(ActionOrigin playerId)
+bool BurgleBrosModel::pass(PlayerId playerId)
 {
     bool retVal=false;
     BurgleBrosPlayer * p=getP2Player(playerId);
@@ -242,7 +242,7 @@ bool BurgleBrosModel::pass(ActionOrigin playerId)
     }
     return retVal;
 }
-bool BurgleBrosModel::peek(ActionOrigin playerId, CardLocation locationToPeek)
+bool BurgleBrosModel::peek(PlayerId playerId, CardLocation locationToPeek)
 {
     bool retVal=false;
     BurgleBrosPlayer *p=getP2Player(playerId);
@@ -261,7 +261,7 @@ bool BurgleBrosModel::peek(ActionOrigin playerId, CardLocation locationToPeek)
     }
     return retVal;  
 }
-bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
+bool BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMove)
 {
     bool retVal=false;
 
@@ -465,7 +465,7 @@ bool BurgleBrosModel::move(ActionOrigin playerId, CardLocation locationToMove)
     }
     return retVal;
 }
-bool BurgleBrosModel::addToken(ActionOrigin playerId, CardLocation locationToAddToken)
+bool BurgleBrosModel::addToken(PlayerId playerId, CardLocation locationToAddToken)
 {
     bool retVal=false;
     BurgleBrosPlayer* movingPlayer=getP2Player(playerId);
@@ -479,7 +479,7 @@ bool BurgleBrosModel::addToken(ActionOrigin playerId, CardLocation locationToAdd
     }
     return retVal;
 }
-bool BurgleBrosModel::addDieToSafe(ActionOrigin playerId, CardLocation safe)
+bool BurgleBrosModel::addDieToSafe(PlayerId playerId, CardLocation safe)
 {
     bool retVal=false;
     BurgleBrosPlayer* p= getP2Player(playerId);
@@ -494,7 +494,7 @@ bool BurgleBrosModel::addDieToSafe(ActionOrigin playerId, CardLocation safe)
     }
     return retVal;
 }
-bool BurgleBrosModel::crackSafe(ActionOrigin playerId, CardLocation safe)
+bool BurgleBrosModel::crackSafe(PlayerId playerId, CardLocation safe)
 {
     bool retVal=false;
     BurgleBrosPlayer* p= getP2Player(playerId);
@@ -526,7 +526,7 @@ bool BurgleBrosModel::crackSafe(ActionOrigin playerId, CardLocation safe)
     return retVal;        
 }
 
-bool BurgleBrosModel::createAlarm(ActionOrigin playerId, CardLocation tile)
+bool BurgleBrosModel::createAlarm(PlayerId playerId, CardLocation tile)
 {
     bool retVal=false;
     if(isCreateAlarmPossible(playerId,tile))
@@ -538,7 +538,7 @@ bool BurgleBrosModel::createAlarm(ActionOrigin playerId, CardLocation tile)
     }
     return retVal;
 }
-bool BurgleBrosModel::placeCrow(ActionOrigin playerId, CardLocation tile)
+bool BurgleBrosModel::placeCrow(PlayerId playerId, CardLocation tile)
 {
     bool retVal=false;
     if(isPlaceCrowPossible(playerId,tile))
@@ -548,7 +548,7 @@ bool BurgleBrosModel::placeCrow(ActionOrigin playerId, CardLocation tile)
     }
     return retVal;
 }
-bool BurgleBrosModel::pickLoot(ActionOrigin playerId, CardLocation tile, Loot lootToPick)
+bool BurgleBrosModel::pickLoot(PlayerId playerId, CardLocation tile, Loot lootToPick)
 {
     bool retVal=false;
     BurgleBrosPlayer *p= getP2Player(playerId);
@@ -573,7 +573,7 @@ bool BurgleBrosModel::pickLoot(ActionOrigin playerId, CardLocation tile, Loot lo
     return retVal;
 }
 
-bool BurgleBrosModel::peekGuardsCard(ActionOrigin playerId, unsigned int guardsFloor)
+bool BurgleBrosModel::peekGuardsCard(PlayerId playerId, unsigned int guardsFloor)
 {
     bool retVal = false;
     if(isPeekGuardsCardPossible(playerId, guardsFloor))
@@ -597,7 +597,7 @@ bool BurgleBrosModel::peekGuardsCard(ActionOrigin playerId, unsigned int guardsF
     return retVal;
 }
 
-bool BurgleBrosModel::askForLoot(ActionOrigin playerId, CardLocation tile, Loot loot)
+bool BurgleBrosModel::askForLoot(PlayerId playerId, CardLocation tile, Loot loot)
 {
     bool retVal = false;
     if(isAskForLootPossible(playerId,tile,loot))
@@ -614,7 +614,7 @@ bool BurgleBrosModel::askForLoot(ActionOrigin playerId, CardLocation tile, Loot 
     }
 }
 
-bool BurgleBrosModel::offerLoot(ActionOrigin playerId, CardLocation tile, Loot loot)
+bool BurgleBrosModel::offerLoot(PlayerId playerId, CardLocation tile, Loot loot)
 {
     bool retVal = false;
     if(isOfferLootPossible(playerId,tile,loot))
@@ -625,12 +625,12 @@ bool BurgleBrosModel::offerLoot(ActionOrigin playerId, CardLocation tile, Loot l
         {    
             getP2OtherPlayer(playerId)->attachLoot(loot);
             getP2Player(playerId)->deattachLoot(loot);
-            loots.setNewLootOwner(loot,playerId==THIS_PLAYER_ACTION?OTHER_PLAYER_ACTION:THIS_PLAYER_ACTION);
+            loots.setNewLootOwner(loot,playerId==THIS_PLAYER?OTHER_PLAYER:THIS_PLAYER);
             view->update(this);
         }
     }
 }
-bool BurgleBrosModel::escape(ActionOrigin playerId, CardLocation stairTile)
+bool BurgleBrosModel::escape(PlayerId playerId, CardLocation stairTile)
 {
     bool retVal=false;
     BurgleBrosPlayer *p = getP2Player(playerId);
@@ -676,8 +676,8 @@ void BurgleBrosModel::checkTurns()
             otherPlayer.setTurn(true);
         else
             myPlayer.setTurn(true);
-        handlePersianKittyMove(OTHER_PLAYER_ACTION);
-        handleChihuahuaMove(OTHER_PLAYER_ACTION);
+        handlePersianKittyMove(OTHER_PLAYER);
+        handleChihuahuaMove(OTHER_PLAYER);
         playerSpentFreeAction=false;
         dice.resetKeypadsDice();
         board.deActivateMotion();
@@ -695,8 +695,8 @@ void BurgleBrosModel::checkTurns()
             myPlayer.setTurn(true);
         else
             otherPlayer.setTurn(true);
-        handlePersianKittyMove(THIS_PLAYER_ACTION);
-        handleChihuahuaMove(THIS_PLAYER_ACTION);
+        handlePersianKittyMove(THIS_PLAYER);
+        handleChihuahuaMove(THIS_PLAYER);
         playerSpentFreeAction=false;
         dice.resetKeypadsDice();
         board.deActivateMotion();
@@ -719,7 +719,7 @@ void BurgleBrosModel::checkIfWonOrLost()
 }
 
 
- bool BurgleBrosModel::isMovePosible(ActionOrigin playerId,CardLocation tileToMove)
+ bool BurgleBrosModel::isMovePosible(PlayerId playerId,CardLocation tileToMove)
  {
      BurgleBrosPlayer * playerMoving = getP2Player(playerId);
      CardLocation playerMovingPos= playerMoving->getPosition();
@@ -753,7 +753,7 @@ void BurgleBrosModel::checkIfWonOrLost()
      }
      return retVal;
  }
- bool BurgleBrosModel:: isPeekPosible(ActionOrigin player, CardLocation tile)
+ bool BurgleBrosModel:: isPeekPosible(PlayerId player, CardLocation tile)
 {
     bool retVal=false;
     BurgleBrosPlayer* p=getP2Player(player);
@@ -770,7 +770,7 @@ void BurgleBrosModel::checkIfWonOrLost()
     }
     return retVal;
 }
-bool BurgleBrosModel::isAddTokenPosible(ActionOrigin player, CardLocation tile)
+bool BurgleBrosModel::isAddTokenPosible(PlayerId player, CardLocation tile)
 {
     bool retVal=false;
     BurgleBrosPlayer* p;
@@ -782,7 +782,7 @@ bool BurgleBrosModel::isAddTokenPosible(ActionOrigin player, CardLocation tile)
     }
     return retVal;
 }
-bool BurgleBrosModel::isAddDieToSafePossible(ActionOrigin player, CardLocation tile)
+bool BurgleBrosModel::isAddDieToSafePossible(PlayerId player, CardLocation tile)
 {
     bool retVal=false;
     BurgleBrosPlayer* p;
@@ -794,7 +794,7 @@ bool BurgleBrosModel::isAddDieToSafePossible(ActionOrigin player, CardLocation t
     }
     return retVal;
 }
-bool BurgleBrosModel::isCrackSafePossible(ActionOrigin playerId, CardLocation safe)
+bool BurgleBrosModel::isCrackSafePossible(PlayerId playerId, CardLocation safe)
 {
     bool retVal=false;
     BurgleBrosPlayer* p = getP2Player(playerId);
@@ -812,7 +812,7 @@ bool BurgleBrosModel::isCrackSafePossible(ActionOrigin playerId, CardLocation sa
     }
     return retVal;
 }
-bool BurgleBrosModel::isCreateAlarmPossible(ActionOrigin playerId, CardLocation tile)
+bool BurgleBrosModel::isCreateAlarmPossible(PlayerId playerId, CardLocation tile)
 {
     bool retVal=false;
     BurgleBrosPlayer* p=getP2Player(playerId);
@@ -820,7 +820,7 @@ bool BurgleBrosModel::isCreateAlarmPossible(ActionOrigin playerId, CardLocation 
         retVal=true;
     return retVal;
 }
-bool BurgleBrosModel::isPlaceCrowPossible(ActionOrigin playerId, CardLocation tile)
+bool BurgleBrosModel::isPlaceCrowPossible(PlayerId playerId, CardLocation tile)
 {
     bool retVal=false;
     BurgleBrosPlayer* p=getP2Player(playerId);
@@ -833,7 +833,7 @@ bool BurgleBrosModel::isPlaceCrowPossible(ActionOrigin playerId, CardLocation ti
     return retVal;
 }
 
-bool BurgleBrosModel::isAskForLootPossible(ActionOrigin playerId, CardLocation tile, Loot loot)
+bool BurgleBrosModel::isAskForLootPossible(PlayerId playerId, CardLocation tile, Loot loot)
 {
     bool retVal = false;
     BurgleBrosPlayer * p = getP2Player(playerId);
@@ -847,7 +847,7 @@ bool BurgleBrosModel::isAskForLootPossible(ActionOrigin playerId, CardLocation t
     return retVal;
 }
 
-bool BurgleBrosModel::isOfferLootPossible(ActionOrigin playerId, CardLocation tile, Loot loot)
+bool BurgleBrosModel::isOfferLootPossible(PlayerId playerId, CardLocation tile, Loot loot)
 {
     bool retVal = false;
     BurgleBrosPlayer * p = getP2Player(playerId);
@@ -860,7 +860,7 @@ bool BurgleBrosModel::isOfferLootPossible(ActionOrigin playerId, CardLocation ti
     }
     return retVal;
 }
-bool BurgleBrosModel::isPickLootPossible(ActionOrigin playerId, CardLocation tile , Loot lootToPick)
+bool BurgleBrosModel::isPickLootPossible(PlayerId playerId, CardLocation tile , Loot lootToPick)
 {
     bool retVal = false;
     BurgleBrosPlayer * p = getP2Player(playerId);
@@ -873,7 +873,7 @@ bool BurgleBrosModel::isPickLootPossible(ActionOrigin playerId, CardLocation til
     }
     return retVal;
 }
-bool BurgleBrosModel::isEscapePossible(ActionOrigin playerId, CardLocation tile)
+bool BurgleBrosModel::isEscapePossible(PlayerId playerId, CardLocation tile)
 {
     bool retVal = false;
     BurgleBrosPlayer * p = getP2Player(playerId);
@@ -889,7 +889,7 @@ bool BurgleBrosModel::isEscapePossible(ActionOrigin playerId, CardLocation tile)
     }
     return retVal;
 }
-bool BurgleBrosModel::isPeekGuardsCardPossible(ActionOrigin playerId, unsigned int guardsFloor)
+bool BurgleBrosModel::isPeekGuardsCardPossible(PlayerId playerId, unsigned int guardsFloor)
 {
     bool retVal = false;
     BurgleBrosPlayer * p = getP2Player(playerId);
@@ -898,7 +898,7 @@ bool BurgleBrosModel::isPeekGuardsCardPossible(ActionOrigin playerId, unsigned i
     return retVal;
 }
 
-list<string> BurgleBrosModel::getPosibleActionsToTile(ActionOrigin player, CardLocation tile)
+list<string> BurgleBrosModel::getPosibleActionsToTile(PlayerId player, CardLocation tile)
 {
     list<string> aux;
     if(isMovePosible(player, tile))
@@ -936,7 +936,7 @@ list<string> BurgleBrosModel::getPosibleActionsToTile(ActionOrigin player, CardL
         aux.push_back("ESCAPE");
     return aux;
 }
-list<string> BurgleBrosModel::getPosibleActionsToGuard(ActionOrigin player, unsigned int guardsFloor)
+list<string> BurgleBrosModel::getPosibleActionsToGuard(PlayerId player, unsigned int guardsFloor)
 {
     list<string> aux;
     if(isPeekGuardsCardPossible(player, guardsFloor))
@@ -944,16 +944,16 @@ list<string> BurgleBrosModel::getPosibleActionsToGuard(ActionOrigin player, unsi
     return aux;
 }
  
-BurgleBrosPlayer * BurgleBrosModel::getP2Player(ActionOrigin playerId)
+BurgleBrosPlayer * BurgleBrosModel::getP2Player(PlayerId playerId)
 {
-    if(playerId==THIS_PLAYER_ACTION)
+    if(playerId==THIS_PLAYER)
         return &myPlayer;
     else
         return &otherPlayer;
 }
-BurgleBrosPlayer * BurgleBrosModel::getP2OtherPlayer(ActionOrigin playerId)
+BurgleBrosPlayer * BurgleBrosModel::getP2OtherPlayer(PlayerId playerId)
 {
-    if(playerId==THIS_PLAYER_ACTION)
+    if(playerId==THIS_PLAYER)
         return &otherPlayer;
     else
         return &myPlayer;
@@ -1083,7 +1083,7 @@ void BurgleBrosModel::triggerSilentAlarm(unsigned int floor)
     }
 }
 
-void BurgleBrosModel::handlePersianKittyMove(ActionOrigin playerId)
+void BurgleBrosModel::handlePersianKittyMove(PlayerId playerId)
 {
     BurgleBrosPlayer *p=getP2Player(playerId);
     if(p->isItsTurn() && p->hasLoot(PERSIAN_KITTY) && board.canKittyMove(p->getPosition()) && dice.persianKittyShallMove())   
@@ -1097,7 +1097,7 @@ void BurgleBrosModel::handlePersianKittyMove(ActionOrigin playerId)
         view->update(this);
     }
 }
-void BurgleBrosModel::handleChihuahuaMove(ActionOrigin playerId)
+void BurgleBrosModel::handleChihuahuaMove(PlayerId playerId)
 {
     BurgleBrosPlayer *p=getP2Player(playerId);
     if(p->isItsTurn() && p->hasLoot(CHIHUAHUA) && dice.chihuahuaBarks())

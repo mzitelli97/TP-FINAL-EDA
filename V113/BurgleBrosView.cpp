@@ -83,8 +83,8 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
         infoGuard[i] = model->getInfo2DrawGuard(i);
     }
     list<Info2DrawLoot> infoLoot= model-> getInfo2DrawLoot();
-    Info2DrawPlayer infoThisPlayer= model->getInfo2DrawPlayer(THIS_PLAYER_ACTION);
-    Info2DrawPlayer infoOtherPlayer= model->getInfo2DrawPlayer(OTHER_PLAYER_ACTION);
+    Info2DrawPlayer infoThisPlayer= model->getInfo2DrawPlayer(THIS_PLAYER);
+    Info2DrawPlayer infoOtherPlayer= model->getInfo2DrawPlayer(OTHER_PLAYER);
     list<Info2DrawTokens> infoTokens= model->getInfo2DrawTokens();
     vector<wall> infoWalls = model->getInfo2DrawWalls();
     
@@ -140,8 +140,8 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     //creo una lista de graphicCharacterscards
     list<GraphicItem* > auxCharactersCards_list;
     
-    GraphicPlayerCard *auxCharactersCardsThis_element=new GraphicPlayerCard(imageLoader.getImageP(infoThisPlayer.character,true),imageLoader.getImageP(STEALTH_TOKEN), infoThisPlayer.lives,infoThisPlayer.name, THIS_PLAYER_ACTION,al_get_display_width(display),al_get_display_height(display)); // con true devuelve la carta
-    GraphicPlayerCard *auxCharactersCardsOther_element=new GraphicPlayerCard(imageLoader.getImageP(infoOtherPlayer.character,true),imageLoader.getImageP(STEALTH_TOKEN), infoOtherPlayer.lives,infoOtherPlayer.name, OTHER_PLAYER_ACTION,al_get_display_width(display),al_get_display_height(display)); // con true devuelve la carta
+    GraphicPlayerCard *auxCharactersCardsThis_element=new GraphicPlayerCard(imageLoader.getImageP(infoThisPlayer.character,true),imageLoader.getImageP(STEALTH_TOKEN), infoThisPlayer.lives,infoThisPlayer.name, THIS_PLAYER,al_get_display_width(display),al_get_display_height(display)); // con true devuelve la carta
+    GraphicPlayerCard *auxCharactersCardsOther_element=new GraphicPlayerCard(imageLoader.getImageP(infoOtherPlayer.character,true),imageLoader.getImageP(STEALTH_TOKEN), infoOtherPlayer.lives,infoOtherPlayer.name, OTHER_PLAYER,al_get_display_width(display),al_get_display_height(display)); // con true devuelve la carta
     auxCharactersCardsThis_element->setFont(actionsFont);
     auxCharactersCardsOther_element->setFont(actionsFont);
     auxCharactersCardsThis_element->setTurn(infoThisPlayer.turn);
@@ -341,7 +341,7 @@ void BurgleBrosView::updateTokens(BurgleBrosModel* model)
 void BurgleBrosView::updateLoots(BurgleBrosModel * model)
 {
     list<Info2DrawLoot> aux = model->getInfo2DrawLoot();
-    map<ActionOrigin, unsigned int> lootsCount;
+    map<PlayerId, unsigned int> lootsCount;
        
     list<list<GraphicItem *>>::iterator itemsList = deleteList(FIRST_LAYER, LOOT_SHOW_LIST);
     for(list<Info2DrawLoot>::iterator newInfo = aux.begin() ; newInfo!= aux.end(); newInfo++)
@@ -366,7 +366,7 @@ void BurgleBrosView::updateButtons(BurgleBrosModel *model)
 void BurgleBrosView::updateCharacters(BurgleBrosModel *model) {
     list<GraphicItem*>::iterator it = accessGraphicItems(SECOND_LAYER, PLAYER_INFO_LIST);
     //First Player
-    Info2DrawPlayer player = model->getInfo2DrawPlayer(THIS_PLAYER_ACTION);
+    Info2DrawPlayer player = model->getInfo2DrawPlayer(THIS_PLAYER);
     GraphicPlayer* gPlayer = dynamic_cast<GraphicPlayer*> (*it); //ASUMI QUE EL PRIMERO ES THIS_PLAYER
     if(gPlayer!=NULL)//VER EL ORDEN DE LAS COSAS, DEBERIA ANDAR IGUAL
     {
@@ -375,7 +375,7 @@ void BurgleBrosView::updateCharacters(BurgleBrosModel *model) {
         gPlayer->setLocation(player.position);
     }
     //Second Player
-    player = model->getInfo2DrawPlayer(OTHER_PLAYER_ACTION);
+    player = model->getInfo2DrawPlayer(OTHER_PLAYER);
     gPlayer = dynamic_cast<GraphicPlayer*> (*(++it));
     if(gPlayer!=NULL)
     {
@@ -386,23 +386,23 @@ void BurgleBrosView::updateCharacters(BurgleBrosModel *model) {
 }
 
 void BurgleBrosView::updateCharacterCards(BurgleBrosModel *model) {
-    Info2DrawPlayer player = model->getInfo2DrawPlayer(THIS_PLAYER_ACTION);
+    Info2DrawPlayer player = model->getInfo2DrawPlayer(THIS_PLAYER);
     //FirstPlayer
     list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, CHARACTER_CARDS_LIST);
     GraphicPlayerCard* gPlayerCard = dynamic_cast<GraphicPlayerCard *> (*it);
     if(gPlayerCard!=NULL)
     {
-        if(onZoom && playerZoomed == THIS_PLAYER_ACTION) gPlayerCard->setZoom(true);
+        if(onZoom && playerZoomed == THIS_PLAYER) gPlayerCard->setZoom(true);
         else gPlayerCard->setZoom(false);
         gPlayerCard->setLivesAndActions(player.lives,player.currActions);
         gPlayerCard->setTurn(player.turn);
     }
     //SecondPlayer
-    player = model->getInfo2DrawPlayer(OTHER_PLAYER_ACTION);
+    player = model->getInfo2DrawPlayer(OTHER_PLAYER);
     gPlayerCard = dynamic_cast<GraphicPlayerCard *> (*(++it));
     if(gPlayerCard!=NULL)
     {
-        if(onZoom && playerZoomed == OTHER_PLAYER_ACTION) gPlayerCard->setZoom(true);
+        if(onZoom && playerZoomed == OTHER_PLAYER) gPlayerCard->setZoom(true);
         else gPlayerCard->setZoom(false);
         gPlayerCard->setLivesAndActions(player.lives,player.currActions);
         gPlayerCard->setTurn(player.turn);
@@ -597,7 +597,7 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
     }   
 }
 
-void BurgleBrosView::zoomLoot(ActionOrigin owner)
+void BurgleBrosView::zoomLoot(PlayerId owner)
 {
     if(owner != NON_PLAYER) onZoom ^= true;
     floorZoomed = NO_FLOOR_ZOOMED;
@@ -618,7 +618,7 @@ void BurgleBrosView::zoomLoot(ActionOrigin owner)
     }   
 }
 
-void BurgleBrosView::zoomPlayerCard(ActionOrigin player)
+void BurgleBrosView::zoomPlayerCard(PlayerId player)
 {
     if(player != NON_PLAYER) onZoom ^= true;
     floorZoomed = NO_FLOOR_ZOOMED;

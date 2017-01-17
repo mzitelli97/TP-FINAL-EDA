@@ -12,12 +12,6 @@
 #include "Controller.h"
 #include "SoundManager.h"
 
-/*typedef enum{OTHER_PLAYER_ACTION, THIS_PLAYER_ACTION} ActionOrigin;
-typedef struct{
-    //bool guardMovementFinishedEv;  Este siempre es 0 a menos que se haya terminado la animacion del movimiento del guardia.
-    ActionOrigin origin;
-    NetworkMessage action;
-}ModelEvent;*/
 
 /*Mensajes para dialog box tienen:  TITULO    SUBTITULO         TEXTO */
 #define ENTER_FINGERPRINT_TEXT      "Alert",        "Confirm Action", "You have entered a Fingerprint tile, so you will trigger an alarm unless you use a hack token"
@@ -47,40 +41,40 @@ class BurgleBrosModel : public Model
         vector<wall> getInfo2DrawWalls();
 	vector<Info2DrawCards> getInfo2DrawCards();
         list<Info2DrawLoot> getInfo2DrawLoot();
-	Info2DrawPlayer getInfo2DrawPlayer(ActionOrigin player);
+	Info2DrawPlayer getInfo2DrawPlayer(PlayerId player);
         Info2DrawGuard getInfo2DrawGuard(unsigned int floor);
 	list<Info2DrawTokens> getInfo2DrawTokens();
         vector<unsigned int> getInfo2DrawExtraDices();
-        ActionOrigin getPlayerOnTurn();
+        PlayerId getPlayerOnTurn();
         bool hasGameFinished();
         string getFinishMsg();
-        bool pass(ActionOrigin playerId);
-        bool peek(ActionOrigin playerId, CardLocation locationToPeek);
-        bool move(ActionOrigin playerId, CardLocation locationToMove);
-        bool addToken(ActionOrigin playerId, CardLocation locationToAddToken);
-        bool crackSafe(ActionOrigin playerId, CardLocation safe);
-        bool addDieToSafe(ActionOrigin playerId, CardLocation safe);
-        bool createAlarm(ActionOrigin playerId, CardLocation tile);
-        bool placeCrow(ActionOrigin playerId, CardLocation tile);
-        bool pickLoot(ActionOrigin playerId, CardLocation tile, Loot loot);
-        bool askForLoot(ActionOrigin playerId, CardLocation tile, Loot loot);
-        bool offerLoot(ActionOrigin playerId, CardLocation tile, Loot loot);
-        bool escape(ActionOrigin playerId, CardLocation stairTile);
-        bool peekGuardsCard(ActionOrigin playerId, unsigned int guardsFloor);
-        bool isMovePosible(ActionOrigin playerId,CardLocation tileToMove);  //Pregunta si una movida es posible
-        bool isPeekPosible(ActionOrigin player, CardLocation tile);         //Pregunta si un peek es posible
-        bool isAddTokenPosible(ActionOrigin player, CardLocation tile);
-        bool isAddDieToSafePossible(ActionOrigin player, CardLocation tile);
-        bool isCrackSafePossible(ActionOrigin playerId, CardLocation safe);
-        bool isCreateAlarmPossible(ActionOrigin playerId, CardLocation tile);
-        bool isPlaceCrowPossible(ActionOrigin playerId, CardLocation tile);
-        bool isPickLootPossible(ActionOrigin playerId, CardLocation tile, Loot loot);
-        bool isAskForLootPossible(ActionOrigin playerId, CardLocation tile, Loot loot);
-        bool isOfferLootPossible(ActionOrigin playerId, CardLocation tile, Loot loot);
-        bool isEscapePossible(ActionOrigin playerId, CardLocation tile);
-        bool isPeekGuardsCardPossible(ActionOrigin playerId, unsigned int guardsFloor);
-        list<string> getPosibleActionsToTile(ActionOrigin player, CardLocation tile);   //Devuelve que acciones puede realizar el jugador indicado en esa tile
-        list<string> getPosibleActionsToGuard(ActionOrigin player, unsigned int guardsFloor); 
+        bool pass(PlayerId playerId);
+        bool peek(PlayerId playerId, CardLocation locationToPeek);
+        bool move(PlayerId playerId, CardLocation locationToMove);
+        bool addToken(PlayerId playerId, CardLocation locationToAddToken);
+        bool crackSafe(PlayerId playerId, CardLocation safe);
+        bool addDieToSafe(PlayerId playerId, CardLocation safe);
+        bool createAlarm(PlayerId playerId, CardLocation tile);
+        bool placeCrow(PlayerId playerId, CardLocation tile);
+        bool pickLoot(PlayerId playerId, CardLocation tile, Loot loot);
+        bool askForLoot(PlayerId playerId, CardLocation tile, Loot loot);
+        bool offerLoot(PlayerId playerId, CardLocation tile, Loot loot);
+        bool escape(PlayerId playerId, CardLocation stairTile);
+        bool peekGuardsCard(PlayerId playerId, unsigned int guardsFloor);
+        bool isMovePosible(PlayerId playerId,CardLocation tileToMove);  //Pregunta si una movida es posible
+        bool isPeekPosible(PlayerId player, CardLocation tile);         //Pregunta si un peek es posible
+        bool isAddTokenPosible(PlayerId player, CardLocation tile);
+        bool isAddDieToSafePossible(PlayerId player, CardLocation tile);
+        bool isCrackSafePossible(PlayerId playerId, CardLocation safe);
+        bool isCreateAlarmPossible(PlayerId playerId, CardLocation tile);
+        bool isPlaceCrowPossible(PlayerId playerId, CardLocation tile);
+        bool isPickLootPossible(PlayerId playerId, CardLocation tile, Loot loot);
+        bool isAskForLootPossible(PlayerId playerId, CardLocation tile, Loot loot);
+        bool isOfferLootPossible(PlayerId playerId, CardLocation tile, Loot loot);
+        bool isEscapePossible(PlayerId playerId, CardLocation tile);
+        bool isPeekGuardsCardPossible(PlayerId playerId, unsigned int guardsFloor);
+        list<string> getPosibleActionsToTile(PlayerId player, CardLocation tile);   //Devuelve que acciones puede realizar el jugador indicado en esa tile
+        list<string> getPosibleActionsToGuard(PlayerId player, unsigned int guardsFloor); 
         void moveGuard(unsigned int floor);
         void attachView(View * view);
         void attachController(Controller * controller);
@@ -89,14 +83,14 @@ class BurgleBrosModel : public Model
     private:
         void checkTurns();
         void checkIfWonOrLost();
-        void handlePersianKittyMove(ActionOrigin playerId);
-        void handleChihuahuaMove(ActionOrigin playerId);
+        void handlePersianKittyMove(PlayerId playerId);
+        void handleChihuahuaMove(PlayerId playerId);
         void triggerSilentAlarm(unsigned int floor);
         bool GuardInCamera();
         void setGuardsNewPath(unsigned int floor);
         bool playerSpentFreeAction;
-        BurgleBrosPlayer * getP2Player(ActionOrigin playerId);
-        BurgleBrosPlayer * getP2OtherPlayer(ActionOrigin playerId);
+        BurgleBrosPlayer * getP2Player(PlayerId playerId);
+        BurgleBrosPlayer * getP2OtherPlayer(PlayerId playerId);
         BurgleBrosPlayer myPlayer;
 	BurgleBrosPlayer otherPlayer;
 	BurgleBrosBoard board;

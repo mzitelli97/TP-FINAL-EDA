@@ -44,8 +44,8 @@ public:
     void showMenu(list<string> options, Point click, unsigned int floor);
     void eraseMenu();
     void zoomFloor(unsigned int floor, Model * auxModel);
-    void zoomLoot(ActionOrigin owner);
-    void zoomPlayerCard(ActionOrigin player);
+    void zoomLoot(PlayerId owner);
+    void zoomPlayerCard(PlayerId player);
     void zoomGuardDeck(unsigned int floor);
     string MessageBox(vector<string> &message);
     int yesNoMessageBox(vector<string> &message);
@@ -71,8 +71,8 @@ private:
     bool onZoom;
     int floorZoomed;
     int guardZoomed;
-    ActionOrigin lootZoomed;
-    ActionOrigin playerZoomed;
+    PlayerId lootZoomed;
+    PlayerId playerZoomed;
 
 };
 
