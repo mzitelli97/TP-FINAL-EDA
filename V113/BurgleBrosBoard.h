@@ -11,7 +11,8 @@ class BurgleBrosBoard
 {
 public:
 	BurgleBrosBoard();
-	void initBoard();						//Inicializa el tablero repartiendo las cartas entre los distintos pisos.
+	void initBoard();
+        void initBoard(vector<CardName> &allTiles);//Inicializa el tablero repartiendo las cartas entre los distintos pisos.
 	bool adjacentCards(CardLocation source, CardRelativeLocation whereToMove);
 	bool adjacentCards(CardLocation source, CardLocation destination);              //Devuelve true si las cartas son vecinas y no hay paredes entre ellas.
 	void getWalls(vector<wall> &vector);    

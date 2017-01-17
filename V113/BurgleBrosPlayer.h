@@ -20,6 +20,9 @@ typedef struct{
     bool turn;
 }Info2DrawPlayer;
 
+CharacterName getRandomCharacter();
+CharacterName  getRandomCharacter(CharacterName exceptThis);
+
 
 class BurgleBrosPlayer
 {
@@ -38,6 +41,7 @@ public:
 	bool isOnBoard();
 	bool carriesLoot();
         void setPosition(CardLocation location);
+        void setCharacter(CharacterName character);
         void getToDaChoppa();
         bool hasLoot(Loot loot);
         void pickRandomPlayer();

@@ -34,6 +34,7 @@ public:
 	CardLocation getPosition();
 	CardLocation getTargetPosition();
         void init();
+        void init(CardLocation guardPos, CardLocation diePos);
         void incDiceNumber();
         bool isTopOfNotShownDeckVisible();
         void pushTopCardToTheBottom();

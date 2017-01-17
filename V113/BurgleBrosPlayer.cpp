@@ -14,6 +14,23 @@ string character2Str(CharacterName character)
 	default: return "Error";
 	}
 }
+
+CharacterName getRandomCharacter()
+{
+    CharacterName retVal;
+    unsigned int i= rand()% NUMBER_OF_CHARACTERS;
+    retVal= (CharacterName)((unsigned int)FIRST_CHARACTER + i);
+    return retVal;
+}
+CharacterName  getRandomCharacter(CharacterName exceptThis)
+{
+    CharacterName retVal;
+    do{
+        retVal=getRandomCharacter();
+    }while(retVal==exceptThis);
+    return retVal;
+}
+
 unsigned int BurgleBrosPlayer::getCurrLifes()
 {
     return lives;
@@ -29,7 +46,10 @@ void BurgleBrosPlayer::getToDaChoppa()
     isOnTheBoard=false;
     //position = {3,4,4}; this does not work, do something to dont show the player anymore
 }
-
+void BurgleBrosPlayer::setCharacter(CharacterName character)
+{
+    characterName=character;
+}
 void BurgleBrosPlayer::setName(string name)
 {
     this->name=name;
@@ -133,6 +153,7 @@ void BurgleBrosPlayer::attachLoot(Loot loot)
 BurgleBrosPlayer::BurgleBrosPlayer()
 {
     //pickRandomPlayer();//Ver si queda adentro, afuera o que....
+    currentActions=4;
     position.floor=0;
     position.row=0;
     position.column=0;

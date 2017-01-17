@@ -28,6 +28,22 @@ void BurgleBrosBoard::initBoard()
     floors[1].initFloor(1, secondFloor);
     floors[2].initFloor(2, thirdFloor);
 }
+void BurgleBrosBoard::initBoard(vector<CardName> &allTiles)
+{
+    vector<CardName> firstFloor, secondFloor, thirdFloor;
+    for(unsigned int i=0; i < BOARD_STANDARD_FLOORS*FLOOR_RAWS*FLOOR_COLUMNS; i++)
+    {
+        if(i<FLOOR_RAWS*FLOOR_COLUMNS)
+            firstFloor.push_back(allTiles[i]);
+        else if(i<2*FLOOR_RAWS*FLOOR_COLUMNS)
+            secondFloor.push_back(allTiles[i]);
+        else 
+            thirdFloor.push_back(allTiles[i]);
+    }
+    floors[0].initFloor(0, firstFloor);
+    floors[1].initFloor(1, secondFloor);
+    floors[2].initFloor(2, thirdFloor);
+}
 bool BurgleBrosBoard::isAWallBetween(CardLocation tile1, CardLocation tile2)
 {
     if(tile1.floor == tile2.floor)

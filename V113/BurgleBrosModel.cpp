@@ -51,6 +51,60 @@ void BurgleBrosModel::attachSoundManager(SoundManager * soundManager)
 {
     this->soundManager=soundManager;
 }
+
+void BurgleBrosModel::initBoard(vector<CardName> &allTiles)
+{
+    if(allTiles.empty())
+    {
+        board.initBoard();
+        CardLocation aux;
+        for(aux.floor=0;aux.floor<BOARD_STANDARD_FLOORS; aux.floor++ )
+        {
+            for(aux.row=0;aux.row<FLOOR_RAWS; aux.row++ )
+            {
+                for(aux.column=0;aux.column<FLOOR_COLUMNS; aux.column++ )
+                {
+                    allTiles.push_back(board.getCardType(aux));
+                }
+            }
+        }
+    }
+    else if(allTiles.size()== BOARD_STANDARD_FLOORS * FLOOR_COLUMNS * FLOOR_RAWS)
+        board.initBoard(allTiles);
+    else
+    {
+        gameFinished=true;
+        finishMsg= "ERROR: BBModel error: Tried to initialize board with an incorrect number of tiles!";
+    }
+}
+void BurgleBrosModel::initPlayer(PlayerId playerId, string playerName, CharacterName playerCharacter, CardLocation playerPos)
+{
+    BurgleBrosPlayer *p = getP2Player(playerId);
+    p->setName(playerName);
+    p->setPosition(playerPos);
+    p->setCharacter(playerCharacter);
+}
+void BurgleBrosModel::setInitTurn(PlayerId playerId)
+{
+    getP2Player(playerId)->setTurn(true);
+}
+void BurgleBrosModel::copyGuardInitPos(CardLocation guardPos, CardLocation guardDiePos)
+{
+    guards[0].init(guardPos, guardDiePos);
+    list<CardLocation> path = board.getShortestPath(guardPos, guardDiePos);
+    guards[0].setNewPathToTarget(path);
+}
+void BurgleBrosModel::generateGuardInitPos(CardLocation *guardPos, CardLocation *guardDiePos)
+{
+    guards[0].init();
+    *guardPos = guards[0].getPosition();
+    *guardDiePos = guards[0].getTargetPosition();
+    list<CardLocation> path = board.getShortestPath(*guardPos, *guardDiePos);
+    guards[0].setNewPathToTarget(path);
+}
+
+
+
 vector<wall> BurgleBrosModel::getInfo2DrawWalls()
 {
     vector<wall> aux;
