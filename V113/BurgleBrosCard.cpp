@@ -82,13 +82,6 @@ BurgleBrosCard::BurgleBrosCard(CardName type, CardLocation location)
 	safeState = false;
 	this->location = location;
 }
-BurgleBrosCard::BurgleBrosCard(CardName type, std::string location)
-{
-	cardType = type;
-	visible = false;
-	safeState = false;
-	this->location = protocolToCardLocation(location);
-}
 CardLocation  BurgleBrosCard::getLocation()
 {
 	return location;
@@ -178,33 +171,7 @@ bool BurgleBrosCard::isNeighboard(CardLocation otherCardLocation)
 	return retVal;
 }
 
-std::string BurgleBrosCard::getProtocolUbication()
-{
-	return cardLocationToProtocol(location);
-}
-
 BurgleBrosCard::~BurgleBrosCard()
 {
 }
 
-CardLocation protocolToCardLocation(std::string location)
-{
-	CardLocation retVal;
-	retVal.row = (unsigned int) location[1] - '1';
-	retVal.column = (unsigned int) location[0] - 'A';
-	retVal.floor = (unsigned int) location[3] - '1';
-	return retVal;
-	
-}
-std::string cardLocationToProtocol(CardLocation &cardLocation)
-{
-	char rowChar = '1' + (char)cardLocation.row;
-	char columnChar = 'A' + (char)cardLocation.column;
-	char floorChar = '1' + (char)cardLocation.floor;
-	std::string aux1(1, rowChar);
-	std::string aux2(1, columnChar);
-	std::string aux3(1, 'F');
-	std::string aux4(1, floorChar);
-	std::string retVal = aux2 + aux1 + aux3 + aux4;
-	return retVal;
-}

@@ -6,22 +6,22 @@
 #include "BurgleBrosLoots.h"
 #include "BurgleBrosPlayer.h"
 #include "BurgleBrosDices.h"
-#include "Networking.h"
 #include "Model.h"
 #include "View.h"
 #include "Controller.h"
 #include "SoundManager.h"
 
 
-/*Mensajes para dialog box tienen:  TITULO    SUBTITULO         TEXTO */
-#define ENTER_FINGERPRINT_TEXT      "Alert",        "Confirm Action", "You have entered a Fingerprint tile, so you will trigger an alarm unless you use a hack token"
-#define LASER_TEXT                  "Alert",        "Confirm Action", "You have entered a Laser tile, you can either spend and extra action or use a hack token to avoid triggering an alarm"
-#define DEADBOLT_TEXT               "Alert",        "Confirm action", "You moved to a deadbolt, in order to enter you must spend 3 actions, otherwise you will go back to your previous tile"
-#define LAVATORY_TEXT               "Alert",        "Confirm Action", "You have encountered a guard! Luckily you are in the lavatory so you can choose between using one of the stealth tokens in it or one of your own"
-#define MOTION_TEXT                 "Alert",        "Confirm Action", "You are leaving an activated motion sensor. An alarm will be triggered unless you use a hack token"
-#define OFFER_LOOT_TEXT             "Loot Offer",   "Confirm Offer",  "The other player offers you the loot: "
-#define ASK_FOR_LOOT_TEXT           "Loot Request", "Confirm Request","The other player ask you for the loot: "
+/*Mensajes para dialog box tienen:  TITULO                  SUBTITULO               TEXTO */
+#define ENTER_FINGERPRINT_TEXT      "Alert",            "Confirm Action", "You have entered a Fingerprint tile, so you will trigger an alarm unless you use a hack token"
+#define LASER_TEXT                  "Alert",            "Confirm Action", "You have entered a Laser tile, you can either spend and extra action or use a hack token to avoid triggering an alarm"
+#define DEADBOLT_TEXT               "Alert",            "Confirm action", "You moved to a deadbolt, in order to enter you must spend 3 actions, otherwise you will go back to your previous tile"
+#define LAVATORY_TEXT               "Alert",            "Confirm Action", "You have encountered a guard! Luckily you are in the lavatory so you can choose between using one of the stealth tokens in it or one of your own"
+#define MOTION_TEXT                 "Alert",            "Confirm Action", "You are leaving an activated motion sensor. An alarm will be triggered unless you use a hack token"
+#define OFFER_LOOT_TEXT             "Loot Offer",       "Confirm Offer",  "The other player offers you the loot: "
+#define ASK_FOR_LOOT_TEXT           "Loot Request",     "Confirm Request","The other player ask you for the loot: "
 #define SPOTTER_SPECIAL_ACTION_TEXT "Spotter guard peek", "Complete action", "You have spotted the top of the guard deck. Would you like to let it on the top or put it at the bottom?"
+/*Botones de los dialog box:*/
 #define ACCEPT_TEXTB "Accept"
 #define DECLINE_TEXTB "Decline"
 #define USE_LAVATORY_TOKEN_TEXTB "Use Lavatory stealth token"
@@ -38,6 +38,10 @@ class BurgleBrosModel : public Model
 {
     public:
 	BurgleBrosModel();
+        PlayerId getPlayerOnTurn();
+        bool hasGameFinished();
+        string getFinishMsg();
+        /* Funciones para obtener información para dibujar. */
         vector<wall> getInfo2DrawWalls();
 	vector<Info2DrawCards> getInfo2DrawCards();
         list<Info2DrawLoot> getInfo2DrawLoot();
@@ -45,9 +49,7 @@ class BurgleBrosModel : public Model
         Info2DrawGuard getInfo2DrawGuard(unsigned int floor);
 	list<Info2DrawTokens> getInfo2DrawTokens();
         vector<unsigned int> getInfo2DrawExtraDices();
-        PlayerId getPlayerOnTurn();
-        bool hasGameFinished();
-        string getFinishMsg();
+        /* Acciones que se puede llamar públicamente*/
         bool pass(PlayerId playerId);
         bool peek(PlayerId playerId, CardLocation locationToPeek);
         bool move(PlayerId playerId, CardLocation locationToMove);
@@ -61,6 +63,7 @@ class BurgleBrosModel : public Model
         bool offerLoot(PlayerId playerId, CardLocation tile, Loot loot);
         bool escape(PlayerId playerId, CardLocation stairTile);
         bool peekGuardsCard(PlayerId playerId, unsigned int guardsFloor);
+        /*Prueba para ver si se pueden realizar ciertas acciones*/
         bool isMovePosible(PlayerId playerId,CardLocation tileToMove);  //Pregunta si una movida es posible
         bool isPeekPosible(PlayerId player, CardLocation tile);         //Pregunta si un peek es posible
         bool isAddTokenPosible(PlayerId player, CardLocation tile);
@@ -100,9 +103,9 @@ class BurgleBrosModel : public Model
 	BurgleBrosDices dice;
         View * view;
         Controller * controller;
-        SoundManager * soundManager;
+        SoundManager * soundManager;        
         bool gameFinished;
-        string finishMsg; //Si el juego terminó indica como termino (por ejemplo WON, LOST o MODEL ERROR:"(errormsg)"
+        string finishMsg;       //Si el juego terminó indica como termino (por ejemplo WON, LOST o MODEL ERROR:"(errormsg)"
 };
 #endif
 

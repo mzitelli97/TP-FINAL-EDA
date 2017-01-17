@@ -37,7 +37,7 @@
       <logicalFolder name="f3" displayName="Networking" projectFiles="true">
         <itemPath>NetworkInterface.h</itemPath>
         <itemPath>Networking.h</itemPath>
-        <itemPath>StrNmbrFieldToArray.h</itemPath>
+        <itemPath>ProtocolFunctions.h</itemPath>
       </logicalFolder>
       <itemPath>Controller.h</itemPath>
       <itemPath>EventData.h</itemPath>
@@ -92,7 +92,7 @@
       <logicalFolder name="f3" displayName="Networking" projectFiles="true">
         <itemPath>NetworkInterface.cpp</itemPath>
         <itemPath>Networking.cpp</itemPath>
-        <itemPath>StrNmbrFieldToArray.cpp</itemPath>
+        <itemPath>ProtocolFunctions.cpp</itemPath>
       </logicalFolder>
       <itemPath>Controller.cpp</itemPath>
       <itemPath>GUI.cpp</itemPath>
@@ -389,13 +389,13 @@
       </item>
       <item path="Networking.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="ProtocolFunctions.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ProtocolFunctions.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="SoundManager.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="SoundManager.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="StrNmbrFieldToArray.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="StrNmbrFieldToArray.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="View.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -560,13 +560,13 @@
       </item>
       <item path="Networking.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="ProtocolFunctions.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ProtocolFunctions.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="SoundManager.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="SoundManager.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="StrNmbrFieldToArray.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="StrNmbrFieldToArray.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="View.cpp" ex="false" tool="1" flavor2="0">
       </item>

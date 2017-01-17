@@ -1,5 +1,6 @@
 #include "ImageLoader.h"
 #include <iostream>
+#include "ProtocolFunctions.h"
 
 string button2Str(buttonAction _button)
 {

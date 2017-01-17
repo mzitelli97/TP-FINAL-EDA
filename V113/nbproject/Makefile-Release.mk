@@ -69,8 +69,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/MouseED.o \
 	${OBJECTDIR}/NetworkInterface.o \
 	${OBJECTDIR}/Networking.o \
+	${OBJECTDIR}/ProtocolFunctions.o \
 	${OBJECTDIR}/SoundManager.o \
-	${OBJECTDIR}/StrNmbrFieldToArray.o \
 	${OBJECTDIR}/View.o \
 	${OBJECTDIR}/main.o
 
@@ -269,15 +269,15 @@ ${OBJECTDIR}/Networking.o: Networking.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Networking.o Networking.cpp
 
+${OBJECTDIR}/ProtocolFunctions.o: ProtocolFunctions.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/ProtocolFunctions.o ProtocolFunctions.cpp
+
 ${OBJECTDIR}/SoundManager.o: SoundManager.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SoundManager.o SoundManager.cpp
-
-${OBJECTDIR}/StrNmbrFieldToArray.o: StrNmbrFieldToArray.cpp
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/StrNmbrFieldToArray.o StrNmbrFieldToArray.cpp
 
 ${OBJECTDIR}/View.o: View.cpp
 	${MKDIR} -p ${OBJECTDIR}

@@ -23,8 +23,7 @@ bool operator==(const CardLocation &l, const CardLocation &r);
 bool operator<(const CardLocation &l,const CardLocation &r);
 bool operator!=(const CardLocation &l, const CardLocation &r);
 
-std::string cardLocationToProtocol(CardLocation &cardLocation);		//(0,0,0) (floor,row,column) = A1F1 (protocol)
-CardLocation protocolToCardLocation(std::string location);
+
 CardLocation getRandomCardLocation();
 CardLocation getRandomCardLocation(unsigned int inThisFloor);
 bool isAnAlarmTile(CardName tile);
@@ -43,31 +42,29 @@ class BurgleBrosCard		//IMPORTANTE SEEDEAR EL RANDOM PARA EL SAFE_CRACKED!!!!!
 public:
 	typedef BurgleBrosCard * CardPointer;
 	BurgleBrosCard(CardName type, CardLocation location);
-	BurgleBrosCard(CardName type, std::string location);
 	BurgleBrosCard();
-	void setNeighboardCards(CardPointer left, CardPointer down, CardPointer right, CardPointer up);
+	void setNeighboardCards(CardPointer left, CardPointer down, CardPointer right, CardPointer up); //Le asigna sus cartas vecinas, nullptr == no hay vecina
 	void setNeighboardCard(CardRelativeLocation relativeLocation, CardPointer cardPointer);
-	bool hasNeighboard(CardRelativeLocation relativeLocation);
+	bool hasNeighboard(CardRelativeLocation relativeLocation);  //Devuelve si no es nullptr esa vecina.
 	bool isNeighboard(CardLocation otherCardLocation);
-	CardLocation getLocation();
+	CardLocation getLocation();             //getters
 	unsigned int getFloor();
 	unsigned int getRow();
 	unsigned int getColumn();
-	std::string getProtocolUbication();
-	void setVisible();
-	bool isVisible();
+	void setVisible();                      //Da vuelta la carta, si no es un safe le asigna un número para el safe.
+	bool isVisible();                     
 	void safeCracked();
 	unsigned int getSafeNumber();
 	bool isCracked();
 	CardName getCardType();
 	~BurgleBrosCard();
 private:
-	bool visible;
-	unsigned int safeNumber;
-	bool safeState;
+	bool visible;               
+	unsigned int safeNumber;    
+	bool safeState;             //Esta variable se pensó para ponerle a todas las cartas que tengan un crack token encima, y al safe cuando se abre, pero se termino usando solo para cuando la safe se abre.
 	CardName cardType;
-	CardLocation location;
-	CardPointer left, down, right, up;									//Esto lo recomend� agustin.
+	CardLocation location;      //Su ubicación en pisos.
+	CardPointer left, down, right, up;  //Sus cartas vecinas.
 };
 
 #endif

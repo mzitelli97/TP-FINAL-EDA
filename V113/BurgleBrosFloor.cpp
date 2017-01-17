@@ -7,8 +7,6 @@ using namespace std;
 
 #define NO_PREVIOUS (-1)
 
-std::string testFunction(bool yesOrNo);
-std::string testFunction2(CardName entry);
 unsigned int indexToInt(CardLocation &i );
 
 BurgleBrosFloor::BurgleBrosFloor(unsigned int whichFloor, std::vector<CardName> &orderedCards)
@@ -207,21 +205,13 @@ bool BurgleBrosFloor::isAWallBetween(CardLocation tile1, CardLocation tile2)
     return retVal;
 }
 
-bool BurgleBrosFloor::isMovePossible(CardLocation source, CardRelativeLocation whereToMove)
+bool BurgleBrosFloor::areTilesAdjacent(CardLocation source, CardRelativeLocation whereToMove)
 {
 	return cards[source.row][source.column].hasNeighboard(whereToMove);
 }
-bool BurgleBrosFloor::isMovePossible(CardLocation source, CardLocation destination)
+bool BurgleBrosFloor::areTilesAdjacent(CardLocation source, CardLocation destination)
 {
 	return cards[source.row][source.column].isNeighboard(destination);
-}
-bool BurgleBrosFloor::isMovePossible(std::string source, std::string destination)
-{
-	return isMovePossible(protocolToCardLocation(source), protocolToCardLocation(destination));
-}
-BurgleBrosCard BurgleBrosFloor::getCardCopy(CardLocation location)
-{
-	return cards[location.row][location.column];
 }
 void BurgleBrosFloor::setCardVisible(CardLocation location)
 {
@@ -235,10 +225,6 @@ unsigned int BurgleBrosFloor::getCardSafeNumber(CardLocation location)
 {
 	return cards[location.row][location.column].getSafeNumber();
 }
-bool BurgleBrosFloor::isCardCracked(CardLocation location)
-{
-	return cards[location.row][location.column].isCracked();
-}
 CardName BurgleBrosFloor::getCardType(CardLocation location)
 {
 	return cards[location.row][location.column].getCardType();
@@ -247,61 +233,6 @@ CardName BurgleBrosFloor::getCardType(unsigned int number)
 {
 	return getCardType(intToIndex(number));
 }
-
-void BurgleBrosFloor::testFloor()
-{
-	std::cout << "Its going to show the possible moves in the current floor: " << std::endl;
-	for (unsigned int row = 0; row < FLOOR_RAWS; row++)
-	{
-		for (unsigned int column = 0; column < FLOOR_COLUMNS; column++)
-		{
-			std::cout << "Card nmbr " << (row*FLOOR_RAWS + column + 1) << " type " << testFunction2(cards[row][column].getCardType()).c_str();
-			std::cout << " To Left: " << testFunction(cards[row][column].hasNeighboard(LEFT_CARD)).c_str();
-			std::cout << " To Down: " << testFunction(cards[row][column].hasNeighboard(DOWN_CARD)).c_str();
-			std::cout << " To Right: " << testFunction(cards[row][column].hasNeighboard(RIGHT_CARD)).c_str();
-			std::cout << " To Up: " << testFunction(cards[row][column].hasNeighboard(UP_CARD)).c_str() << std::endl;
-		}
-	}
-}
-
-std::string testFunction(bool entry)
-{
-	if (entry == true)
-		return "YES";
-	else
-		return "NO";
-}
-std::string testFunction2(CardName entry)
-{
-	switch (entry)
-	{
-		case ATRIUM: return "Atrium";
-		case CAMERA: return "CAMERA";
-		case COMPUTER_ROOM_FINGERPRINT: return "COMPUTER_ROOM_FINGERPRINT";
-		case COMPUTER_ROOM_LASER: return "COMPUTER_ROOM_LASER";
-		case COMPUTER_ROOM_MOTION: return "COMPUTER_ROOM_MOTION";
-		case DEADBOLT: return "DEADBOLT";
-		case FINGERPRINT: return "FINGERPRINT";
-		case FOYER: return "FOYER";
-		case KEYPAD: return "KEYPAD";
-		case LABORATORY: return "Atrium";
-		case LASER: return "CAMERA";
-		case LAVATORY: return "LAVATORY";
-		case MOTION: return "MOTION";
-		case SAFE: return "SAFE";
-		case SCANNER_DETECTOR: return "SCANNER_DETECTOR";
-		case SECRET_DOOR: return "SECRET_DOOR";
-		case SERVICE_DUCT: return "SERVICE_DUCT";
-		case STAIR: return "STAIR";
-		case THERMO: return "THERMO";
-		case WALKAWAY: return "WALKAWAY";
-		case GUARD_CARD: return "GUARD_CARD";
-		default: return "Error";
-	}
-}
-
-
-
 CardLocation BurgleBrosFloor::intToIndex(unsigned int i)
 {
 	CardLocation aux;

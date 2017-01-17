@@ -25,6 +25,7 @@ public:
 	BurgleBrosGuard();
         BurgleBrosGuard(unsigned int floor);
 	CardLocation getTopCard();
+        void setPosition(CardLocation location);
         bool checkIfInitialized();
 	list<CardLocation> getPath();
         list<CardLocation> getShownDeck();
@@ -42,14 +43,11 @@ public:
         void setNewPathToTarget(list<CardLocation> &pathToTarget);   //DESARROLLAR
         CardLocation drawCardTarget();      //Devuelve una copia la que agarró
 	bool drawCardTarget(CardLocation targetCard);   //Devuelve true si encontró la carta en el mazo de las no mostradas.
-        string getInitGPos();
-        void setPosition(CardLocation location);
 	~BurgleBrosGuard();
 private:
         void setPosition();
         void initCardDeck();
         void shuffleCardDeck();
-        void setPosition(string initialGPos);
 	
 	void shuffleDecks();
         bool initialized;

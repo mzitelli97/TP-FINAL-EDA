@@ -19,36 +19,29 @@ class BurgleBrosFloor
 public:
 	BurgleBrosFloor(unsigned int whichFloor, std::vector<CardName> &orderedCards);			//Deben ser si o si FLOOR_COLUMNS*FLOOR_RAWS cartas
 	BurgleBrosFloor();
-	//BurgleBrosFloor(unsigned int whichFloor, std::string protocolCardTypes);
-	void initFloor(unsigned int whichFloor, std::vector<CardName> &orderedCards);
-        void getWalls(vector<wall> &vector);
-	std::string getShortestPathProtocolar(CardLocation source, CardLocation destination);		//Devuelve con formato de protocolo
-	std::list<CardLocation> getShortestPath(CardLocation source, CardLocation destination);		//
-	bool isMovePossible(CardLocation source, CardRelativeLocation whereToMove);
-	bool isMovePossible(CardLocation source, CardLocation destination);
-	bool isMovePossible(std::string source, std::string destination);
-	BurgleBrosCard getCardCopy(CardLocation location);
-	void setCardVisible(CardLocation location);
-        bool isAWallBetween(CardLocation tile1, CardLocation tile2);
-	bool isCardVisible(CardLocation location);
-	void crackSafe();
-	unsigned int getCardSafeNumber(CardLocation location);
-        bool isCardCracked(CardLocation location);  //()
-        bool isSafeCracked();
-        CardLocation getSafeLocation();
-	CardName getCardType(CardLocation location);
+	void initFloor(unsigned int whichFloor, std::vector<CardName> &orderedCards);                   //Inicializa el floor con las cartas dadas en forma de vector.
+        void getWalls(vector<wall> &vector);                                                            //Devuelve las 8 walls correspondientes a su piso.
+	std::list<CardLocation> getShortestPath(CardLocation source, CardLocation destination);		//Devuelve la lista que da el camino más corto desde una posición a otra.
+	bool areTilesAdjacent(CardLocation source, CardRelativeLocation whereToMove);                   //Dice si son adjacentes (puede ser que no porque no haya nada a su posición relativa o una pared).
+	bool areTilesAdjacent(CardLocation source, CardLocation destination);
+	void setCardVisible(CardLocation location);                                 //Da vuelta una carta
+        bool isAWallBetween(CardLocation tile1, CardLocation tile2);                //Devuelve si hay una pared entre 2 tiles
+	bool isCardVisible(CardLocation location);                                  
+	void crackSafe();                                                           //Le pone a la carta SAFE de su piso que está crackeada.
+	unsigned int getCardSafeNumber(CardLocation location);                      //Devuelve el numero para crackear de una carta
+        bool isSafeCracked();                                                       //Devuelve si ya se crackeó la safe
+        CardLocation getSafeLocation();                                             //Devuelve la posición del safe
+	CardName getCardType(CardLocation location);                                //Obtiene que tipo de tile es en esa ubicación.
 	CardName getCardType(unsigned int number);
-        CardLocation getKittyMovingPos(CardLocation location); // Dice para donde va ir el persian kitty si se tiran mal los dados
-	void testFloor();
-
+        CardLocation getKittyMovingPos(CardLocation location);          //Dice para donde va ir el persian kitty si se tiran mal los dados
 	~BurgleBrosFloor();
 private:
 	CardLocation intToIndex(unsigned int i );
-	void linkCards();
-        void initAdjList();
+	void linkCards();           //Le pone todos los vecinos propios a cada carta del piso
+        void initAdjList();         //Crea la lista de adjacencia, para poder computar los dijkstra más facilmente
         void computeDijkstra(unsigned int sourceCard, unsigned int destinationCard,vector<unsigned int> &minDist,vector<int> &prevCard);
-        vector<vector<unsigned int>> adjacentList;
-	void linkCardsWithoutWalls();
+        vector<vector<unsigned int>> adjacentList;  //Para cada carta representada con un entero (0,0,0 -> 0, 0,1,0->4, etc), hay un vector con todas sus adjacentes representadas también por un número entero.
+	void linkCardsWithoutWalls();       
 	void generateWalls();
 	unsigned int floorNumber;
 	wall walls[NUMBER_OF_WALLS];

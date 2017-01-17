@@ -3,7 +3,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include "Networking.h"
-#include "StrNmbrFieldToArray.h"
+#include "ProtocolFunctions.h"
 
 #define MIN_WAITING_TIME 0.2 
 #define MAX_WAITING_TIME 10.0

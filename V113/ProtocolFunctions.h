@@ -15,10 +15,14 @@
 #define STRNMBRFIELDTOARRAY_H
 #include <iostream>
 #include <string>
+#include "BurgleBrosModel.h"
 
 
 using namespace std;
 
+
+std::string cardLocationToProtocol(CardLocation &cardLocation);		//(0,0,0) (floor,row,column) = A1F1 (protocol)
+CardLocation protocolToCardLocation(std::string location);
 void strNmbrFieldToArray(string &field, unsigned char *buffer, unsigned int *length);
 void arrayToStrNmbrField(string *field, unsigned char *buffer, unsigned int length);
 

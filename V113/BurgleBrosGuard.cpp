@@ -78,14 +78,6 @@ void BurgleBrosGuard::init()
 }
 
 
-void BurgleBrosGuard::setPosition(string initialGPos)
-{
-    string guardPosition=initialGPos.substr(0,4);
-    string guardDicePosition=initialGPos.substr(4,4);
-    drawCardTarget(protocolToCardLocation(guardDicePosition));
-    position=protocolToCardLocation(guardPosition);
-}
-
 void BurgleBrosGuard::setPosition(CardLocation location)
 {
     position=location;
@@ -98,10 +90,6 @@ void BurgleBrosGuard::setPosition()
         aux=getRandomCardLocation(floor);
     }while(aux==position);
     drawCardTarget(aux);
-}
-string BurgleBrosGuard::getInitGPos()
-{
-    return cardLocationToProtocol(position) + cardLocationToProtocol(*(shownDeck.begin()));
 }
 void BurgleBrosGuard::incDiceNumber()
 {

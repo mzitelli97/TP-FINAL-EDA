@@ -28,29 +28,6 @@ void BurgleBrosBoard::initBoard()
     floors[1].initFloor(1, secondFloor);
     floors[2].initFloor(2, thirdFloor);
 }
-void BurgleBrosBoard::initBoard(string startInfo)
-{
-	vector<CardName> allFloors;
-	vector<CardName> firstFloor, secondFloor, thirdFloor;
-	startInfoToVector(startInfo, &allFloors);        
-        sliceVector(allFloors, &firstFloor, &secondFloor, &thirdFloor);
-	floors[0].initFloor(0, firstFloor);
-	floors[1].initFloor(1, secondFloor);
-	floors[2].initFloor(2, thirdFloor);
-}
-string BurgleBrosBoard::getStartInfo()
-{
-	unsigned char buffer[BOARD_STANDARD_FLOORS*FLOOR_COLUMNS*FLOOR_RAWS];
-	unsigned int len = BOARD_STANDARD_FLOORS*FLOOR_COLUMNS*FLOOR_RAWS;
-	string retVal;
-	for (unsigned int j = 0; j < BOARD_STANDARD_FLOORS; j++)
-	{
-		for (unsigned int i = 0; i < FLOOR_COLUMNS*FLOOR_RAWS; i++)
-			buffer[j*FLOOR_COLUMNS*FLOOR_RAWS + i] = floors[j].getCardType(i);
-	}
-	arrayToStrNmbrField(&retVal, buffer, len);
-	return retVal;
-}
 bool BurgleBrosBoard::isAWallBetween(CardLocation tile1, CardLocation tile2)
 {
     if(tile1.floor == tile2.floor)
@@ -60,21 +37,13 @@ bool BurgleBrosBoard::isAWallBetween(CardLocation tile1, CardLocation tile2)
 }
 bool BurgleBrosBoard::adjacentCards(CardLocation source, CardRelativeLocation whereToMove)
 {
-	return floors[source.floor].isMovePossible(source, whereToMove);
+	return floors[source.floor].areTilesAdjacent(source, whereToMove);
 }
 bool BurgleBrosBoard::adjacentCards(CardLocation source, CardLocation destination)
 {
-	return floors[source.floor].isMovePossible(source, destination);
+	return floors[source.floor].areTilesAdjacent(source, destination);
 }
 
-BurgleBrosCard BurgleBrosBoard::getCardCopy(CardLocation location)
-{
-	return floors[location.floor].getCardCopy(location);
-}
-BurgleBrosCard BurgleBrosBoard::getCardCopy(std::string location)
-{
-	return getCardCopy(protocolToCardLocation(location));
-}
 void BurgleBrosBoard::getWalls(vector<wall> &vector)
 {
     for(unsigned int i=0;i <BOARD_STANDARD_FLOORS; i++)
@@ -84,41 +53,17 @@ void BurgleBrosBoard::setCardVisible(CardLocation location)
 {
 	return floors[location.floor].setCardVisible(location);
 }
-void BurgleBrosBoard::setCardVisible(std::string location)
-{
-	return setCardVisible(protocolToCardLocation(location));
-}
 bool BurgleBrosBoard::isCardVisible(CardLocation location)
 {
 	return floors[location.floor].isCardVisible(location);
-}
-bool BurgleBrosBoard::isCardVisible(std::string location)
-{
-	return isCardVisible(protocolToCardLocation(location));
 }
 unsigned int BurgleBrosBoard::getCardSafeNumber(CardLocation location)
 {
 	return floors[location.floor].getCardSafeNumber(location);
 }
-unsigned int BurgleBrosBoard::getCardSafeNumber(std::string location)
-{
-	return getCardSafeNumber(protocolToCardLocation(location));
-}
-bool BurgleBrosBoard::isCardCracked(CardLocation location)
-{
-	return floors[location.floor].isCardCracked(location);
-}
-bool BurgleBrosBoard::isCardCracked(std::string location)
-{
-	return isCardCracked(protocolToCardLocation(location));
-}
 CardName BurgleBrosBoard::getCardType(CardLocation location)
 {
 	return floors[location.floor].getCardType(location);
-}
-CardName BurgleBrosBoard::getCardType(std::string location)
-{
-	return getCardType(protocolToCardLocation(location));
 }
 
 CardLocation BurgleBrosBoard::getOtherServiceDuctPos(CardLocation secretDoor1)
@@ -256,17 +201,6 @@ bool BurgleBrosBoard::setSafeCracked(unsigned int floor)
 
 
 
-void BurgleBrosBoard::startInfoToVector(std::string &startInfo, std::vector<CardName> *cardNames)
-{
-	unsigned char buffer[BOARD_STANDARD_FLOORS*FLOOR_COLUMNS*FLOOR_RAWS];
-	unsigned int length;
-	string aux;
-	size_t found = startInfo.rfind(',');
-	aux = startInfo.substr(0, found);
-	strNmbrFieldToArray(aux, buffer, &length);
-	for (unsigned int i = 0; i < length; i++)
-		cardNames->push_back((CardName)buffer[i]);
-}
 
 void BurgleBrosBoard::sliceVector(std::vector<CardName> &allFloors, std::vector<CardName> *firstFloor, std::vector<CardName> *secondFloor, std::vector<CardName> *thirdFloor)
 {
@@ -325,15 +259,6 @@ void BurgleBrosBoard::getEachFloorTiles(vector<CardName> *firstFloor, vector<Car
 	shuffle(secondFloor->begin(), secondFloor->end(), default_random_engine(rand()));
 	shuffle(thirdFloor->begin(), thirdFloor->end(), default_random_engine(rand()));
 
-}
-void BurgleBrosBoard::testBoard()
-{
-	cout << "Floor 1 ";
-	floors[0].testFloor();
-	cout << "Floor 2 ";
-	floors[1].testFloor();
-	cout << "Floor 3 ";
-	floors[2].testFloor();
 }
 
 BurgleBrosBoard::~BurgleBrosBoard()
