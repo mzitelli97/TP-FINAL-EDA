@@ -25,6 +25,7 @@ bool operator!=(const CardLocation &l, const CardLocation &r);
 
 
 CardLocation getRandomCardLocation();
+CardLocation getRandomCardLocation(CardLocation exceptThisPos, unsigned int inThisFloor);
 CardLocation getRandomCardLocation(unsigned int inThisFloor);
 bool isAnAlarmTile(CardName tile);
 

@@ -296,7 +296,83 @@ void BurgleBrosController::clientInitRoutine(NetworkED *networkEvent)
 
 void BurgleBrosController::serverInitRoutine(NetworkED *networkEvent)
 {
-    
+    unsigned int packetCountCopy=initPacketCount;   //Saco una copia del número de paquete de inicialización
+    CardLocation guardPos,guardsDiePos, playersPos;
+    vector<CardName> tiles;
+    switch(initPacketCount)
+    {
+        case 0:
+            if(networkEvent->getHeader() == NAME_IS)   //Primero el client recibe el paquete name is del cliente. (Había mandado name antes el server).
+            {
+                auxInitInfo[OTHER_PLAYER].PlayerName=networkEvent->getName();   //Guarda el nombre del otro
+                networkInterface->sendPacket(ACK);      //Al cual le responde con su nombre 
+                initPacketCount++;
+            }
+            break;
+        case 1:
+            if(networkEvent->getHeader() == NAME)       //El cliente le pide al server su name
+            {
+                networkInterface->sendName(thisPlayerName);     //El server se lo devuelve.
+                initPacketCount++;
+            }
+            break;
+        case 2:
+            if(networkEvent->getHeader() == ACK)        //El cliente ya sabe el nombre del server
+            {
+                auxInitInfo[THIS_PLAYER].playersCharacter=getRandomCharacter(); //ENtonces se obtiene un character aleatorio
+                networkInterface->sendChar(auxInitInfo[THIS_PLAYER].playersCharacter); // se lo manda al client
+                initPacketCount++;
+            }
+            break;
+        case 3:
+            if(networkEvent->getHeader() == I_AM)       //EL cliente manda el character que escogió el.
+            {
+                auxInitInfo[OTHER_PLAYER].playersCharacter= networkEvent->getCharacter();     //Se obtiene ese character
+                modelPointer->generateGuardInitPos(&guardPos, &guardsDiePos);           //Se inicializa el guardia del primer piso
+                networkInterface->sendInitGPos(guardPos,guardsDiePos);          //Le manda al cliente donde se inicializó el guardia y su dado.
+                initPacketCount++;
+            }
+        case 4:
+            if(networkEvent->getHeader() == ACK)
+            {
+                modelPointer->initBoard(tiles);
+                auxInitInfo[THIS_PLAYER].initPos=getRandomCardLocation(modelPointer->getInfo2DrawGuard(0).position, 0); // EN el piso 0 empiezan
+                auxInitInfo[OTHER_PLAYER].initPos= auxInitInfo[THIS_PLAYER].initPos;    //Los dos empiezan en la misma posición
+                networkInterface->sendStartInfo(tiles, auxInitInfo[THIS_PLAYER].initPos);   //Se manda la información inicial de los tiles y la posición inicial de los jugadores
+                modelPointer->initPlayer(THIS_PLAYER,auxInitInfo[THIS_PLAYER].PlayerName,auxInitInfo[THIS_PLAYER].playersCharacter,auxInitInfo[THIS_PLAYER].initPos); //Se inicializan los jugadores con los datos que veníamos guardando en los anteriores mensajes.
+                modelPointer->initPlayer(OTHER_PLAYER,auxInitInfo[OTHER_PLAYER].PlayerName,auxInitInfo[OTHER_PLAYER].playersCharacter,auxInitInfo[OTHER_PLAYER].initPos);
+                initPacketCount++;
+            }
+            break;
+        case 5:
+            if(networkEvent->getHeader() == ACK)        //Al recibir este ack, ya hay que decidir quien juega
+            {
+                if(rand()%2)
+                {
+                    networkInterface->sendPacket(YOU_START);    //Si empieza el cliente, se lo dice y ya termina su fase de inicialización.
+                    initPacketCount=0;
+                    modelPointer->setInitTurn(OTHER_PLAYER);
+                    status=PLAYING;
+                }
+                else
+                {
+                    networkInterface->sendPacket(I_START);    //Si empieza el server, espera a que le llegue el ack para empezar a jugar
+                    initPacketCount++;
+                }
+            }
+            break;
+        case 6:
+            if(networkEvent->getHeader() == ACK)
+            {
+                modelPointer->setInitTurn(THIS_PLAYER);
+                initPacketCount=0;
+                status=PLAYING;
+            }
+            break;
+            
+    }
+    if(initPacketCount==packetCountCopy)    //Si no fue modificado significa que no entró a un if, por ende hubo un paquete que no siguió las reglas del protocolo -> se cierra el programa.
+        quit=true;
 }
 
 

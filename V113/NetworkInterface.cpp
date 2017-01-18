@@ -112,7 +112,7 @@ bool NetworkInterface::sendInitGPos(CardLocation guardPos, CardLocation guardDie
     retVal = p2networking->sendPacket(INITIAL_G_POS, aux.c_str(), aux.length());
     return retVal;
 }
-bool NetworkInterface::sendStartInfo(vector<CardName> tiles, CardLocation initTile)
+bool NetworkInterface::sendStartInfo(vector<CardName> &tiles, CardLocation &initTile)
 {
     bool retVal=false;
     unsigned char auxBuffer[BUFSIZE];

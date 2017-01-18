@@ -36,7 +36,7 @@ public:
         bool sendName(string name);         //El largo del nombre debe ser menor que bufsize - 1
         bool sendChar(CharacterName characterName);
         bool sendInitGPos(CardLocation guardPos, CardLocation guardDiePos);
-        bool sendStartInfo(vector<CardName> tiles, CardLocation initTile);
+        bool sendStartInfo(vector<CardName> &tiles, CardLocation &initTile);
         
 	~NetworkInterface();
 private:

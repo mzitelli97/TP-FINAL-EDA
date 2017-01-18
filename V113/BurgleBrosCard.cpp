@@ -67,7 +67,14 @@ CardLocation getRandomCardLocation(unsigned int inThisFloor)
     retVal.floor=inThisFloor;
     return retVal;
 }
-
+CardLocation getRandomCardLocation(CardLocation exceptThisPos, unsigned int inThisFloor)
+{
+    CardLocation retVal;
+    do{
+        retVal=getRandomCardLocation(inThisFloor);
+    }while(retVal==exceptThisPos);
+    return retVal;
+}
 
 
 BurgleBrosCard::BurgleBrosCard()
