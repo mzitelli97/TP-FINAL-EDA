@@ -154,9 +154,6 @@ BurgleBrosPlayer::BurgleBrosPlayer()
 {
     //pickRandomPlayer();//Ver si queda adentro, afuera o que....
     currentActions=4;
-    position.floor=0;
-    position.row=0;
-    position.column=0;
     lives=INIT_NMBR_OF_LIVES;
     isOnTheHelicopter=false;
 }

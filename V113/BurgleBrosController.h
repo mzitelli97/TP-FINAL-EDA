@@ -38,9 +38,8 @@ class BurgleBrosController:public Controller {
 public:
     BurgleBrosController();
     BurgleBrosController(const BurgleBrosController& orig);
-    void setThisPlayerName(string name);
-    void setCommunicationRole(CommunicationRole communicationRole);
     void attachNetworkInterface(NetworkInterface * p2NetworkInterface);
+    void setCommunicationRoleNThisPlayerName(CommunicationRole communicationRole, string name);
     void attachModel(BurgleBrosModel *gamePointer);
     void attachView(BurgleBrosView *view);
     bool checkIfGameFinished();

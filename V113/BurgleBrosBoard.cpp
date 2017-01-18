@@ -15,7 +15,7 @@ typedef struct{
 
 BurgleBrosBoard::BurgleBrosBoard()
 {
-    initBoard();
+    //initBoard();
 }
 void BurgleBrosBoard::initBoard()
 {

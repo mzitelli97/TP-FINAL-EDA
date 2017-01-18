@@ -23,24 +23,18 @@ using namespace std;
 BurgleBrosController::BurgleBrosController() 
 {
     modelPointer=nullptr;
+    networkInterface=nullptr;
     view=nullptr;
     quit=false;
     status=INITIALIZING;
     initPacketCount=0;
 }
 
-BurgleBrosController::BurgleBrosController(const BurgleBrosController& orig) {
+BurgleBrosController::BurgleBrosController(const BurgleBrosController& orig) 
+{
 }
 
-void BurgleBrosController::setThisPlayerName(string name)
-{
-    this->thisPlayerName=name;
-}
 
-void BurgleBrosController::setCommunicationRole(CommunicationRole communicationRole)
-{
-    this->communicationRole=communicationRole;
-}
 void BurgleBrosController::attachNetworkInterface(NetworkInterface * p2NetworkInterface)
 {
     this->networkInterface=p2NetworkInterface;
@@ -55,6 +49,14 @@ void BurgleBrosController::attachView(BurgleBrosView *view)
     if(view!=nullptr)
         this->view=view;
 }
+void BurgleBrosController::setCommunicationRoleNThisPlayerName(CommunicationRole communicationRole,string name)
+{
+    this->communicationRole=communicationRole;
+    this->thisPlayerName=name;
+    if(communicationRole==SERVER)
+        networkInterface->sendPacket(NAME);     //Si es el server, tiene que iniciar la conversación.
+}
+
 bool BurgleBrosController::checkIfGameFinished()
 {
     return quit;
@@ -73,7 +75,7 @@ string BurgleBrosController::askForSpentOK(vector<string> &message)
 void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
 {
     
-    if(mouseEvent!=nullptr)
+    if(mouseEvent!=nullptr && status!=INITIALIZING)
     {
         MouseED *p2MouseData = dynamic_cast<MouseED *> (mouseEvent);
         if( p2MouseData != nullptr)
@@ -369,7 +371,8 @@ void BurgleBrosController::serverInitRoutine(NetworkED *networkEvent)
                 status=PLAYING;
             }
             break;
-            
+        default:
+            break;
     }
     if(initPacketCount==packetCountCopy)    //Si no fue modificado significa que no entró a un if, por ende hubo un paquete que no siguió las reglas del protocolo -> se cierra el programa.
         quit=true;

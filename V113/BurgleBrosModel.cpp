@@ -24,18 +24,18 @@ BurgleBrosModel::BurgleBrosModel()
     BurgleBrosGuard aux3(2);
     guards[0]= aux1;
     guards[1]= aux2;
-    guards[2]= aux3;
+    guards[2]= aux3;/*
     board.initBoard();
     myPlayer.pickRandomPlayer();
     otherPlayer.pickRandomPlayer(myPlayer.getCharacter());
     myPlayer.setTurn(true);
     myPlayer.setName("PEPE");
     otherPlayer.setTurn(false);
-    otherPlayer.setName("COQUI");
+    otherPlayer.setName("COQUI");*/
     gameFinished=false;
-    guards[0].init();
+   /* guards[0].init();
     list<CardLocation> path = board.getShortestPath(guards[0].getPosition(), guards[0].getTargetPosition());
-    guards[0].setNewPathToTarget(path );
+    guards[0].setNewPathToTarget(path );*/
     playerSpentFreeAction=false;
     
 }
