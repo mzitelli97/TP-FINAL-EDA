@@ -67,6 +67,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/LibsInit.o \
 	${OBJECTDIR}/Model.o \
 	${OBJECTDIR}/MouseED.o \
+	${OBJECTDIR}/NetworkED.o \
 	${OBJECTDIR}/NetworkInterface.o \
 	${OBJECTDIR}/Networking.o \
 	${OBJECTDIR}/ProtocolFunctions.o \
@@ -258,6 +259,11 @@ ${OBJECTDIR}/MouseED.o: MouseED.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/MouseED.o MouseED.cpp
+
+${OBJECTDIR}/NetworkED.o: NetworkED.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/NetworkED.o NetworkED.cpp
 
 ${OBJECTDIR}/NetworkInterface.o: NetworkInterface.cpp
 	${MKDIR} -p ${OBJECTDIR}
