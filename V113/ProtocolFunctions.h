@@ -20,6 +20,8 @@
 
 using namespace std;
 
+#define PROTOCOL_LOCATION_LENGTH 4  //Por ejemplo A1F1, todas tienen 4 caracteres.
+
 
 std::string cardLocationToProtocol(CardLocation &cardLocation);		//(0,0,0) (floor,row,column) = A1F1 (protocol)
 CardLocation protocolToCardLocation(std::string location);

@@ -40,6 +40,11 @@ int main(int argc, char** argv) {
     model.attachController(&controller);
     model.attachSoundManager(&sound);
     
+    string name="PEPE";
+    string ipToConnect="192.0.1.8";
+    
+    gui.getNameAndIp(name, ipToConnect);
+    gui.connect();
     while(gui.gameStillPlaying())
     {
         if(gui.hayEvento())

@@ -35,12 +35,23 @@ void GUI::atachController(BurgleBrosController* Controller)
     this->Controller=Controller;
 }
 
+void GUI::getNameAndIp(string userName, string ipToConnect)
+{
+    this->userName=userName;
+    this->ipToConnect=ipToConnect;
+}
+void GUI::connect()
+{
+    while(!networkingInterface.standardConnectionStart(ipToConnect));
+}
+
 bool GUI::gameStillPlaying()
 {
     return !(Controller->checkIfGameFinished());
 }
 bool GUI::hayEvento()
 {
+    ALLEGRO_EVENT rawEvent;
     bool retVal=false;
     if(al_get_next_event(EventQueue,&rawEvent))   //necesito una eventQueue y donde la iniciliza
     {

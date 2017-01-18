@@ -3,7 +3,17 @@
 #define DIFF_TIME_CLOCK(X,Y) (((double)((X)-(Y)))/((double) CLOCKS_PER_SEC))
 #define RAND_IN_RANGE_DOUBLE(x,y) y+((((double)rand())/((double)(RAND_MAX)))*((x)-(y))) //y<x
 
+
+
 using namespace std;
+
+
+bool packetHasNoDataField(PerezProtocolHeader h)
+{
+    return (h==ACK || h==AGREE || h==DISAGREE || h==NAME || h==YOU_START || h==I_START || h==PASS || h==WE_WON || h==WE_LOST || h==GAME_OVER || h==QUIT || h==ERRORR);
+}
+
+
 NetworkInterface::NetworkInterface()
 {
     p2networking = new Networking;
@@ -12,6 +22,7 @@ NetworkInterface::NetworkInterface()
     currentRole = CLIENT;
     currClock = clock();
     prevClock = currClock;
+    error=false;
 }
 NetworkInterface::NetworkInterface(Networking &networking)
 {
@@ -21,6 +32,7 @@ NetworkInterface::NetworkInterface(Networking &networking)
 	currentRole = CLIENT;
 	currClock = clock();
 	prevClock = currClock;
+        error=false;
 }
 bool NetworkInterface::standardConnectionStart(string &ip)
 {
@@ -57,101 +69,66 @@ CommunicationRole NetworkInterface::getCommunicationRole()
 {
 	return currentRole;
 }
-bool NetworkInterface::sendPacket(PerezProtocolHeader header, string message)
+bool NetworkInterface::recievePacket(PerezProtocolHeader *header, unsigned char * msg, unsigned int *len)
 {
-	bool retVal = false;
-	string cardTypes, playerTile;
-	size_t found;
-	unsigned char auxBuffer[BUFSIZE];
-	unsigned char auxChar;
-	switch (header)
-	{
-	case START_INFO:
-		auxBuffer[0] = '\0';
-		unsigned int len;
-		found = message.rfind(',');
-		cardTypes = message.substr(0, found);
-		playerTile = message.substr(found + 1, message.length() - (found + 1));
-		strNmbrFieldToArray(cardTypes, auxBuffer, &len);
-		auxBuffer[len] = '\0';
-		memcpy(&(auxBuffer[len]), playerTile.c_str(), playerTile.length());
-		retVal = p2networking->sendPacket(header, (const char *)auxBuffer, playerTile.length() + len);
-		break;
-	case GUARD_MOVEMENT:
-		auxBuffer[0] = '\0';
-		memcpy(auxBuffer, message.c_str(), message.length());
-		for (unsigned int i = 0; i < message.length(); i++)
-		{
-			if (auxBuffer[i] == ',')												//entre los movs que realiza y las carta que levanta, el guard se pone un FF, pero en el programa le vamos a poner , as� es mas facil porque se puede operar con strings
-				auxBuffer[i] = 0xFF;												//entonces se reemplaza antes de enviarse en esta capa m�s baja.
-		}
-		retVal = p2networking->sendPacket(header, (const char *)auxBuffer, message.length());
-		break;
-	case NAME_IS:
-		auxBuffer[0] = '\0';
-		auxBuffer[0] = message.length();											//Por protocolo, debe ir en el primer byte el largo del nombre y luego el nombre.
-		memcpy(&(auxBuffer[1]), message.c_str(), message.length());
-		retVal = p2networking->sendPacket(header, (const char *)auxBuffer, message.length() + 1);
-		break;
-	case I_AM: case OFFER_LOOT: case REQUEST_LOOT:
-		auxChar = (unsigned char)stoi(message);
-		retVal = p2networking->sendPacket(header, (const char *)&auxChar, 1);
-		break;
-	default:
-		retVal = p2networking->sendPacket(header, message.c_str(), message.length());
-		break;
-	}
-	return retVal;
+    return p2networking->recievePacket(header,(char *)msg,len);
 }
-
-bool NetworkInterface::recievePacket(PerezProtocolHeader *headerRecieved, string *messageRecieved)
+bool NetworkInterface::sendPacket(PerezProtocolHeader header)
 {
-	bool retVal = false;
-	unsigned int lengthRecieved;
-	unsigned char auxBuffer[BUFSIZE];
-	retVal = p2networking->recievePacket(headerRecieved, (char *)auxBuffer, &lengthRecieved);
-	if (retVal == true)
-	{
-		auxBuffer[lengthRecieved] = (unsigned char) '\0';
-		string playerPos; //Switch no deja crear variables  en sus casos, pongo todas las variables auxiliares aca.
-		string cardTypes;
-		string coma;
-		char auxBuffer2[BUFSIZE];
-		switch (*headerRecieved)
-		{
-		case START_INFO:
-			playerPos = (char *)&(auxBuffer[lengthRecieved - 4]);
-			coma = ",";
-			arrayToStrNmbrField(&cardTypes, auxBuffer, lengthRecieved - 4); //4 De la posici�n del juego
-			*messageRecieved = cardTypes + coma + playerPos;
-			break;
-		case GUARD_MOVEMENT:
-			for (unsigned int i = 0; i < lengthRecieved; i++)
-			{
-				if (auxBuffer[i] == 0xFF)
-					auxBuffer[i] = ',';
-			}
-			*messageRecieved = (char *)auxBuffer;
-			break;
-		case NAME_IS:
-			*messageRecieved = (char *)&(auxBuffer[1]);
-			break;
-		case I_AM: case OFFER_LOOT: case REQUEST_LOOT:
-			auxBuffer2[0] = '\0';
-			sprintf(auxBuffer2, "%d", (unsigned int)auxBuffer[0]);
-			*messageRecieved = auxBuffer2;
-			break;
-		default:
-			*messageRecieved = (char *)auxBuffer; //Faltar�a checkear si es v�lido el header.
-			break;
-		}
-	}
-	return retVal;
+    bool retVal=false;
+    unsigned char buff[1];
+    unsigned int i=0;
+    if(packetHasNoDataField(header))
+        retVal=p2networking->sendPacket(header,(const char *)buff,i);
+    else
+    {
+        error=true;
+        errorMsg= "ERROR: NetworkInterface error: tried to send a message that has data field without data field.";
+    }
+    return retVal;
 }
-
-
-
-
+bool NetworkInterface::sendName(string name)
+{
+    bool retVal=false;
+    unsigned char auxBuffer[BUFSIZE];
+    auxBuffer[0] = '\0';
+    auxBuffer[0] = name.length();
+    memcpy(&(auxBuffer[1]), name.c_str(), name.length());
+    retVal = p2networking->sendPacket(NAME_IS, (const char *)auxBuffer, name.length() + 1);
+    return retVal;
+}
+bool NetworkInterface::sendChar(CharacterName characterName)
+{
+    bool retVal=false;
+    unsigned char auxBuffer[1];
+    auxBuffer[0]=(unsigned char) characterName;
+    retVal = p2networking->sendPacket(I_AM, (const char *)auxBuffer, 1);
+    return retVal;
+}
+bool NetworkInterface::sendInitGPos(CardLocation guardPos, CardLocation guardDiePos)
+{
+    bool retVal=false;
+    string aux = cardLocationToProtocol(guardPos) + cardLocationToProtocol(guardDiePos); 
+    retVal = p2networking->sendPacket(INITIAL_G_POS, aux.c_str(), aux.length());
+    return retVal;
+}
+bool NetworkInterface::sendStartInfo(vector<CardName> tiles, CardLocation initTile)
+{
+    bool retVal=false;
+    unsigned char auxBuffer[BUFSIZE];
+    if(tiles.size() == BOARD_STANDARD_FLOORS*FLOOR_RAWS * FLOOR_COLUMNS)
+    {
+        unsigned int i;
+        for(i=0; i<BOARD_STANDARD_FLOORS*FLOOR_RAWS * FLOOR_COLUMNS; i++)
+        {
+            auxBuffer[i]=(unsigned char) tiles[i];
+        }
+        string initPos=cardLocationToProtocol(initTile);
+        memcpy(&(auxBuffer[i]), initPos.c_str(), initPos.length());	 
+        retVal = p2networking->sendPacket(START_INFO,(const char *) auxBuffer, BOARD_STANDARD_FLOORS*FLOOR_RAWS * FLOOR_COLUMNS+ initPos.length());
+    }
+    return retVal;
+}
 
 
 NetworkInterface::~NetworkInterface()

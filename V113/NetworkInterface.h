@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "Networking.h"
 #include "ProtocolFunctions.h"
+#include "BurgleBrosModel.h"
 
 #define MIN_WAITING_TIME 0.2 
 #define MAX_WAITING_TIME 10.0
@@ -14,7 +15,9 @@ typedef struct
     PerezProtocolHeader header;
     std::string message;
 }NetworkMessage;
+using namespace std;
 
+bool packetHasNoDataField(PerezProtocolHeader header); //Devuelve si el header no requiere ningún dato extra, por ejemplo ack
 
 class NetworkInterface
 {
@@ -28,15 +31,18 @@ public:
 	bool standardConnectionStart(std::string &ip);	
 	/*Devuelve si se conect� como server o cliente */
 	CommunicationRole getCommunicationRole();
-	/*Recibe un paquete del protocolo establecido, pasando el mensaje a un formato de string. Los unicos dos mensajes que van a ser distintos son
-	Guard movement y Name Is, ya que pueden tener caracteres con los que no opera string. Por ejemplo si llega : 5ARIEL (nameis) esta funcion devuelve
-	un string con "ARIEL". si llega A2F2(0xFF)A4F2(0xFF)(GUARD_MOV) devuelve A2F2,A4F2,*/
-	bool recievePacket(PerezProtocolHeader *headerRecieved, std::string *messageRecieved);
-	/*Adapta el mensaje en string al protocolo y lo env�a, as� se puede trabajar con strings todos los mensajes.*/
-	bool sendPacket(PerezProtocolHeader header, std::string message);
+	bool recievePacket(PerezProtocolHeader *header, unsigned char * msg, unsigned int *len);
+        bool sendPacket(PerezProtocolHeader header);    //Para los que no mandan datos.
+        bool sendName(string name);         //El largo del nombre debe ser menor que bufsize - 1
+        bool sendChar(CharacterName characterName);
+        bool sendInitGPos(CardLocation guardPos, CardLocation guardDiePos);
+        bool sendStartInfo(vector<CardName> tiles, CardLocation initTile);
+        
 	~NetworkInterface();
 private:
 	double timeToBecomeServer;
+        bool error;
+        string errorMsg;
 	clock_t prevClock;
 	clock_t currClock;
 	bool  firstTimeCalled;
