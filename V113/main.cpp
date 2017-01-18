@@ -40,8 +40,8 @@ int main(int argc, char** argv) {
     model.attachController(&controller);
     model.attachSoundManager(&sound);
     
-    string name="PEPE";
-    string ipToConnect="192.0.1.8";
+    string name=argv[1];
+    string ipToConnect=argv[1];
     
     gui.getNameAndIp(name, ipToConnect);
     gui.connect();
