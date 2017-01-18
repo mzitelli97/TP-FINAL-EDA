@@ -15,11 +15,12 @@
 #define NETWORKED_H
 
 #include "NetworkInterface.h"
+#include "EventData.h"
 #include "ProtocolFunctions.h"
 
 class NetworkED: public EventData {
 public:
-    NetworkED(PerezProtocolHeader header, char * buffer, unsigned int length);
+    NetworkED(PerezProtocolHeader header,unsigned char * buffer, unsigned int length);
     bool isPacketOk();          //FALTARIA DESARROLLAR
     string getName();
     CharacterName getCharacter();
@@ -30,7 +31,7 @@ public:
     virtual ~NetworkED();
 private:
     PerezProtocolHeader header;
-    char buffer[BUFSIZE];
+    unsigned char buffer[BUFSIZE];
     unsigned int len;
     bool error=false;
 };

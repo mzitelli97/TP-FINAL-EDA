@@ -15,6 +15,7 @@
 #include <allegro5/mouse.h>
 #include "GUI.h"
 #include "MouseED.h"
+#include "NetworkED.h"
 
 GUI::GUI() {
     
@@ -43,6 +44,7 @@ void GUI::getNameAndIp(string userName, string ipToConnect)
 void GUI::connect()
 {
     while(!networkingInterface.standardConnectionStart(ipToConnect));
+    //controller->setCommunicationRole(networkingInterface.getCommunicationRole());
 }
 
 bool GUI::gameStillPlaying()
@@ -53,38 +55,32 @@ bool GUI::hayEvento()
 {
     ALLEGRO_EVENT rawEvent;
     bool retVal=false;
-    if(al_get_next_event(EventQueue,&rawEvent))   //necesito una eventQueue y donde la iniciliza
+    unsigned char auxBuffer[BUFSIZE];
+    unsigned int len;
+    PerezProtocolHeader header;
+    if(networkingInterface.recievePacket(&header,auxBuffer,&len))
     {
-       /* switch(rawEvent.type)
-        {       
-            case ALLEGRO_MOUSE_EVENT:*/
-
-                if(rawEvent.mouse.type == ALLEGRO_EVENT_MOUSE_AXES)
-                {
-                   
-                }
-                else if(rawEvent.mouse.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP)
-                {
-                    
-                    MouseED *auxData= new MouseED(true,rawEvent.mouse.x,rawEvent.mouse.y);
-                    eventData=(EventData *) auxData;
-                    event=GUI_EVENT_MOUSE;
-                    retVal=true;
-                }
-                else if(rawEvent.mouse.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
-                {
-
-                }
-                //break;
- /*           case ALLEGRO_KEYBOARD_EVENT:    
-                    
-                break;
-        
-        }*/
-        
-        
+        NetworkED *auxData=new NetworkED(header,auxBuffer,len);
+        if(auxData->isPacketOk())
+        {
+            eventData= (EventData *) auxData;
+            event=GUI_EVENT_NETWORKING;
+            retVal=true;
+        }
+        else
+            error=true;
     }
-    //elseif NETWORKING
+    else if(al_get_next_event(EventQueue,&rawEvent))   //necesito una eventQueue y donde la iniciliza
+    {
+        if(rawEvent.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP)
+        {
+
+            MouseED *auxData= new MouseED(true,rawEvent.mouse.x,rawEvent.mouse.y);
+            eventData=(EventData *) auxData;
+            event=GUI_EVENT_MOUSE;
+            retVal=true;
+        }
+    }
     return retVal;
 }
 
@@ -98,6 +94,7 @@ void GUI::parseEvento(){
         case GUI_EVENT_KEYBOARD:
             break;
         case GUI_EVENT_NETWORKING:
+            //Controller->parseNetworkEvent(eventData);
             break;
     }
     

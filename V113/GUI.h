@@ -39,6 +39,7 @@ public:
 private:
     BurgleBrosController * Controller;
     string userName;
+    bool error;
     string ipToConnect;
     CommunicationRole communicationRole;
     GuiEvent event;

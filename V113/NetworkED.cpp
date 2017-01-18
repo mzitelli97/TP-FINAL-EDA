@@ -13,10 +13,12 @@
 
 #include "NetworkED.h"
 
-NetworkED::NetworkED(PerezProtocolHeader header, char * buffer, unsigned int length) 
+NetworkED::NetworkED(PerezProtocolHeader header,unsigned char * buffer, unsigned int length) 
 {
      error=false;
-    
+     this->header=header;
+     this->len=length;
+     memcpy(this->buffer, buffer, len);
 }
 
 bool NetworkED::isPacketOk()
@@ -39,7 +41,7 @@ void NetworkED::getInitGPos(CardLocation *guardPos, CardLocation *guardsDiePos)
     if(header==INITIAL_G_POS)
     {
         buffer[len]= '\0';
-        string aux = buffer;
+        string aux = (char *)buffer;
         *guardPos=protocolToCardLocation(aux.substr(0,PROTOCOL_LOCATION_LENGTH));
         *guardsDiePos=protocolToCardLocation(aux.substr(PROTOCOL_LOCATION_LENGTH,PROTOCOL_LOCATION_LENGTH));
     }
@@ -55,7 +57,7 @@ void NetworkED::getStartInfo(vector<CardName> *tiles, CardLocation *playersStart
         unsigned int i;
         for(i=0;i<BOARD_STANDARD_FLOORS*FLOOR_RAWS*FLOOR_COLUMNS; i++)
             tiles->push_back((CardName)buffer[i]);
-        string aux= (&(buffer[i]));
+        string aux= (char *)(&(buffer[i]));
         *playersStartingPos=protocolToCardLocation(aux);
     }
     else 
