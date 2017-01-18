@@ -25,6 +25,10 @@ bool NetworkED::isPacketOk()
 {
     return true; //Por ahora confiamos que todos los paquetes se van a mandar bien.
 }
+PerezProtocolHeader NetworkED::getHeader()
+{
+    return header;
+}
 CharacterName NetworkED::getCharacter()
 {
     CharacterName retVal;
@@ -36,6 +40,14 @@ CharacterName NetworkED::getCharacter()
         error=true;
     return retVal;
 }
+
+string NetworkED::getName()
+{
+    buffer[len]= '\0';
+    string aux = (char *)(&(buffer[1]));
+    return aux;
+}
+
 void NetworkED::getInitGPos(CardLocation *guardPos, CardLocation *guardsDiePos)
 {
     if(header==INITIAL_G_POS)

@@ -11,6 +11,7 @@
 #include "Controller.h"
 #include "SoundManager.h"
 
+#define NUMBER_OF_PLAYERS 2
 
 /*Mensajes para dialog box tienen:  TITULO                  SUBTITULO               TEXTO */
 #define ENTER_FINGERPRINT_TEXT      "Alert",            "Confirm Action", "You have entered a Fingerprint tile, so you will trigger an alarm unless you use a hack token"

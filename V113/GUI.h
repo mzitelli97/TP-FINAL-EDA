@@ -20,7 +20,6 @@
 #include "NetworkInterface.h"
 
 typedef enum{GUI_EVENT_MOUSE, GUI_EVENT_KEYBOARD,GUI_EVENT_NETWORKING,GUI_EVENT_NOEVENT} GuiEvent;
-typedef enum{GETTING_NAME_AND_IP, CONNECTING, INITIALIZING, PLAYING}GameStatus;
 
 using namespace std;
 

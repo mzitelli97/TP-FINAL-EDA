@@ -14,6 +14,8 @@
 #include "BurgleBrosController.h"
 #include "MouseED.h"
 #include "GraphicMenuItem.h"
+#include "GUI.h"
+#include "NetworkED.h"
 #include <algorithm>
 
 using namespace std;
@@ -22,12 +24,27 @@ BurgleBrosController::BurgleBrosController()
 {
     modelPointer=nullptr;
     view=nullptr;
-    gameIsOver=false;
+    quit=false;
+    status=INITIALIZING;
+    initPacketCount=0;
 }
 
 BurgleBrosController::BurgleBrosController(const BurgleBrosController& orig) {
 }
 
+void BurgleBrosController::setThisPlayerName(string name)
+{
+    this->thisPlayerName=name;
+}
+
+void BurgleBrosController::setCommunicationRole(CommunicationRole communicationRole)
+{
+    this->communicationRole=communicationRole;
+}
+void BurgleBrosController::attachNetworkInterface(NetworkInterface * p2NetworkInterface)
+{
+    this->networkInterface=p2NetworkInterface;
+}
 void BurgleBrosController::attachModel(BurgleBrosModel *gamePointer)
 {
     if(gamePointer!=nullptr)
@@ -40,7 +57,7 @@ void BurgleBrosController::attachView(BurgleBrosView *view)
 }
 bool BurgleBrosController::checkIfGameFinished()
 {
-    return gameIsOver;
+    return quit;
 }
 string BurgleBrosController::askForSpentOK(vector<string> &message)
 {
@@ -107,7 +124,7 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                 case EXIT_BUTTON_CLICK:
                     if(view->yesNoMessageBox(exitMsg)==1)
                     {
-                        gameIsOver=true;
+                        quit=true;
                         quitCause=USER_QUIT;
                     }
                     break;
@@ -171,47 +188,117 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
             }
         }
     }
-    /*else if(action=="ASK FOR TIARA")
-        modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,TIARA);
-    else if(action=="ASK FOR PERSIAN KITTY")
-        modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,PERSIAN_KITTY);
-    else if(action=="ASK FOR PAITING")
-        modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,PAINTING);
-    else if(action=="ASK FOR MIRROR")
-        modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,MIRROR);
-    else if(action=="ASK FOR KEYCARD")
-        modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,KEYCARD);
-    else if(action=="ASK FOR ISOTOPE")
-        modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,ISOTOPE);
-    else if(action=="ASK FOR GEMSTONE")
-        modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,GEMSTONE);
-    else if(action=="ASK FOR CURSED GOBLET")
-        modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,CURSED_GOBLET);
-    else if(action=="ASK FOR CHIHUAHUA")
-        modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,CHIHUAHUA);
-    else if(action=="ASK FOR GOLD BAR")
-        modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,GOLD_BAR);
-    else if(action=="OFFER TIARA")
-        modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,TIARA);
-    else if(action=="OFFER PERSIAN KITTY")
-        modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,PERSIAN_KITTY);
-    else if(action=="OFFER PAITING")
-        modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,PAINTING);
-    else if(action=="OFFER MIRROR")
-        modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,MIRROR);
-    else if(action=="OFFER KEYCARD")
-        modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,KEYCARD);
-    else if(action=="OFFER ISOTOPE")
-        modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,ISOTOPE);
-    else if(action=="OFFER GEMSTONE")
-        modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,GEMSTONE);
-    else if(action=="OFFER CURSED GOBLET")
-        modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,CURSED_GOBLET);
-    else if(action=="OFFER CHIHUAHUA")
-        modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,CHIHUAHUA);
-    else if(action=="OFFER GOLD BAR")
-        modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,GOLD_BAR);*/
 }
+
+void BurgleBrosController::parseNetworkEvent(EventData *networkEvent)
+{
+    NetworkED *p2NetworkData = dynamic_cast<NetworkED *> (networkEvent);
+    if(p2NetworkData!=nullptr)
+    {
+        switch(status)      //Depende de en que estado está el juego, los paquetes de internet significan distintas cosas
+        {
+            case INITIALIZING:          //En la inicialización importa si es el cliente o el server en cuanto al orden de los mensajes
+                if(communicationRole==CLIENT)
+                    clientInitRoutine(p2NetworkData);
+                else if(communicationRole==SERVER)
+                    serverInitRoutine(p2NetworkData);
+                break;
+            default:
+                break;
+              
+        }
+    }
+    else
+        quit=true;
+}
+
+void BurgleBrosController::clientInitRoutine(NetworkED *networkEvent)
+{
+    unsigned int packetCountCopy=initPacketCount;   //Saco una copia del número de paquete de inicialización
+    CardLocation guardPos,guardsDiePos, playersPos;
+    vector<CardName> tiles;
+    switch(initPacketCount)
+    {
+        case 0: 
+            if(networkEvent->getHeader() == NAME)   //Primero el client recibe el paquete name
+            {
+                networkInterface->sendName(thisPlayerName);  //Al cual le responde con su nombre 
+                initPacketCount++;
+            }
+            break;
+        case 1:
+            if(networkEvent->getHeader() == ACK)        //Una vez que el server recibió la informacion y confirmó con un ack
+            {
+                networkInterface->sendPacket(NAME);     //Se le envía name para saber el nombre del server.
+                initPacketCount++;
+            }
+            break;
+        case 2:
+            if(networkEvent->getHeader() == NAME_IS)    //El server responde con su nombre.
+            {
+                auxInitInfo[OTHER_PLAYER].PlayerName=networkEvent->getName(); //Se guarda en una estructura auxiliar para luego pasarle toda la información junta de inicialización de jugadores al modelo.
+                networkInterface->sendPacket(ACK);     //Se le envía un ack para confirmar la información recibida.
+                initPacketCount++;
+            }
+            break;
+        case 3:
+            if(networkEvent->getHeader() == I_AM)   //Luego el server manda que character escogió
+            {
+                auxInitInfo[OTHER_PLAYER].playersCharacter=networkEvent->getCharacter();        //Se guarda su jugador
+                auxInitInfo[THIS_PLAYER].playersCharacter=getRandomCharacter(auxInitInfo[OTHER_PLAYER].playersCharacter);    //Se elige uno random que no sea el que escogió el server
+                networkInterface->sendChar(auxInitInfo[THIS_PLAYER].playersCharacter);      //Y se le manda la info de cual es el que escogió el client.
+                initPacketCount++;
+            }
+            break;
+        case 4:
+            if(networkEvent->getHeader() == INITIAL_G_POS)      //El server crea a los guardias y le pasa al cliente donde están
+            {
+                networkEvent->getInitGPos(&guardPos, &guardsDiePos);    //Geteo su info y se la paso al modelo
+                modelPointer->copyGuardInitPos(guardPos,guardsDiePos);
+                networkInterface->sendPacket(ACK);                      //Respondo con un ack
+                initPacketCount++;
+            }
+            break;
+        case 5:
+            if(networkEvent->getHeader() == START_INFO)         //Luego vienen de que tipo es cada tile, y la posición inicial de los jugadores
+            {   
+                networkEvent->getStartInfo(&tiles, &playersPos);    
+                modelPointer->initBoard(tiles);                 //Se inicializa ya el board
+                auxInitInfo[OTHER_PLAYER].initPos=playersPos;   //Y se pasa toda la info de los players al modelo
+                auxInitInfo[THIS_PLAYER].initPos=playersPos;
+                modelPointer->initPlayer(THIS_PLAYER,auxInitInfo[THIS_PLAYER].PlayerName,auxInitInfo[THIS_PLAYER].playersCharacter,auxInitInfo[THIS_PLAYER].initPos);
+                modelPointer->initPlayer(OTHER_PLAYER,auxInitInfo[OTHER_PLAYER].PlayerName,auxInitInfo[OTHER_PLAYER].playersCharacter,auxInitInfo[OTHER_PLAYER].initPos);
+                networkInterface->sendPacket(ACK);              //Se responde con un ack
+                initPacketCount++;
+            }
+            break;
+        case 6:
+            if(networkEvent->getHeader() == YOU_START)          //Luego el server decide quien empieza.
+            {
+                initPacketCount=0;
+                modelPointer->setInitTurn(THIS_PLAYER);         //Como el server dijo que el cliente empiece empieza el jugador de esta maquina
+                status=PLAYING;
+            }
+            else if(networkEvent->getHeader() == I_START)
+            {
+                initPacketCount=0;
+                modelPointer->setInitTurn(OTHER_PLAYER);         //Como el server dijo que el cliente empiece empieza el, the other player comienza jugando.
+                networkInterface->sendPacket(ACK);              //Se le manda un ack para que el server sepa que le llegó el msj al cliente.
+                status=PLAYING;
+            }
+            break;
+        default:
+            break;
+    }
+    if(initPacketCount==packetCountCopy)    //Si no fue modificado significa que no entró a un if, por ende hubo un paquete que no siguió las reglas del protocolo -> se cierra el programa.
+        quit=true;
+}
+
+void BurgleBrosController::serverInitRoutine(NetworkED *networkEvent)
+{
+    
+}
+
 
 void BurgleBrosController::checkGameStatus()
 {

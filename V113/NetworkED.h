@@ -22,6 +22,7 @@ class NetworkED: public EventData {
 public:
     NetworkED(PerezProtocolHeader header,unsigned char * buffer, unsigned int length);
     bool isPacketOk();          //FALTARIA DESARROLLAR
+    PerezProtocolHeader getHeader();
     string getName();
     CharacterName getCharacter();
     void getInitGPos(CardLocation *guardPos, CardLocation *guardsDiePos);
