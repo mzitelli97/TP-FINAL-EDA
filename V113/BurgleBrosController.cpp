@@ -280,6 +280,8 @@ void BurgleBrosController::clientInitRoutine(NetworkED *networkEvent)
                 initPacketCount=0;
                 modelPointer->setInitTurn(THIS_PLAYER);         //Como el server dijo que el cliente empiece empieza el jugador de esta maquina
                 status=PLAYING;
+                view->ViewInit(modelPointer);
+                view->update(modelPointer);
             }
             else if(networkEvent->getHeader() == I_START)
             {
@@ -287,6 +289,8 @@ void BurgleBrosController::clientInitRoutine(NetworkED *networkEvent)
                 modelPointer->setInitTurn(OTHER_PLAYER);         //Como el server dijo que el cliente empiece empieza el, the other player comienza jugando.
                 networkInterface->sendPacket(ACK);              //Se le manda un ack para que el server sepa que le llegó el msj al cliente.
                 status=PLAYING;
+                view->ViewInit(modelPointer);
+                view->update(modelPointer);
             }
             break;
         default:
@@ -355,6 +359,8 @@ void BurgleBrosController::serverInitRoutine(NetworkED *networkEvent)
                     initPacketCount=0;
                     modelPointer->setInitTurn(OTHER_PLAYER);
                     status=PLAYING;
+                    view->ViewInit(modelPointer);
+                    view->update(modelPointer);
                 }
                 else
                 {
@@ -369,6 +375,8 @@ void BurgleBrosController::serverInitRoutine(NetworkED *networkEvent)
                 modelPointer->setInitTurn(THIS_PLAYER);
                 initPacketCount=0;
                 status=PLAYING;
+                view->ViewInit(modelPointer);
+                view->update(modelPointer);
             }
             break;
         default:

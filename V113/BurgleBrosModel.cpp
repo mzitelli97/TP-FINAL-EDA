@@ -83,6 +83,7 @@ void BurgleBrosModel::initPlayer(PlayerId playerId, string playerName, Character
     p->setName(playerName);
     p->setPosition(playerPos);
     p->setCharacter(playerCharacter);
+    tokens.placeDownstairToken(playerPos);
 }
 void BurgleBrosModel::setInitTurn(PlayerId playerId)
 {
