@@ -84,6 +84,7 @@ class BurgleBrosModel : public Model
         bool isOfferLootPossible(PlayerId playerId, CardLocation tile, Loot loot);
         bool isEscapePossible(PlayerId playerId, CardLocation tile);
         bool isPeekGuardsCardPossible(PlayerId playerId, unsigned int guardsFloor);
+        bool moveWillRequireSpecifications(PlayerId playerId, CardLocation locationToMove, int safeNumber); //devuelve true si el model necesitara info extra, por ejemplo si necesita el input de responder el allegro native dialog box o si necesita saber los dados que tiró el otro jugador.
         list<string> getPosibleActionsToTile(PlayerId player, CardLocation tile);   //Devuelve que acciones puede realizar el jugador indicado en esa tile
         list<string> getPosibleActionsToGuard(PlayerId player, unsigned int guardsFloor); 
         void moveGuard(unsigned int floor);

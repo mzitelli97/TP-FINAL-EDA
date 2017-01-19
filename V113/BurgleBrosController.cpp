@@ -446,24 +446,7 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
 {
     if(packetsQueue.empty())      //Si no había que procesar un paquete anterior como MOVE.  
     {
-        switch(networkEvent->getHeader())       //Depende de que acción se ejecutan distintas funciones.
-        {
-            case PEEK:
-                modelPointer->peek(OTHER_PLAYER, networkEvent->getPos(),networkEvent->getSafeNumber());
-                networkInterface->sendPacket(ACK);
-                break;
-            case PASS:
-                modelPointer->pass(OTHER_PLAYER);   
-                networkInterface->sendPacket(ACK);
-                break;
-            case MOVE:      //El caso de move es distinto, se guarda el paquete y con el siguiente paquete se decide que hacer
-                packetsQueue.push_back(*networkEvent);  //Si se hizo un move que pregunta por un spent ok se tiene que saber responder, y eso viene con el siguiente paquete.
-                networkInterface->sendPacket(ACK);
-                break;
-            default:
-                break;
-
-        }
+        doOnePacketAction(networkEvent);
     }
     else
     {
@@ -472,6 +455,8 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             case MOVE:  //Si luego de move llega uno de estos paquetes que sirven para saber si triggerear una alarma , si pudo entrar o no, se pushean a la lista.
                 if(networkEvent->getHeader()==SPENT_OK || networkEvent->getHeader()==USE_TOKEN || networkEvent->getHeader()==SPENT_OK)
                     packetsQueue.push_back(*networkEvent);
+                else 
+                    doOnePacketAction(networkEvent);
                 modelPointer->move(OTHER_PLAYER, networkEvent->getPos(),networkEvent->getSafeNumber()); //Si no era ninguno de esos, a la llegada del siguiente paquete no se va a llamar a spentOK del controller
                 packetsQueue.pop_front(); //Borro el paquete de move.
                 networkInterface->sendPacket(ACK);
@@ -483,6 +468,35 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
         }
     }
 }
+
+void BurgleBrosController::doOnePacketAction(NetworkED *networkEvent)
+{
+    switch(networkEvent->getHeader())       //Depende de que acción se ejecutan distintas funciones.
+    {
+        case PEEK:
+            modelPointer->peek(OTHER_PLAYER, networkEvent->getPos(),networkEvent->getSafeNumber());
+            networkInterface->sendPacket(ACK);
+            break;
+        case PASS:
+            modelPointer->pass(OTHER_PLAYER);   
+            networkInterface->sendPacket(ACK);
+            break;
+        case MOVE:     
+            if(modelPointer->moveWillRequireSpecifications(OTHER_PLAYER, networkEvent->getPos(), NO_SAFE_NUMBER))   //Si se necesita saber info extra, por ejemplo al entrar en un laser si gast acciones, usa token o triggerea alarma, se dejara para analizar cuando llegue el sig paquete
+                packetsQueue.push_back(*networkEvent);  
+            else        //Sino se realiza el move y se manda un ack.
+            {
+                modelPointer->move(OTHER_PLAYER, networkEvent->getPos(),networkEvent->getSafeNumber());
+                networkInterface->sendPacket(ACK);
+            }
+            networkInterface->sendPacket(ACK);
+            break;
+        default:
+            break;
+
+    }
+}
+
 
 void BurgleBrosController::checkGameStatus()
 {

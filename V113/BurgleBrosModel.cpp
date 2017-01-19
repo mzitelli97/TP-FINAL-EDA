@@ -992,6 +992,65 @@ bool BurgleBrosModel::isPeekGuardsCardPossible(PlayerId playerId, unsigned int g
     return retVal;
 }
 
+
+ bool BurgleBrosModel::moveWillRequireSpecifications(PlayerId playerId, CardLocation locationToMove, int safeNumber)
+ {
+    bool retVal=false;
+    if(isMovePosible(playerId, locationToMove) && !gameFinished)
+    {
+        BurgleBrosPlayer* movingPlayer=getP2Player(playerId);
+        BurgleBrosPlayer* playerNotMoving=getP2OtherPlayer(playerId);
+        CardLocation prevLocation=movingPlayer->getPosition();
+        CardName newCardType=board.getCardType(locationToMove);
+        bool cardWasVisible=true;
+        
+        if( !board.isCardVisible(locationToMove) )
+            cardWasVisible=false;
+        movingPlayer->decActions();
+        movingPlayer->setPosition(locationToMove);
+        
+        
+        if(board.getCardType(prevLocation)==MOTION && board.isMotionActivated())        //Si salio de un motion y habia entrado en el mismo turno
+        {
+            if(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_MOTION))         //Y si hay tokens que puede usar, va a salir un cartel
+                retVal=true;        
+        }
+        if( newCardType==DEADBOLT && locationToMove!=guards[locationToMove.floor].getPosition() && locationToMove!=playerNotMoving->getPosition())
+        {   //Si se movió a un deadbolt y no había nadi allí
+            if(movingPlayer->getcurrentActions()>2)     //Y tiene 3 o mas acciones, va a saltar un cartel.
+                retVal=true; 
+        } 
+        if( newCardType==KEYPAD && !tokens.isThereAKeypadToken(locationToMove))     //Si esta en un keypad que no tiene su token
+        {
+            if(getPlayerOnTurn()==OTHER_PLAYER)          //y el otro jugador fue el que tiro los dados, necesita saber el numero de esos dados.
+                retVal=true;
+        }
+        
+        if(movingPlayer->getCharacter()!=THE_HACKER && ( playerNotMoving->getCharacter()!=THE_HACKER || (playerNotMoving->getCharacter()==THE_HACKER && locationToMove!= playerNotMoving->getPosition() ) ))
+        {    
+            if( newCardType==FINGERPRINT) // si entra a un fingerprint
+            {
+               if(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_FINGERPRINT) )//Si hay tokens disponibles
+                   retVal=true;     //Va a salir un cartel si gastar tokens o trigger alarma.
+            }   
+            if(newCardType==LASER && !movingPlayer->hasLoot(MIRROR))
+            {   
+                if( !(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_LASER)) && !(movingPlayer->getcurrentActions())) //Si no hay tokens y no le quedan mas acciones
+                    retVal=false;   //nada
+                else            //Sino, si pide un cartel para ver si se puede.
+                    retVal=true;
+            }
+        }
+        if(newCardType==LAVATORY)           //Si se mueve a un lavatory y había un guardia alli, y seguian habiendo stealth tokens, salta un cartel para saber si gastar los suyos o los del lavatory
+        {
+            if(locationToMove==guards[locationToMove.floor].getPosition() && tokens.isThereAStealthToken(locationToMove))
+                retVal=true;
+        }   
+    }
+    return retVal;
+ }
+
+
 list<string> BurgleBrosModel::getPosibleActionsToTile(PlayerId player, CardLocation tile)
 {
     list<string> aux;
