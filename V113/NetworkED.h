@@ -27,7 +27,8 @@ public:
     CharacterName getCharacter();
     void getInitGPos(CardLocation *guardPos, CardLocation *guardsDiePos);
     void getStartInfo(vector<CardName> *tiles, CardLocation *playersStartingPos);
-    
+    CardLocation getPos();
+    unsigned int getSafeNumber();
     
     virtual ~NetworkED();
 private:

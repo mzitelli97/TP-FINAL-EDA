@@ -50,6 +50,7 @@ public:
 private:
     void clientInitRoutine(NetworkED *networkEvent);
     void serverInitRoutine(NetworkED *networkEvent);
+    void interpretNetworkAction(NetworkED *networkEvent);
     void interpretAction(string action, CardLocation location);
     void checkGameStatus();
     NetworkInterface * networkInterface;

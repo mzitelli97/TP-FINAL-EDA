@@ -75,8 +75,32 @@ void NetworkED::getStartInfo(vector<CardName> *tiles, CardLocation *playersStart
     else 
         error=true;
 }
-
-
+CardLocation NetworkED::getPos()
+{
+    CardLocation retVal;
+    if(header==MOVE || header == PEEK)
+    {
+        char temp =  buffer[len-1];   //Guardo el numero del safe.
+        buffer[len-1]= '\0';    //Pongo un terminador en su lugar
+        string aux =(char *) buffer;
+        retVal=protocolToCardLocation(aux); // Lo paso por string y lo convierto a card locatioon
+        buffer[len-1]=temp;         //Le vuelvo a asignar su número del safe.
+    }
+    else 
+        error=true;
+    return retVal;
+}
+unsigned int NetworkED::getSafeNumber()
+{
+    unsigned int retVal;
+    if(header==MOVE || header == PEEK)
+    {
+        retVal=buffer[len-1];       //El numero de safe se guarda en el ultimo byte del msg.
+    }
+    else 
+        error=true;
+    return retVal;
+}
 NetworkED::~NetworkED() 
 {
 }

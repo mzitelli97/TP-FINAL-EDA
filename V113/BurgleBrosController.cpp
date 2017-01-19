@@ -208,6 +208,9 @@ void BurgleBrosController::parseNetworkEvent(EventData *networkEvent)
                 else if(communicationRole==SERVER)
                     serverInitRoutine(p2NetworkData);
                 break;
+            case PLAYING:
+                interpretNetworkAction(p2NetworkData);
+                break;
             default:
                 break;
               
@@ -388,7 +391,19 @@ void BurgleBrosController::serverInitRoutine(NetworkED *networkEvent)
     if(initPacketCount==packetCountCopy)    //Si no fue modificado significa que no entró a un if, por ende hubo un paquete que no siguió las reglas del protocolo -> se cierra el programa.
         quit=true;
 }
-
+void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
+{
+    switch(networkEvent->getHeader())
+    {
+        case PEEK:
+            modelPointer->peek(OTHER_PLAYER, networkEvent->getPos(),networkEvent->getSafeNumber());
+            //networkInterface->sendPacket(ACK);
+            break;
+        default:
+            break;
+        
+    }
+}
 
 void BurgleBrosController::checkGameStatus()
 {
