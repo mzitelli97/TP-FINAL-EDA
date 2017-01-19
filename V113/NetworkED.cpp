@@ -107,7 +107,7 @@ unsigned int NetworkED::getSafeNumber()
     unsigned int retVal;
     if(header==MOVE || header == PEEK)
     {
-        retVal=buffer[len-1];       //El numero de safe se guarda en el ultimo byte del msg.
+        retVal=buffer[len-1]- '0';       //El numero de safe se guarda en el ultimo byte del msg.
     }
     else 
         error=true;

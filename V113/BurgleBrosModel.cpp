@@ -339,8 +339,10 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
         
         if( !board.isCardVisible(locationToMove) )
         {
-            if(OTHER_PLAYER)
+            if(playerId == OTHER_PLAYER)
                 retVal=board.setCardVisible(locationToMove, safeNumber);
+            else
+                retVal=board.setCardVisible(locationToMove);
             cardWasVisible=false;
         }    
         movingPlayer->decActions();
@@ -543,6 +545,7 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
     }
     if(actionOk==false)
     {   gameFinished=true; finishMsg = "ERROR: BBModel error: A peek action was called when it wasnt possible to do it!"; }
+    return retVal;
 }
 void BurgleBrosModel::addToken(PlayerId playerId, CardLocation locationToAddToken)
 {
@@ -1006,9 +1009,6 @@ bool BurgleBrosModel::isPeekGuardsCardPossible(PlayerId playerId, unsigned int g
         
         if( !board.isCardVisible(locationToMove) )
             cardWasVisible=false;
-        movingPlayer->decActions();
-        movingPlayer->setPosition(locationToMove);
-        
         
         if(board.getCardType(prevLocation)==MOTION && board.isMotionActivated())        //Si salio de un motion y habia entrado en el mismo turno
         {
@@ -1017,7 +1017,7 @@ bool BurgleBrosModel::isPeekGuardsCardPossible(PlayerId playerId, unsigned int g
         }
         if( newCardType==DEADBOLT && locationToMove!=guards[locationToMove.floor].getPosition() && locationToMove!=playerNotMoving->getPosition())
         {   //Si se movió a un deadbolt y no había nadi allí
-            if(movingPlayer->getcurrentActions()>2)     //Y tiene 3 o mas acciones, va a saltar un cartel.
+            if(movingPlayer->getcurrentActions()>3)     //Y tiene 3 o mas acciones, va a saltar un cartel.
                 retVal=true; 
         } 
         if( newCardType==KEYPAD && !tokens.isThereAKeypadToken(locationToMove))     //Si esta en un keypad que no tiene su token
@@ -1035,7 +1035,7 @@ bool BurgleBrosModel::isPeekGuardsCardPossible(PlayerId playerId, unsigned int g
             }   
             if(newCardType==LASER && !movingPlayer->hasLoot(MIRROR))
             {   
-                if( !(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_LASER)) && !(movingPlayer->getcurrentActions())) //Si no hay tokens y no le quedan mas acciones
+                if( !(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_LASER)) && !(movingPlayer->getcurrentActions()-1)) //Si no hay tokens y no le quedan mas acciones
                     retVal=false;   //nada
                 else            //Sino, si pide un cartel para ver si se puede.
                     retVal=true;
