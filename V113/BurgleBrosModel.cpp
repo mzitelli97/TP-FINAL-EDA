@@ -299,13 +299,17 @@ void BurgleBrosModel::pass(PlayerId playerId)
     if(actionOk==false)
     {   gameFinished=true; finishMsg = "ERROR: BBModel error: A pass action was called when it wasnt possible to do it!"; }
 }
-void BurgleBrosModel::peek(PlayerId playerId, CardLocation locationToPeek)
+unsigned int BurgleBrosModel::peek(PlayerId playerId, CardLocation locationToPeek, int safeNumber)
 {
+    unsigned int retVal;
     bool actionOk=false;
     BurgleBrosPlayer *p=getP2Player(playerId);
     if(isPeekPosible(playerId, locationToPeek) && !gameFinished)
     {
-        board.setCardVisible(locationToPeek);
+        if(playerId == THIS_PLAYER)
+             retVal=board.setCardVisible(locationToPeek);
+        else
+             retVal=board.setCardVisible(locationToPeek, safeNumber);
         if(p->getCharacter() == THE_HAWK && playerSpentFreeAction==false && board.isAWallBetween(p->getPosition(), locationToPeek))
             playerSpentFreeAction=true;
         else
@@ -318,6 +322,7 @@ void BurgleBrosModel::peek(PlayerId playerId, CardLocation locationToPeek)
     }
     if(actionOk==false)
     {   gameFinished=true; finishMsg = "ERROR: BBModel error :A peek action was called when it wasnt possible to do it!"; }
+    return retVal;
 }
 void BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMove)
 {

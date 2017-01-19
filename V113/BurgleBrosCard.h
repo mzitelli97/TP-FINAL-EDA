@@ -52,8 +52,9 @@ public:
 	unsigned int getFloor();
 	unsigned int getRow();
 	unsigned int getColumn();
-	void setVisible();                      //Da vuelta la carta, si no es un safe le asigna un número para el safe.
-	bool isVisible();                     
+	unsigned int setVisible();                      //Da vuelta la carta, si no es un safe le asigna un número para el safe.
+	unsigned int setVisible(unsigned int withThisSafeNumber); 
+        bool isVisible();                     
 	void safeCracked();
 	unsigned int getSafeNumber();
 	bool isCracked();

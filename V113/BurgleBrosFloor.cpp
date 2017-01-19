@@ -213,9 +213,13 @@ bool BurgleBrosFloor::areTilesAdjacent(CardLocation source, CardLocation destina
 {
 	return cards[source.row][source.column].isNeighboard(destination);
 }
-void BurgleBrosFloor::setCardVisible(CardLocation location)
+unsigned int BurgleBrosFloor::setCardVisible(CardLocation location)
 {
-	cards[location.row][location.column].setVisible();
+    return cards[location.row][location.column].setVisible();
+}
+unsigned int BurgleBrosFloor::setCardVisible(CardLocation location, int safeNumber)
+{
+    return cards[location.row][location.column].setVisible(safeNumber);
 }
 bool BurgleBrosFloor::isCardVisible(CardLocation location)
 {

@@ -24,7 +24,8 @@ public:
 	std::list<CardLocation> getShortestPath(CardLocation source, CardLocation destination);		//Devuelve la lista que da el camino más corto desde una posición a otra.
 	bool areTilesAdjacent(CardLocation source, CardRelativeLocation whereToMove);                   //Dice si son adjacentes (puede ser que no porque no haya nada a su posición relativa o una pared).
 	bool areTilesAdjacent(CardLocation source, CardLocation destination);
-	void setCardVisible(CardLocation location);                                 //Da vuelta una carta
+	unsigned int setCardVisible(CardLocation location);                                 //Da vuelta una carta y devuelve que numero de safe number salio
+        unsigned int setCardVisible(CardLocation location, int safeNumber);                 //Da vuelta la carta, le asigna el safenumber pasado por asignado y devuleve el mismo.
         bool isAWallBetween(CardLocation tile1, CardLocation tile2);                //Devuelve si hay una pared entre 2 tiles
 	bool isCardVisible(CardLocation location);                                  
 	void crackSafe();                                                           //Le pone a la carta SAFE de su piso que está crackeada.

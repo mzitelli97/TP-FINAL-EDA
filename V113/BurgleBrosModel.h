@@ -12,6 +12,7 @@
 #include "SoundManager.h"
 
 #define NUMBER_OF_PLAYERS 2
+#define NO_SAFE_NUMBER -1
 
 /*Mensajes para dialog box tienen:  TITULO                  SUBTITULO               TEXTO */
 #define ENTER_FINGERPRINT_TEXT      "Alert",            "Confirm Action", "You have entered a Fingerprint tile, so you will trigger an alarm unless you use a hack token"
@@ -58,7 +59,7 @@ class BurgleBrosModel : public Model
         vector<unsigned int> getInfo2DrawExtraDices();
         /* Acciones que se puede llamar públicamente*/
         void pass(PlayerId playerId);
-        void peek(PlayerId playerId, CardLocation locationToPeek);
+        unsigned int peek(PlayerId playerId, CardLocation locationToPeek,int safeNumber); //Recibe que jugador a que tile va a mirar, y si se sabe de antemano el número de safe, se lo asigna a la carta que estaba dada vuelta. devuelve el numero de safe de esa carta.
         void move(PlayerId playerId, CardLocation locationToMove);
         void addToken(PlayerId playerId, CardLocation locationToAddToken);
         void crackSafe(PlayerId playerId, CardLocation safe);

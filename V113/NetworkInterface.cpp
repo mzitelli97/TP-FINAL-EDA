@@ -130,7 +130,16 @@ bool NetworkInterface::sendStartInfo(vector<CardName> &tiles, CardLocation &init
     return retVal;
 }
 
-
+bool NetworkInterface::sendPeek(CardLocation tileToPeek, unsigned int safeNumber)
+{
+    bool retVal=false;
+    char buffer[2];
+    buffer[0]='0'+safeNumber;
+    buffer[1]='\0';
+    string fullmsg= cardLocationToProtocol(tileToPeek) + buffer;
+    retVal=p2networking->sendPacket(PEEK, fullmsg.c_str(), fullmsg.length());
+    return retVal;
+}
 NetworkInterface::~NetworkInterface()
 {
 }

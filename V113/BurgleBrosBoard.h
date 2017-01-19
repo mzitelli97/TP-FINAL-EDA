@@ -16,7 +16,8 @@ public:
 	bool adjacentCards(CardLocation source, CardRelativeLocation whereToMove);
 	bool adjacentCards(CardLocation source, CardLocation destination);              //Devuelve true si las cartas son vecinas y no hay paredes entre ellas.
 	void getWalls(vector<wall> &vector);    
-	void setCardVisible(CardLocation location);
+	unsigned int setCardVisible(CardLocation location);
+        unsigned int setCardVisible(CardLocation location, unsigned int safeNumber);   //Da vuelta una carta y le asigna un numero de safeNumber específico.       
 	bool isCardVisible(CardLocation location);
 	unsigned int getCardSafeNumber(CardLocation location);
         bool isSafeCracked(unsigned int floor);

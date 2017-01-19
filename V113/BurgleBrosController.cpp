@@ -147,9 +147,12 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
 {
     view->eraseMenu();
     if(action == "PEEK")//VER SI ESTE TIPO DE FUNCIONES TIENEN QUE RECIBIR QUE PLAYER O USAR EL QUE ESTA EN TURNO DIRECTAMENTE
-        modelPointer->peek(modelPointer->getPlayerOnTurn(),location);
+    {   
+        unsigned int safeNumber =modelPointer->peek(THIS_PLAYER,location,NO_SAFE_NUMBER);
+        networkInterface->sendPeek(location, safeNumber);
+    }
     else if(action=="MOVE")
-        modelPointer->move(modelPointer->getPlayerOnTurn(),location);
+        modelPointer->move(THIS_PLAYER,location);
     else if(action=="ADD TOKEN")
         modelPointer->addToken(modelPointer->getPlayerOnTurn(),location);
     else if(action=="ADD DIE")

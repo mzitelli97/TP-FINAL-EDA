@@ -65,9 +65,13 @@ void BurgleBrosBoard::getWalls(vector<wall> &vector)
     for(unsigned int i=0;i <BOARD_STANDARD_FLOORS; i++)
         floors[i].getWalls(vector);
 }
-void BurgleBrosBoard::setCardVisible(CardLocation location)
+unsigned int BurgleBrosBoard::setCardVisible(CardLocation location)
 {
 	return floors[location.floor].setCardVisible(location);
+}
+unsigned int BurgleBrosBoard::setCardVisible(CardLocation location, unsigned int safeNumber)
+{
+	return floors[location.floor].setCardVisible(location,safeNumber);
 }
 bool BurgleBrosBoard::isCardVisible(CardLocation location)
 {

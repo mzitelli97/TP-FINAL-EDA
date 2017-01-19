@@ -37,6 +37,7 @@ public:
         bool sendChar(CharacterName characterName);
         bool sendInitGPos(CardLocation guardPos, CardLocation guardDiePos);
         bool sendStartInfo(vector<CardName> &tiles, CardLocation &initTile);
+        bool sendPeek(CardLocation tileToPeek, unsigned int safeNumber);
         
 	~NetworkInterface();
 private:
