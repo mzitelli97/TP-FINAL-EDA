@@ -95,7 +95,7 @@ void GUI::parseEvento(){
         case GUI_EVENT_KEYBOARD:
             break;
         case GUI_EVENT_NETWORKING:
-            //Controller->parseNetworkEvent(eventData);
+            Controller->parseNetworkEvent(eventData);
             break;
     }
     

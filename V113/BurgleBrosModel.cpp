@@ -24,8 +24,8 @@ BurgleBrosModel::BurgleBrosModel()
     BurgleBrosGuard aux3(2);
     guards[0]= aux1;
     guards[1]= aux2;
-    guards[2]= aux3;/*
-    board.initBoard();
+    guards[2]= aux3;
+    board.initBoard();/*
     myPlayer.pickRandomPlayer();
     otherPlayer.pickRandomPlayer(myPlayer.getCharacter());
     myPlayer.setTurn(true);

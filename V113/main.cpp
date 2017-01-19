@@ -30,8 +30,8 @@ int main(int argc, char** argv) {
     BurgleBrosController controller;
     GUI gui;
     BurgleBrosSound sound;
-    view.ViewInit(&model);
-    view.update(&model);
+    //view.ViewInit(&model);
+    //view.update(&model);
     
     model.attachView(&view);
     controller.attachModel(&model);
@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
     model.attachSoundManager(&sound);
     
     string name=argv[1];
-    string ipToConnect=argv[1];
+    string ipToConnect=argv[2];
     
     gui.getNameAndIp(name, ipToConnect);
     gui.connect();
