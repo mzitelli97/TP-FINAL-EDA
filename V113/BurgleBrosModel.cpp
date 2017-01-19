@@ -83,7 +83,8 @@ void BurgleBrosModel::initPlayer(PlayerId playerId, string playerName, Character
     p->setName(playerName);
     p->setPosition(playerPos);
     p->setCharacter(playerCharacter);
-    tokens.placeDownstairToken(playerPos);
+    if(!tokens.isThereADownstairToken(playerPos))
+        tokens.placeDownstairToken(playerPos);
 }
 void BurgleBrosModel::setInitTurn(PlayerId playerId)
 {
@@ -324,10 +325,10 @@ unsigned int BurgleBrosModel::peek(PlayerId playerId, CardLocation locationToPee
     {   gameFinished=true; finishMsg = "ERROR: BBModel error :A peek action was called when it wasnt possible to do it!"; }
     return retVal;
 }
-void BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMove)
+unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMove, int safeNumber)
 {
     bool actionOk=false;
-
+    unsigned int retVal;
     if(isMovePosible(playerId, locationToMove) && !gameFinished)
     {
         BurgleBrosPlayer* movingPlayer=getP2Player(playerId);
@@ -338,7 +339,8 @@ void BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMove)
         
         if( !board.isCardVisible(locationToMove) )
         {
-            board.setCardVisible(locationToMove);
+            if(OTHER_PLAYER)
+                retVal=board.setCardVisible(locationToMove, safeNumber);
             cardWasVisible=false;
         }    
         movingPlayer->decActions();
@@ -430,10 +432,23 @@ void BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMove)
         if( newCardType==KEYPAD && !tokens.isThereAKeypadToken(locationToMove))
         {
             bool keyCracked=false;
-            if(movingPlayer->getCharacter()==THE_PETERMAN)
-                keyCracked=dice.throwDiceForKeypadWithExtraDie(locationToMove);
-            else
-                keyCracked=dice.throwDiceForKeypad(locationToMove);
+            vector<unsigned int> currDice;
+            if(getPlayerOnTurn()==THIS_PLAYER)          //Si eran de este jugador se tiran y se mandan los dados al controller
+            {
+                if(movingPlayer->getCharacter()==THE_PETERMAN)
+                    keyCracked=dice.throwDiceForKeypadWithExtraDie(locationToMove);
+                else
+                    keyCracked=dice.throwDiceForKeypad(locationToMove);
+                currDice=dice.getCurrDice();
+                controller->sendTheseDice(currDice);
+            }
+            else            //Sino se obtienen del controller los dados arrojados
+            {
+                controller->getOthersDice(currDice);
+                dice.setDice(currDice);
+                keyCracked=dice.didDiceUnlockKeypad();
+            }
+                 
             if(keyCracked)
                 tokens.putKeyPadToken(locationToMove);
             else

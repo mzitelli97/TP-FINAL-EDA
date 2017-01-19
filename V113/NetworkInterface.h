@@ -38,6 +38,8 @@ public:
         bool sendInitGPos(CardLocation guardPos, CardLocation guardDiePos);
         bool sendStartInfo(vector<CardName> &tiles, CardLocation &initTile);
         bool sendPeek(CardLocation tileToPeek, unsigned int safeNumber);
+        bool sendMove(CardLocation tileToPeek, unsigned int safeNumber);
+        bool sendDice(vector<unsigned int> &dice);
         
 	~NetworkInterface();
 private:

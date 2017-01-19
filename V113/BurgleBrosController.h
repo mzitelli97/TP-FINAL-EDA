@@ -45,6 +45,8 @@ public:
     bool checkIfGameFinished();
     void parseMouseEvent(EventData *mouseEvent);
     void parseNetworkEvent(EventData *networkEvent);
+    virtual void getOthersDice(vector<unsigned int> &dice);
+    virtual void sendTheseDice(vector<unsigned int> &dice);
     virtual string askForSpentOK(vector<string> &message);
     virtual ~BurgleBrosController();
 private:
@@ -56,7 +58,8 @@ private:
     NetworkInterface * networkInterface;
     CommunicationRole communicationRole;
     unsigned int initPacketCount;
-    AuxInitInfo auxInitInfo[NUMBER_OF_PLAYERS];     
+    AuxInitInfo auxInitInfo[NUMBER_OF_PLAYERS]; 
+    list<NetworkED> packetsQueue; //Para eventos como move, que necesita varios paquetes para ejecutarse completamente, esta ésta queue.
     BurgleBrosModel *modelPointer;
     BurgleBrosView *view;
     string thisPlayerName;

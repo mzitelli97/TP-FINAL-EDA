@@ -130,6 +130,17 @@ bool NetworkInterface::sendStartInfo(vector<CardName> &tiles, CardLocation &init
     return retVal;
 }
 
+bool NetworkInterface::sendDice(vector<unsigned int> &dice)
+{
+    bool retVal=false;
+    char buffer[MAX_NMBR_OF_EXTRA_DICES];
+    for(unsigned int i=0; i<MAX_NMBR_OF_EXTRA_DICES; i++)
+        buffer[i]=(char)((unsigned int)'0'+dice[i]);
+    retVal=p2networking->sendPacket(THROW_DICE, buffer, MAX_NMBR_OF_EXTRA_DICES);
+    return retVal;
+}
+
+
 bool NetworkInterface::sendPeek(CardLocation tileToPeek, unsigned int safeNumber)
 {
     bool retVal=false;
@@ -138,6 +149,16 @@ bool NetworkInterface::sendPeek(CardLocation tileToPeek, unsigned int safeNumber
     buffer[1]='\0';
     string fullmsg= cardLocationToProtocol(tileToPeek) + buffer;
     retVal=p2networking->sendPacket(PEEK, fullmsg.c_str(), fullmsg.length());
+    return retVal;
+}
+bool NetworkInterface::sendMove(CardLocation tileToPeek, unsigned int safeNumber)
+{
+    bool retVal=false;
+    char buffer[2];
+    buffer[0]='0'+safeNumber;
+    buffer[1]='\0';
+    string fullmsg= cardLocationToProtocol(tileToPeek) + buffer;
+    retVal=p2networking->sendPacket(MOVE, fullmsg.c_str(), fullmsg.length());
     return retVal;
 }
 NetworkInterface::~NetworkInterface()

@@ -23,6 +23,8 @@ public:
     Controller();
     Controller(const Controller& orig);
     virtual string askForSpentOK(vector<string> &message)=0;
+    virtual void getOthersDice(vector<unsigned int> &dice)=0;
+    virtual void sendTheseDice(vector<unsigned int> &dice)=0;
     virtual ~Controller();
 private:
 

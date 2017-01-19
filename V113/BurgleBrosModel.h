@@ -60,7 +60,7 @@ class BurgleBrosModel : public Model
         /* Acciones que se puede llamar públicamente*/
         void pass(PlayerId playerId);
         unsigned int peek(PlayerId playerId, CardLocation locationToPeek,int safeNumber); //Recibe que jugador a que tile va a mirar, y si se sabe de antemano el número de safe, se lo asigna a la carta que estaba dada vuelta. devuelve el numero de safe de esa carta.
-        void move(PlayerId playerId, CardLocation locationToMove);
+        unsigned int move(PlayerId playerId, CardLocation locationToMove, int safeNumber); //Si es del otro jugador, recibe el safeNumber desde afuera, devuelve el safe number de la carta a la que se mueve.
         void addToken(PlayerId playerId, CardLocation locationToAddToken);
         void crackSafe(PlayerId playerId, CardLocation safe);
         void addDieToSafe(PlayerId playerId, CardLocation safe);

@@ -103,6 +103,17 @@ bool BurgleBrosDices::throwDiceForKeypad(CardLocation keypadLocation)
     }
     return retVal;
 }
+bool BurgleBrosDices::didDiceUnlockKeypad()
+{
+    bool retVal=false;
+    for(unsigned int i=0; i<MAX_NMBR_OF_EXTRA_DICES ; i++)
+    {
+        if(dice[i]==NMBR_TO_UNLOCK_KEYPAD)
+            retVal=true;
+    }
+    return retVal;
+}
+
 bool BurgleBrosDices::throwDiceForKeypadWithExtraDie(CardLocation keypadLocation)
 {
     bool retVal=false;
@@ -139,7 +150,10 @@ bool BurgleBrosDices::chihuahuaBarks()
         retVal=true;
     return retVal;
 }
-
+void BurgleBrosDices::setDice(vector<unsigned int> &dice)
+{
+    this->dice=dice;
+}
 vector<unsigned int> BurgleBrosDices::getCurrDice()
 {
     return dice;

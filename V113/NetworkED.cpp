@@ -90,6 +90,18 @@ CardLocation NetworkED::getPos()
         error=true;
     return retVal;
 }
+bool NetworkED::playerAcceptedToSpentMoves()
+{
+    bool retVal=false;
+    if(header==SPENT_OK)
+    {
+        if(buffer[0]=='Y')
+            retVal=true;
+    }
+    else 
+        error=true;
+    return retVal;
+}
 unsigned int NetworkED::getSafeNumber()
 {
     unsigned int retVal;
@@ -100,6 +112,16 @@ unsigned int NetworkED::getSafeNumber()
     else 
         error=true;
     return retVal;
+}
+void NetworkED::getDice(vector<unsigned int> &dice)
+{
+    if(header==THROW_DICE)
+    {
+        for(unsigned int i=0; i<MAX_NMBR_OF_EXTRA_DICES; i++)
+            dice[i]=(unsigned int)(buffer[i]-'0');
+    }
+    else 
+        error=true;
 }
 NetworkED::~NetworkED() 
 {

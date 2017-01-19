@@ -29,7 +29,8 @@ public:
     void getStartInfo(vector<CardName> *tiles, CardLocation *playersStartingPos);
     CardLocation getPos();
     unsigned int getSafeNumber();
-    
+    bool playerAcceptedToSpentMoves();
+    void getDice(vector<unsigned int> &dice);
     virtual ~NetworkED();
 private:
     PerezProtocolHeader header;
