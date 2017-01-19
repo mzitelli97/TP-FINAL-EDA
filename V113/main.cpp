@@ -30,8 +30,6 @@ int main(int argc, char** argv) {
     BurgleBrosController controller;
     GUI gui;
     BurgleBrosSound sound;
-    //view.ViewInit(&model);
-    //view.update(&model);
     
     model.attachView(&view);
     controller.attachModel(&model);

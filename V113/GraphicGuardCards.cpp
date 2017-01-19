@@ -61,7 +61,7 @@ void GraphicGuardCards::draw()
     max.y = min.y + CARD_HEIGHT;
     width = max.x - min.x;
     height = max.y - min.y;
-    if(cards.front() != nullptr)
+    if(!cards.empty())
     {
         al_draw_scaled_bitmap(cards.front(),0,0,al_get_bitmap_width(cards.front()),al_get_bitmap_height(cards.front()),
                 min.x, min.y, width, height, 0);

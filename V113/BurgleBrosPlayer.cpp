@@ -156,6 +156,7 @@ BurgleBrosPlayer::BurgleBrosPlayer()
     currentActions=4;
     lives=INIT_NMBR_OF_LIVES;
     isOnTheHelicopter=false;
+    isPlayersTurn=false;
 }
 
 BurgleBrosPlayer::~BurgleBrosPlayer()
