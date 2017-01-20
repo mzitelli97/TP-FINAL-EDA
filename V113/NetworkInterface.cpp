@@ -161,6 +161,24 @@ bool NetworkInterface::sendMove(CardLocation tileToPeek, unsigned int safeNumber
     retVal=p2networking->sendPacket(MOVE, fullmsg.c_str(), fullmsg.length());
     return retVal;
 }
+
+bool NetworkInterface::sendUseToken(CardLocation location)
+{
+    bool retVal=false;
+    string msg=cardLocationToProtocol(location);
+    retVal=p2networking->sendPacket(USE_TOKEN, msg.c_str(), msg.length());
+    return retVal;
+}
+bool NetworkInterface::sendSpent(bool YesOrNo)
+{
+    char buffer[1];
+    if(YesOrNo==true)
+        buffer[0]='Y';
+    else
+        buffer[0]='N';
+    return p2networking->sendPacket(SPENT_OK, buffer, 1);
+}
+
 NetworkInterface::~NetworkInterface()
 {
 }

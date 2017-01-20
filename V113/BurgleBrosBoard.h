@@ -26,6 +26,7 @@ public:
 	CardName getCardType(CardLocation location);                                    //Devuelve de que tipo era una carta
         CardLocation getOtherServiceDuctPos(CardLocation secretDoor1);                  //Dada una secret Door, devuelve la posición de la otra.
         CardLocation getComputerRoomLocation(CardName computerRoom);                    //Dada una computer room, devuelve su posición en el tablero
+        CardLocation getLavatoryLocation();
         bool isCardUpstairs(CardLocation source, CardLocation destination);
         bool isCardDownstairs(CardLocation source, CardLocation destination);                       
         bool canSafeBeCracked(unsigned int safeFloor);                                              //Si hay por lo menos una carta visible en la misma fila o columna que el safe devuelve true

@@ -121,7 +121,23 @@ CardLocation BurgleBrosBoard::getComputerRoomLocation(CardName computerRoom)
     }
     return retVal;
 }
-
+CardLocation BurgleBrosBoard::getLavatoryLocation()
+{
+    CardLocation retVal;
+    CardLocation aux;
+    for(aux.floor=0;aux.floor<BOARD_STANDARD_FLOORS; aux.floor++ )
+    {
+        for(aux.row=0;aux.row<FLOOR_RAWS; aux.row++ )
+        {
+            for(aux.column=0;aux.column<FLOOR_COLUMNS; aux.column++ )
+            {
+                if(floors[aux.floor].getCardType(aux) == LAVATORY)
+                    retVal=aux;
+            }
+        }
+    }
+    return retVal;
+}
 list<CardLocation> BurgleBrosBoard::getShortestPath(CardLocation source, CardLocation destination)
 {
     list<CardLocation> retVal;

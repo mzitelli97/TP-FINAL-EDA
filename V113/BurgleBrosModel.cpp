@@ -281,7 +281,13 @@ string BurgleBrosModel::getFinishMsg()
 {
     return finishMsg;
 }
-
+CardLocation BurgleBrosModel::locationOfComputerRoomOrLavatory(CardName computerRoomOrLavatory)
+{
+    if(computerRoomOrLavatory == LAVATORY)
+        return board.getLavatoryLocation();
+    else
+        return board.getComputerRoomLocation(computerRoomOrLavatory);
+}
 
 void BurgleBrosModel::pass(PlayerId playerId)
 {

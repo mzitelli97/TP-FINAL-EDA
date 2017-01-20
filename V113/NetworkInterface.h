@@ -40,6 +40,8 @@ public:
         bool sendPeek(CardLocation tileToPeek, unsigned int safeNumber);
         bool sendMove(CardLocation tileToPeek, unsigned int safeNumber);
         bool sendDice(vector<unsigned int> &dice);
+        bool sendUseToken(CardLocation location);
+        bool sendSpent(bool YesOrNo);       //Yes == true, no == false;
         
 	~NetworkInterface();
 private:

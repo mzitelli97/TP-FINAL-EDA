@@ -57,6 +57,8 @@ class BurgleBrosModel : public Model
         Info2DrawGuard getInfo2DrawGuard(unsigned int floor);
 	list<Info2DrawTokens> getInfo2DrawTokens();
         vector<unsigned int> getInfo2DrawExtraDices();
+        /*Funciones para obtener info extra.*/
+        CardLocation locationOfComputerRoomOrLavatory(CardName computerRoomOrLavatory);
         /* Acciones que se puede llamar públicamente*/
         void pass(PlayerId playerId);
         unsigned int peek(PlayerId playerId, CardLocation locationToPeek,int safeNumber); //Recibe que jugador a que tile va a mirar, y si se sabe de antemano el número de safe, se lo asigna a la carta que estaba dada vuelta. devuelve el numero de safe de esa carta.
