@@ -62,17 +62,16 @@ bool BurgleBrosController::checkIfGameFinished()
     return quit;
 }
 
-void BurgleBrosController::getOthersDice(vector<unsigned int> &dice)
-{
-    packetsQueue.front().getDice(dice);
-    packetsQueue.pop_front();
-    
-}
-void BurgleBrosController::sendTheseDice(vector<unsigned int> &dice)
-{
-    networkInterface->sendDice(dice);
-}
 string BurgleBrosController::askForSpentOK(vector<string> &message)
+{
+    string retVal;
+    
+    retVal=view->MessageBox(message);   //una vez obtenido lo que el usuario escogió, se tiene que mandar un mensaje con lo que se puso.
+        
+          
+    return retVal;
+}
+string BurgleBrosController::getUsersResponse(vector<string> &message)
 {
     string retVal;
     
@@ -106,37 +105,37 @@ string BurgleBrosController::askForSpentOK(vector<string> &message)
     {
         if(message[0]==ENTER_FINGERPRINT_TEXT)  //Si se preguntaba por un fingerprint
         {
-            if(packetsQueue.empty())            //Y no llego ninguna info extra, se devuelve que eligió triggerear una alarma
+            if(packetToAnalize.empty())            //Y no llego ninguna info extra, se devuelve que eligió triggerear una alarma
                 retVal=TRIGGER_ALARM_TEXTB;
-            else if(packetsQueue.front().getHeader()==USE_TOKEN)    //Si se uso un token se devuelve eso.
+            else if(packetToAnalize.front().getHeader()==USE_TOKEN)    //Si se uso un token se devuelve eso.
                 retVal=USE_HACK_TOKEN_TEXTB;
         }
         else if(message[0]==LASER_TEXT)         //SI se preguntaba por la entrada a un tile laser
         {
-            if(packetsQueue.front().getHeader()==USE_TOKEN)    //Si se uso un token se devuelve eso.
+            if(packetToAnalize.front().getHeader()==USE_TOKEN)    //Si se uso un token se devuelve eso.
                 retVal=USE_HACK_TOKEN_TEXTB;
-            else if(packetsQueue.front().getHeader()==SPENT_OK && packetsQueue.front().playerAcceptedToSpentMoves())
+            else if(packetToAnalize.front().getHeader()==SPENT_OK && packetToAnalize.front().playerAcceptedToSpentMoves())
                 retVal=SPEND_ACTION_TEXTB;
             else
                 retVal=TRIGGER_ALARM_TEXTB;             //Sino ,llego un  spent ok con el valor "N".
         }
         else if(message[0]==MOTION_TEXT)            //Si se esperaba para un motion
         {
-            if(packetsQueue.front().getHeader()==USE_TOKEN)     //Y llego un use token, se devulve como si hubiera presionado el cartel con use hack token text
+            if(packetToAnalize.front().getHeader()==USE_TOKEN)     //Y llego un use token, se devulve como si hubiera presionado el cartel con use hack token text
                 retVal=USE_HACK_TOKEN_TEXTB;
             else
                 retVal=TRIGGER_ALARM_TEXTB;         //Si era cualquier otro paquete triggerea alarma.
         }
         else if(message[0]==LAVATORY_TEXT)          //Si se entró a un lavaratory
         {
-            if(packetsQueue.empty())                //Y el siguiente paquete que llegó no fue un use token, se usan los tokens del jugador
+            if(packetToAnalize.empty())                //Y el siguiente paquete que llegó no fue un use token, se usan los tokens del jugador
                 retVal=USE_MY_STEALTH_TOKEN_TEXTB;
-            else if(packetsQueue.front().getHeader()==USE_TOKEN)    //Sino se usan los tokens del lavatory
+            else if(packetToAnalize.front().getHeader()==USE_TOKEN)    //Sino se usan los tokens del lavatory
                 retVal=USE_LAVATORY_TOKEN_TEXTB;
         }
         else if(message[0]==DEADBOLT_TEXT)          //Si se entró a un deadbolt donde no había personas dentro
         {
-            if(packetsQueue.front().getHeader()== SPENT_OK && packetsQueue.front().playerAcceptedToSpentMoves())    //Si el spent ok llego con yes, se usan las acciones extyra, sino no.
+            if(packetToAnalize.front().getHeader()== SPENT_OK && packetToAnalize.front().playerAcceptedToSpentMoves())    //Si el spent ok llego con yes, se usan las acciones extyra, sino no.
                 retVal=SPEND_ACTIONS_TEXTB;
             else
                 retVal=GET_BACK_TEXTB;
@@ -145,7 +144,6 @@ string BurgleBrosController::askForSpentOK(vector<string> &message)
           
     return retVal;
 }
-
 
 void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
 {
@@ -475,33 +473,8 @@ void BurgleBrosController::serverInitRoutine(NetworkED *networkEvent)
 }
 void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
 {
-    if(packetsQueue.empty())      //Si no había que procesar un paquete anterior como MOVE.  
-    {
-        doOnePacketAction(networkEvent);
-    }
-    else
-    {
-        switch(packetsQueue.front().getHeader())
-        {
-            case MOVE:  //Si luego de move llega uno de estos paquetes que sirven para saber si triggerear una alarma , si pudo entrar o no, se pushean a la lista.
-                if(networkEvent->getHeader()==SPENT_OK || networkEvent->getHeader()==USE_TOKEN || networkEvent->getHeader()==SPENT_OK)
-                    packetsQueue.push_back(*networkEvent);
-                else 
-                    doOnePacketAction(networkEvent);
-                modelPointer->move(OTHER_PLAYER, networkEvent->getPos(),networkEvent->getSafeNumber()); //Si no era ninguno de esos, a la llegada del siguiente paquete no se va a llamar a spentOK del controller
-                packetsQueue.pop_front(); //Borro el paquete de move.
-                networkInterface->sendPacket(ACK);
-                break;
-                
-            default:
-                quit=true;      //Si quedó un paquete de los que no esperan un siguiente paquete significa que hubo un error
-                break;
-        }
-    }
-}
-
-void BurgleBrosController::doOnePacketAction(NetworkED *networkEvent)
-{
+    vector<string> message;
+    analizeIfModelRequiresMoreActions(networkEvent);
     switch(networkEvent->getHeader())       //Depende de que acción se ejecutan distintas funciones.
     {
         case PEEK:
@@ -513,21 +486,41 @@ void BurgleBrosController::doOnePacketAction(NetworkED *networkEvent)
             networkInterface->sendPacket(ACK);
             break;
         case MOVE:     
-            if(modelPointer->moveWillRequireSpecifications(OTHER_PLAYER, networkEvent->getPos(), NO_SAFE_NUMBER))   //Si se necesita saber info extra, por ejemplo al entrar en un laser si gast acciones, usa token o triggerea alarma, se dejara para analizar cuando llegue el sig paquete
-                packetsQueue.push_back(*networkEvent);  
-            else        //Sino se realiza el move y se manda un ack.
-            {
-                modelPointer->move(OTHER_PLAYER, networkEvent->getPos(),networkEvent->getSafeNumber());
-                networkInterface->sendPacket(ACK);
-            }
+            modelPointer->move(OTHER_PLAYER, networkEvent->getPos(),networkEvent->getSafeNumber());
             networkInterface->sendPacket(ACK);
+            break;
+        case ACK:
+            if(modelPointer->getModelStatus()==WAITING_FOR_USER_CONFIRMATION)   //Si se esperaba la confirmación del usuario para una accion propia del jugador de esta cpu:
+            {
+                message=modelPointer->getMsgToShow(); //Se obtiene el mensaje a mostrar,
+                modelPointer->userDecidedTo(getUsersResponse(message));//Esta función devuelve lo que elige el jugador en el cartelito. y le pasa la respuesta al modelo.
+            }
+            break;
+        case SPENT_OK:case USE_TOKEN:
+            if(modelPointer->getModelStatus()==WAITING_FOR_USER_CONFIRMATION)   //Si se esperaba la confirmación del usuario para una accion propia del jugador de esta cpu:
+            {
+                packetToAnalize.push_back(*networkEvent);   //Acá se guarda para tratar el paquete en la función getUsersResponse
+                message=modelPointer->getMsgToShow(); 
+                modelPointer->userDecidedTo(getUsersResponse(message));
+            }
+            else
+               quit=true;
             break;
         default:
             break;
 
     }
 }
-
+void BurgleBrosController::analizeIfModelRequiresMoreActions(NetworkED *networkEvent)
+{
+    PerezProtocolHeader h = networkEvent->getHeader();
+    vector<string> message;
+    if(modelPointer->getModelStatus()==WAITING_FOR_USER_CONFIRMATION && (h!=SPENT_OK || h!=USE_TOKEN)) //Si se hizo un move que podía llegar un use token o un spent ok luego, pero no llegó
+    {
+        message=modelPointer->getMsgToShow(); //Se obtiene el mensaje que se mostraria si saltar el cartel
+        modelPointer->userDecidedTo(getUsersResponse(message));//Y esta funcion "emula" lo elegido por el otro jugador. por ejemplo si no gasto las acciones del deadbolt simula como que eligio no gastarlas en el cartel, pero siendo el jugador desde la otra pc.
+    }
+}
 
 void BurgleBrosController::checkGameStatus()
 {
