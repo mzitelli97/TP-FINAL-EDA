@@ -14,12 +14,14 @@
 #define NUMBER_OF_PLAYERS 2
 #define NO_SAFE_NUMBER -1
 
+
 /*Mensajes para dialog box tienen:  TITULO                  SUBTITULO               TEXTO */
 #define ENTER_FINGERPRINT_TEXT      "Alert",            "Confirm Action", "You have entered a Fingerprint tile, so you will trigger an alarm unless you use a hack token"
 #define LASER_TEXT                  "Alert",            "Confirm Action", "You have entered a Laser tile, you can either spend and extra action or use a hack token to avoid triggering an alarm"
 #define DEADBOLT_TEXT               "Alert",            "Confirm action", "You moved to a deadbolt, in order to enter you must spend 3 actions, otherwise you will go back to your previous tile"
 #define LAVATORY_TEXT               "Alert",            "Confirm Action", "You have encountered a guard! Luckily you are in the lavatory so you can choose between using one of the stealth tokens in it or one of your own"
 #define MOTION_TEXT                 "Alert",            "Confirm Action", "You are leaving an activated motion sensor. An alarm will be triggered unless you use a hack token"
+#define ENTER_KEYPAD                "EnterKeypad"
 #define OFFER_LOOT_TEXT             "Loot Offer",       "Confirm Offer",  "The other player offers you the loot: "
 #define ASK_FOR_LOOT_TEXT           "Loot Request",     "Confirm Request","The other player ask you for the loot: "
 #define SPOTTER_SPECIAL_ACTION_TEXT "Spotter guard peek", "Complete action", "You have spotted the top of the guard deck. Would you like to let it on the top or put it at the bottom?"
@@ -35,6 +37,10 @@
 #define TRIGGER_ALARM_TEXTB "Trigger alarm"
 #define SPOTTER_TOP         "Top"
 #define SPOTTER_BOTTOM      "Bottom"
+#define KEYPAD_GET_OTHERS_DICE    "Get Others Dice"
+
+
+typedef enum {WAITING_FOR_ACTION, WAITING_FOR_USER_CONFIRMATION, WAITING_FOR_OTHERS_DICE} ModelStatus;
 
 class BurgleBrosModel : public Model
 {
@@ -57,8 +63,12 @@ class BurgleBrosModel : public Model
         Info2DrawGuard getInfo2DrawGuard(unsigned int floor);
 	list<Info2DrawTokens> getInfo2DrawTokens();
         vector<unsigned int> getInfo2DrawExtraDices();
-        /*Funciones para obtener info extra.*/
+        /*Funciones para cuando pide cartelito con info extra.*/
         CardLocation locationOfComputerRoomOrLavatory(CardName computerRoomOrLavatory);
+        ModelStatus getModelStatus();
+        vector<string> getMsgToShow();
+        void userDecidedTo(string decision);
+        void setDice(vector<unsigned int> &dice);
         /* Acciones que se puede llamar públicamente*/
         void pass(PlayerId playerId);
         unsigned int peek(PlayerId playerId, CardLocation locationToPeek,int safeNumber); //Recibe que jugador a que tile va a mirar, y si se sabe de antemano el número de safe, se lo asigna a la carta que estaba dada vuelta. devuelve el numero de safe de esa carta.
@@ -114,9 +124,13 @@ class BurgleBrosModel : public Model
 	BurgleBrosDices dice;
         View * view;
         Controller * controller;
-        SoundManager * soundManager;        
+        SoundManager * soundManager;  
         bool gameFinished;
         string finishMsg;       //Si el juego terminó indica como termino (por ejemplo WON, LOST o MODEL ERROR:"(errormsg)"
+        ModelStatus status;         //Para las preguntas al usuario
+        vector<string> msgsToShow;      //Contiene el texto y sus respuestas.
+        CardLocation prevLoc;
+        
 };
 #endif
 
