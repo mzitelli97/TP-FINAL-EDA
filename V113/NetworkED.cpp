@@ -128,10 +128,12 @@ unsigned int NetworkED::getSafeNumber()
 }
 void NetworkED::getDice(vector<unsigned int> &dice)
 {
+    dice.clear();
+    dice.reserve(MAX_NMBR_OF_EXTRA_DICES);
     if(header==THROW_DICE)
     {
         for(unsigned int i=0; i<MAX_NMBR_OF_EXTRA_DICES; i++)
-            dice[i]=(unsigned int)(buffer[i]-'0');
+            dice.push_back((unsigned int)(buffer[i]-'0'));
     }
     else 
         error=true;

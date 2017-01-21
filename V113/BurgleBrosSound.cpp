@@ -20,7 +20,7 @@ BurgleBrosSound::BurgleBrosSound() {
     initOK=loadAllSamples();
     al_reserve_samples(1);
     if(initOK)
-         test=al_play_sample(samples.front(), 1.0, 0.0, 1.0,ALLEGRO_PLAYMODE_LOOP, NULL);
+         //test=al_play_sample(samples.front(), 1.0, 0.0, 1.0,ALLEGRO_PLAYMODE_LOOP, NULL);
     cout<<(unsigned int)test;
 }
 
