@@ -419,6 +419,8 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
                 retVal=board.setCardVisible(locationToMove);
             cardWasVisible=false;
         }    
+        else
+            retVal=board.getCardSafeNumber(locationToMove);
         movingPlayer->decActions();
         movingPlayer->setPosition(locationToMove);
         
@@ -829,7 +831,7 @@ void BurgleBrosModel::checkTurns()
         dice.resetKeypadsDice();
         board.deActivateMotion();
     }
-    if(otherPlayer.isItsTurn() && otherPlayer.getcurrentActions() == 0)
+    if(otherPlayer.isItsTurn() && otherPlayer.getcurrentActions() == 0 && status==WAITING_FOR_ACTION)
     {
         if(board.getCardType(myPlayer.getPosition()) == THERMO)
             tokens.triggerAlarm(myPlayer.getPosition());

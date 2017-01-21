@@ -74,13 +74,18 @@ string BurgleBrosController::askForSpentOK(vector<string> &message)
 string BurgleBrosController::getUsersResponse(vector<string> &message)
 {
     string retVal;
-    
+    vector<string> fingerPrint({ENTER_FINGERPRINT_TEXT});
+    vector<string> lavatory({LAVATORY_TEXT});
+    vector<string> laser({LASER_TEXT});
+    vector<string> motion({MOTION_TEXT});
+    vector<string> deadbolt({DEADBOLT_TEXT});
     if(modelPointer->getPlayerOnTurn() == THIS_PLAYER)      //A este jugador le pregunta con un cartelito por view
     {
         retVal=view->MessageBox(message);   //una vez obtenido lo que el usuario escogió, se tiene que mandar un mensaje con lo que se puso.
-        if(message[0]==ENTER_FINGERPRINT_TEXT && retVal==USE_HACK_TOKEN_TEXTB )  //Si se preguntaba por un fingerprint y el usuario decidió usar un token:
+        //EL 2 SIGNIFICA EL TEXTO, los titulos y subtitulos son iguales.
+        if(message[2]==fingerPrint[2] && retVal==USE_HACK_TOKEN_TEXTB )  //Si se preguntaba por un fingerprint y el usuario decidió usar un token:
             networkInterface->sendUseToken(modelPointer->locationOfComputerRoomOrLavatory(COMPUTER_ROOM_FINGERPRINT));
-        else if (message[0]==LASER_TEXT )   //Si entro a un laser
+        else if (message[2]==laser[2] )   //Si entro a un laser
         {
             if(retVal==USE_HACK_TOKEN_TEXTB)        //y eligio gastar un hack token, se manda con la location del mismo.
                 networkInterface->sendUseToken(modelPointer->locationOfComputerRoomOrLavatory(COMPUTER_ROOM_LASER));
@@ -89,28 +94,28 @@ string BurgleBrosController::getUsersResponse(vector<string> &message)
             else
                 networkInterface->sendSpent(false); //Sino, se manda con este paquete.
         }
-        else if(message[0]==LAVATORY_TEXT && retVal==USE_LAVATORY_TOKEN_TEXTB)  //si era un lavatory y eligió usar un token se manda un use token
+        else if(message[2]==lavatory[2] && retVal==USE_LAVATORY_TOKEN_TEXTB)  //si era un lavatory y eligió usar un token se manda un use token
             networkInterface->sendUseToken(modelPointer->locationOfComputerRoomOrLavatory(LAVATORY));
-        else if(message[0]==DEADBOLT_TEXT)          //Si era un deadbolt
+        else if(message[2]==deadbolt[2])          //Si era un deadbolt
         {
             if(retVal==SPEND_ACTIONS_TEXTB)         //Se manda spend actions con true si eligió gastarlas, con no si no gasto nada el rata.
                 networkInterface->sendSpent(true);
             else
                 networkInterface->sendSpent(false);
         }
-        else if(message[0]==MOTION_TEXT && retVal==USE_HACK_TOKEN_TEXTB)    //Si salio del motion y uso el token se manda un use token.
+        else if(message[2]==motion[2] && retVal==USE_HACK_TOKEN_TEXTB)    //Si salio del motion y uso el token se manda un use token.
             networkInterface->sendUseToken(modelPointer->locationOfComputerRoomOrLavatory(COMPUTER_ROOM_MOTION));
     }
     else                                        //Al otro jugador le pregunta por el paquete recibido en la queue
     {
-        if(message[0]==ENTER_FINGERPRINT_TEXT)  //Si se preguntaba por un fingerprint
+        if(message[2]==fingerPrint[2])  //Si se preguntaba por un fingerprint
         {
             if(packetToAnalize.empty())            //Y no llego ninguna info extra, se devuelve que eligió triggerear una alarma
                 retVal=TRIGGER_ALARM_TEXTB;
             else if(packetToAnalize.front().getHeader()==USE_TOKEN)    //Si se uso un token se devuelve eso.
                 retVal=USE_HACK_TOKEN_TEXTB;
         }
-        else if(message[0]==LASER_TEXT)         //SI se preguntaba por la entrada a un tile laser
+        else if(message[2]==laser[2])         //SI se preguntaba por la entrada a un tile laser
         {
             if(packetToAnalize.front().getHeader()==USE_TOKEN)    //Si se uso un token se devuelve eso.
                 retVal=USE_HACK_TOKEN_TEXTB;
@@ -119,21 +124,21 @@ string BurgleBrosController::getUsersResponse(vector<string> &message)
             else
                 retVal=TRIGGER_ALARM_TEXTB;             //Sino ,llego un  spent ok con el valor "N".
         }
-        else if(message[0]==MOTION_TEXT)            //Si se esperaba para un motion
+        else if(message[2]==motion[2])            //Si se esperaba para un motion
         {
             if(packetToAnalize.front().getHeader()==USE_TOKEN)     //Y llego un use token, se devulve como si hubiera presionado el cartel con use hack token text
                 retVal=USE_HACK_TOKEN_TEXTB;
             else
                 retVal=TRIGGER_ALARM_TEXTB;         //Si era cualquier otro paquete triggerea alarma.
         }
-        else if(message[0]==LAVATORY_TEXT)          //Si se entró a un lavaratory
+        else if(message[2]==lavatory[2])          //Si se entró a un lavaratory
         {
             if(packetToAnalize.empty())                //Y el siguiente paquete que llegó no fue un use token, se usan los tokens del jugador
                 retVal=USE_MY_STEALTH_TOKEN_TEXTB;
             else if(packetToAnalize.front().getHeader()==USE_TOKEN)    //Sino se usan los tokens del lavatory
                 retVal=USE_LAVATORY_TOKEN_TEXTB;
         }
-        else if(message[0]==DEADBOLT_TEXT)          //Si se entró a un deadbolt donde no había personas dentro
+        else if(message[2]==deadbolt[2])          //Si se entró a un deadbolt donde no había personas dentro
         {
             if(packetToAnalize.front().getHeader()== SPENT_OK && packetToAnalize.front().playerAcceptedToSpentMoves())    //Si el spent ok llego con yes, se usan las acciones extyra, sino no.
                 retVal=SPEND_ACTIONS_TEXTB;
