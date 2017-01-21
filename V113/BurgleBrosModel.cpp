@@ -333,7 +333,9 @@ void BurgleBrosModel::userDecidedTo(string userChoice)
             tokens.useLavatoryToken();
     }
     status=WAITING_FOR_ACTION;
+    view->update(this);
     checkTurns();
+    view->update(this);
 }
 
 void BurgleBrosModel::setDice(vector<unsigned int> &currDice)

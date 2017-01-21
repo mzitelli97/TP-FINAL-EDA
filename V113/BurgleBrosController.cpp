@@ -520,7 +520,7 @@ void BurgleBrosController::analizeIfModelRequiresMoreActions(NetworkED *networkE
 {
     PerezProtocolHeader h = networkEvent->getHeader();
     vector<string> message;
-    if(modelPointer->getModelStatus()==WAITING_FOR_USER_CONFIRMATION && (h!=SPENT_OK || h!=USE_TOKEN)) //Si se hizo un move que podía llegar un use token o un spent ok luego, pero no llegó
+    if(modelPointer->getModelStatus()==WAITING_FOR_USER_CONFIRMATION && h!=SPENT_OK && h!=USE_TOKEN) //Si se hizo un move que podía llegar un use token o un spent ok luego, pero no llegó
     {
         message=modelPointer->getMsgToShow(); //Se obtiene el mensaje que se mostraria si saltar el cartel
         modelPointer->userDecidedTo(getUsersResponse(message));//Y esta funcion "emula" lo elegido por el otro jugador. por ejemplo si no gasto las acciones del deadbolt simula como que eligio no gastarlas en el cartel, pero siendo el jugador desde la otra pc.
