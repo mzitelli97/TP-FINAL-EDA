@@ -347,7 +347,8 @@ void BurgleBrosModel::setDice(vector<unsigned int> &currDice)
         if(movingPlayer->getCharacter()==THE_PETERMAN)      //Si es el peterman tira 1 dado más
             keyCracked=dice.throwDiceForKeypadWithExtraDie(movingPlayer->getPosition());
         else
-            keyCracked=dice.throwDiceForKeypad(movingPlayer->getPosition());    //
+            keyCracked=dice.throwDiceForKeypad(movingPlayer->getPosition());    
+        currDice=dice.getCurrDice();
     }
     else
     {
@@ -362,7 +363,9 @@ void BurgleBrosModel::setDice(vector<unsigned int> &currDice)
         movingPlayer->setPosition(prevLoc);
     }
     status=WAITING_FOR_ACTION;
+    view->update(this);
     checkTurns();
+    view->update(this);
 }
 void BurgleBrosModel::pass(PlayerId playerId)
 {
@@ -510,27 +513,8 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
         if( newCardType==KEYPAD && !tokens.isThereAKeypadToken(locationToMove))
         {
             bool keyCracked=false;
-            vector<unsigned int> currDice;
-            if(getPlayerOnTurn()==THIS_PLAYER)          //Si eran de este jugador se tiran y se mandan los dados al controller
-            {
-                if(movingPlayer->getCharacter()==THE_PETERMAN)      //Si es el peterman tira 1 dado más
-                    keyCracked=dice.throwDiceForKeypadWithExtraDie(locationToMove);
-                else
-                    keyCracked=dice.throwDiceForKeypad(locationToMove);
-                currDice=dice.getCurrDice();
-                if(keyCracked)          //SI se crackeó se pone un token sobre el tile
-                    tokens.putKeyPadToken(locationToMove);
-                else
-                {
-                    dice.addDieToKeypad(locationToMove);
-                    movingPlayer->setPosition(prevLocation);
-                }
-            }
-            else            
-            {
-                this->status=WAITING_FOR_OTHERS_DICE;
-                this->prevLoc=prevLocation;
-            }
+            this->status=WAITING_FOR_DICE;
+            this->prevLoc=prevLocation;
         }
         
         if(movingPlayer->getCharacter()!=THE_HACKER && ( playerNotMoving->getCharacter()!=THE_HACKER || (playerNotMoving->getCharacter()==THE_HACKER && locationToMove!= playerNotMoving->getPosition() ) ))

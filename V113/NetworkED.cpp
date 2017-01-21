@@ -90,6 +90,19 @@ CardLocation NetworkED::getPos()
         error=true;
     return retVal;
 }
+CardLocation NetworkED::getTokenPos()
+{
+    CardLocation retVal;
+    if(header==ADD_TOKEN || USE_TOKEN)
+    {
+        buffer[len]= '\0';
+        string aux =(char *) buffer;
+        retVal=protocolToCardLocation(aux);
+    }
+    else
+        error=true;
+    return retVal;
+}
 bool NetworkED::playerAcceptedToSpentMoves()
 {
     bool retVal=false;

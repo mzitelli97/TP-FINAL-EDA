@@ -38,7 +38,7 @@
 #define SPOTTER_BOTTOM      "Bottom"
 
 
-typedef enum {WAITING_FOR_ACTION, WAITING_FOR_USER_CONFIRMATION, WAITING_FOR_OTHERS_DICE} ModelStatus;
+typedef enum {WAITING_FOR_ACTION, WAITING_FOR_USER_CONFIRMATION, WAITING_FOR_DICE} ModelStatus;
 
 class BurgleBrosModel : public Model
 {

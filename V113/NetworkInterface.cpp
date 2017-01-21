@@ -169,6 +169,13 @@ bool NetworkInterface::sendUseToken(CardLocation location)
     retVal=p2networking->sendPacket(USE_TOKEN, msg.c_str(), msg.length());
     return retVal;
 }
+bool NetworkInterface::sendAddToken(CardLocation location)
+{
+    bool retVal=false;
+    string msg=cardLocationToProtocol(location);
+    retVal=p2networking->sendPacket(ADD_TOKEN, msg.c_str(), msg.length());
+    return retVal;
+}
 bool NetworkInterface::sendSpent(bool YesOrNo)
 {
     char buffer[1];

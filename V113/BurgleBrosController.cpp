@@ -239,7 +239,10 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
         networkInterface->sendMove(location, safeNumber);
     }
     else if(action=="ADD TOKEN")
+    {
         modelPointer->addToken(modelPointer->getPlayerOnTurn(),location);
+        networkInterface->sendAddToken(location);
+    }
     else if(action=="ADD DIE")
         modelPointer->addDieToSafe(modelPointer->getPlayerOnTurn(),location);
     else if(action=="CRACK")
@@ -479,6 +482,7 @@ void BurgleBrosController::serverInitRoutine(NetworkED *networkEvent)
 void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
 {
     vector<string> message;
+    vector<unsigned int> dice;
     analizeIfModelRequiresMoreActions(networkEvent);
     switch(networkEvent->getHeader())       //Depende de que acción se ejecutan distintas funciones.
     {
@@ -494,11 +498,18 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             modelPointer->move(OTHER_PLAYER, networkEvent->getPos(),networkEvent->getSafeNumber());
             networkInterface->sendPacket(ACK);
             break;
+        case ADD_TOKEN:
+            modelPointer->addToken(OTHER_PLAYER,);
         case ACK:
             if(modelPointer->getModelStatus()==WAITING_FOR_USER_CONFIRMATION)   //Si se esperaba la confirmación del usuario para una accion propia del jugador de esta cpu:
             {
                 message=modelPointer->getMsgToShow(); //Se obtiene el mensaje a mostrar,
                 modelPointer->userDecidedTo(getUsersResponse(message));//Esta función devuelve lo que elige el jugador en el cartelito. y le pasa la respuesta al modelo.
+            }
+            else if(modelPointer->getModelStatus()== WAITING_FOR_DICE)
+            {
+                  modelPointer->setDice(dice);    //le paso unos dados vacíos y ahí pone los dados que salieron tirando para el keypad.
+                  networkInterface->sendDice(dice); //Se lo envía a la otra pc.
             }
             break;
         case SPENT_OK:case USE_TOKEN:
@@ -511,6 +522,12 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             else
                quit=true;
             break;
+        case THROW_DICE:
+            if(modelPointer->getModelStatus() == WAITING_FOR_DICE)
+            {
+                networkEvent->getDice(dice);    //Obtiene los dados que tiro el otro para el keypad
+                modelPointer->setDice(dice);    //Y se los pasa al modelo para que procese.
+            }
         default:
             break;
 

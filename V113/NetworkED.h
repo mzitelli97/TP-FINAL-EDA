@@ -27,7 +27,8 @@ public:
     CharacterName getCharacter();
     void getInitGPos(CardLocation *guardPos, CardLocation *guardsDiePos);
     void getStartInfo(vector<CardName> *tiles, CardLocation *playersStartingPos);
-    CardLocation getPos();
+    CardLocation getPos();  //Sirve para obtener la cardlocation de a donde se hizo peek o move
+    CardLocation getTokenPos(); //Sirve para obtener la cardLocation de a donde se agrego o de donde se uso un token.
     unsigned int getSafeNumber();
     bool playerAcceptedToSpentMoves();
     void getDice(vector<unsigned int> &dice);
