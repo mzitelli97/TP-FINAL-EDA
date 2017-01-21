@@ -284,14 +284,19 @@ vector<string> BurgleBrosModel::getMsgToShow()
 void BurgleBrosModel::userDecidedTo(string userChoice)
 {
     BurgleBrosPlayer * movingPlayer= getP2Player(getPlayerOnTurn()); 
-    if(msgsToShow[0]== MOTION_TEXT)     //Si era una respuesta para un motion
+    vector<string> fingerPrint({ENTER_FINGERPRINT_TEXT});
+    vector<string> lavatory({LAVATORY_TEXT});
+    vector<string> laser({LASER_TEXT});
+    vector<string> motion({MOTION_TEXT});
+    vector<string> deadbolt({DEADBOLT_TEXT});
+    if(msgsToShow[2]== motion[2])     //Si era una respuesta para un motion
     {
         if(userChoice==USE_HACK_TOKEN_TEXTB)        // y uso hack tokens
             tokens.removeOneHackTokenOf(COMPUTER_ROOM_MOTION);
         else if(userChoice==TRIGGER_ALARM_TEXTB)        //Sino, triggerea la alarma
             tokens.triggerAlarm(prevLoc);
     }
-    else if(msgsToShow[0]==DEADBOLT_TEXT)
+    else if(msgsToShow[2]==deadbolt[2])
     {
         if(userChoice==SPEND_ACTIONS_TEXTB)//decide gastar las acciones y entra
         {
@@ -301,7 +306,7 @@ void BurgleBrosModel::userDecidedTo(string userChoice)
         else if(userChoice==GET_BACK_TEXTB)//decide no gastar las acciones y vuelve atras
             movingPlayer->setPosition(prevLoc);
     }
-    else if(msgsToShow[0]==ENTER_FINGERPRINT_TEXT)
+    else if(msgsToShow[2]==fingerPrint[2])
     {
         if(userChoice==USE_HACK_TOKEN_TEXTB)// clickeo "use hack token" 
             tokens.removeOneHackTokenOf(COMPUTER_ROOM_FINGERPRINT);
@@ -311,7 +316,7 @@ void BurgleBrosModel::userDecidedTo(string userChoice)
               setGuardsNewPath(movingPlayer->getPosition().floor); //Así se pone el dado a donde tiene que ir, este lo necesitaba desde el guardia
         }
     }
-    else if(msgsToShow[0]==LASER_TEXT)
+    else if(msgsToShow[2]==laser[2])
     {
         if(userChoice==TRIGGER_ALARM_TEXTB)
         {    tokens.triggerAlarm(movingPlayer->getPosition()); setGuardsNewPath(movingPlayer->getPosition().floor);}
@@ -320,7 +325,7 @@ void BurgleBrosModel::userDecidedTo(string userChoice)
         else if(userChoice==SPEND_ACTION_TEXTB)
             movingPlayer->decActions();
     }
-    else if(msgsToShow[0]==LAVATORY_TEXT)
+    else if(msgsToShow[2]==lavatory[2])
     {
         if(userChoice ==USE_MY_STEALTH_TOKEN_TEXTB)
             movingPlayer->decLives();
