@@ -499,7 +499,7 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             networkInterface->sendPacket(ACK);
             break;
         case ADD_TOKEN:
-            modelPointer->addToken(OTHER_PLAYER,);
+            modelPointer->addToken(OTHER_PLAYER,networkEvent->getTokenPos());
         case ACK:
             if(modelPointer->getModelStatus()==WAITING_FOR_USER_CONFIRMATION)   //Si se esperaba la confirmación del usuario para una accion propia del jugador de esta cpu:
             {

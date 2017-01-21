@@ -39,7 +39,7 @@
 
 
 typedef enum {WAITING_FOR_ACTION, WAITING_FOR_USER_CONFIRMATION, WAITING_FOR_DICE} ModelStatus;
-
+typedef enum {GUARD_STEP_TO, GUARD_CARD_PICK} LocationMeaning;
 class BurgleBrosModel : public Model
 {
     public:
@@ -81,6 +81,7 @@ class BurgleBrosModel : public Model
         void offerLoot(PlayerId playerId, CardLocation tile, Loot loot);
         void escape(PlayerId playerId, CardLocation stairTile);
         void peekGuardsCard(PlayerId playerId, unsigned int guardsFloor);
+        //void guardMove(list<pair<LocationMeaning, CardLocation> &guardMovement);
         /*Prueba para ver si se pueden realizar ciertas acciones*/
         bool isMovePosible(PlayerId playerId,CardLocation tileToMove);  //Pregunta si una movida es posible
         bool isPeekPosible(PlayerId player, CardLocation tile);         //Pregunta si un peek es posible
