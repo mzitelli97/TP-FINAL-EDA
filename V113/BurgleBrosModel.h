@@ -40,11 +40,16 @@
 
 typedef enum {WAITING_FOR_ACTION, WAITING_FOR_USER_CONFIRMATION, WAITING_FOR_DICE} ModelStatus;
 typedef enum {GUARD_STEP_TO, GUARD_CARD_PICK} LocationMeaning;
+typedef struct{
+    LocationMeaning meaning;
+    CardLocation cardLocation;
+}GuardMoveInfo;
 class BurgleBrosModel : public Model
 {
     public:
 	BurgleBrosModel();
         PlayerId getPlayerOnTurn();
+        bool isGuardsTurn();
         bool hasGameFinished();
         string getFinishMsg();
         /* Funciones para inicializar al modelo.*/
@@ -81,7 +86,7 @@ class BurgleBrosModel : public Model
         void offerLoot(PlayerId playerId, CardLocation tile, Loot loot);
         void escape(PlayerId playerId, CardLocation stairTile);
         void peekGuardsCard(PlayerId playerId, unsigned int guardsFloor);
-        //void guardMove(list<pair<LocationMeaning, CardLocation> &guardMovement);
+        void guardMove(list<GuardMoveInfo> &guardMovement);
         /*Prueba para ver si se pueden realizar ciertas acciones*/
         bool isMovePosible(PlayerId playerId,CardLocation tileToMove);  //Pregunta si una movida es posible
         bool isPeekPosible(PlayerId player, CardLocation tile);         //Pregunta si un peek es posible
@@ -98,19 +103,21 @@ class BurgleBrosModel : public Model
         bool moveWillRequireSpecifications(PlayerId playerId, CardLocation locationToMove, int safeNumber); //devuelve true si el model necesitara info extra, por ejemplo si necesita el input de responder el allegro native dialog box o si necesita saber los dados que tiró el otro jugador.
         list<string> getPosibleActionsToTile(PlayerId player, CardLocation tile);   //Devuelve que acciones puede realizar el jugador indicado en esa tile
         list<string> getPosibleActionsToGuard(PlayerId player, unsigned int guardsFloor); 
-        void moveGuard(unsigned int floor);
+        
         void attachView(View * view);
         void attachController(Controller * controller);
         void attachSoundManager(SoundManager * soundManager);
 	~BurgleBrosModel();
     private:
+        void makeGuardMove(list<GuardMoveInfo> &guardMovement);
+        void copyGuardMove(list<GuardMoveInfo> &guardMovement); //Faltaría checkear que el move sea correcto.
         void checkTurns();
         void checkIfWonOrLost();
         void handlePersianKittyMove(PlayerId playerId);
         void handleChihuahuaMove(PlayerId playerId);
         void triggerSilentAlarm(unsigned int floor);
         bool GuardInCamera();
-        void setGuardsNewPath(unsigned int floor);
+        list<CardLocation> setGuardsNewPath(unsigned int floor);
         bool playerSpentFreeAction;
         BurgleBrosPlayer * getP2Player(PlayerId playerId);
         BurgleBrosPlayer * getP2OtherPlayer(PlayerId playerId);
@@ -129,7 +136,8 @@ class BurgleBrosModel : public Model
         ModelStatus status;         //Para las preguntas al usuario
         vector<string> msgsToShow;      //Contiene el texto y sus respuestas.
         CardLocation prevLoc;
-        
+        PlayerId playerOnTurnBeforeGuardMove;
+        bool guardFinishedMoving;
 };
 #endif
 

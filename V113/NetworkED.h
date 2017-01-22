@@ -31,7 +31,8 @@ public:
     CardLocation getTokenPos(); //Sirve para obtener la cardLocation de a donde se agrego o de donde se uso un token.
     unsigned int getSafeNumber();
     bool playerAcceptedToSpentMoves();
-    void getDice(vector<unsigned int> &dice);
+    void getDice(vector<unsigned int> &dice);   //Pone en el arreglo los dice obtenidos via interne
+    void getGuardMovement(list<GuardMoveInfo> &guardInfo);  //Pone en la lista la guard info obtenida via interne
     virtual ~NetworkED();
 private:
     PerezProtocolHeader header;

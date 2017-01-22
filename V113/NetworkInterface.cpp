@@ -185,7 +185,39 @@ bool NetworkInterface::sendSpent(bool YesOrNo)
         buffer[0]='N';
     return p2networking->sendPacket(SPENT_OK, buffer, 1);
 }
-
+bool NetworkInterface::sendGMove(list<GuardMoveInfo> guardMovement)
+{
+    unsigned char buffer[BUFSIZE];
+    buffer[0]=guardMovement.size();
+    list<GuardMoveInfo>::iterator lastInfo=guardMovement.begin();
+    list<GuardMoveInfo>::iterator it;
+    unsigned int i=1;
+    for(it=guardMovement.begin(); it != guardMovement.end(); it++ )
+    {
+        if(it->meaning== GUARD_STEP_TO)     //Si fue un step le pongo el formato de la carta
+        {
+            if(lastInfo->meaning==GUARD_CARD_PICK)   //SI hubo un mensaje previo y fue un levante de carta, pongo el 0xff para separar.
+            {
+                buffer[i]= 0xFF;
+                i++;
+            }
+            cardLocationToProtocol(it->cardLocation).copy((char *)&(buffer[i]), PROTOCOL_LOCATION_LENGTH);
+            i += PROTOCOL_LOCATION_LENGTH;
+        }
+        else
+        {
+            if(lastInfo->meaning==GUARD_STEP_TO)   //SI hubo un mensaje previo y fue un guard step pongo el separador 0xFF
+            {
+                buffer[i]= 0xFF;
+                i++;
+            }
+            cardLocationToProtocol(it->cardLocation).copy((char *)&(buffer[i]), PROTOCOL_LOCATION_LENGTH);
+            i += PROTOCOL_LOCATION_LENGTH;
+        }
+        lastInfo==it;
+    }
+    return p2networking->sendPacket(GUARD_MOVEMENT, (char *) buffer, i);
+}
 NetworkInterface::~NetworkInterface()
 {
 }

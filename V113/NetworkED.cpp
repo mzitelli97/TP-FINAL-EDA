@@ -138,6 +138,37 @@ void NetworkED::getDice(vector<unsigned int> &dice)
     else 
         error=true;
 }
+
+void NetworkED::getGuardMovement(list<GuardMoveInfo> &guardInfo)
+{
+    unsigned int i=1;
+    unsigned char temp;
+    GuardMoveInfo auxgInfo;
+    LocationMeaning currMeaning=GUARD_STEP_TO;
+    while(i<len)
+    {
+        if(buffer[i] == 0xFF)
+        {
+            if(currMeaning==GUARD_STEP_TO)
+                currMeaning=GUARD_CARD_PICK;
+            else
+                currMeaning=GUARD_STEP_TO;
+            i++;
+        }
+        else
+        {
+            temp=buffer[i+PROTOCOL_LOCATION_LENGTH];
+            buffer[i+PROTOCOL_LOCATION_LENGTH]='\0';
+            auxgInfo.cardLocation=protocolToCardLocation((const char*)&(buffer[i]));
+            auxgInfo.meaning=currMeaning;
+            guardInfo.push_back(auxgInfo);
+            buffer[i+PROTOCOL_LOCATION_LENGTH]=temp;
+            i += PROTOCOL_LOCATION_LENGTH;
+        }
+        
+    }
+}
+
 NetworkED::~NetworkED() 
 {
 }
