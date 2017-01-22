@@ -214,7 +214,7 @@ bool NetworkInterface::sendGMove(list<GuardMoveInfo> guardMovement)
             cardLocationToProtocol(it->cardLocation).copy((char *)&(buffer[i]), PROTOCOL_LOCATION_LENGTH);
             i += PROTOCOL_LOCATION_LENGTH;
         }
-        lastInfo==it;
+        lastInfo=it;
     }
     return p2networking->sendPacket(GUARD_MOVEMENT, (char *) buffer, i);
 }
