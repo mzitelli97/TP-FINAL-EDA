@@ -828,7 +828,7 @@ void BurgleBrosModel::checkTurns()
     if(myPlayer.isItsTurn() && myPlayer.getcurrentActions() == 0 && status==WAITING_FOR_ACTION)
     {
         if(board.getCardType(myPlayer.getPosition()) == THERMO)
-            tokens.triggerAlarm(myPlayer.getPosition());
+        {    tokens.triggerAlarm(myPlayer.getPosition()); setGuardsNewPath(myPlayer.getPosition().floor);}
         myPlayer.setTurn(false);
         playerOnTurnBeforeGuardMove=THIS_PLAYER;
       /*  moveGuard(myPlayer.getPosition().floor); //Se comenta para probar los moves entre las 2 pcs
@@ -845,7 +845,7 @@ void BurgleBrosModel::checkTurns()
     else if(otherPlayer.isItsTurn() && otherPlayer.getcurrentActions() == 0 && status==WAITING_FOR_ACTION)
     {
         if(board.getCardType(myPlayer.getPosition()) == THERMO)
-            tokens.triggerAlarm(myPlayer.getPosition());
+        {   tokens.triggerAlarm(myPlayer.getPosition()); setGuardsNewPath(myPlayer.getPosition().floor);}
         otherPlayer.setTurn(false);
         playerOnTurnBeforeGuardMove=OTHER_PLAYER;
         //moveGuard(otherPlayer.getPosition().floor);
@@ -871,6 +871,7 @@ void BurgleBrosModel::checkTurns()
        // handlePersianKittyMove(nextPlayerOnTurn);
        // handleChihuahuaMove(nextPlayerOnTurn);
         guardFinishedMoving=false;
+        view->update(this);
     }
     checkIfWonOrLost();
 }
@@ -1134,6 +1135,7 @@ void BurgleBrosModel::guardMove(list<GuardMoveInfo> &guardMovement)
         makeGuardMove(guardMovement);
     else
         copyGuardMove(guardMovement);
+    guardFinishedMoving=true;
     checkTurns();
 }
 void BurgleBrosModel::makeGuardMove(list<GuardMoveInfo> &guardMovement)
@@ -1187,7 +1189,7 @@ void BurgleBrosModel::makeGuardMove(list<GuardMoveInfo> &guardMovement)
                 if(board.getCardType(guardMoving->getPosition()) != board.getCardType(myPlayer.getPosition()))      //Y ese player no está en la misma camara que el guardia
                 {   tokens.triggerAlarm(myPlayer.getPosition()); setGuardsNewPath(myPlayer.getPosition().floor); }  //Triggerea una alarma en el piso que se encuentra 
             if(board.getCardType(guardMoving->getPosition()) == CAMERA && board.getCardType(otherPlayer.getPosition()) == CAMERA && board.isCardVisible(otherPlayer.getPosition()))
-                if(board.getCardType(guardMoving->getPosition()) != board.getCardType(otherPlayer.getPosition()))
+                if(guardMoving->getPosition() != otherPlayer.getPosition())
                 {   tokens.triggerAlarm(otherPlayer.getPosition()); setGuardsNewPath(otherPlayer.getPosition().floor); }
         }
         /*Si un player esta sobre un atrium dado vuelta, y el guardia pasa un piso arriba o abajo de ese player, este pierde una vida*/
@@ -1231,10 +1233,7 @@ void BurgleBrosModel::copyGuardMove(list<GuardMoveInfo> &guardMovement)
     unsigned int guardFloor= getP2Player(playerOnTurnBeforeGuardMove)->getPosition().floor;   //Obtengo la posición del 
     BurgleBrosGuard *guardMoving = &(guards[guardFloor]);
     if(tokens.isThereAnAlarmToken(guardMoving->getPosition()))     //Si hay una alarma en su posición ya la desactiva y busca un nuevo camino.
-    {
         tokens.turnOffAlarm(guardMoving->getPosition());
-        setGuardsNewPath(guardFloor);
-    }
     if(myPlayer.getCharacter()== THE_ACROBAT && myPlayer.getPosition() == guardMoving->getPosition()) // Si un acrobat termina su turno en el tile del guardia PERDERA LA CABEZA! digo un stealth token.
         myPlayer.decLives();
     if(otherPlayer.getCharacter()== THE_ACROBAT && otherPlayer.getPosition() == guardMoving->getPosition())
@@ -1270,10 +1269,10 @@ void BurgleBrosModel::copyGuardMove(list<GuardMoveInfo> &guardMovement)
             if(board.isCardVisible(guardMoving->getPosition()))
             {   
                 if(board.getCardType(guardMoving->getPosition()) == CAMERA && board.getCardType(myPlayer.getPosition()) == CAMERA && board.isCardVisible(myPlayer.getPosition()))   //Si un guardia se mueve a una camara y hay un player en una camara
-                    if(board.getCardType(guardMoving->getPosition()) != board.getCardType(myPlayer.getPosition()))      //Y ese player no está en la misma camara que el guardia
+                    if(guardMoving->getPosition() != myPlayer.getPosition())      //Y ese player no está en la misma camara que el guardia
                     {   tokens.triggerAlarm(myPlayer.getPosition()); setGuardsNewPath(myPlayer.getPosition().floor); }  //Triggerea una alarma en el piso que se encuentra 
                 if(board.getCardType(guardMoving->getPosition()) == CAMERA && board.getCardType(otherPlayer.getPosition()) == CAMERA && board.isCardVisible(otherPlayer.getPosition()))
-                    if(board.getCardType(guardMoving->getPosition()) != board.getCardType(otherPlayer.getPosition()))
+                    if(guardMoving->getPosition() != otherPlayer.getPosition())
                     {   tokens.triggerAlarm(otherPlayer.getPosition()); setGuardsNewPath(otherPlayer.getPosition().floor); }
             }
             /*Si un player esta sobre un atrium dado vuelta, y el guardia pasa un piso arriba o abajo de ese player, este pierde una vida*/
@@ -1292,7 +1291,7 @@ void BurgleBrosModel::copyGuardMove(list<GuardMoveInfo> &guardMovement)
         view->update(this);
         //sleep(1.0);         //Esto despues cambiará (es bloqueante)
     }
-    setGuardsNewPath(guardFloor); //Para que no quede sin un camino  si la próxima vez se ejecuta desde esta cpu.
+    setGuardsNewPath(guardFloor, guardMoving->getTargetPosition());//Para que no quede sin un camino  si la próxima vez se ejecuta desde esta cpu.
 }
 list<CardLocation> BurgleBrosModel::setGuardsNewPath(unsigned int floor)
 {
@@ -1337,6 +1336,49 @@ list<CardLocation> BurgleBrosModel::setGuardsNewPath(unsigned int floor)
             retVal.push_back(newTargetLocation);                //la guarda en el retval
         }while(newTargetLocation == guards[floor].getPosition());      //si era la misma posición que la del guardia, saca otra carta del mazo.
     }
+    guards[floor].setNewTarget(newTargetLocation);
+    list<CardLocation> temp = board.getShortestPath(guards[floor].getPosition(), newTargetLocation);
+    guards[floor].setNewPathToTarget(temp);
+    return retVal;
+}
+list<CardLocation> BurgleBrosModel::setGuardsNewPath(unsigned int floor, CardLocation thisTarget)
+{
+    list<CardLocation> retVal;
+    list<CardLocation> alarmList = tokens.getAlarmsList();
+    list<AuxStruct> alarmsOnSameFloor;
+    CardLocation newTargetLocation;
+    unsigned int aux=0;
+    for(list<CardLocation>::iterator it=alarmList.begin(); it !=alarmList.end(); it++)
+    {
+        AuxStruct aux;
+        if(it->floor == floor)
+        {
+             aux.target=*it;
+             alarmsOnSameFloor.push_back(aux);       //Obtengo las alarmas que están en el mismo piso  
+        }
+    }
+    if(!alarmsOnSameFloor.empty())          //Si hay alarmas en su piso
+    {
+        for(list<AuxStruct>::iterator it=alarmsOnSameFloor.begin(); it !=alarmsOnSameFloor.end(); it++)
+            it->length=board.getShortestPathLength(guards[floor].getPosition(), it->target);    //obtengo el largo de cada camino.
+        alarmsOnSameFloor.sort(sortAuxStruct);  //las ordeno por el camino mas corto
+        for(list<AuxStruct>::iterator it=alarmsOnSameFloor.begin(); it !=alarmsOnSameFloor.end(); it++) 
+        {
+            if(it->length == alarmsOnSameFloor.front().length)
+                aux++;  //Cuento cuantas alarmas estan a la misma distancia.
+        }
+        if(aux==1)  //Si hay una que este a la minima distancia
+            newTargetLocation=alarmsOnSameFloor.front().target; //Esa va a ser el nuevo objetivo
+        else
+        {
+            int temp = rand() % aux;            //Sino, se elige random entre las que tienen el mismo largo de camino
+            list<AuxStruct>::iterator it = alarmsOnSameFloor.begin();
+            advance(it, temp);
+            newTargetLocation = it->target;
+        }
+    }
+    else        //Si no había alarmas, se toma una carta  que no sea en la que esté parado
+        newTargetLocation = thisTarget;  //si era la misma posición que la del guardia, saca otra carta del mazo.
     guards[floor].setNewTarget(newTargetLocation);
     list<CardLocation> temp = board.getShortestPath(guards[floor].getPosition(), newTargetLocation);
     guards[floor].setNewPathToTarget(temp);

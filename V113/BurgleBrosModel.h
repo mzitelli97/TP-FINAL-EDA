@@ -119,6 +119,7 @@ class BurgleBrosModel : public Model
         void triggerSilentAlarm(unsigned int floor);
         bool GuardInCamera();
         list<CardLocation> setGuardsNewPath(unsigned int floor);
+        list<CardLocation> setGuardsNewPath(unsigned int floor,CardLocation thisTarget);
         bool playerSpentFreeAction;
         BurgleBrosPlayer * getP2Player(PlayerId playerId);
         BurgleBrosPlayer * getP2OtherPlayer(PlayerId playerId);
