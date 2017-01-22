@@ -1,6 +1,73 @@
 #include "Networking.h"
+#include "BurgleBrosModel.h"
+#include <cctype>
 
 #define DEF_SOCK_TIMEOUT (APR_USEC_PER_SEC * 5) //TIMEOUT (ver m�s adelante).
+
+
+string protocolHeaderToStr(PerezProtocolHeader header)
+{
+    string retVal;
+    switch(header)
+    {
+        case ACK: retVal="Ack";break;
+        case AGREE:retVal="Agree";break;
+        case DISAGREE:retVal="Disagree";break;
+        case NAME:retVal="Name";break;
+        case NAME_IS:retVal="Name is";break;
+        case I_AM:retVal="I am";break;
+        case INITIAL_G_POS:retVal="Initial g pos";break;
+        case START_INFO:retVal="Start info";break;
+        case YOU_START:retVal="You start";break;
+        case I_START:retVal="I start";break;
+        case PEEK:retVal="Peek";break;
+        case MOVE:retVal="Move";break;
+        case SPENT_OK:retVal="Spent OK";break;
+        case ADD_TOKEN:retVal="Add token";break;
+        case USE_TOKEN:retVal="Use token";break;
+        case THROW_DICE:retVal="Throw dice";break;
+        case SAFE_OPENED:retVal="Safe Opened";break;
+        case CREATE_ALARM:retVal="Create alarm";break;
+        case SPY_PATROL:retVal="Spy Patrol";break;
+        case PLACE_CROW:retVal="Place Crow";break;
+        case OFFER_LOOT:retVal="Offer Loot";break;
+        case REQUEST_LOOT:retVal="Request Loot";break;
+        case PICK_UP_LOOT:retVal="Pick up Loot";break;
+        case PASS:retVal="Pass";break;
+        case ROLL_DICE_FOR_LOOT:retVal="Roll dice for loot";break;
+        case GUARD_MOVEMENT:retVal="Guard movement";break;
+        case WE_WON:retVal="We won";break;
+        case WE_LOST:retVal="We lost";break;
+        case GAME_OVER:retVal="Game over";break;
+        case QUIT:retVal="Quit";break;
+        case ERRORR:retVal="Error";break;
+        default: retVal="Unknown header";break;
+    }
+    return retVal;
+}
+
+string getStrRepresentingPacket(PerezProtocolHeader header, const char *packetInfo, unsigned int packetLength)
+{
+    string retVal= "Header: " + protocolHeaderToStr(header);
+    char buffer[BUFSIZE];
+    unsigned int i,j; //J indice para el buffer auxiliar
+    for(i=0,j=0; i<packetLength;i++,j++)
+    {
+        if(isalnum(packetInfo[i]))
+            buffer[j]= packetInfo[i];
+        else
+        {
+            sprintf(&(buffer[j]), "(0x%X)",(unsigned int)packetInfo[i]);    //Si no es algo imprimible, pone el valor en hexa entre parentesis.
+            while(buffer[j+1]!='\0')        //Avanzo i hasta llegar al ), luego el for lo incrementa en 1
+                j++;
+        }
+    }
+    buffer[j+1]='\0'; // Le pongo terminador para que sea string.
+    retVal+= " Packet: ";
+    retVal+= buffer;       
+    
+    return retVal;
+}
 
 
 Networking::Networking()
@@ -120,7 +187,12 @@ bool Networking::sendPacket(PerezProtocolHeader header, const char *packetInfo, 
 			memcpy(&(buffer[1]), packetInfo, packetLength);
 		rv = apr_socket_send(principalSocket, (const char *)buffer, &totalSize);
 		if (rv == APR_SUCCESS)
-			retVal = true;
+		{
+                    retVal = true;
+                    string aux= "Sent-> " + getStrRepresentingPacket(header,packetInfo, packetLength) + "\n";
+                    cout << aux;
+                    msgsSentNRecieved.push_back(aux);
+                }
 	}
 	return retVal;
 }
@@ -140,6 +212,9 @@ bool Networking::recievePacket(PerezProtocolHeader *header, char *buffer, unsign
 		if (*length != 0)
 			memcpy(buffer, (&(auxBuffer[1])), *length);
 		retVal = true;
+                string aux= "Recieved <- " + getStrRepresentingPacket(*header,buffer, *length) + "\n";
+                cout << aux;
+                msgsSentNRecieved.push_back(aux);
 	}
 	return retVal;
 }
@@ -152,3 +227,5 @@ Networking::~Networking()
 	apr_socket_close(principalSocket);
 	apr_terminate();
 }
+
+

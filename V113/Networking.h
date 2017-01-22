@@ -4,6 +4,7 @@
 #define APR_DECLARE_STATIC
 #include <iostream>
 #include <string>
+#include <list>
 #include <apr_general.h>
 #include <apr_file_io.h>
 #include <apr_strings.h>
@@ -18,7 +19,11 @@ typedef enum{ACK=0x01, AGREE, DISAGREE, NAME=0x10, NAME_IS, I_AM, INITIAL_G_POS,
 			 PEEK=0x30, MOVE, SPENT_OK, ADD_TOKEN, USE_TOKEN, THROW_DICE, SAFE_OPENED, CREATE_ALARM, SPY_PATROL,
 			 PLACE_CROW, OFFER_LOOT, REQUEST_LOOT, PICK_UP_LOOT, PASS, ROLL_DICE_FOR_LOOT, GUARD_MOVEMENT, WE_WON,
 			 WE_LOST, GAME_OVER, QUIT=0xFE, ERRORR}PerezProtocolHeader;
+using namespace std;
+                         
+string protocolHeaderToStr(PerezProtocolHeader header);
 
+string getStrRepresentingPacket(PerezProtocolHeader header, const char *packetInfo, unsigned int packetLength);
 
 class Networking
 {
@@ -33,6 +38,7 @@ public:
 	bool recievePacket(PerezProtocolHeader *header,char *buffer, unsigned int *length);					//buffer len >= BUFSIZE!!!
 	~Networking();
 private:
+        list<string> msgsSentNRecieved;
 	apr_pool_t *memoryPool;
 	apr_socket_t *auxiliarSocket;
 	apr_socket_t *principalSocket;

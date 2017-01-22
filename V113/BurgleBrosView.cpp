@@ -243,7 +243,7 @@ void BurgleBrosView::update(Model* auxModel)
     /*Update all*/
     clock_t  before,after;
     
-    before=clock();
+    //before=clock();
     BurgleBrosModel * model = (BurgleBrosModel *) auxModel;
     updateTiles(model);
     updateTokens(model);
@@ -252,24 +252,20 @@ void BurgleBrosView::update(Model* auxModel)
     updateLoots(model);
     updateGuards(model);
     updateExtraDices(model);
-    after=clock();
-    cout << "Update tardó: "<< ((double)(after-before))/(double)CLOCKS_PER_SEC<< " segundos."<<endl; 
+    //after=clock();
+    //cout << "Update tardó: "<< ((double)(after-before))/(double)CLOCKS_PER_SEC<< " segundos."<<endl; 
     /*Draw all*/
     al_draw_scaled_bitmap(backScreen,0,0,al_get_bitmap_width(backScreen),al_get_bitmap_height(backScreen),0,0,al_get_display_width(display),al_get_display_height(display),0);
     list<list<list<GraphicItem *>>>::iterator it_layers;
     list<list<GraphicItem *>>::iterator it_itemType;
     list<GraphicItem *>::iterator it_items;
-    //cout << "hola" << endl;
-    before=clock();
+    //before=clock();
     for( it_layers = graphicInterface.begin(); it_layers != graphicInterface.end(); it_layers++)
     {
-        //cout << "hola1" << endl;
         for( it_itemType = it_layers->begin(); it_itemType != it_layers->end(); it_itemType++)
         {
-            //cout << "hola2" << endl;
             for( it_items = it_itemType->begin(); it_items != it_itemType->end(); it_items++)
             {
-                //cout << "hola3" << endl;
                 if((*it_items)->isZoomed() || !onZoom)
                     (*it_items)->draw();
                 
@@ -277,8 +273,8 @@ void BurgleBrosView::update(Model* auxModel)
         }
     }
     al_flip_display();
-    after=clock();
-    cout << "Draw tardó: "<< ((double)(after-before))/(double)CLOCKS_PER_SEC << " segundos."<<endl; 
+    //after=clock();
+    //cout << "Draw tardó: "<< ((double)(after-before))/(double)CLOCKS_PER_SEC << " segundos."<<endl; 
 }
 ItemInfo BurgleBrosView::itemFromClick(Point point)
 {
