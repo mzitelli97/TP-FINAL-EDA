@@ -322,7 +322,7 @@ void BurgleBrosModel::userDecidedTo(string userChoice)
         if(userChoice==USE_HACK_TOKEN_TEXTB)        // y uso hack tokens
             tokens.removeOneHackTokenOf(COMPUTER_ROOM_MOTION);
         else if(userChoice==TRIGGER_ALARM_TEXTB)        //Sino, triggerea la alarma
-            tokens.triggerAlarm(prevLoc);
+        {    tokens.triggerAlarm(prevLoc); setGuardsNewPath(prevLoc.floor);}
     }
     else if(msgsToShow[2]==deadbolt[2])
     {
@@ -475,7 +475,7 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
                 this->prevLoc=prevLocation;
             }
             else 
-                tokens.triggerAlarm(prevLocation);
+            {    tokens.triggerAlarm(prevLocation); setGuardsNewPath(prevLocation.floor); }
             board.deActivateMotion();//OJO, SI SE AGREGA LA OPCION STAY ESTO TIENE QUE IR EN LOS OTROS CASOS Y NO ACA
         }
         //cambios segun el charatcer
@@ -593,10 +593,10 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
         
         
         if( newCardType==SCANNER_DETECTOR && movingPlayer->carriesLoot())
-            tokens.triggerAlarm(locationToMove);
+        {    tokens.triggerAlarm(locationToMove); setGuardsNewPath(locationToMove.floor); }
         
         if(newCardType==THERMO && ( movingPlayer->getcurrentActions()==0 || movingPlayer->hasLoot(ISOTOPE)))
-            tokens.triggerAlarm(locationToMove);
+        {    tokens.triggerAlarm(locationToMove); setGuardsNewPath(locationToMove.floor); }
         
         if(newCardType==WALKAWAY && !cardWasVisible && locationToMove.floor>0)
         {   
@@ -1243,6 +1243,8 @@ void BurgleBrosModel::copyGuardMove(list<GuardMoveInfo> &guardMovement)
         if(it->meaning==GUARD_STEP_TO)
         {
             guardMoving->setPosition(it->cardLocation);
+            if(tokens.isThereAnAlarmToken(guardMoving->getPosition()))     //Si hay una alarma en su posición ya la desactiva y busca un nuevo camino.
+                tokens.turnOffAlarm(guardMoving->getPosition());
             //Se comentó porque hay que ver que pasa con los paquetes.
             /*if(guardMoving->getPosition() == myPlayer.getPosition() && board.getCardType(myPlayer.getPosition())==LAVATORY && tokens.isThereAStealthToken(myPlayer.getPosition()))
             {
