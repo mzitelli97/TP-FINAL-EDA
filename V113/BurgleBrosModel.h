@@ -38,7 +38,7 @@
 #define SPOTTER_BOTTOM      "Bottom"
 
 
-typedef enum {WAITING_FOR_ACTION, WAITING_FOR_USER_CONFIRMATION, WAITING_FOR_DICE} ModelStatus;
+typedef enum {WAITING_FOR_ACTION, WAITING_FOR_USER_CONFIRMATION, WAITING_FOR_DICE, WAITING_FOR_GUARD_INIT} ModelStatus;
 typedef enum {GUARD_STEP_TO, GUARD_CARD_PICK} LocationMeaning;
 typedef struct{
     LocationMeaning meaning;
@@ -56,8 +56,8 @@ class BurgleBrosModel : public Model
         void initBoard(vector<CardName> &allTiles);     //Dado un vector de cardNames: Si está vacío, se genera el board y se le pasa toda la información, si tiene 48 cartas, se copian las cartas, sino genera un error.
         void initPlayer(PlayerId playerId, string playerName, CharacterName playerCharacter, CardLocation playerPos);   
         void setInitTurn(PlayerId playerId);
-        void copyGuardInitPos(CardLocation guardPos, CardLocation guardDiePos);
-        void generateGuardInitPos(CardLocation *guardPos, CardLocation *guardDiePos);
+        void copyGuardInitPos(CardLocation guardPos, CardLocation guardDiePos);          //Esta función es inteligente y si se inicializó el guardia del primer piso y se la llama, inicializa el del segundo piso, etc.
+        void generateGuardInitPos(CardLocation *guardPos, CardLocation *guardDiePos);   //Esta función es inteligente y si se inicializó el guardia del primer piso y se la llama, inicializa el del segundo piso, etc.
         /* Funciones para obtener información para dibujar. */
         vector<wall> getInfo2DrawWalls();
 	vector<Info2DrawCards> getInfo2DrawCards();
@@ -76,6 +76,7 @@ class BurgleBrosModel : public Model
         void pass(PlayerId playerId);
         unsigned int peek(PlayerId playerId, CardLocation locationToPeek,int safeNumber); //Recibe que jugador a que tile va a mirar, y si se sabe de antemano el número de safe, se lo asigna a la carta que estaba dada vuelta. devuelve el numero de safe de esa carta.
         unsigned int move(PlayerId playerId, CardLocation locationToMove, int safeNumber); //Si es del otro jugador, recibe el safeNumber desde afuera, devuelve el safe number de la carta a la que se mueve.
+        bool moveRequiresToInitGuard(CardLocation locationToMove);
         void addToken(PlayerId playerId, CardLocation locationToAddToken);
         void crackSafe(PlayerId playerId, CardLocation safe);
         void addDieToSafe(PlayerId playerId, CardLocation safe);
@@ -136,8 +137,8 @@ class BurgleBrosModel : public Model
         ModelStatus status;         //Para las preguntas al usuario
         vector<string> msgsToShow;      //Contiene el texto y sus respuestas.
         CardLocation prevLoc;
-        PlayerId playerOnTurnBeforeGuardMove;
-        bool guardFinishedMoving;
+        PlayerId playerOnTurnBeforeGuardMove;   //Este se podría poner dentro del guard después
+        bool guardFinishedMoving;       //Este se podría poner dentro del guard después
 };
 #endif
 

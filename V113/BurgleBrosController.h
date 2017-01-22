@@ -63,6 +63,8 @@ private:
     list<NetworkED> packetToAnalize; //Para eventos como move, que necesita varios paquetes para ejecutarse completamente, esta ésta queue.
     BurgleBrosModel *modelPointer;
     BurgleBrosView *view;
+    bool aMoveActionPending;
+    CardLocation previousMovingToLocation;
     string thisPlayerName;
     bool quit;
     GameStatus status;

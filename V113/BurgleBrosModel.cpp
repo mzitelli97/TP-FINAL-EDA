@@ -41,6 +41,10 @@ void BurgleBrosModel::attachSoundManager(SoundManager * soundManager)
 {
     this->soundManager=soundManager;
 }
+bool BurgleBrosModel::moveRequiresToInitGuard(CardLocation locationToMove)
+{
+    return !guards[locationToMove.floor].checkIfInitialized();
+}
 
 void BurgleBrosModel::initBoard(vector<CardName> &allTiles)
 {
@@ -82,17 +86,33 @@ void BurgleBrosModel::setInitTurn(PlayerId playerId)
 }
 void BurgleBrosModel::copyGuardInitPos(CardLocation guardPos, CardLocation guardDiePos)
 {
-    guards[0].init(guardPos, guardDiePos);
+    unsigned int i;
+    for(i=0; i<BOARD_STANDARD_FLOORS; i++)
+    {    
+        if(i==BOARD_STANDARD_FLOORS-1 && guards[i].checkIfInitialized())        //Si se llamo a esta función ya habiendo incializado los 3 guardias se cierra el modelo.
+            this->gameFinished=true;
+        if(!guards[i].checkIfInitialized())     //Si no está inicializado, a ese guardia se va a inicializar.
+            break;
+    }
+    guards[i].init(guardPos, guardDiePos);
     list<CardLocation> path = board.getShortestPath(guardPos, guardDiePos);
-    guards[0].setNewPathToTarget(path);
+    guards[i].setNewPathToTarget(path);
 }
 void BurgleBrosModel::generateGuardInitPos(CardLocation *guardPos, CardLocation *guardDiePos)
 {
-    guards[0].init();
-    *guardPos = guards[0].getPosition();
-    *guardDiePos = guards[0].getTargetPosition();
+    unsigned int i;
+    for(i=0; i<BOARD_STANDARD_FLOORS; i++)
+    {    
+        if(i==BOARD_STANDARD_FLOORS-1 && guards[i].checkIfInitialized())        //Si se llamo a esta función ya habiendo incializado los 3 guardias se cierra el modelo.
+            this->gameFinished=true;
+        if(!guards[i].checkIfInitialized())     //Si no está inicializado, a ese guardia se va a inicializar.
+            break;
+    }
+    guards[i].init();
+    *guardPos = guards[i].getPosition();
+    *guardDiePos = guards[i].getTargetPosition();
     list<CardLocation> path = board.getShortestPath(*guardPos, *guardDiePos);
-    guards[0].setNewPathToTarget(path);
+    guards[i].setNewPathToTarget(path);
 }
 vector<wall> BurgleBrosModel::getInfo2DrawWalls()
 {
@@ -442,13 +462,7 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
         movingPlayer->decActions();
         movingPlayer->setPosition(locationToMove);
         
-        /*Si me moví a otro piso y en ese piso el guardia no estaba inicializado, lo inicializo*/
-        if(!guards[movingPlayer->getPosition().floor].checkIfInitialized())
-        {
-            guards[movingPlayer->getPosition().floor].init();
-            list<CardLocation> path = board.getShortestPath(guards[movingPlayer->getPosition().floor].getPosition(), guards[movingPlayer->getPosition().floor].getTargetPosition());
-            guards[movingPlayer->getPosition().floor].setNewPathToTarget(path);
-        }
+        
         
         //Cambios segun el lugar desde el que me muevo
         if(board.getCardType(prevLocation)==MOTION && board.isMotionActivated())
@@ -833,6 +847,7 @@ void BurgleBrosModel::checkTurns()
         if(board.getCardType(myPlayer.getPosition()) == THERMO)
             tokens.triggerAlarm(myPlayer.getPosition());
         otherPlayer.setTurn(false);
+        playerOnTurnBeforeGuardMove=OTHER_PLAYER;
         //moveGuard(otherPlayer.getPosition().floor);
       /*  if(!myPlayer.isOnHelicopter())
             myPlayer.setTurn(true);

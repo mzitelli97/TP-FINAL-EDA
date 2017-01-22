@@ -28,6 +28,7 @@ BurgleBrosController::BurgleBrosController()
     quit=false;
     status=INITIALIZING;
     initPacketCount=0;
+    aMoveActionPending=false;
 }
 
 BurgleBrosController::BurgleBrosController(const BurgleBrosController& orig) 
@@ -235,8 +236,19 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
     }
     else if(action=="MOVE")
     {
-        unsigned int safeNumber = modelPointer->move(THIS_PLAYER,location,NO_SAFE_NUMBER);
-        networkInterface->sendMove(location, safeNumber);
+        if(modelPointer->moveRequiresToInitGuard(location))     //Si el jugador con el move sube a un piso donde no hay un guardia inicializado:
+        {
+            CardLocation guardPos,guardDiePos;
+            previousMovingToLocation=location;      //Guarda a donde se iba a mover
+            aMoveActionPending=true;                
+            modelPointer->generateGuardInitPos(&guardPos,&guardDiePos);
+            networkInterface->sendInitGPos(guardPos,guardDiePos);
+        }
+        else
+        {
+            unsigned int safeNumber = modelPointer->move(THIS_PLAYER,location,NO_SAFE_NUMBER);
+            networkInterface->sendMove(location, safeNumber);
+        }
     }
     else if(action=="ADD TOKEN")
     {
@@ -496,14 +508,20 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             modelPointer->pass(OTHER_PLAYER);   
             networkInterface->sendPacket(ACK);
             break;
-        case MOVE:     
+        case MOVE:    
             modelPointer->move(OTHER_PLAYER, networkEvent->getPos(),networkEvent->getSafeNumber());
             networkInterface->sendPacket(ACK);
             break;
         case ADD_TOKEN:
             modelPointer->addToken(OTHER_PLAYER,networkEvent->getTokenPos());
         case ACK:
-            if(modelPointer->getModelStatus()==WAITING_FOR_USER_CONFIRMATION)   //Si se esperaba la confirmación del usuario para una accion propia del jugador de esta cpu:
+            if(aMoveActionPending)      //SI se tuvo que inicializar un guardia por un move, se inicializo y despues se mando la acción move.
+            {
+                unsigned int safeNumber = modelPointer->move(THIS_PLAYER,previousMovingToLocation,NO_SAFE_NUMBER);      //Se ejecuta el move y se hace.
+                networkInterface->sendMove(previousMovingToLocation, safeNumber);
+                aMoveActionPending=false;
+            }
+            else if(modelPointer->getModelStatus()==WAITING_FOR_USER_CONFIRMATION)   //Si se esperaba la confirmación del usuario para una accion propia del jugador de esta cpu:
             {
                 message=modelPointer->getMsgToShow(); //Se obtiene el mensaje a mostrar,
                 modelPointer->userDecidedTo(getUsersResponse(message));//Esta función devuelve lo que elige el jugador en el cartelito. y le pasa la respuesta al modelo.
@@ -546,7 +564,7 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             modelPointer->guardMove(guardMovement); //Y hago que el modelo lo procese.
             break;
         case INITIAL_G_POS:
-            networkEvent->getInitGPos(&guardPosition, guardDice);
+            networkEvent->getInitGPos(&guardPosition, &guardDice);
             modelPointer->copyGuardInitPos(guardPosition, guardDice);
             break;
         default:
