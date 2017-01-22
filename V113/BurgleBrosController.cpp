@@ -482,6 +482,7 @@ void BurgleBrosController::serverInitRoutine(NetworkED *networkEvent)
 void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
 {
     vector<string> message;
+    CardLocation guardPosition, guardDice;
     list<GuardMoveInfo> guardMovement;
     vector<unsigned int> dice;
     analizeIfModelRequiresMoreActions(networkEvent);
@@ -509,8 +510,13 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             }
             else if(modelPointer->getModelStatus()== WAITING_FOR_DICE)
             {
-                  modelPointer->setDice(dice);    //le paso unos dados vacíos y ahí pone los dados que salieron tirando para el keypad.
-                  networkInterface->sendDice(dice); //Se lo envía a la otra pc.
+                modelPointer->setDice(dice);    //le paso unos dados vacíos y ahí pone los dados que salieron tirando para el keypad.
+                networkInterface->sendDice(dice); //Se lo envía a la otra pc.
+            }
+            else if(modelPointer->getModelStatus()== WAITING_FOR_GUARD_INIT)
+            {
+                modelPointer->generateGuardInitPos(&guardPosition, &guardDice);
+                networkInterface->sendInitGPos(guardPosition, guardDice);
             }
             else if(modelPointer->getModelStatus()== WAITING_FOR_ACTION && modelPointer->isGuardsTurn())    //Si el jugador gastó todas las acciones y, para casos especiales metió lo que se preguntaba (deadbolt, etc) se procede a mover el guardia.
             {
@@ -538,6 +544,10 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
         case GUARD_MOVEMENT:
             networkEvent->getGuardMovement(guardMovement);  //Obtengo el movimiento del guardia
             modelPointer->guardMove(guardMovement); //Y hago que el modelo lo procese.
+            break;
+        case INITIAL_G_POS:
+            networkEvent->getInitGPos(&guardPosition, guardDice);
+            modelPointer->copyGuardInitPos(guardPosition, guardDice);
             break;
         default:
             break;
