@@ -1,0 +1,33 @@
+En la rama principal se llegó a terminar el juego sin jugar entre jugadores, luego las modificaciones por fecha:
+Todo lo modificado tiene comentarios de lo que se cambió.
+17/01:
+Se cambió el main, ahora aparecen getnameandip y connect(), lo cual hace que las dos compus tengan un socket en común como lo pide el procedimiento de agustín. después se agrego un status del controller: ahora empieza en initializing y solo escucha eventos de network.
+CUando llega un evento de network, atraves de parse network event, lo mete en la rutina del cliente o del server segun corresponda, (lo conoce de la función connect a su rol). Al terminar su rutina, inicializa a view y pone el status en playing, acá ya funciona como antes el juego. Se ve con el cheat de las cartas que las dos tienen las mismas cartas, mismo jugador en turno, mismas posiciones, misma inicialización.
+
+18/01:
+Se trataron de incorporar los mensajes más básicos para el juego:
+Dado que hay un problema con el movimiento del guardia ( Como hacer que se mueva el guardia tal cual lo pide el paquete y como obtener el movimiento anterior del guardia en la forma que pide el paquete?) se simplifica a las acciones move y peek durante el primer turno. 
+Como hacer para mandar un peek?
+Primero se crea la clase network event data, la cual se la crea con la información obtenida en el recibir el paquete de internet y facilita la información en variable usadas en el modelo ( por ejemplo transformar A1F1 en {0,0,0}). Ver funciones para mas ejemplos. Se hace parse Network event para el estado Playing: acá los mensajes significan acciones. Se modificó peek del modelo para que al dal vuelta una carta se le pueda poner un numero de prepo, el que llega en el paquete. Se prueba y funciona ;)
+Se intentó algo con move y no funcó.
+
+20/01:
+
+Ahora funciona move, el flujo funciona así:
+la función move ahora devuelve el número de safe number de la carta que se descubrió, y tambien recibe un safenumber para ponerle si fue una acción del usuario que está en la otra pc. Luego, faltaba contemplar casos especiales:
+	-FIngerprint, deadbolt, motion y laser funcionan de esta manera para poder contemplar los paquetes de agustín: al hacerse un move que requiera que el usuario decida si usar tokens o triggerear alarma, etc. el modelo se pone en un estado "WAITING_FOR_USER_CONFIRMATION", que despues llamando a la función "userDecidedTo" con el string de la opción se vuelve al estado normal. desde afuera, el controller convierte la información del paquete en ese string mediante la función del modelo getMsgToShow() que devuelve los strings que se mostraron el cartelito.
+Ejemplo de flujo:
+Jugador 1= J1, Jugador 2 =J2. J1 se mueve hacia A2F2, se revela un laser con safe number 4 y el modelo pasa a estar en estado WAITING_FOR_USER_CONFIRMATION. Luego, J1 le manda a J2 MOVE A2F24, J2 responde con un ack. Al llegarle el ack al J1, le sale un cartel preguntandole si gasta una acción o triggerea alarma, J1 decide gastar acción extra. J1 envía un SPENT_OK Y, J2 lo interpreta gracias a la función getUsersResponse y llama al modelo con el texto que eligió en el cartel J1.
+	-Keypad, el funcionamiento es similar: se pone en un estado Waiting for Dice. para ponerlo se llama a la función setDice con un vector de dados, si es el turno del jugador en la pc se tiran y se guardan los tirados ahí para enviar, sino se copian de ese vector.
+
+Ahora ya funcionando esto, a veces pasan algunas cosas raras que no se que fueron, se empieza con los guardias: 
+Guard movement: primero se hace una estructura para poder escribir los movimientos más simpes: una ubicación carta y que significa esa ubicación, si es una carta que sacó el guardia o si se movió hacia allá. Luego, networkInterface se encarga de adaptar eso al protocolo de agustín para enviar y NetworkED para recibir la info. Se cambió el movimiento del guardia, ahora hay una función para el movimiento propio y otra para copiar el movimiento. Cuando se mueve el guardia ahora ninguno de los players tiene turno, sino que hay un bool en model que indica si es el turno de un guardia. FALTA CHECKEAR QUE EL MOVIMIENTO DEL GUARDIA DEL OTRO SEA CORRECTO!.
+Tambien se modificó change turns, si un player termina su turno ahora pasa a ser el del guardia y si un guardia termina su turno ahi pasa a ser de otro player con lo que implica (si hay un persian kitty, con cuantas acciones se va a poner el player en turno, si hay un player en el helicotero).
+
+Guard init pos: Al subir a otro piso, se tiene que mandar un initGPos ANTES de hacer el move con el que sube, entonces lo que se cambió fue:
+copyGuardInitPos y generateGuardInitPos son funciones + inteligentes, ahora inicializan el guardia que debería inicializarse, o sea, si se inicializo el del 1er piso y luego se llamo a alguna de estas funciones, inicializan el 2do piso. Entonces ahora en el controller una vez que se iba a hacer la movida MOVE, se pregunta si hay que inicializar un guardia para esa movida. EN ese caso, manda la inicialización de guard y guarda el move a hacer. Al llegar el ack del init guard, manda el move guardado.
+
+
+
+
+
