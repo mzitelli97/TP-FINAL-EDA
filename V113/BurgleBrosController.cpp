@@ -514,6 +514,7 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             break;
         case ADD_TOKEN:
             modelPointer->addToken(OTHER_PLAYER,networkEvent->getTokenPos());
+            networkInterface->sendPacket(ACK);
         case ACK:
             if(aMoveActionPending)      //SI se tuvo que inicializar un guardia por un move, se inicializo y despues se mando la acción move.
             {
@@ -548,6 +549,7 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
                 packetToAnalize.push_back(*networkEvent);   //Acá se guarda para tratar el paquete en la función getUsersResponse
                 message=modelPointer->getMsgToShow(); 
                 modelPointer->userDecidedTo(getUsersResponse(message));
+                networkInterface->sendPacket(ACK);
             }
             else
                quit=true;
@@ -557,6 +559,7 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             {
                 networkEvent->getDice(dice);    //Obtiene los dados que tiro el otro para el keypad
                 modelPointer->setDice(dice);    //Y se los pasa al modelo para que procese.
+                networkInterface->sendPacket(ACK);
             }
             break;
         case GUARD_MOVEMENT:
