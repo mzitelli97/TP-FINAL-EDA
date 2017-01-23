@@ -566,6 +566,7 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
         case INITIAL_G_POS:
             networkEvent->getInitGPos(&guardPosition, &guardDice);
             modelPointer->copyGuardInitPos(guardPosition, guardDice);
+            networkInterface->sendPacket(ACK);
             break;
         default:
             break;
