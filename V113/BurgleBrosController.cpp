@@ -290,12 +290,14 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
             transform(offer.begin(), offer.end(), offer.begin(), ::toupper);
             if(action==ask)
             {
-                modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,(Loot)i);
+                modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),(Loot)i);
+                networkInterface->sendRequestLoot((Loot)i);
                 break;
             }
             if(action==offer)
             {
-                modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,(Loot)i);
+                modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),(Loot)i);
+                networkInterface->sendOfferLoot((Loot)i);
                 break;
             }
         }
@@ -559,7 +561,7 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
                 networkInterface->sendSafeOpened(loot);
             }
             break;
-        case SPENT_OK:case USE_TOKEN:
+        case SPENT_OK:case USE_TOKEN: 
             if(modelPointer->getModelStatus()==WAITING_FOR_USER_CONFIRMATION)   //Si se esperaba la confirmación del usuario para una accion propia del jugador de esta cpu:
             {
                 packetToAnalize.push_back(*networkEvent);   //Acá se guarda para tratar el paquete en la función getUsersResponse
@@ -570,6 +572,10 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             else
                quit=true;
             break;
+        case AGREE: case DISAGREE: case REQUEST_LOOT: case OFFER_LOOT:
+            handleLootsExchange(networkEvent);
+            break;
+           
         case THROW_DICE:
             if(modelPointer->getModelStatus() == WAITING_FOR_DICE)      //Si se esperaba para un keypad
             {
@@ -603,6 +609,34 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
 
     }
 }
+
+void BurgleBrosController::handleLootsExchange(NetworkED *networkEvent)
+{
+    if(modelPointer->getModelStatus()==WAITING_FOR_ACTION)      //Si el otro usuario mando un offer o un request
+    {
+        if(networkEvent->getHeader()==REQUEST_LOOT)         //Interpreta la acción pasandola por el modelo
+            modelPointer->askForLoot(OTHER_PLAYER, networkEvent->getLoot());
+        else if(networkEvent->getHeader() == OFFER_LOOT)
+            modelPointer->offerLoot(OTHER_PLAYER, networkEvent->getLoot());
+        vector<string> msgToShow= modelPointer->getMsgToShow();
+        string userChoice =view->MessageBox(msgToShow);     //Le pregunta al usuario su elección
+        modelPointer->userDecidedTo(userChoice);            //Se la pone al modelo
+        if(userChoice==ACCEPT_TEXTB)                        //Se lo comunica a la otra pc
+            networkInterface->sendPacket(AGREE);
+        else
+            networkInterface->sendPacket(DISAGREE);
+    }
+    else        //Si se esperaba por un agree o un disagree de la otra persona:
+    {
+        if(networkEvent->getHeader()== AGREE)
+            modelPointer->userDecidedTo(ACCEPT_TEXTB);      //Si era un agree se lo comunica al modelo, sino le comunica un disagree.
+        else
+            modelPointer->userDecidedTo(DECLINE_TEXTB);
+    }
+}
+
+
+
 void BurgleBrosController::analizeIfModelRequiresMoreActions(NetworkED *networkEvent)
 {
     PerezProtocolHeader h = networkEvent->getHeader();
