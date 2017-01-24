@@ -29,6 +29,8 @@ public:
     void getStartInfo(vector<CardName> *tiles, CardLocation *playersStartingPos);
     CardLocation getPos();  //Sirve para obtener la cardlocation de a donde se hizo peek o move
     CardLocation getTokenPos(); //Sirve para obtener la cardLocation de a donde se agrego o de donde se uso un token.
+    CardLocation getCreateAlarmPos();
+    CardLocation getPlaceCrowPos();
     unsigned int getSafeNumber();
     bool playerAcceptedToSpentMoves();
     void getDice(vector<unsigned int> &dice);   //Pone en el arreglo los dice obtenidos via interne

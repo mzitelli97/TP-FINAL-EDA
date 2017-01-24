@@ -604,6 +604,10 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             modelPointer->setLoot(OTHER_PLAYER, &loot);
             networkInterface->sendPacket(ACK);
             break;
+        case PLACE_CROW:
+           
+            
+                    
         default:
             break;
 
