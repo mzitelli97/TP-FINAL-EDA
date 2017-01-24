@@ -1035,7 +1035,7 @@ bool BurgleBrosModel::isPlaceCrowPossible(PlayerId playerId, CardLocation tile)
 {
     bool retVal=false;
     BurgleBrosPlayer* p=getP2Player(playerId);
-    if(p->getCharacter()== THE_RAVEN && tile.floor == p->getPosition().floor && board.getShortestPathLength(p->getPosition(), tile) <= 2 && playerSpentFreeAction==false && status == WAITING_FOR_ACTION)
+    if(p->isItsTurn() && p->getCharacter()== THE_RAVEN && tile.floor == p->getPosition().floor && board.getShortestPathLength(p->getPosition(), tile) <= 2 && playerSpentFreeAction==false && status == WAITING_FOR_ACTION)
     {
         retVal=true;
         if(tokens.getCrowToken().first && tokens.getCrowToken().second==tile)
