@@ -176,6 +176,24 @@ bool NetworkInterface::sendAddToken(CardLocation location)
     retVal=p2networking->sendPacket(ADD_TOKEN, msg.c_str(), msg.length());
     return retVal;
 }
+
+bool NetworkInterface::sendPlaceCrow(CardLocation location)
+{
+    bool retVal=false;
+    string msg=cardLocationToProtocol(location);
+    retVal=p2networking->sendPacket(PLACE_CROW, msg.c_str(), msg.length());
+    return retVal;
+    
+}
+
+bool NetworkInterface::sendCreateAlarm(CardLocation location)
+{
+    bool retVal=false;
+    string msg=cardLocationToProtocol(location);
+    retVal=p2networking->sendPacket(CREATE_ALARM, msg.c_str(), msg.length());
+    return retVal;
+}
+
 bool NetworkInterface::sendSpent(bool YesOrNo)
 {
     char buffer[1];

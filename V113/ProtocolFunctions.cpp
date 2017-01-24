@@ -50,6 +50,7 @@ void arrayToStrNmbrField(string *field, unsigned char *buffer, unsigned int leng
 	}
 	*field = straux;
 }
+
 CardLocation protocolToCardLocation(std::string location)
 {
 	CardLocation retVal;
@@ -59,6 +60,7 @@ CardLocation protocolToCardLocation(std::string location)
 	return retVal;
 	
 }
+
 std::string cardLocationToProtocol(CardLocation &cardLocation)
 {
 	char rowChar = '1' + (char)cardLocation.row;

@@ -44,6 +44,8 @@ public:
         bool sendAddToken(CardLocation location);
         bool sendSpent(bool YesOrNo);       //Yes == true, no == false;
         bool sendGMove(list<GuardMoveInfo> guardMovement);
+	bool sendPlaceCrow(CardLocation location);
+        bool sendCreateAlarm(CardLocation location);
         bool sendSafeOpened(Loot loot);
         bool sendRequestLoot(Loot i);
         bool sendOfferLoot(Loot i);

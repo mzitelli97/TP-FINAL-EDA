@@ -29,8 +29,8 @@
 #include "GraphicButton.h"
 #include <time.h>
 
-#define SCREEN_W 1250
-#define SCREEN_H 670
+#define SCREEN_W 720
+#define SCREEN_H (SCREEN_W*9/16)
 #define TITLE_H al_get_bitmap_height(backScreen)/20.0
 #define ACTIONS_FONT_H al_get_bitmap_height(backScreen)/50.0
 #define NO_FLOOR_ZOOMED -1
@@ -38,7 +38,9 @@
 
 BurgleBrosView::BurgleBrosView() {
     imageLoader.initImages();           //Falta checkear.
+#ifdef FULLSCREEN
     al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
+#endif
     display =al_create_display(SCREEN_W,SCREEN_H);           //Falta checkear.
     backScreen = al_load_bitmap("fondo.jpg");
     al_draw_scaled_bitmap(backScreen,0,0,al_get_bitmap_width(backScreen),al_get_bitmap_height(backScreen),0,0,al_get_display_width(display),al_get_display_height(display),0);
