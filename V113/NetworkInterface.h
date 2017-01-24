@@ -45,6 +45,8 @@ public:
         bool sendSpent(bool YesOrNo);       //Yes == true, no == false;
         bool sendGMove(list<GuardMoveInfo> guardMovement);
         bool sendSafeOpened(Loot loot);
+        bool sendRequestLoot(Loot i);
+        bool sendOfferLoot(Loot i);
 	~NetworkInterface();
 private:
 	double timeToBecomeServer;
