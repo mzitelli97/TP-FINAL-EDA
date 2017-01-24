@@ -229,6 +229,22 @@ bool NetworkInterface::sendGMove(list<GuardMoveInfo> guardMovement)
     }
     return p2networking->sendPacket(GUARD_MOVEMENT, (char *) buffer, i);
 }
+
+bool NetworkInterface::sendRequestLoot(Loot i)
+{
+    unsigned char buffer[1];
+    buffer[0]= (unsigned char) i;
+    return p2networking->sendPacket(REQUEST_LOOT,(char *) buffer, 1);
+}
+bool NetworkInterface::sendOfferLoot(Loot i)
+{
+    unsigned char buffer[1];
+    buffer[0]= (unsigned char) i;
+    return p2networking->sendPacket(OFFER_LOOT,(char *) buffer, 1);
+}
+
+
+
 NetworkInterface::~NetworkInterface()
 {
 }
