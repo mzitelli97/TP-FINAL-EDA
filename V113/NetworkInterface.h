@@ -44,7 +44,9 @@ public:
         bool sendAddToken(CardLocation location);
         bool sendSpent(bool YesOrNo);       //Yes == true, no == false;
         bool sendGMove(list<GuardMoveInfo> guardMovement);
-	~NetworkInterface();
+	bool sendPlaceCrow(CardLocation location);
+        bool sendCreateAlarm(CardLocation location);
+        ~NetworkInterface();
 private:
 	double timeToBecomeServer;
         bool error;
