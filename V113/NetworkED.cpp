@@ -48,6 +48,7 @@ string NetworkED::getName()
     return aux;
 }
 
+
 void NetworkED::getInitGPos(CardLocation *guardPos, CardLocation *guardsDiePos)
 {
     if(header==INITIAL_G_POS)
@@ -108,14 +109,47 @@ CardLocation NetworkED::getTokenPos()
     CardLocation retVal;
     if(header==ADD_TOKEN || USE_TOKEN)
     {
-        buffer[len]= '\0';
-        string aux =(char *) buffer;
+       // buffer[len]= '\0';                //javi nose xq lo hiciste asi, lo cambie abajo
+       
+        string aux =(char *) buffer + '\0';
         retVal=protocolToCardLocation(aux);
     }
     else
         error=true;
     return retVal;
 }
+
+CardLocation NetworkED::getCreateAlarmPos()
+{
+    CardLocation retVal;
+    
+    if(header == CREATE_ALARM)
+    { 
+        string aux = (char *) buffer + '\0';
+        retVal=protocolToCardLocation(aux); 
+    }
+    else
+        error=true;
+    
+    return retVal;
+}
+
+
+CardLocation NetworkED::getPlaceCrowPos()
+{
+    CardLocation retVal;
+    
+    if(header == PLACE_CROW)
+    {
+        string aux = (char *) buffer + '\0';
+        retVal=protocolToCardLocation(aux);
+    }
+    else
+        error=true;
+    
+    return retVal;
+}
+
 bool NetworkED::playerAcceptedToSpentMoves()
 {
     bool retVal=false;
@@ -152,6 +186,7 @@ void NetworkED::getDice(vector<unsigned int> &dice)
         error=true;
 }
 
+
 void NetworkED::getGuardMovement(list<GuardMoveInfo> &guardInfo)
 {
     unsigned int i=1;
@@ -181,6 +216,7 @@ void NetworkED::getGuardMovement(list<GuardMoveInfo> &guardInfo)
         
     }
 }
+
 
 NetworkED::~NetworkED() 
 {
