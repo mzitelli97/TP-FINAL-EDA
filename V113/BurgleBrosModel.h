@@ -83,9 +83,9 @@ class BurgleBrosModel : public Model
         void addDieToSafe(PlayerId playerId, CardLocation safe);
         void createAlarm(PlayerId playerId, CardLocation tile);
         void placeCrow(PlayerId playerId, CardLocation tile);
-        void pickLoot(PlayerId playerId, CardLocation tile, Loot loot);
-        void askForLoot(PlayerId playerId, CardLocation tile, Loot loot);
-        void offerLoot(PlayerId playerId, CardLocation tile, Loot loot);
+        void pickLoot(PlayerId playerId, Loot loot);
+        void askForLoot(PlayerId playerId, Loot loot);
+        void offerLoot(PlayerId playerId, Loot loot);
         void escape(PlayerId playerId, CardLocation stairTile);
         void peekGuardsCard(PlayerId playerId, unsigned int guardsFloor);
         void guardMove(list<GuardMoveInfo> &guardMovement);
@@ -94,7 +94,7 @@ class BurgleBrosModel : public Model
         bool isPeekPosible(PlayerId player, CardLocation tile);         //Pregunta si un peek es posible
         bool isAddTokenPosible(PlayerId player, CardLocation tile);
         bool isAddDieToSafePossible(PlayerId player, CardLocation tile);
-        bool isCrackSafePossible(PlayerId playerId,vector<unsigned int> &dice);
+        bool isCrackSafePossible(PlayerId playerId,CardLocation tile);
         bool isCreateAlarmPossible(PlayerId playerId, CardLocation tile);
         bool isPlaceCrowPossible(PlayerId playerId, CardLocation tile);
         bool isPickLootPossible(PlayerId playerId, CardLocation tile, Loot loot);
@@ -141,6 +141,7 @@ class BurgleBrosModel : public Model
         CardLocation prevLoc;
         PlayerId playerOnTurnBeforeGuardMove;   //Este se podría poner dentro del guard después
         bool guardFinishedMoving;       //Este se podría poner dentro del guard después
+        Loot lootOfferedOrAskedFor;
 };
 #endif
 

@@ -317,6 +317,8 @@ void BurgleBrosModel::userDecidedTo(string userChoice)
     vector<string> laser({LASER_TEXT});
     vector<string> motion({MOTION_TEXT});
     vector<string> deadbolt({DEADBOLT_TEXT});
+    vector<string> askForLoot({ASK_FOR_LOOT_TEXT});
+    vector<string> offerLoot({OFFER_LOOT_TEXT});
     if(msgsToShow[2]== motion[2])     //Si era una respuesta para un motion
     {
         if(userChoice==USE_HACK_TOKEN_TEXTB)        // y uso hack tokens
@@ -359,6 +361,27 @@ void BurgleBrosModel::userDecidedTo(string userChoice)
             movingPlayer->decLives();
         else if(userChoice ==USE_LAVATORY_TOKEN_TEXTB)
             tokens.useLavatoryToken();
+    }
+    else if(msgsToShow[0]==askForLoot[0])       //Si se estaba esperando por la respuesta a un ask for loot
+    {
+        if(userChoice==ACCEPT_TEXTB)        //Y se respondió que se acepta
+        {   
+            PlayerId playerOnTurn = getPlayerOnTurn();
+            getP2Player(playerOnTurn)->attachLoot(lootOfferedOrAskedFor);   //Se le pone el loot al player on turn
+            getP2OtherPlayer(playerOnTurn)->deattachLoot(lootOfferedOrAskedFor);    //Se le saca al otro jugador
+            loots.setNewLootOwner(lootOfferedOrAskedFor,playerOnTurn);
+        }
+    }
+    else if(msgsToShow[0]== offerLoot[0])
+    {
+        if(userChoice==ACCEPT_TEXTB)
+        {    
+            PlayerId playerOnTurn = getPlayerOnTurn();
+            getP2OtherPlayer(playerOnTurn)->attachLoot(lootOfferedOrAskedFor);
+            getP2Player(playerOnTurn)->deattachLoot(lootOfferedOrAskedFor);
+            loots.setNewLootOwner(lootOfferedOrAskedFor,playerOnTurn==THIS_PLAYER?OTHER_PLAYER:THIS_PLAYER);
+            view->update(this);
+        }
     }
     status=WAITING_FOR_ACTION;
     view->update(this);
@@ -647,7 +670,7 @@ void BurgleBrosModel::crackSafe(PlayerId playerId,vector<unsigned int> &diceThro
 {
     bool actionOk=false;
     BurgleBrosPlayer* p= getP2Player(playerId);
-    if(isCrackSafePossible(playerId,diceThrown) && !gameFinished)
+    if(isCrackSafePossible(playerId,p->getPosition()) && !gameFinished)
     {
         CardLocation safe= p->getPosition();
         p->decActions();                //Cuesta una acción hacer un creack
@@ -665,17 +688,6 @@ void BurgleBrosModel::crackSafe(PlayerId playerId,vector<unsigned int> &diceThro
             status=WAITING_FOR_LOOT;    //Espero a que me confirmen el loot.
             prevLoc=safe;           //Guardo a que safe crackeo
         }
-        /*if(tokens.isSafeOpened(safe.floor))
-        {
-            Loot lootGotten =loots.getLoot(playerId);
-            p->attachLoot(lootGotten);
-            if(lootGotten==GOLD_BAR)
-                loots.setGoldBardLocation(safe);
-            if(lootGotten==CURSED_GOBLET && p->getCurrLifes()>1)
-                p->decLives();
-            board.setSafeCracked(safe.floor);
-            triggerSilentAlarm(safe.floor);
-        }*/
         view->update(this);
         checkTurns();
         actionOk=true;
@@ -736,11 +748,11 @@ void BurgleBrosModel::placeCrow(PlayerId playerId, CardLocation tile)
     if(actionOk==false)
     {   gameFinished=true; finishMsg = "ERROR: BBModel error: A place crow action was called when it wasnt possible to do it!"; }
 }
-void BurgleBrosModel::pickLoot(PlayerId playerId, CardLocation tile, Loot lootToPick)
+void BurgleBrosModel::pickLoot(PlayerId playerId, Loot lootToPick)
 {
     bool actionOk=false;
     BurgleBrosPlayer *p= getP2Player(playerId);
-    if(isPickLootPossible(playerId,tile, lootToPick) && !gameFinished)
+    if(isPickLootPossible(playerId,p->getPosition(), lootToPick) && !gameFinished)
     {
         if(lootToPick==PERSIAN_KITTY)          //Si es el persian kitty
         {
@@ -753,7 +765,7 @@ void BurgleBrosModel::pickLoot(PlayerId playerId, CardLocation tile, Loot lootTo
         }
         else if(lootToPick==GOLD_BAR)
         {
-            loots.pickGoldBarOnFloor(playerId, tile);
+            loots.pickGoldBarOnFloor(playerId, p->getPosition());
             p->attachLoot(GOLD_BAR);
             actionOk=true;
         }
@@ -787,40 +799,31 @@ void BurgleBrosModel::peekGuardsCard(PlayerId playerId, unsigned int guardsFloor
     {   gameFinished=true; finishMsg = "ERROR: BBModel error: A peek guards card action was called when it wasnt possible to do it!"; }
 }
 
-void BurgleBrosModel::askForLoot(PlayerId playerId, CardLocation tile, Loot loot)
+void BurgleBrosModel::askForLoot(PlayerId playerId, Loot loot)
 {
     bool actionOk = false;
-    if(isAskForLootPossible(playerId,tile,loot) && !gameFinished)
+    if(isAskForLootPossible(playerId,getP2Player(playerId)->getPosition(),loot) && !gameFinished)
     {
-        std::vector<string> msgToShow({ASK_FOR_LOOT_TEXT+loot2Str(loot),ACCEPT_TEXTB,DECLINE_TEXTB}); 
-        string userChoice=controller->askForSpentOK(msgToShow);
-        if(userChoice==ACCEPT_TEXTB)
-        {    
-            getP2Player(playerId)->attachLoot(loot);
-            getP2OtherPlayer(playerId)->deattachLoot(loot);
-            loots.setNewLootOwner(loot,playerId);
-            view->update(this);
-        }
+        
+        std::vector<string> aux({ASK_FOR_LOOT_TEXT+loot2Str(loot),ACCEPT_TEXTB,DECLINE_TEXTB}); 
+        this->msgsToShow=aux;
+        this->status=WAITING_FOR_USER_CONFIRMATION;
+        this->lootOfferedOrAskedFor=loot;
         actionOk=true;
     }
     if(actionOk==false)
     {   gameFinished=true; finishMsg = "ERROR: BBModel error: An ask for loot action was called when it wasnt possible to do it!"; }
 }
 
-void BurgleBrosModel::offerLoot(PlayerId playerId, CardLocation tile, Loot loot)
+void BurgleBrosModel::offerLoot(PlayerId playerId, Loot loot)
 {
     bool actionOk = false;
-    if(isOfferLootPossible(playerId,tile,loot) && !gameFinished)
+    if(isOfferLootPossible(playerId,getP2Player(playerId)->getPosition(),loot) && !gameFinished)
     {
-        std::vector<string> msgToShow({OFFER_LOOT_TEXT+loot2Str(loot),ACCEPT_TEXTB,DECLINE_TEXTB}); 
-        string userChoice=controller->askForSpentOK(msgToShow);
-        if(userChoice==ACCEPT_TEXTB)
-        {    
-            getP2OtherPlayer(playerId)->attachLoot(loot);
-            getP2Player(playerId)->deattachLoot(loot);
-            loots.setNewLootOwner(loot,playerId==THIS_PLAYER?OTHER_PLAYER:THIS_PLAYER);
-            view->update(this);
-        }
+        std::vector<string> aux({OFFER_LOOT_TEXT+loot2Str(loot),ACCEPT_TEXTB,DECLINE_TEXTB}); 
+        this->msgsToShow=aux;
+        this->status=WAITING_FOR_USER_CONFIRMATION;
+        this->lootOfferedOrAskedFor=loot;
         actionOk=true;
     }
     if(actionOk==false)
@@ -968,7 +971,7 @@ void BurgleBrosModel::checkIfWonOrLost()
     {
         if(board.adjacentCards(p->getPosition(),tile))
             retVal=true;
-        else if(p->getCharacter()==THE_HAWK && board.isAWallBetween(p->getPosition(),tile))//HACER FUNCION WALLLSEPARATES
+        else if(p->getCharacter()==THE_HAWK && board.isAWallBetween(p->getPosition(),tile)&& !playerSpentFreeAction)//HACER FUNCION WALLLSEPARATES
             retVal=true;
         else if( board.getCardType(p->getPosition())== ATRIUM && ( board.isCardUpstairs(p->getPosition(),tile) || board.isCardDownstairs(p->getPosition(),tile) ) )
             retVal=true;
@@ -1001,14 +1004,13 @@ bool BurgleBrosModel::isAddDieToSafePossible(PlayerId player, CardLocation tile)
     }
     return retVal;
 }
-bool BurgleBrosModel::isCrackSafePossible(PlayerId playerId,vector<unsigned int> &diceThrown)
+bool BurgleBrosModel::isCrackSafePossible(PlayerId playerId,CardLocation safe)
 {
     bool retVal=false;
     BurgleBrosPlayer* p = getP2Player(playerId);
     
-    if(p->isItsTurn()&& board.getCardType(p->getPosition())==SAFE  && status == WAITING_FOR_ACTION)
+    if(p->isItsTurn()&& board.getCardType(p->getPosition())==SAFE  && p->getPosition()==safe && status == WAITING_FOR_ACTION)
     {
-        CardLocation safe=p->getPosition();
         if(board.canSafeBeCracked(safe.floor) && !board.isSafeCracked(safe.floor))
         {
             if(dice.getSafeDiceCount(safe.floor)!= 0)
@@ -1049,7 +1051,8 @@ bool BurgleBrosModel::isAskForLootPossible(PlayerId playerId, CardLocation tile,
     BurgleBrosPlayer * o = getP2OtherPlayer(playerId);
     if(p->isItsTurn() && p->getPosition() == tile && o->getPosition() == tile && o->hasLoot(loot) && status == WAITING_FOR_ACTION)
     {
-        retVal = true;
+        if(!o->isOnHelicopter())
+            retVal = true;
         if(loot == GOLD_BAR && p->hasLoot(loot))
             retVal = false;
     }
@@ -1063,7 +1066,8 @@ bool BurgleBrosModel::isOfferLootPossible(PlayerId playerId, CardLocation tile, 
     BurgleBrosPlayer * o = getP2OtherPlayer(playerId);
     if(p->isItsTurn() && p->getPosition() == tile && o->getPosition() == tile && p->hasLoot(loot) && status == WAITING_FOR_ACTION)
     {
-        retVal = true;
+        if(!o->isOnHelicopter())
+            retVal = true;
         if(loot == GOLD_BAR && o->hasLoot(loot))
             retVal = false;
     }
@@ -1109,7 +1113,6 @@ bool BurgleBrosModel::isPeekGuardsCardPossible(PlayerId playerId, unsigned int g
 list<string> BurgleBrosModel::getPosibleActionsToTile(PlayerId player, CardLocation tile)
 {
     list<string> aux;
-    vector<unsigned int> auxDice;
     if(isMovePosible(player, tile))
         aux.push_back("MOVE");
     if(isPeekPosible(player, tile))
@@ -1118,7 +1121,7 @@ list<string> BurgleBrosModel::getPosibleActionsToTile(PlayerId player, CardLocat
         aux.push_back("ADD TOKEN");
     if(isAddDieToSafePossible(player, tile))
         aux.push_back("ADD DIE");
-    if(isCrackSafePossible(player, auxDice))
+    if(isCrackSafePossible(player, tile))
         aux.push_back("CRACK");
     if(isCreateAlarmPossible(player,tile))
         aux.push_back("CREATE ALARM");

@@ -260,7 +260,12 @@ bool NetworkInterface::sendOfferLoot(Loot i)
     buffer[0]= (unsigned char) i;
     return p2networking->sendPacket(OFFER_LOOT,(char *) buffer, 1);
 }
-
+bool NetworkInterface::sendPickUpLoot(Loot loot)
+{
+    unsigned char buffer[1];
+    buffer[0]= (unsigned char) loot;
+    return p2networking->sendPacket(PICK_UP_LOOT,(char *) buffer, 1);
+}
 
 
 NetworkInterface::~NetworkInterface()

@@ -64,7 +64,7 @@ void NetworkED::getInitGPos(CardLocation *guardPos, CardLocation *guardsDiePos)
 Loot NetworkED::getLoot()
 {
     Loot retVal;
-    if(header==SAFE_OPENED)
+    if(header==SAFE_OPENED || header== OFFER_LOOT || header == REQUEST_LOOT || header == PICK_UP_LOOT)
     {
         retVal= (Loot) buffer[0];
     }

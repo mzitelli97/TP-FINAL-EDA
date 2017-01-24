@@ -47,8 +47,10 @@ public:
     void parseNetworkEvent(EventData *networkEvent);
     virtual string askForSpentOK(vector<string> &message);
     string getUsersResponse(vector<string> &message);
+    
     virtual ~BurgleBrosController();
 private:
+    void handleLootsExchange(NetworkED * networkEvent);
     void clientInitRoutine(NetworkED *networkEvent);
     void serverInitRoutine(NetworkED *networkEvent);
     void interpretNetworkAction(NetworkED *networkEvent);

@@ -186,7 +186,7 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                     break;
                 case GUARD_CARDS_CLICK:
                     floor = (unsigned int *)temp.info;
-                    view->showMenu(modelPointer->getPosibleActionsToGuard(modelPointer->getPlayerOnTurn(), *floor), aux, *floor);
+                    view->showMenu(modelPointer->getPosibleActionsToGuard(THIS_PLAYER, *floor), aux, *floor);
                     view->update(modelPointer);
                     break;
                 case CHAR_CARD_CLICK:
@@ -252,38 +252,45 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
     }
     else if(action=="ADD TOKEN")
     {
-        modelPointer->addToken(modelPointer->getPlayerOnTurn(),location);
+        modelPointer->addToken(THIS_PLAYER,location);
         networkInterface->sendAddToken(location);
     }
     else if(action=="ADD DIE")
     {
-        modelPointer->addDieToSafe(modelPointer->getPlayerOnTurn(),location);
+        modelPointer->addDieToSafe(THIS_PLAYER,location);
         networkInterface->sendAddToken(location);           //Add token tmb es para añadir dados al safe
     }
     else if(action=="CRACK")
     {
         vector<unsigned int> diceThrown;
-        modelPointer->crackSafe(modelPointer->getPlayerOnTurn(),diceThrown);
+        modelPointer->crackSafe(THIS_PLAYER,diceThrown);
         networkInterface->sendDice(diceThrown);
     }
     else if(action=="CREATE ALARM")
     {
-        modelPointer->createAlarm(modelPointer->getPlayerOnTurn(),location);
+        modelPointer->createAlarm(THIS_PLAYER,location);
         networkInterface->sendCreateAlarm(location);
     }
     else if(action=="PLACE CROW")
     {
-        modelPointer->placeCrow(modelPointer->getPlayerOnTurn(),location);
+        modelPointer->placeCrow(THIS_PLAYER,location);
         networkInterface->sendPlaceCrow(location);
     }
     else if(action=="PICK UP KITTY")
-        modelPointer->pickLoot(modelPointer->getPlayerOnTurn(), location, PERSIAN_KITTY);
+    {
+        modelPointer->pickLoot(THIS_PLAYER, PERSIAN_KITTY);
+        networkInterface->sendPickUpLoot(PERSIAN_KITTY);
+    }
+        
     else if(action=="PICK UP GOLD BAR")
-        modelPointer->pickLoot(modelPointer->getPlayerOnTurn(), location, GOLD_BAR);
+    {
+        modelPointer->pickLoot(THIS_PLAYER, GOLD_BAR);
+        networkInterface->sendPickUpLoot(GOLD_BAR);
+    }
     else if(action=="ESCAPE")
-        modelPointer->escape(modelPointer->getPlayerOnTurn(),location);
+        modelPointer->escape(THIS_PLAYER,location);
     else if(action=="PEEK TOP CARD")
-        modelPointer->peekGuardsCard(modelPointer->getPlayerOnTurn(),location.floor);
+        modelPointer->peekGuardsCard(THIS_PLAYER,location.floor);
     else
     {
         for(int i = (int)TIARA; i <= (int)GOLD_BAR; i++)
@@ -610,6 +617,10 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             modelPointer->setLoot(OTHER_PLAYER, &loot);
             networkInterface->sendPacket(ACK);
             break;
+        case PICK_UP_LOOT:
+            modelPointer->pickLoot(OTHER_PLAYER, networkEvent->getLoot());
+            networkInterface->sendPacket(ACK);
+            break;       
         default:
             break;
 
