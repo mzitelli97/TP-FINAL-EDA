@@ -47,6 +47,9 @@ public:
 	bool sendPlaceCrow(CardLocation location);
         bool sendCreateAlarm(CardLocation location);
         bool sendSafeOpened(Loot loot);
+        bool sendRequestLoot(Loot i);
+        bool sendOfferLoot(Loot i);
+        bool sendPickUpLoot(Loot loot);
 	~NetworkInterface();
 private:
 	double timeToBecomeServer;

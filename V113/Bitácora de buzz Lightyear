@@ -28,6 +28,23 @@ Guard init pos: Al subir a otro piso, se tiene que mandar un initGPos ANTES de h
 copyGuardInitPos y generateGuardInitPos son funciones + inteligentes, ahora inicializan el guardia que debería inicializarse, o sea, si se inicializo el del 1er piso y luego se llamo a alguna de estas funciones, inicializan el 2do piso. Entonces ahora en el controller una vez que se iba a hacer la movida MOVE, se pregunta si hay que inicializar un guardia para esa movida. EN ese caso, manda la inicialización de guard y guarda el move a hacer. Al llegar el ack del init guard, manda el move guardado.
 
 
+21/02:
+
+Se añadió pero no se probó:
+	-Añadir un dado al safe, que agustín en el tp puso que eso se tiene que enviar con el paquete add token no se por qué. En fin pregunta si donde estaba parado el jugador era un safe al llegar un add token, en ese caso añade un dado al safe
+	-Crackear un safe: Cuando se crackea un safe se envía un throw dice. Cuando se recibe un throw dice (Y el modelo sabe que no es a un keypad porque no hubo un move antes y no está en estado waiting for dice), se llama a crack safe con los dados recibidos para que los copie. SI se crackeó el safe el modelo se pone en un estado waiting for loot. Luego se pone un loot con la funcion set loot, que devuelve en una de las variables la que se sacó aleatoriamente si la sacó este jugador. 
+	EJEMPLO: J1 clickea sobre el safe y clickea "crack", se tiran los dados y se logra abrir el safe. El model se pone en estado waiting for loot, J1 le manda a J2 el paquete THROW_DICE con los dados que tiró, J2 los procesa y el modelo de J2 se pone en waiting for loot. Luego el controller de J2 le manda un ack. J1 al llegar el ACK llama a set loot del modelo, que toma un loot random y se lo pone al J1, que crackeo el safe. Luego J1 le manda a J2 mediante el paquete SAFE_OPENED con el loot que salió y J2 le asigna en su modelo a J1 ese loot.
+	-Ofertar o pedir un loot: Se manda un offer Loot con el que se quiere ofertar y al llegar a la otra pc, medianta la función handleLootsExchange() que el controller ejecuta al recibir uno de esos 2 paquetes, sale un cartel que le pregunta al usuario si quiere aceptar o no un intercambio de loot y se guarda en el modelo que se hizo. Luego se manda un agree o disagree dependiendo de lo escogido por el usuario y de vuelta handleLootsExchange() se encarga
+de decirle al modelo si se acepto o no el intercambio.
+	EJEMPLO: pendiente ...
+	-Pick up loot: al levantar un loot se manda un pick up loot con el loot que se levanto. OJO esto no cumple el protocolo de agus, pero puede pasar que un persian kitty esté en el mismo tile que un gold bar, por lo cual creo que agustín se equivocó.
+
+
+
+
+
+
+
 
 
 

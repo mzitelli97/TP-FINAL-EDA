@@ -186,7 +186,7 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                     break;
                 case GUARD_CARDS_CLICK:
                     floor = (unsigned int *)temp.info;
-                    view->showMenu(modelPointer->getPosibleActionsToGuard(modelPointer->getPlayerOnTurn(), *floor), aux, *floor);
+                    view->showMenu(modelPointer->getPosibleActionsToGuard(THIS_PLAYER, *floor), aux, *floor);
                     view->update(modelPointer);
                     break;
                 case CHAR_CARD_CLICK:
@@ -252,38 +252,45 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
     }
     else if(action=="ADD TOKEN")
     {
-        modelPointer->addToken(modelPointer->getPlayerOnTurn(),location);
+        modelPointer->addToken(THIS_PLAYER,location);
         networkInterface->sendAddToken(location);
     }
     else if(action=="ADD DIE")
     {
-        modelPointer->addDieToSafe(modelPointer->getPlayerOnTurn(),location);
+        modelPointer->addDieToSafe(THIS_PLAYER,location);
         networkInterface->sendAddToken(location);           //Add token tmb es para añadir dados al safe
     }
     else if(action=="CRACK")
     {
         vector<unsigned int> diceThrown;
-        modelPointer->crackSafe(modelPointer->getPlayerOnTurn(),diceThrown);
+        modelPointer->crackSafe(THIS_PLAYER,diceThrown);
         networkInterface->sendDice(diceThrown);
     }
     else if(action=="CREATE ALARM")
     {
-        modelPointer->createAlarm(modelPointer->getPlayerOnTurn(),location);
+        modelPointer->createAlarm(THIS_PLAYER,location);
         networkInterface->sendCreateAlarm(location);
     }
     else if(action=="PLACE CROW")
     {
-        modelPointer->placeCrow(modelPointer->getPlayerOnTurn(),location);
+        modelPointer->placeCrow(THIS_PLAYER,location);
         networkInterface->sendPlaceCrow(location);
     }
     else if(action=="PICK UP KITTY")
-        modelPointer->pickLoot(modelPointer->getPlayerOnTurn(), location, PERSIAN_KITTY);
+    {
+        modelPointer->pickLoot(THIS_PLAYER, PERSIAN_KITTY);
+        networkInterface->sendPickUpLoot(PERSIAN_KITTY);
+    }
+        
     else if(action=="PICK UP GOLD BAR")
-        modelPointer->pickLoot(modelPointer->getPlayerOnTurn(), location, GOLD_BAR);
+    {
+        modelPointer->pickLoot(THIS_PLAYER, GOLD_BAR);
+        networkInterface->sendPickUpLoot(GOLD_BAR);
+    }
     else if(action=="ESCAPE")
-        modelPointer->escape(modelPointer->getPlayerOnTurn(),location);
+        modelPointer->escape(THIS_PLAYER,location);
     else if(action=="PEEK TOP CARD")
-        modelPointer->peekGuardsCard(modelPointer->getPlayerOnTurn(),location.floor);
+        modelPointer->peekGuardsCard(THIS_PLAYER,location.floor);
     else
     {
         for(int i = (int)TIARA; i <= (int)GOLD_BAR; i++)
@@ -296,12 +303,14 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
             transform(offer.begin(), offer.end(), offer.begin(), ::toupper);
             if(action==ask)
             {
-                modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),location,(Loot)i);
+                modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),(Loot)i);
+                networkInterface->sendRequestLoot((Loot)i);
                 break;
             }
             if(action==offer)
             {
-                modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),location,(Loot)i);
+                modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),(Loot)i);
+                networkInterface->sendOfferLoot((Loot)i);
                 break;
             }
         }
@@ -565,7 +574,7 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
                 networkInterface->sendSafeOpened(loot);
             }
             break;
-        case SPENT_OK:case USE_TOKEN:
+        case SPENT_OK:case USE_TOKEN: 
             if(modelPointer->getModelStatus()==WAITING_FOR_USER_CONFIRMATION)   //Si se esperaba la confirmación del usuario para una accion propia del jugador de esta cpu:
             {
                 packetToAnalize.push_back(*networkEvent);   //Acá se guarda para tratar el paquete en la función getUsersResponse
@@ -576,6 +585,10 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             else
                quit=true;
             break;
+        case AGREE: case DISAGREE: case REQUEST_LOOT: case OFFER_LOOT:
+            handleLootsExchange(networkEvent);
+            break;
+           
         case THROW_DICE:
             if(modelPointer->getModelStatus() == WAITING_FOR_DICE)      //Si se esperaba para un keypad
             {
@@ -604,15 +617,43 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             modelPointer->setLoot(OTHER_PLAYER, &loot);
             networkInterface->sendPacket(ACK);
             break;
-        case PLACE_CROW:
-           
-            
-                    
+        case PICK_UP_LOOT:
+            modelPointer->pickLoot(OTHER_PLAYER, networkEvent->getLoot());
+            networkInterface->sendPacket(ACK);
+            break;       
         default:
             break;
 
     }
 }
+
+void BurgleBrosController::handleLootsExchange(NetworkED *networkEvent)
+{
+    if(modelPointer->getModelStatus()==WAITING_FOR_ACTION)      //Si el otro usuario mando un offer o un request
+    {
+        if(networkEvent->getHeader()==REQUEST_LOOT)         //Interpreta la acción pasandola por el modelo
+            modelPointer->askForLoot(OTHER_PLAYER, networkEvent->getLoot());
+        else if(networkEvent->getHeader() == OFFER_LOOT)
+            modelPointer->offerLoot(OTHER_PLAYER, networkEvent->getLoot());
+        vector<string> msgToShow= modelPointer->getMsgToShow();
+        string userChoice =view->MessageBox(msgToShow);     //Le pregunta al usuario su elección
+        modelPointer->userDecidedTo(userChoice);            //Se la pone al modelo
+        if(userChoice==ACCEPT_TEXTB)                        //Se lo comunica a la otra pc
+            networkInterface->sendPacket(AGREE);
+        else
+            networkInterface->sendPacket(DISAGREE);
+    }
+    else        //Si se esperaba por un agree o un disagree de la otra persona:
+    {
+        if(networkEvent->getHeader()== AGREE)
+            modelPointer->userDecidedTo(ACCEPT_TEXTB);      //Si era un agree se lo comunica al modelo, sino le comunica un disagree.
+        else
+            modelPointer->userDecidedTo(DECLINE_TEXTB);
+    }
+}
+
+
+
 void BurgleBrosController::analizeIfModelRequiresMoreActions(NetworkED *networkEvent)
 {
     PerezProtocolHeader h = networkEvent->getHeader();
