@@ -185,6 +185,17 @@ bool NetworkInterface::sendSpent(bool YesOrNo)
         buffer[0]='N';
     return p2networking->sendPacket(SPENT_OK, buffer, 1);
 }
+
+bool NetworkInterface::sendSafeOpened(Loot loot)
+{
+    char buffer[1];
+    buffer[0]=(char) loot;
+    return p2networking->sendPacket(SAFE_OPENED, buffer, 1);
+}
+
+
+
+
 bool NetworkInterface::sendGMove(list<GuardMoveInfo> guardMovement)
 {
     unsigned char buffer[BUFSIZE];

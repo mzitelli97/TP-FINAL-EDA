@@ -38,7 +38,7 @@
 #define SPOTTER_BOTTOM      "Bottom"
 
 
-typedef enum {WAITING_FOR_ACTION, WAITING_FOR_USER_CONFIRMATION, WAITING_FOR_DICE, WAITING_FOR_GUARD_INIT} ModelStatus;
+typedef enum {WAITING_FOR_ACTION, WAITING_FOR_USER_CONFIRMATION, WAITING_FOR_DICE, WAITING_FOR_GUARD_INIT, WAITING_FOR_LOOT} ModelStatus;
 typedef enum {GUARD_STEP_TO, GUARD_CARD_PICK} LocationMeaning;
 typedef struct{
     LocationMeaning meaning;
@@ -78,7 +78,8 @@ class BurgleBrosModel : public Model
         unsigned int move(PlayerId playerId, CardLocation locationToMove, int safeNumber); //Si es del otro jugador, recibe el safeNumber desde afuera, devuelve el safe number de la carta a la que se mueve.
         bool moveRequiresToInitGuard(CardLocation locationToMove);
         void addToken(PlayerId playerId, CardLocation locationToAddToken);
-        void crackSafe(PlayerId playerId, CardLocation safe);
+        void crackSafe(PlayerId playerId,vector<unsigned int> &dice); 
+        void setLoot(PlayerId playerId, Loot *loot);
         void addDieToSafe(PlayerId playerId, CardLocation safe);
         void createAlarm(PlayerId playerId, CardLocation tile);
         void placeCrow(PlayerId playerId, CardLocation tile);
@@ -93,7 +94,7 @@ class BurgleBrosModel : public Model
         bool isPeekPosible(PlayerId player, CardLocation tile);         //Pregunta si un peek es posible
         bool isAddTokenPosible(PlayerId player, CardLocation tile);
         bool isAddDieToSafePossible(PlayerId player, CardLocation tile);
-        bool isCrackSafePossible(PlayerId playerId, CardLocation safe);
+        bool isCrackSafePossible(PlayerId playerId,vector<unsigned int> &dice);
         bool isCreateAlarmPossible(PlayerId playerId, CardLocation tile);
         bool isPlaceCrowPossible(PlayerId playerId, CardLocation tile);
         bool isPickLootPossible(PlayerId playerId, CardLocation tile, Loot loot);
