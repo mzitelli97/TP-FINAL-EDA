@@ -643,21 +643,29 @@ void BurgleBrosModel::addDieToSafe(PlayerId playerId, CardLocation safe)
     if(actionOk==false)
     {   gameFinished=true; finishMsg = "ERROR: BBModel error: An add die to safe action was called when it wasnt possible to do it!"; }
 }
-void BurgleBrosModel::crackSafe(PlayerId playerId, CardLocation safe)
+void BurgleBrosModel::crackSafe(PlayerId playerId,vector<unsigned int> &diceThrown)
 {
     bool actionOk=false;
     BurgleBrosPlayer* p= getP2Player(playerId);
-    if(isCrackSafePossible(playerId,safe) && !gameFinished)
+    if(isCrackSafePossible(playerId,diceThrown) && !gameFinished)
     {
+        CardLocation safe= p->getPosition();
         p->decActions();                //Cuesta una acción hacer un creack
-        vector<unsigned int> aux;
-        if(p->getCharacter() == THE_PETERMAN)       //Si es peterman tira con un dado extra
-            aux=dice.throwDiceForSafeWithExtraDie(safe.floor);
-        else                                        //Sino tira los dados normales
-            aux=dice.throwDiceForSafe(safe.floor);
-        list<CardLocation> tilesCrackedOnThisAction = board.tilesWithCracked(aux,safe.floor);   //Obtengo las cartas que tienen como safe number uno de los numeros que salio en el dado
+        if(playerId==THIS_PLAYER)       //Para este jugador:
+        {
+            if(p->getCharacter() == THE_PETERMAN)       //Si es peterman tira con un dado extra
+                diceThrown=dice.throwDiceForSafeWithExtraDie(safe.floor);
+            else                                        //Sino tira los dados normales
+                diceThrown=dice.throwDiceForSafe(safe.floor);
+        }
+        list<CardLocation> tilesCrackedOnThisAction = board.tilesWithCracked(diceThrown,safe.floor);   //Obtengo las cartas que tienen como safe number uno de los numeros que salio en el dado
         tokens.addCrackTokenOn(tilesCrackedOnThisAction);
         if(tokens.isSafeOpened(safe.floor))
+        {
+            status=WAITING_FOR_LOOT;    //Espero a que me confirmen el loot.
+            prevLoc=safe;           //Guardo a que safe crackeo
+        }
+        /*if(tokens.isSafeOpened(safe.floor))
         {
             Loot lootGotten =loots.getLoot(playerId);
             p->attachLoot(lootGotten);
@@ -667,7 +675,7 @@ void BurgleBrosModel::crackSafe(PlayerId playerId, CardLocation safe)
                 p->decLives();
             board.setSafeCracked(safe.floor);
             triggerSilentAlarm(safe.floor);
-        }
+        }*/
         view->update(this);
         checkTurns();
         actionOk=true;
@@ -675,6 +683,33 @@ void BurgleBrosModel::crackSafe(PlayerId playerId, CardLocation safe)
     if(actionOk==false)
     {   gameFinished=true; finishMsg = "ERROR: BBModel error: A crack safe action was called when it wasnt possible to do it!"; }
 }
+void BurgleBrosModel::setLoot(PlayerId playerId, Loot *loot)
+{
+    BurgleBrosPlayer *p=getP2Player(playerId);
+    CardLocation safe= prevLoc;
+    if(tokens.isSafeOpened(safe.floor) && status== WAITING_FOR_LOOT)
+    {
+        Loot lootGotten;
+        if(playerId==THIS_PLAYER)
+            lootGotten =loots.getLoot(playerId);
+        else if(playerId==OTHER_PLAYER)
+            lootGotten =loots.getLoot(playerId, *loot);
+        p->attachLoot(lootGotten);
+        if(lootGotten==GOLD_BAR)
+            loots.setGoldBardLocation(safe);
+        if(lootGotten==CURSED_GOBLET && p->getCurrLifes()>1)
+            p->decLives();
+        board.setSafeCracked(safe.floor);
+        triggerSilentAlarm(safe.floor);
+        *loot=lootGotten;
+        status=WAITING_FOR_ACTION;
+        view->update(this);
+        checkTurns();
+    }
+    else
+    {   gameFinished=true; finishMsg = "ERROR: BBModel error: A set Loot action was called when it wasnt possible to do it!"; }
+}
+
 
 void BurgleBrosModel::createAlarm(PlayerId playerId, CardLocation tile)
 {
@@ -966,12 +1001,14 @@ bool BurgleBrosModel::isAddDieToSafePossible(PlayerId player, CardLocation tile)
     }
     return retVal;
 }
-bool BurgleBrosModel::isCrackSafePossible(PlayerId playerId, CardLocation safe)
+bool BurgleBrosModel::isCrackSafePossible(PlayerId playerId,vector<unsigned int> &diceThrown)
 {
     bool retVal=false;
     BurgleBrosPlayer* p = getP2Player(playerId);
-    if(p->isItsTurn()&& board.getCardType(p->getPosition())==SAFE && p->getPosition()==safe && status == WAITING_FOR_ACTION)
+    
+    if(p->isItsTurn()&& board.getCardType(p->getPosition())==SAFE  && status == WAITING_FOR_ACTION)
     {
+        CardLocation safe=p->getPosition();
         if(board.canSafeBeCracked(safe.floor) && !board.isSafeCracked(safe.floor))
         {
             if(dice.getSafeDiceCount(safe.floor)!= 0)
@@ -1072,6 +1109,7 @@ bool BurgleBrosModel::isPeekGuardsCardPossible(PlayerId playerId, unsigned int g
 list<string> BurgleBrosModel::getPosibleActionsToTile(PlayerId player, CardLocation tile)
 {
     list<string> aux;
+    vector<unsigned int> auxDice;
     if(isMovePosible(player, tile))
         aux.push_back("MOVE");
     if(isPeekPosible(player, tile))
@@ -1080,7 +1118,7 @@ list<string> BurgleBrosModel::getPosibleActionsToTile(PlayerId player, CardLocat
         aux.push_back("ADD TOKEN");
     if(isAddDieToSafePossible(player, tile))
         aux.push_back("ADD DIE");
-    if(isCrackSafePossible(player, tile))
+    if(isCrackSafePossible(player, auxDice))
         aux.push_back("CRACK");
     if(isCreateAlarmPossible(player,tile))
         aux.push_back("CREATE ALARM");

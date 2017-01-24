@@ -79,6 +79,36 @@ Loot BurgleBrosLoots::getLoot(PlayerId owner)
     currentLoots++;
     return aux;
 }
+Loot BurgleBrosLoots::getLoot(PlayerId owner, Loot thisLoot)
+{
+    lootInfo[currentLoots].loot = thisLoot;
+    lootInfo[currentLoots].owner = owner;
+    for(vector<Loot>::iterator it=lootDeck.begin(); it!=lootDeck.end();it++)            //Borro el loot que se pido
+    {
+        if(*it==thisLoot)
+        {
+            lootDeck.erase(it);
+            break;
+        }
+    }
+    if(thisLoot==GOLD_BAR)      //Si era un gold Bar se saca el otro goldbar
+    {
+        for(vector<Loot>::iterator it=lootDeck.begin(); it!=lootDeck.end();it++)
+        {
+            if(*it==GOLD_BAR)
+            {
+                lootDeck.erase(it);
+                break;
+            }
+        }
+        currentLoots++;
+        lootInfo[currentLoots].loot = GOLD_BAR;
+        lootInfo[currentLoots].owner = NON_PLAYER;   //Sin dueño
+        goldBarOnFloor.first=true;
+    }
+    currentLoots++;
+    return thisLoot;
+}
 
 void BurgleBrosLoots::setGoldBardLocation(CardLocation safeLocation)
 {

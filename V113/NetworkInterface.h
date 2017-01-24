@@ -46,7 +46,8 @@ public:
         bool sendGMove(list<GuardMoveInfo> guardMovement);
 	bool sendPlaceCrow(CardLocation location);
         bool sendCreateAlarm(CardLocation location);
-        ~NetworkInterface();
+        bool sendSafeOpened(Loot loot);
+	~NetworkInterface();
 private:
 	double timeToBecomeServer;
         bool error;

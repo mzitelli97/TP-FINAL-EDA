@@ -57,7 +57,7 @@ string getStrRepresentingPacket(PerezProtocolHeader header, const char *packetIn
             buffer[j]= packetInfo[i];
         else
         {
-            sprintf(&(buffer[j]), "(0x%X)",(unsigned int)packetInfo[i]);    //Si no es algo imprimible, pone el valor en hexa entre parentesis.
+            sprintf(&(buffer[j]), "(0x%X)",(unsigned int)(unsigned char)packetInfo[i]);    //Si no es algo imprimible, pone el valor en hexa entre parentesis.
             while(buffer[j+1]!='\0')        //Avanzo i hasta llegar al ), luego el for lo incrementa en 1
                 j++;
         }

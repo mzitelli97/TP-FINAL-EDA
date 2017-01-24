@@ -256,9 +256,16 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
         networkInterface->sendAddToken(location);
     }
     else if(action=="ADD DIE")
+    {
         modelPointer->addDieToSafe(modelPointer->getPlayerOnTurn(),location);
+        networkInterface->sendAddToken(location);           //Add token tmb es para añadir dados al safe
+    }
     else if(action=="CRACK")
-        modelPointer->crackSafe(modelPointer->getPlayerOnTurn(),location);
+    {
+        vector<unsigned int> diceThrown;
+        modelPointer->crackSafe(modelPointer->getPlayerOnTurn(),diceThrown);
+        networkInterface->sendDice(diceThrown);
+    }
     else if(action=="CREATE ALARM")
     {
         modelPointer->createAlarm(modelPointer->getPlayerOnTurn(),location);
@@ -500,6 +507,7 @@ void BurgleBrosController::serverInitRoutine(NetworkED *networkEvent)
 void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
 {
     vector<string> message;
+    Loot loot;
     CardLocation guardPosition, guardDice;
     list<GuardMoveInfo> guardMovement;
     vector<unsigned int> dice;
@@ -519,7 +527,11 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             networkInterface->sendPacket(ACK);
             break;
         case ADD_TOKEN:
-            modelPointer->addToken(OTHER_PLAYER,networkEvent->getTokenPos());
+            if(modelPointer->isAddDieToSafePossible(OTHER_PLAYER,networkEvent->getTokenPos()))      //SI el add token era para añadir un dado al safe
+                modelPointer->addDieToSafe(OTHER_PLAYER,networkEvent->getTokenPos());
+            else
+                modelPointer->addToken(OTHER_PLAYER,networkEvent->getTokenPos());   //Sino era un token para computer room
+            networkInterface->sendPacket(ACK);
         case ACK:
             if(aMoveActionPending)      //SI se tuvo que inicializar un guardia por un move, se inicializo y despues se mando la acción move.
             {
@@ -547,6 +559,11 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
                 modelPointer->guardMove(guardMovement);         //Se hace la movida del guardia, y se guarda por referencia en guardMovement 
                 networkInterface->sendGMove(guardMovement);     //Se envía esa información.
             }
+            else if(modelPointer->getModelStatus()==WAITING_FOR_LOOT)
+            {
+                modelPointer->setLoot(THIS_PLAYER, &loot);
+                networkInterface->sendSafeOpened(loot);
+            }
             break;
         case SPENT_OK:case USE_TOKEN:
             if(modelPointer->getModelStatus()==WAITING_FOR_USER_CONFIRMATION)   //Si se esperaba la confirmación del usuario para una accion propia del jugador de esta cpu:
@@ -554,15 +571,23 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
                 packetToAnalize.push_back(*networkEvent);   //Acá se guarda para tratar el paquete en la función getUsersResponse
                 message=modelPointer->getMsgToShow(); 
                 modelPointer->userDecidedTo(getUsersResponse(message));
+                networkInterface->sendPacket(ACK);
             }
             else
                quit=true;
             break;
         case THROW_DICE:
-            if(modelPointer->getModelStatus() == WAITING_FOR_DICE)
+            if(modelPointer->getModelStatus() == WAITING_FOR_DICE)      //Si se esperaba para un keypad
             {
                 networkEvent->getDice(dice);    //Obtiene los dados que tiro el otro para el keypad
                 modelPointer->setDice(dice);    //Y se los pasa al modelo para que procese.
+                networkInterface->sendPacket(ACK);
+            }
+            else                //Sino se tira para el safe.
+            {
+                networkEvent->getDice(dice);
+                modelPointer->crackSafe(OTHER_PLAYER, dice);
+                networkInterface->sendPacket(ACK);
             }
             break;
         case GUARD_MOVEMENT:
@@ -572,6 +597,11 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
         case INITIAL_G_POS:
             networkEvent->getInitGPos(&guardPosition, &guardDice);
             modelPointer->copyGuardInitPos(guardPosition, guardDice);
+            networkInterface->sendPacket(ACK);
+            break;
+        case SAFE_OPENED:
+            loot=networkEvent->getLoot();
+            modelPointer->setLoot(OTHER_PLAYER, &loot);
             networkInterface->sendPacket(ACK);
             break;
         default:

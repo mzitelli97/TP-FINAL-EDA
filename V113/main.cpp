@@ -23,6 +23,7 @@ using namespace std;
  * 
  */
 int main(int argc, char** argv) {
+
     srand(time(NULL));
     allegro_startup();
     BurgleBrosModel model;

@@ -60,6 +60,19 @@ void NetworkED::getInitGPos(CardLocation *guardPos, CardLocation *guardsDiePos)
     else 
         error=true;
 }
+
+Loot NetworkED::getLoot()
+{
+    Loot retVal;
+    if(header==SAFE_OPENED)
+    {
+        retVal= (Loot) buffer[0];
+    }
+    else 
+        error=true;
+    return retVal;
+}
+
 void NetworkED::getStartInfo(vector<CardName> *tiles, CardLocation *playersStartingPos)
 {
     tiles->clear();

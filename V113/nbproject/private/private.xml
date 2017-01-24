@@ -7,15 +7,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/javier/Desktop/GitHub/TP-FINAL-EDA/V113/BurgleBrosController.h</file>
-            <file>file:/home/javier/Desktop/GitHub/TP-FINAL-EDA/V113/Controller.h</file>
-            <file>file:/home/javier/Desktop/GitHub/TP-FINAL-EDA/V113/GUI.cpp</file>
-            <file>file:/home/javier/Desktop/GitHub/TP-FINAL-EDA/V113/NetworkED.cpp</file>
-            <file>file:/home/javier/Desktop/GitHub/TP-FINAL-EDA/V113/NetworkED.h</file>
+            <file>file:/home/javier/Desktop/GitHub/TP-FINAL-EDA/V113/SoundManager.cpp</file>
             <file>file:/home/javier/Desktop/GitHub/TP-FINAL-EDA/V113/BurgleBrosController.cpp</file>
-            <file>file:/home/javier/Desktop/GitHub/TP-FINAL-EDA/V113/NetworkInterface.h</file>
             <file>file:/home/javier/Desktop/GitHub/TP-FINAL-EDA/V113/BurgleBrosModel.h</file>
             <file>file:/home/javier/Desktop/GitHub/TP-FINAL-EDA/V113/main.cpp</file>
+            <file>file:/home/javier/Desktop/GitHub/TP-FINAL-EDA/V113/Networking.cpp</file>
             <file>file:/home/javier/Desktop/GitHub/TP-FINAL-EDA/V113/BurgleBrosModel.cpp</file>
             <file>file:/home/javier/Desktop/GitHub/TP-FINAL-EDA/V113/NetworkInterface.cpp</file>
         </group>
