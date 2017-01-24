@@ -541,6 +541,7 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             else
                 modelPointer->addToken(OTHER_PLAYER,networkEvent->getTokenPos());   //Sino era un token para computer room
             networkInterface->sendPacket(ACK);
+            break;
         case ACK:
             if(aMoveActionPending)      //SI se tuvo que inicializar un guardia por un move, se inicializo y despues se mando la acción move.
             {
