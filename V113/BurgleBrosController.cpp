@@ -375,8 +375,7 @@ void BurgleBrosController::clientInitRoutine(NetworkED *networkEvent)
             if(networkEvent->getHeader() == I_AM)   //Luego el server manda que character escogió
             {
                 auxInitInfo[OTHER_PLAYER].playersCharacter=networkEvent->getCharacter();        //Se guarda su jugador
-                //auxInitInfo[THIS_PLAYER].playersCharacter=getRandomCharacter(auxInitInfo[OTHER_PLAYER].playersCharacter);    //Se elige uno random que no sea el que escogió el server
-                auxInitInfo[THIS_PLAYER].playersCharacter= THE_RAVEN;
+                auxInitInfo[THIS_PLAYER].playersCharacter=getRandomCharacter(auxInitInfo[OTHER_PLAYER].playersCharacter);    //Se elige uno random que no sea el que escogió el server
                 networkInterface->sendChar(auxInitInfo[THIS_PLAYER].playersCharacter);      //Y se le manda la info de cual es el que escogió el client.
                 initPacketCount++;
             }
@@ -454,8 +453,7 @@ void BurgleBrosController::serverInitRoutine(NetworkED *networkEvent)
         case 2:
             if(networkEvent->getHeader() == ACK)        //El cliente ya sabe el nombre del server
             {
-                //auxInitInfo[THIS_PLAYER].playersCharacter=getRandomCharacter(); //ENtonces se obtiene un character aleatorio
-                auxInitInfo[THIS_PLAYER].playersCharacter=THE_JUICER;
+                auxInitInfo[THIS_PLAYER].playersCharacter=getRandomCharacter(); //ENtonces se obtiene un character aleatorio
                 networkInterface->sendChar(auxInitInfo[THIS_PLAYER].playersCharacter); // se lo manda al client
                 initPacketCount++;
             }
