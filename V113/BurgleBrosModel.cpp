@@ -908,7 +908,9 @@ void BurgleBrosModel::checkTurns()
         nextPlayerOnTurn->setActions(INIT_NMBR_OF_LIVES);       //Se le resetean las acciones.
         if(nextPlayerOnTurn->hasLoot(MIRROR))
             nextPlayerOnTurn->setActions(INIT_NMBR_OF_LIVES-1);       //SI tenía un mirror pierde 1 acción
-       // handlePersianKittyMove(nextPlayerOnTurn);
+        if(nextPlayerOnTurn->hasLoot(CHIHUAHUA) || nextPlayerOnTurn->hasLoot(PERSIAN_KITTY))
+            status=WAITING_DICE_FOR_LOOT;
+        // handlePersianKittyMove(nextPlayerOnTurn);
        // handleChihuahuaMove(nextPlayerOnTurn);
         guardFinishedMoving=false;
         view->update(this);

@@ -36,6 +36,7 @@ public:
     void getDice(vector<unsigned int> &dice);   //Pone en el arreglo los dice obtenidos via interne
     void getGuardMovement(list<GuardMoveInfo> &guardInfo);  //Pone en la lista la guard info obtenida via interne
     Loot getLoot();
+    unsigned int getDieForLoot();
     virtual ~NetworkED();
 private:
     PerezProtocolHeader header;

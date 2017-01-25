@@ -36,7 +36,9 @@ public:
     void addDieToKeypad(CardLocation keypadLocation);
     void resetKeypadsDice();
     bool persianKittyShallMove();
+    bool persianKittyShallMove(unsigned int die);
     bool chihuahuaBarks();
+    bool chihuahuaBarks(unsigned int die);
     unsigned int throwADie();
     
     virtual ~BurgleBrosDices();

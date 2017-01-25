@@ -266,7 +266,12 @@ bool NetworkInterface::sendPickUpLoot(Loot loot)
     buffer[0]= (unsigned char) loot;
     return p2networking->sendPacket(PICK_UP_LOOT,(char *) buffer, 1);
 }
-
+bool NetworkInterface::sendRollDiceForLoot(unsigned int die)
+{
+    unsigned char buffer[1];
+    buffer[0]= (unsigned char) die;
+    return p2networking->sendPacket(ROLL_DICE_FOR_LOOT,(char *) buffer, 1);
+}
 
 NetworkInterface::~NetworkInterface()
 {

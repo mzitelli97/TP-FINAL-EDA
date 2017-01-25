@@ -50,6 +50,7 @@ public:
         bool sendRequestLoot(Loot i);
         bool sendOfferLoot(Loot i);
         bool sendPickUpLoot(Loot loot);
+        bool sendRollDiceForLoot(unsigned int die);
 	~NetworkInterface();
 private:
 	double timeToBecomeServer;

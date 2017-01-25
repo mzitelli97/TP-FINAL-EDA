@@ -118,6 +118,16 @@ CardLocation NetworkED::getTokenPos()
         error=true;
     return retVal;
 }
+unsigned int NetworkED::getDieForLoot()
+{
+    unsigned int retVal;
+    
+    if(header == ROLL_DICE_FOR_LOOT)
+        retVal=(unsigned int) buffer[0];
+    else
+        error=true;
+    return retVal;
+}
 
 CardLocation NetworkED::getCreateAlarmPos()
 {

@@ -655,7 +655,7 @@ void BurgleBrosController::handleLootsExchange(NetworkED *networkEvent)
     {
         if(networkEvent->getHeader()== AGREE)
             modelPointer->userDecidedTo(ACCEPT_TEXTB);      //Si era un agree se lo comunica al modelo, sino le comunica un disagree.
-        else
+        else (networkEvent->getHeader()== DISAGREE)
             modelPointer->userDecidedTo(DECLINE_TEXTB);
     }
 }
