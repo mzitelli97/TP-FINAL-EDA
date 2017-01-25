@@ -46,6 +46,10 @@ bool BurgleBrosModel::moveRequiresToInitGuard(CardLocation locationToMove)
 {
     return !guards[locationToMove.floor].checkIfInitialized();
 }
+pair<bool,CardLocation> BurgleBrosModel::getGoldBarInfo()
+{
+    return loots.getGoldBarOnFloor();
+}
 
 void BurgleBrosModel::initBoard(vector<CardName> &allTiles)
 {

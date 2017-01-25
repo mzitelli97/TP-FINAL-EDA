@@ -38,6 +38,8 @@ public:
         void incDiceNumber();
         bool isTopOfNotShownDeckVisible();
         void pushTopCardToTheBottom();
+        void pushCardToTheBottom(CardLocation thisCard);
+        void pushCardToTheTop(CardLocation thisCard);
         void setTopOfNotShownDeckVisible(bool whichState);
         bool step();                                        //DESARROLLAR (devuelve 1 si llego al objetivo)
         void setNewTarget(CardLocation alarm);              //DESARROLLAR

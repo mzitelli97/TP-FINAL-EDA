@@ -23,6 +23,7 @@ class BurgleBrosLoots
 public:
 	BurgleBrosLoots();
 	Info2DrawLoot getLootInfo(unsigned int nmbrOfLoot);
+        pair<bool,CardLocation> getGoldBarOnFloor();
 	unsigned int getCurrentLoots();
         bool isLootDrawn(Loot loot);
         void setGoldBardLocation(CardLocation safeLocation);

@@ -30,7 +30,10 @@ unsigned int BurgleBrosLoots::getCurrentLoots()
 {
     return currentLoots;
 }
-
+pair<bool,CardLocation> BurgleBrosLoots::getGoldBarOnFloor()
+{
+    return goldBarOnFloor;
+}
 
 BurgleBrosLoots::BurgleBrosLoots()
 {

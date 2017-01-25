@@ -69,7 +69,32 @@ void BurgleBrosGuard::pushTopCardToTheBottom()
     cardDeck.insert(it, topCard);
     cardDeck.pop_front();
 }   
-
+void BurgleBrosGuard::pushCardToTheBottom(CardLocation thisCard)
+{/*Si la carta estaba en el top del mazo ( posición cero) va hacia su nueva posición, que depende de con cuantas cartas estemos jugando:*/
+    unsigned int newPos = NUMBER_OF_CARDS_TO_PLAY-shownDeck.size(); //Por ejemplo si saqué 6 cartas, jugabamos con 10, su posición nueva va a ser la 4:
+    list<CardLocation>::iterator it1;
+    for(it1=cardDeck.begin(); it1!=cardDeck.end();it1++)        //busco la carta del deck 
+    {
+        if(*it1 == thisCard)
+            break;
+    }
+    cardDeck.erase(*it1);       //La borro
+    list<CardLocation>::iterator it=cardDeck.begin();
+    advance(it,newPos);
+    cardDeck.insert(it, thisCard);       //La pongo en el supuesto fondo del mazo
+}   
+void BurgleBrosGuard::pushCardToTheTop(CardLocation thisCard)
+{
+    unsigned int newPos = NUMBER_OF_CARDS_TO_PLAY-shownDeck.size(); //Por ejemplo si saqué 6 cartas, jugabamos con 10, su posición nueva va a ser la 4:
+    list<CardLocation>::iterator it1;
+    for(it1=cardDeck.begin(); it1!=cardDeck.end();it1++)        //busco la carta del deck 
+    {
+        if(*it1 == thisCard)
+            break;
+    }
+    cardDeck.erase(*it1);       //La borro
+    cardDeck.push_front(thisCard);
+}
 void BurgleBrosGuard::init() 
 {
     initialized=true;

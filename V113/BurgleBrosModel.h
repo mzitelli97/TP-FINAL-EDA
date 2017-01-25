@@ -59,6 +59,7 @@ class BurgleBrosModel : public Model
         void copyGuardInitPos(CardLocation guardPos, CardLocation guardDiePos);          //Esta función es inteligente y si se inicializó el guardia del primer piso y se la llama, inicializa el del segundo piso, etc.
         void generateGuardInitPos(CardLocation *guardPos, CardLocation *guardDiePos);   //Esta función es inteligente y si se inicializó el guardia del primer piso y se la llama, inicializa el del segundo piso, etc.
         /* Funciones para obtener información para dibujar. */
+        pair<bool,CardLocation> getGoldBarInfo();
         vector<wall> getInfo2DrawWalls();
 	vector<Info2DrawCards> getInfo2DrawCards();
         list<Info2DrawLoot> getInfo2DrawLoot();
