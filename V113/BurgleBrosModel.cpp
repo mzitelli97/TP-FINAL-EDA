@@ -807,7 +807,7 @@ void BurgleBrosModel::askForLoot(PlayerId playerId, Loot loot)
         
         std::vector<string> aux({ASK_FOR_LOOT_TEXT+loot2Str(loot),ACCEPT_TEXTB,DECLINE_TEXTB}); 
         this->msgsToShow=aux;
-        this->status=WAITING_FOR_USER_CONFIRMATION;
+        this->status=IN_LOOT_EXCHANGE;
         this->lootOfferedOrAskedFor=loot;
         actionOk=true;
     }
@@ -822,7 +822,7 @@ void BurgleBrosModel::offerLoot(PlayerId playerId, Loot loot)
     {
         std::vector<string> aux({OFFER_LOOT_TEXT+loot2Str(loot),ACCEPT_TEXTB,DECLINE_TEXTB}); 
         this->msgsToShow=aux;
-        this->status=WAITING_FOR_USER_CONFIRMATION;
+        this->status=IN_LOOT_EXCHANGE;
         this->lootOfferedOrAskedFor=loot;
         actionOk=true;
     }

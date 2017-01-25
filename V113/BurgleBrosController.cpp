@@ -303,13 +303,13 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
             transform(offer.begin(), offer.end(), offer.begin(), ::toupper);
             if(action==ask)
             {
-                modelPointer->askForLoot(modelPointer->getPlayerOnTurn(),(Loot)i);
+                modelPointer->askForLoot(THIS_PLAYER,(Loot)i);
                 networkInterface->sendRequestLoot((Loot)i);
                 break;
             }
             if(action==offer)
             {
-                modelPointer->offerLoot(modelPointer->getPlayerOnTurn(),(Loot)i);
+                modelPointer->offerLoot(THIS_PLAYER,(Loot)i);
                 networkInterface->sendOfferLoot((Loot)i);
                 break;
             }

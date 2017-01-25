@@ -170,6 +170,15 @@ bool BurgleBrosGuard::drawCardTarget(CardLocation targetCard)
     bool retVal=false;
     list<CardLocation>::iterator it;
     list<CardLocation>::iterator auxIt;
+    CardLocation aux;
+    if(shownDeck.size() == NUMBER_OF_CARDS_TO_PLAY-1) //Si me falta 1 para usar todas las cartas con las que estoy jugando ( 10 para 2 personas) se baraja de vuelta al sacar la primera
+    {    
+        aux=cardDeck.front();            //Guardo la primera.
+        initCardDeck();                             //Barajo de vuelta y saco esa carta que antes era la que quedaba.
+        drawCardTarget(aux);
+        currentTarget = aux;
+        incDiceNumber();    
+    }
     for(it=cardDeck.begin(); it!=cardDeck.end();it++)
     {
         if(*it == targetCard)
