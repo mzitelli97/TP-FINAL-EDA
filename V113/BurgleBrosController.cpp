@@ -288,7 +288,11 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
         networkInterface->sendPickUpLoot(GOLD_BAR);
     }
     else if(action=="ESCAPE")
+    {
         modelPointer->escape(THIS_PLAYER,location);
+        location.floor++;
+        networkInterface->sendMove(location,0);
+    }
     else if(action=="PEEK TOP CARD")
         modelPointer->peekGuardsCard(THIS_PLAYER,location.floor);
     else
@@ -532,7 +536,10 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             networkInterface->sendPacket(ACK);
             break;
         case MOVE:    
-            modelPointer->move(OTHER_PLAYER, networkEvent->getPos(),networkEvent->getSafeNumber());
+            if(networkEvent->getPos().floor==3)     //Si es un movimiento al 4to piso, es un escape.
+                modelPointer->escape(OTHER_PLAYER, networkEvent->getPos());
+            else
+                modelPointer->move(OTHER_PLAYER, networkEvent->getPos(),networkEvent->getSafeNumber());
             networkInterface->sendPacket(ACK);
             break;
         case ADD_TOKEN:
