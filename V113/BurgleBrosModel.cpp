@@ -28,6 +28,7 @@ BurgleBrosModel::BurgleBrosModel()
     playerSpentFreeAction=false;
     status=WAITING_FOR_ACTION;
     guardFinishedMoving=false;
+    rollForLootCount=0;
 }
 void BurgleBrosModel::attachView(View * view)
 {
@@ -1439,29 +1440,80 @@ void BurgleBrosModel::triggerSilentAlarm(unsigned int floor)
     }
 }
 
-void BurgleBrosModel::handlePersianKittyMove(PlayerId playerId)
+bool BurgleBrosModel::dieForLootNeeded() //Si es necesario tirar un dado para el chihuahua o persian kitty
 {
-    BurgleBrosPlayer *p=getP2Player(playerId);
-    if(p->isItsTurn() && p->hasLoot(PERSIAN_KITTY) && board.canKittyMove(p->getPosition()) && dice.persianKittyShallMove())   
-    {
-        p->deattachLoot(PERSIAN_KITTY);
-        loots.setNewLootOwner(PERSIAN_KITTY,NON_PLAYER);
-        pair<bool, CardLocation> persianKittyToken;
-        persianKittyToken.first = true;
-        persianKittyToken.second = board.getKittyMovingPos(p->getPosition());
-        tokens.placePersianKittyToken(persianKittyToken);
-        view->update(this);
-    }
+    bool retVal=false;
+    BurgleBrosPlayer *p=getP2Player(getPlayerOnTurn());
+    if(p->hasLoot(PERSIAN_KITTY) || p->hasLoot(CHIHUAHUA)  && status==WAITING_DICE_FOR_LOOT && rollForLootCount==0) //Si se esperaba por el dice for loot y todavía no se tiraron los dados si
+        retVal=true;
+    else if(p->hasLoot(PERSIAN_KITTY) && p->hasLoot(CHIHUAHUA) && status==WAITING_DICE_FOR_LOOT && rollForLootCount==1 && board.canKittyMove(p->getPosition()))
+        retVal=true; //Tambien si tenía los dos loots y tiró por el chihuahua, y ahora si el kitty puede moverse se tiene
+    return retVal;
 }
-void BurgleBrosModel::handleChihuahuaMove(PlayerId playerId)
+void BurgleBrosModel::continueGame()        //Si el juego estaba parado por los dados para el loot, se le dice que continúe.
 {
-    BurgleBrosPlayer *p=getP2Player(playerId);
-    if(p->isItsTurn() && p->hasLoot(CHIHUAHUA) && dice.chihuahuaBarks())
+    rollForLootCount=0;
+    status=WAITING_FOR_ACTION;
+}
+
+unsigned int BurgleBrosModel::rollDieForLoot(unsigned int die)
+{
+    BurgleBrosPlayer *p=getP2Player(getPlayerOnTurn());
+    if(p->hasLoot(PERSIAN_KITTY) && !p->hasLoot(CHIHUAHUA))     //Si tiene persian kitty y no chihuahua
+        handlePersianKittyMove(die);
+    else if(!p->hasLoot(PERSIAN_KITTY) && p->hasLoot(CHIHUAHUA))    //SI tiene chihuahua y no tiene persian kitty
+        handleChihuahuaMove(die);
+    else if(p->hasLoot(PERSIAN_KITTY) && p->hasLoot(CHIHUAHUA))     //Si tiene los 2.
     {
-        tokens.triggerAlarm(p->getPosition());
-        setGuardsNewPath(p->getPosition().floor);
-        view->update(this);
+        if(rollForLootCount==0)
+            handleChihuahuaMove(die);
+        else
+            handlePersianKittyMove(die);
     }
+    return dice.getCurrDice().front();
+}
+
+void BurgleBrosModel::handlePersianKittyMove(unsigned int die)
+{
+    BurgleBrosPlayer *p=getP2Player(getPlayerOnTurn());
+    if(p->isItsTurn() && p->hasLoot(PERSIAN_KITTY) && board.canKittyMove(p->getPosition()))   
+    {
+        bool itWillMove;
+        if(getPlayerOnTurn()==THIS_PLAYER)      //Si es este jugador tira los dados
+            itWillMove=dice.persianKittyShallMove();
+        else if(getPlayerOnTurn()==OTHER_PLAYER)    //SIno pone el dado recibido
+            itWillMove=dice.persianKittyShallMove();
+        if(itWillMove)
+        {
+            p->deattachLoot(PERSIAN_KITTY);
+            loots.setNewLootOwner(PERSIAN_KITTY,NON_PLAYER);
+            pair<bool, CardLocation> persianKittyToken;
+            persianKittyToken.first = true;
+            persianKittyToken.second = board.getKittyMovingPos(p->getPosition());
+            tokens.placePersianKittyToken(persianKittyToken);
+            view->update(this);
+        }
+    }
+    rollForLootCount++;
+}
+void BurgleBrosModel::handleChihuahuaMove(unsigned int die)
+{
+    BurgleBrosPlayer *p=getP2Player(getPlayerOnTurn());
+    if(p->isItsTurn() && p->hasLoot(CHIHUAHUA))
+    {
+        bool itWillBark;
+        if(getPlayerOnTurn()==THIS_PLAYER)  //SI es este jugador tira los dados
+            itWillBark=dice.chihuahuaBarks();
+        else if(getPlayerOnTurn()==OTHER_PLAYER)
+            itWillBark=dice.chihuahuaBarks(die);    //SIno, tira los dados recibidos.
+        if(itWillBark)
+        {
+            tokens.triggerAlarm(p->getPosition());
+            setGuardsNewPath(p->getPosition().floor);
+            view->update(this);
+        }
+    }
+    rollForLootCount++;
 }
 BurgleBrosModel::~BurgleBrosModel()
 {

@@ -569,10 +569,20 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
                 modelPointer->guardMove(guardMovement);         //Se hace la movida del guardia, y se guarda por referencia en guardMovement 
                 networkInterface->sendGMove(guardMovement);     //Se envía esa información.
             }
-            else if(modelPointer->getModelStatus()==WAITING_FOR_LOOT)
+            else if(modelPointer->getModelStatus()==WAITING_FOR_LOOT)   //Si se envió un throw dice que habría el safe
             {
-                modelPointer->setLoot(THIS_PLAYER, &loot);
+                modelPointer->setLoot(THIS_PLAYER, &loot);          //Al llegar el ack se manda el safeopened con el loot obtenido.
                 networkInterface->sendSafeOpened(loot);
+            }
+            else if(modelPointer->getModelStatus()== WAITING_DICE_FOR_LOOT) //Si llegó el ack a un tiro de dados
+            {
+                if(modelPointer->dieForLootNeeded())            //Si se necesitaba tirar 1 dado más (caso que tenga chihuahua y persian kitty juntos)
+                {
+                    unsigned int die=modelPointer->rollDieForLoot(NO_DIE);
+                    networkInterface->sendRollDiceForLoot(die);
+                }
+                else
+                    modelPointer->continueGame();       //SIno se sigue con el juego normal.
             }
             break;
         case SPENT_OK:case USE_TOKEN: 
@@ -607,6 +617,11 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
         case GUARD_MOVEMENT:
             networkEvent->getGuardMovement(guardMovement);  //Obtengo el movimiento del guardia
             modelPointer->guardMove(guardMovement); //Y hago que el modelo lo procese.
+            if(modelPointer->dieForLootNeeded())        //Si se necesita tirar un dado para los loots (chihuahua o persian kitty).
+            {
+                unsigned int die=modelPointer->rollDieForLoot(NO_DIE);
+                networkInterface->sendRollDiceForLoot(die);
+            }
             break;
         case INITIAL_G_POS:
             networkEvent->getInitGPos(&guardPosition, &guardDice);
@@ -628,6 +643,11 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             break;
         case PLACE_CROW:
             modelPointer->placeCrow(OTHER_PLAYER, networkEvent->getPlaceCrowPos());
+            networkInterface->sendPacket(ACK);
+        case ROLL_DICE_FOR_LOOT:
+            modelPointer->rollDieForLoot(networkEvent->getDieForLoot());
+            if(!modelPointer->dieForLootNeeded())            //Si no se necesita más roll for dices, continua el juego. O sea si el otro tenía el persian kitty y el chihuahua pasa 2 veces por aca y la segunda solo pasa por el continue.
+                modelPointer->continueGame();
             networkInterface->sendPacket(ACK);
         default:
             break;

@@ -71,7 +71,11 @@ class BurgleBrosModel : public Model
         ModelStatus getModelStatus();
         vector<string> getMsgToShow();
         void userDecidedTo(string decision);
+        /*Otras funciones*/
         void setDice(vector<unsigned int> &dice);
+        bool dieForLootNeeded();      //Si es necesario tirar un dado para el chihuahua o persian kitty
+        void continueGame();        //Si el juego estaba parado por los dados para el loot, se le dice que continúe.
+        unsigned int rollDieForLoot(unsigned int die);          //Tira un dado para los loots y devuelve el número que salió. en el caso que tenga chihuahua y persian kitty el player, primero se tira por chihuahua y luego por persian kitty.
         /* Acciones que se puede llamar públicamente*/
         void pass(PlayerId playerId);
         unsigned int peek(PlayerId playerId, CardLocation locationToPeek,int safeNumber); //Recibe que jugador a que tile va a mirar, y si se sabe de antemano el número de safe, se lo asigna a la carta que estaba dada vuelta. devuelve el numero de safe de esa carta.
@@ -115,8 +119,8 @@ class BurgleBrosModel : public Model
         void copyGuardMove(list<GuardMoveInfo> &guardMovement); //Faltaría checkear que el move sea correcto.
         void checkTurns();
         void checkIfWonOrLost();
-        void handlePersianKittyMove(PlayerId playerId);
-        void handleChihuahuaMove(PlayerId playerId);
+        void handlePersianKittyMove(unsigned int die);
+        void handleChihuahuaMove(unsigned int die);
         void triggerSilentAlarm(unsigned int floor);
         bool GuardInCamera();
         list<CardLocation> setGuardsNewPath(unsigned int floor);
@@ -142,6 +146,7 @@ class BurgleBrosModel : public Model
         PlayerId playerOnTurnBeforeGuardMove;   //Este se podría poner dentro del guard después
         bool guardFinishedMoving;       //Este se podría poner dentro del guard después
         Loot lootOfferedOrAskedFor;
+        unsigned int rollForLootCount;
 };
 #endif
 
