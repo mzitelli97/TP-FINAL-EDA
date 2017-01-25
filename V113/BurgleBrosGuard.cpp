@@ -78,7 +78,7 @@ void BurgleBrosGuard::pushCardToTheBottom(CardLocation thisCard)
         if(*it1 == thisCard)
             break;
     }
-    cardDeck.erase(*it1);       //La borro
+    cardDeck.erase(it1);       //La borro
     list<CardLocation>::iterator it=cardDeck.begin();
     advance(it,newPos);
     cardDeck.insert(it, thisCard);       //La pongo en el supuesto fondo del mazo
@@ -92,7 +92,7 @@ void BurgleBrosGuard::pushCardToTheTop(CardLocation thisCard)
         if(*it1 == thisCard)
             break;
     }
-    cardDeck.erase(*it1);       //La borro
+    cardDeck.erase(it1);       //La borro
     cardDeck.push_front(thisCard);
 }
 void BurgleBrosGuard::init() 
@@ -187,7 +187,14 @@ CardLocation BurgleBrosGuard::drawCardTarget()
         shownDeck.push_front(aux);
         currentTarget = aux;
     }
-    
+    for(list<CardLocation>::iterator sincronizedCards=cardSincronized.begin(); sincronizedCards!=cardSincronized.end(); sincronizedCards++) //si no era la que saqué, recorro las cartas sincronizadas,
+    {
+        if(aux==*sincronizedCards)      //Me fijo si era una de las cartas que estaban sincronizadas.
+        {
+            cardSincronized.erase(sincronizedCards);    //EN ese caso la borro.
+            break;
+        }
+    }
     return aux;
 }
 bool BurgleBrosGuard::drawCardTarget(CardLocation targetCard)
@@ -204,15 +211,42 @@ bool BurgleBrosGuard::drawCardTarget(CardLocation targetCard)
         currentTarget = aux;
         incDiceNumber();    
     }
-    for(it=cardDeck.begin(); it!=cardDeck.end();it++)
+    for(it=cardDeck.begin(); it!=cardDeck.end();it++)           //Recorro cada carta
     {
-        if(*it == targetCard)
+        if(*it == targetCard)           //Si es la carta que se pedía, la pongo en las visibles 
         {
             CardLocation aux = *it;
             auxIt=it;
             shownDeck.push_front(aux);
             currentTarget = aux;
+            for(list<CardLocation>::iterator sincronizedCards=cardSincronized.begin(); sincronizedCards!=cardSincronized.end(); sincronizedCards++) //si no era la que saqué, recorro las cartas sincronizadas,
+            {
+                if(*it==*sincronizedCards)      //Me fijo si era una de las cartas que estaban sincronizadas.
+                {
+                    cardSincronized.erase(sincronizedCards);    //EN ese caso la borro.
+                    break;
+                }
+            }
             retVal=true;
+            break;
+        }
+        else if(it!=cardDeck.begin()) //salvo para la primer carta, igual esto no debería pasar nunca si esta bien hecho de afeura.
+        {   //Si pase por una carta que esta sincronizada la tengo que hacer avanzar 1 lugar en el mazo, para esto se trata este if.
+            bool itsAsincroCard=false;
+            for(list<CardLocation>::iterator sincronizedCards=cardSincronized.begin(); sincronizedCards!=cardSincronized.end(); sincronizedCards++) //si no era la que saqué, recorro las cartas sincronizadas,
+            {
+                if(*it==*sincronizedCards)      //Me fijo si era una de las cartas que estaban sincronizadas.
+                    itsAsincroCard=true;
+            }
+            if(itsAsincroCard)
+            {
+                list<CardLocation>::iterator prev = it;
+                prev--; //Apunto al anterior elemento
+                CardLocation tempLocation=*it;  //Copia del elemento a swapear
+                *it=*prev;
+                *prev=tempLocation;         //Pongo la carta sincronizada 1 lugar más cerca del frente del mazo.
+            }
+            
         }
     }
     cardDeck.erase(auxIt);

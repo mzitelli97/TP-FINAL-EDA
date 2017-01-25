@@ -51,7 +51,7 @@ private:
         void setPosition();
         void initCardDeck();
         void shuffleCardDeck();
-	
+	list<CardLocation> cardSincronized; //Aca se guardan las que están sincronizadas via internet.
 	void shuffleDecks();
         bool initialized;
         bool topOfNotShownDeckVisible;      //Indica si está visible la primer carta del mazo de las que no fueron mostradas ( para el special ability del spotter).
