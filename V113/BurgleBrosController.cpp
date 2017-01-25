@@ -375,7 +375,8 @@ void BurgleBrosController::clientInitRoutine(NetworkED *networkEvent)
             if(networkEvent->getHeader() == I_AM)   //Luego el server manda que character escogió
             {
                 auxInitInfo[OTHER_PLAYER].playersCharacter=networkEvent->getCharacter();        //Se guarda su jugador
-                auxInitInfo[THIS_PLAYER].playersCharacter=getRandomCharacter(auxInitInfo[OTHER_PLAYER].playersCharacter);    //Se elige uno random que no sea el que escogió el server
+                //auxInitInfo[THIS_PLAYER].playersCharacter=getRandomCharacter(auxInitInfo[OTHER_PLAYER].playersCharacter);    //Se elige uno random que no sea el que escogió el server
+                auxInitInfo[THIS_PLAYER].playersCharacter= THE_RAVEN;
                 networkInterface->sendChar(auxInitInfo[THIS_PLAYER].playersCharacter);      //Y se le manda la info de cual es el que escogió el client.
                 initPacketCount++;
             }
@@ -453,7 +454,8 @@ void BurgleBrosController::serverInitRoutine(NetworkED *networkEvent)
         case 2:
             if(networkEvent->getHeader() == ACK)        //El cliente ya sabe el nombre del server
             {
-                auxInitInfo[THIS_PLAYER].playersCharacter=getRandomCharacter(); //ENtonces se obtiene un character aleatorio
+                //auxInitInfo[THIS_PLAYER].playersCharacter=getRandomCharacter(); //ENtonces se obtiene un character aleatorio
+                auxInitInfo[THIS_PLAYER].playersCharacter=THE_JUICER;
                 networkInterface->sendChar(auxInitInfo[THIS_PLAYER].playersCharacter); // se lo manda al client
                 initPacketCount++;
             }
@@ -622,6 +624,13 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             modelPointer->pickLoot(OTHER_PLAYER, networkEvent->getLoot());
             networkInterface->sendPacket(ACK);
             break;       
+        case CREATE_ALARM:
+            modelPointer->createAlarm(OTHER_PLAYER, networkEvent->getCreateAlarmPos());
+            networkInterface->sendPacket(ACK);
+            break;
+        case PLACE_CROW:
+            modelPointer->placeCrow(OTHER_PLAYER, networkEvent->getPlaceCrowPos());
+            networkInterface->sendPacket(ACK);
         default:
             break;
 

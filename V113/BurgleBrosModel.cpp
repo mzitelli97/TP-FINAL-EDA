@@ -732,6 +732,7 @@ void BurgleBrosModel::createAlarm(PlayerId playerId, CardLocation tile)
         tokens.triggerAlarm(tile);
         setGuardsNewPath(tile.floor);
         actionOk=true;
+        view->update(this);
     }
     if(actionOk==false)
     {   gameFinished=true; finishMsg = "ERROR: BBModel error: A create alarm action was called when it wasnt possible to do it!"; }
@@ -744,6 +745,7 @@ void BurgleBrosModel::placeCrow(PlayerId playerId, CardLocation tile)
         tokens.placeCrowToken(tile);
         playerSpentFreeAction=true;
         actionOk=true;
+        view->update(this);
     }
     if(actionOk==false)
     {   gameFinished=true; finishMsg = "ERROR: BBModel error: A place crow action was called when it wasnt possible to do it!"; }

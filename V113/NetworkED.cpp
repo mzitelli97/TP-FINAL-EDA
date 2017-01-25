@@ -107,11 +107,11 @@ CardLocation NetworkED::getPos()
 CardLocation NetworkED::getTokenPos()
 {
     CardLocation retVal;
-    if(header==ADD_TOKEN || USE_TOKEN)
+    if(header==ADD_TOKEN || header==USE_TOKEN)
     {
-       // buffer[len]= '\0';                //javi nose xq lo hiciste asi, lo cambie abajo
-       
-        string aux =(char *) buffer + '\0';
+        buffer[len]= '\0';               
+        string aux =(char *) buffer;
+       //string aux =(char *) buffer + '\0'; //perro, lo había puesto así porque no hay nada que asegure que venga con terminador el buffer, entonces esta linea podría fallar
         retVal=protocolToCardLocation(aux);
     }
     else
@@ -125,7 +125,9 @@ CardLocation NetworkED::getCreateAlarmPos()
     
     if(header == CREATE_ALARM)
     { 
-        string aux = (char *) buffer + '\0';
+        buffer[len]= '\0'; 
+        string aux =(char *) buffer;
+        //string aux = (char *) buffer + '\0'; //perro, lo había puesto así porque no hay nada que asegure que venga con terminador el buffer, entonces esta linea podría fallar
         retVal=protocolToCardLocation(aux); 
     }
     else
@@ -141,7 +143,9 @@ CardLocation NetworkED::getPlaceCrowPos()
     
     if(header == PLACE_CROW)
     {
-        string aux = (char *) buffer + '\0';
+        buffer[len]= '\0'; 
+        string aux =(char *) buffer;
+        //string aux = (char *) buffer + '\0'; //perro, lo había puesto así porque no hay nada que asegure que venga con terminador el buffer, entonces esta linea podría fallar
         retVal=protocolToCardLocation(aux);
     }
     else
