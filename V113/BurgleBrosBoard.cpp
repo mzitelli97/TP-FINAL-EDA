@@ -359,7 +359,7 @@ bool BurgleBrosBoard::canKittyMove(CardLocation ownerPos)
     {
         for(aux.column=0; aux.column<FLOOR_RAWS; aux.column++)
         {
-            if(isAnAlarmTile(getCardType(aux)) && ownerPos!=aux)    //Si hay una tile de alarma en el piso y no es en la que está parado el chabon
+            if(isAnAlarmTile(getCardType(aux)) && ownerPos!=aux && isCardVisible(aux))    //Si hay una tile de alarma en el piso y no es en la que está parado el chabon, y está dada vuelta
                 retVal=true;
         }
     }

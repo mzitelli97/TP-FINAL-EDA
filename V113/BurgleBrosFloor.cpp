@@ -341,7 +341,7 @@ CardLocation BurgleBrosFloor::getKittyMovingPos(CardLocation playerPos)
 	        cardQueue.insert(std::make_pair(minDist[B], B));
                 CardLocation aux= intToIndex(B);
                 aux.floor=floorNumber;
-                if(isAnAlarmTile(getCardType(aux)) && aux!= playerPos)
+                if(isAnAlarmTile(getCardType(aux)) && aux!= playerPos && isCardVisible(aux))
                 {
                     auxCard = B;
                     pathToTargetObtained=true;
