@@ -29,6 +29,7 @@ BurgleBrosController::BurgleBrosController()
     status=INITIALIZING;
     initPacketCount=0;
     aMoveActionPending=false;
+    waiting4QuitAck=false;
 }
 
 BurgleBrosController::BurgleBrosController(const BurgleBrosController& orig) 
@@ -555,7 +556,9 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             networkInterface->sendPacket(ACK);
             break;
         case ACK:
-            if(aMoveActionPending)      //SI se tuvo que inicializar un guardia por un move, se inicializo y despues se mando la acción move.
+            if(waiting4QuitAck)
+                quit=true;
+            else if(aMoveActionPending)      //SI se tuvo que inicializar un guardia por un move, se inicializo y despues se mando la acción move.
             {
                 unsigned int safeNumber = modelPointer->move(THIS_PLAYER,previousMovingToLocation,NO_SAFE_NUMBER);      //Se ejecuta el move y se hace.
                 networkInterface->sendMove(previousMovingToLocation, safeNumber);
@@ -668,6 +671,10 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
         case SPY_PATROL:
             auxLoc=networkEvent->getSpyPatrolPos();
             modelPointer->peekGuardsCard(OTHER_PLAYER,&auxLoc,networkEvent->getSpyPatrolChoice());
+            networkInterface->sendPacket(ACK);
+            break;
+        case QUIT:
+            quit=true;
             networkInterface->sendPacket(ACK);
             break;
         default:
