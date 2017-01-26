@@ -529,7 +529,7 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
                 this->msgsToShow=aux;
                 status=WAITING_FOR_USER_CONFIRMATION; //Ahora el modelo va a esperar la respuesta del usuario.
                 this->prevLoc=prevLocation;
-                handleSpecialMoveFromMotion(locationToMove); //EN el caso en que se mueve a otra carte que pida cartel, se encarga esta función de arreglarlo.
+                handleSpecialMoveFromMotion(locationToMove,&cardWasVisible); //EN el caso en que se mueve a otra carte que pida cartel, se encarga esta función de arreglarlo.
             }
             else 
             {    tokens.triggerAlarm(prevLocation); setGuardsNewPath(prevLocation.floor); }
@@ -635,7 +635,7 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
         
         if(newCardType==LAVATORY)
         {
-            if(!board.isCardVisible(locationToMove))
+            if(!cardWasVisible)
                 tokens.lavatoryRevealed(locationToMove);
 
             if(locationToMove==guards[locationToMove.floor].getPosition() && tokens.isThereAStealthToken(locationToMove))
@@ -672,7 +672,7 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
     {   gameFinished=true; finishMsg = "ERROR: BBModel error: A peek action was called when it wasnt possible to do it!"; }
     return retVal;
 }
-void BurgleBrosModel::handleSpecialMoveFromMotion(CardLocation movingToTile)
+void BurgleBrosModel::handleSpecialMoveFromMotion(CardLocation movingToTile, bool *cardWasVisible)
 {
     CardName moveTo=board.getCardType(movingToTile);
     BurgleBrosPlayer * playerMoving = getP2Player(getPlayerOnTurn());
@@ -696,8 +696,8 @@ void BurgleBrosModel::handleSpecialMoveFromMotion(CardLocation movingToTile)
     }
     else if(moveTo==LAVATORY)
     {
-        if(board.isCardVisible(movingToTile))
-           tokens.lavatoryRevealed(movingToTile);
+        if(!(*cardWasVisible))
+        {   tokens.lavatoryRevealed(movingToTile); *cardWasVisible=true;    }
         if(movingToTile==guards[movingToTile.floor].getPosition() && tokens.isThereAStealthToken(movingToTile))
         {
             specialMotionCase=true;

@@ -124,7 +124,7 @@ class BurgleBrosModel : public Model
         void handlePersianKittyMove(unsigned int die);
         void handleChihuahuaMove(unsigned int die);
         void triggerSilentAlarm(unsigned int floor);
-        void handleSpecialMoveFromMotion(CardLocation movingTo);
+        void handleSpecialMoveFromMotion(CardLocation movingTo,bool *cardWasVisible);
         bool GuardInCamera();
         list<CardLocation> setGuardsNewPath(unsigned int floor);
         list<CardLocation> setGuardsNewPath(unsigned int floor,CardLocation thisTarget);
