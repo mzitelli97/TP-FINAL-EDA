@@ -51,6 +51,7 @@ public:
         bool sendOfferLoot(Loot i);
         bool sendPickUpLoot(Loot loot);
         bool sendRollDiceForLoot(unsigned int die);
+        bool sendSpyPatrol(CardLocation topOfNotShown,string userChoice);
 	~NetworkInterface();
 private:
 	double timeToBecomeServer;

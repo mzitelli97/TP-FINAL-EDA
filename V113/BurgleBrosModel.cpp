@@ -781,29 +781,49 @@ void BurgleBrosModel::pickLoot(PlayerId playerId, Loot lootToPick)
     {   gameFinished=true; finishMsg = "ERROR: BBModel error: A pick loot action was called when it wasnt possible to do it!"; }
 }
 
-void BurgleBrosModel::peekGuardsCard(PlayerId playerId, unsigned int guardsFloor)
+string BurgleBrosModel::peekGuardsCard(PlayerId playerId, CardLocation *guardCard, string prevChoice)
 {
     bool actionOk = false;
-    if(isPeekGuardsCardPossible(playerId, guardsFloor) && !gameFinished)
+    string userChoice;
+    if(isPeekGuardsCardPossible(playerId, guardCard->floor) && !gameFinished)
     {
+        unsigned int guardsFloor= guardCard->floor;
         guards[guardsFloor].setTopOfNotShownDeckVisible(true);      //Muestro la carta de arriba
         view->update(this);
-        vector<string>msgToShow({SPOTTER_SPECIAL_ACTION_TEXT,SPOTTER_TOP,SPOTTER_BOTTOM});
-        string userChoice = controller->askForSpentOK(msgToShow);   //Le pregunto si la quiere arriba o abajo
+        
+        if(prevChoice == SPOTTER_NO_PREV_CHOICE && playerId==THIS_PLAYER)   //Para este jugador le pregunta por patalla
+        {
+            vector<string>msgToShow({SPOTTER_SPECIAL_ACTION_TEXT,SPOTTER_TOP,SPOTTER_BOTTOM});
+            userChoice = controller->askForSpentOK(msgToShow);//Le pregunto si la quiere arriba o abajo
+        }
+        else
+        {
+            userChoice=prevChoice;      //Sino es lo pasado por argumento.
+            sleep(1); //Se duerme un segundo para mostrar la carta que saco el otro pj.
+        }    
+        
         if(userChoice==SPOTTER_TOP)
         {
             guards[guardsFloor].setTopOfNotShownDeckVisible(false); //Si la quería arriba no hago nada y dejo de mostrarla.
+            *guardCard=guards[guardsFloor].getTopCard();
+            guards[guardsFloor].pushCardToTheTop(*guardCard);
         }
         else
         {
             guards[guardsFloor].setTopOfNotShownDeckVisible(false);
-            guards[guardsFloor].pushTopCardToTheBottom();
+            if(playerId==THIS_PLAYER)
+                guards[guardsFloor].pushTopCardToTheBottom();
+            else
+                guards[guardsFloor].pushCardToTheBottom(*guardCard);
         }
         getP2Player(playerId)->decActions();
+        playerSpentFreeAction=true;
+        view->update(this);
         actionOk=true;
     }
     if(actionOk==false)
     {   gameFinished=true; finishMsg = "ERROR: BBModel error: A peek guards card action was called when it wasnt possible to do it!"; }
+    return userChoice;
 }
 
 void BurgleBrosModel::askForLoot(PlayerId playerId, Loot loot)
@@ -1115,7 +1135,7 @@ bool BurgleBrosModel::isPeekGuardsCardPossible(PlayerId playerId, unsigned int g
 {
     bool retVal = false;
     BurgleBrosPlayer * p = getP2Player(playerId);
-    if(p->isItsTurn() && p->getCharacter()== THE_SPOTTER && p->getPosition().floor == guardsFloor && status == WAITING_FOR_ACTION)
+    if(p->isItsTurn() && p->getCharacter()== THE_SPOTTER && p->getPosition().floor == guardsFloor && status == WAITING_FOR_ACTION && playerSpentFreeAction==false)
         retVal=true;
     return retVal;
 }

@@ -294,7 +294,11 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
         networkInterface->sendMove(location,0);
     }
     else if(action=="PEEK TOP CARD")
-        modelPointer->peekGuardsCard(THIS_PLAYER,location.floor);
+    {
+        CardLocation topOfNotShown;
+        string userChoice=modelPointer->peekGuardsCard(THIS_PLAYER,&topOfNotShown, SPOTTER_NO_PREV_CHOICE);
+        networkInterface->sendSpyPatrol(topOfNotShown,userChoice);
+    }
     else
     {
         for(int i = (int)TIARA; i <= (int)GOLD_BAR; i++)
@@ -521,7 +525,7 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
 {
     vector<string> message;
     Loot loot;
-    CardLocation guardPosition, guardDice;
+    CardLocation guardPosition, guardDice,auxLoc;
     list<GuardMoveInfo> guardMovement;
     vector<unsigned int> dice;
     analizeIfModelRequiresMoreActions(networkEvent);
@@ -651,11 +655,18 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
         case PLACE_CROW:
             modelPointer->placeCrow(OTHER_PLAYER, networkEvent->getPlaceCrowPos());
             networkInterface->sendPacket(ACK);
+            break;
         case ROLL_DICE_FOR_LOOT:
             modelPointer->rollDieForLoot(networkEvent->getDieForLoot());
             if(!modelPointer->dieForLootNeeded())            //Si no se necesita más roll for dices, continua el juego. O sea si el otro tenía el persian kitty y el chihuahua pasa 2 veces por aca y la segunda solo pasa por el continue.
                 modelPointer->continueGame();
             networkInterface->sendPacket(ACK);
+            break;
+        case SPY_PATROL:
+            auxLoc=networkEvent->getSpyPatrolPos();
+            modelPointer->peekGuardsCard(OTHER_PLAYER,&auxLoc,networkEvent->getSpyPatrolChoice());
+            networkInterface->sendPacket(ACK);
+            break;
         default:
             break;
 

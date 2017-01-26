@@ -231,7 +231,34 @@ void NetworkED::getGuardMovement(list<GuardMoveInfo> &guardInfo)
     }
 }
 
-
+string NetworkED::getSpyPatrolChoice()
+{
+    string retVal;
+    if(header==SPY_PATROL)
+    {
+        if(buffer[len-1]=='T')
+            retVal=SPOTTER_TOP;
+        else if (buffer[len-1]=='B')
+            retVal=SPOTTER_BOTTOM;
+    }
+    else 
+        error=true;
+    return retVal;
+}
+CardLocation NetworkED::getSpyPatrolPos()
+{
+    CardLocation retVal;
+    if(header==SPY_PATROL)
+    {
+        char temp =  buffer[len-1];   //Guardo el numero del safe.
+        buffer[len-1]= '\0';    //Pongo un terminador en su lugar
+        string aux =(char *) buffer;
+        retVal=protocolToCardLocation(aux); // Lo paso por string y lo convierto a card locatioon
+        buffer[len-1]=temp;         //Le vuelvo a asignar su número del safe.
+    }
+    else 
+        error=true;
+}
 NetworkED::~NetworkED() 
 {
 }

@@ -273,6 +273,19 @@ bool NetworkInterface::sendRollDiceForLoot(unsigned int die)
     return p2networking->sendPacket(ROLL_DICE_FOR_LOOT,(char *) buffer, 1);
 }
 
+bool NetworkInterface::sendSpyPatrol(CardLocation topOfNotShown,string userChoice)
+{
+    unsigned char buffer[BUFSIZE];
+    string pos=cardLocationToProtocol(topOfNotShown);
+    memcpy(buffer, pos.c_str(), pos.length());
+    if(userChoice==SPOTTER_BOTTOM)
+        buffer[PROTOCOL_LOCATION_LENGTH]='B';
+    else
+        buffer[PROTOCOL_LOCATION_LENGTH]='T';
+    return p2networking->sendPacket(SPY_PATROL,(char *) buffer, PROTOCOL_LOCATION_LENGTH+1);
+}
+
+
 NetworkInterface::~NetworkInterface()
 {
 }

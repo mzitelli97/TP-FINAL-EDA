@@ -36,6 +36,7 @@
 #define TRIGGER_ALARM_TEXTB "Trigger alarm"
 #define SPOTTER_TOP         "Top"
 #define SPOTTER_BOTTOM      "Bottom"
+#define SPOTTER_NO_PREV_CHOICE "..."
 
 
 typedef enum {WAITING_FOR_ACTION, WAITING_FOR_USER_CONFIRMATION, WAITING_FOR_DICE, WAITING_FOR_GUARD_INIT, WAITING_FOR_LOOT, IN_LOOT_EXCHANGE, WAITING_DICE_FOR_LOOT} ModelStatus;
@@ -92,7 +93,7 @@ class BurgleBrosModel : public Model
         void askForLoot(PlayerId playerId, Loot loot);
         void offerLoot(PlayerId playerId, Loot loot);
         void escape(PlayerId playerId, CardLocation stairTile);
-        void peekGuardsCard(PlayerId playerId, unsigned int guardsFloor);
+        string peekGuardsCard(PlayerId playerId, CardLocation *guardCard, string prevChoice);
         void guardMove(list<GuardMoveInfo> &guardMovement);
         /*Prueba para ver si se pueden realizar ciertas acciones*/
         bool isMovePosible(PlayerId playerId,CardLocation tileToMove);  //Pregunta si una movida es posible
