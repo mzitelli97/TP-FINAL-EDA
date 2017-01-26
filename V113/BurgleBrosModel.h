@@ -124,6 +124,7 @@ class BurgleBrosModel : public Model
         void handlePersianKittyMove(unsigned int die);
         void handleChihuahuaMove(unsigned int die);
         void triggerSilentAlarm(unsigned int floor);
+        void handleSpecialMoveFromMotion(CardLocation movingTo);
         bool GuardInCamera();
         list<CardLocation> setGuardsNewPath(unsigned int floor);
         list<CardLocation> setGuardsNewPath(unsigned int floor,CardLocation thisTarget);
@@ -149,6 +150,9 @@ class BurgleBrosModel : public Model
         bool guardFinishedMoving;       //Este se podría poner dentro del guard después
         Loot lootOfferedOrAskedFor;
         unsigned int rollForLootCount;
+        bool specialMotionCase;
+        vector<string> auxMsgsToShow;
+        
 };
 #endif
 
