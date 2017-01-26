@@ -147,7 +147,7 @@ string BurgleBrosController::getUsersResponse(vector<string> &message)
                 retVal=GET_BACK_TEXTB;
         }
     }
-          
+    packetToAnalize.clear();
     return retVal;
 }
 
