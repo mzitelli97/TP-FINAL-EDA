@@ -314,8 +314,9 @@ vector<string> BurgleBrosModel::getMsgToShow()
 {
     return msgsToShow;
 }
-void BurgleBrosModel::userDecidedTo(string userChoice)
+bool BurgleBrosModel::userDecidedTo(string userChoice)
 {   /*Esta funcion se encarga de procesar la elección del usuario a entrar a tiles especiales, del de este jugador y del otro jugador.*/
+    bool guardHasToMove=false;
     BurgleBrosPlayer * movingPlayer= getP2Player(getPlayerOnTurn()); 
     vector<string> fingerPrint({ENTER_FINGERPRINT_TEXT});
     vector<string> lavatory({LAVATORY_TEXT});
@@ -329,7 +330,11 @@ void BurgleBrosModel::userDecidedTo(string userChoice)
         if(userChoice==USE_HACK_TOKEN_TEXTB)        // y uso hack tokens
             tokens.removeOneHackTokenOf(COMPUTER_ROOM_MOTION);
         else if(userChoice==TRIGGER_ALARM_TEXTB)        //Sino, triggerea la alarma
-        {    tokens.triggerAlarm(prevLoc); setGuardsNewPath(prevLoc.floor);}
+        {    
+            tokens.triggerAlarm(prevLoc); setGuardsNewPath(prevLoc.floor); 
+            if(movingPlayer->getcurrentActions() == 0 && getPlayerOnTurn() == THIS_PLAYER) //SI es de este player justo cuando termina su turno, se tiene que enviar el paquete del guardia.
+                guardHasToMove=true;
+        }
     }
     else if(msgsToShow[2]==deadbolt[2])
     {
@@ -349,6 +354,8 @@ void BurgleBrosModel::userDecidedTo(string userChoice)
         {
               tokens.triggerAlarm(movingPlayer->getPosition());
               setGuardsNewPath(movingPlayer->getPosition().floor); //Así se pone el dado a donde tiene que ir, este lo necesitaba desde el guardia
+              if(movingPlayer->getcurrentActions() == 0 && getPlayerOnTurn() == THIS_PLAYER) //SI es de este player justo cuando termina su turno, se tiene que enviar el paquete del guardia.
+                    guardHasToMove=true;
         }
     }
     else if(msgsToShow[2]==laser[2])
@@ -359,11 +366,17 @@ void BurgleBrosModel::userDecidedTo(string userChoice)
             tokens.removeOneHackTokenOf(COMPUTER_ROOM_LASER);
         else if(userChoice==SPEND_ACTION_TEXTB)
             movingPlayer->decActions();
+        if(movingPlayer->getcurrentActions() == 0 && getPlayerOnTurn() == THIS_PLAYER && msgsToShow.size()==5 && msgsToShow[4]==USE_HACK_TOKEN_TEXTB && userChoice==TRIGGER_ALARM_TEXTB)
+            guardHasToMove=true; //En el caso que: this player se mete a un laser y se queda sin acciones, pero tenía token y decide no usar un token, no se manda ningun paquete, por lo cual se tiene que manda el paquete de guardmove.
     }
     else if(msgsToShow[2]==lavatory[2])
     {
         if(userChoice ==USE_MY_STEALTH_TOKEN_TEXTB)
+        {
             movingPlayer->decLives();
+            if(movingPlayer->getcurrentActions() == 0 && getPlayerOnTurn() == THIS_PLAYER) //SI es de este player justo cuando termina su turno, se tiene que enviar el paquete del guardia.
+                    guardHasToMove=true;
+        }
         else if(userChoice ==USE_LAVATORY_TOKEN_TEXTB)
             tokens.useLavatoryToken();
     }
@@ -392,6 +405,7 @@ void BurgleBrosModel::userDecidedTo(string userChoice)
     view->update(this);
     checkTurns();
     view->update(this);
+    return guardHasToMove;
 }
 
 void BurgleBrosModel::setDice(vector<unsigned int> &currDice)

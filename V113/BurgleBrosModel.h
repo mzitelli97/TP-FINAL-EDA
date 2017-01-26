@@ -72,7 +72,7 @@ class BurgleBrosModel : public Model
         CardLocation locationOfComputerRoomOrLavatory(CardName computerRoomOrLavatory);
         ModelStatus getModelStatus();
         vector<string> getMsgToShow();
-        void userDecidedTo(string decision);
+        bool userDecidedTo(string decision); // Devuelve si hay que llamar a move guard.
         /*Otras funciones*/
         void setDice(vector<unsigned int> &dice);
         bool dieForLootNeeded();      //Si es necesario tirar un dado para el chihuahua o persian kitty

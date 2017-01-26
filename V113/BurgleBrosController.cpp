@@ -525,6 +525,7 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
 {
     vector<string> message;
     Loot loot;
+    bool guardHasToMove;
     CardLocation guardPosition, guardDice,auxLoc;
     list<GuardMoveInfo> guardMovement;
     vector<unsigned int> dice;
@@ -568,7 +569,9 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             else if(modelPointer->getModelStatus()==WAITING_FOR_USER_CONFIRMATION)   //Si se esperaba la confirmación del usuario para una accion propia del jugador de esta cpu:
             {
                 message=modelPointer->getMsgToShow(); //Se obtiene el mensaje a mostrar,
-                modelPointer->userDecidedTo(getUsersResponse(message));//Esta función devuelve lo que elige el jugador en el cartelito. y le pasa la respuesta al modelo.
+                guardHasToMove = modelPointer->userDecidedTo(getUsersResponse(message));//Esta función devuelve lo que elige el jugador en el cartelito. y le pasa la respuesta al modelo.
+                if(guardHasToMove)      //Si se termino una jugada que no mando paquete y termino su turno, se tiene que enviar el paquete del guardia.
+                {   modelPointer->guardMove(guardMovement); networkInterface->sendGMove(guardMovement);}
             }
             else if(modelPointer->getModelStatus()== WAITING_FOR_DICE)
             {
