@@ -49,6 +49,7 @@ class BurgleBrosModel : public Model
         Info2DrawGuard getInfo2DrawGuard(unsigned int floor);
 	list<Info2DrawTokens> getInfo2DrawTokens();
         vector<unsigned int> getInfo2DrawExtraDices();
+        pair<bool,CardLocation> getGoldBarInfo();
         /* Acciones que se puede llamar públicamente*/
         bool pass(PlayerId playerId);
         bool peek(PlayerId playerId, CardLocation locationToPeek);

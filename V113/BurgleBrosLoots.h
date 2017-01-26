@@ -33,6 +33,7 @@ public:
         Loot pickUpKitty(PlayerId owner,CardLocation playerLocation);
         bool areLootsOnFloor();
         Loot getLoot(PlayerId owner); //Devuelve el loot que estaba en la cima de la pila y guarda en su info interna el loot que sac� y a que jugador le pertenece.
+        pair<bool,CardLocation> getGoldBarOnFloor();
 	~BurgleBrosLoots();
 private:
 	void shuffleDeck();

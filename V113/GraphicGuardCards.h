@@ -17,9 +17,15 @@
 #include "GraphicItem.h"
 
 
+typedef struct
+{
+    unsigned int floor;
+    bool shownDeck;
+}auxInfoGuard;
+
 class GraphicGuardCards : public GraphicItem{
 public:
-    GraphicGuardCards(ALLEGRO_BITMAP * image, unsigned int floor);
+    GraphicGuardCards(ALLEGRO_BITMAP * image, unsigned int floor, bool isShownDeck);
     GraphicGuardCards(const GraphicGuardCards& orig);
     virtual ~GraphicGuardCards();
     ItemInfo IAm() override;
@@ -29,7 +35,9 @@ public:
     void setTopOfNonVisibleDeck(bool visible, ALLEGRO_BITMAP *target);
 private:
     list<ALLEGRO_BITMAP *> cards;
-    unsigned int floor;
+    void setPosition();
+    void drawOnZoom();
+    auxInfoGuard properties;
     bool topOfNonVisibleDeckShown;
     ALLEGRO_BITMAP * topOfNonVisibleDeckTarget;
 };

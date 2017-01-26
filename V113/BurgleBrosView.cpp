@@ -128,15 +128,7 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
         auxButtons_list.push_back(auxButton);
         if(i == (int)MUTE_BUTTON) i++;          //this is because there are the MUTE and the UNMUTE buttons
     }
-    /*auxButton = new GraphicButton(imageLoader.getImageP(PASS_BUTTON), nullptr, PASS_BUTTON, al_get_display_width(display), al_get_display_height(display));
-    auxButtons_list.push_back(auxButton);
-    auxButton = new GraphicButton(imageLoader.getImageP(QUIT_BUTTON), nullptr, QUIT_BUTTON, al_get_display_width(display), al_get_display_height(display));
-    auxButtons_list.push_back(auxButton);
-    auxButton = new GraphicButton(imageLoader.getImageP(HELP_BUTTON), nullptr, HELP_BUTTON, al_get_display_width(display), al_get_display_height(display));
-    auxButtons_list.push_back(auxButton);
-    auxButton = new GraphicButton(imageLoader.getImageP(MUTE_BUTTON), nullptr, MUTE_BUTTON, al_get_display_width(display), al_get_display_height(display));
-    auxButtons_list.push_back(auxButton);*/
-      
+          
     //creo una lista de graphicCharacterscards
     list<GraphicItem* > auxCharactersCards_list;
     
@@ -160,10 +152,13 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     
     for(int i = 0; i < BOARD_STANDARD_FLOORS; i++)
     {
-        GraphicGuardCards *auxGuard_card = new GraphicGuardCards(imageLoader.getImageBackP(infoGuard[i].position),i);
+        GraphicGuardCards *auxGuard_card = new GraphicGuardCards(imageLoader.getImageBackP(infoGuard[i].position),i, false);
         auxGuard_card->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
-        auxGuard_card->push_top_card(imageLoader.getImageP(infoGuard[i].shownDeck.front()));
+        GraphicGuardCards *auxGuard_card2 = new GraphicGuardCards(imageLoader.getImageP(infoGuard[i].shownDeck.front()),i, true);
+        auxGuard_card2->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
+        auxGuard_card2->push_top_card(imageLoader.getImageP(infoGuard[i].shownDeck.front()));
         auxGuard_list.push_back((GraphicItem *)auxGuard_card);
+        auxGuard_list.push_back((GraphicItem *)auxGuard_card2);
     }
     
     //**********push sobre la primera capa 
@@ -342,19 +337,29 @@ void BurgleBrosView::updateLoots(BurgleBrosModel * model)
 {
     list<Info2DrawLoot> aux = model->getInfo2DrawLoot();
     map<PlayerId, unsigned int> lootsCount;
+    pair<bool,CardLocation> goldBar;
        
     list<list<GraphicItem *>>::iterator itemsList = deleteList(FIRST_LAYER, LOOT_SHOW_LIST);
     for(list<Info2DrawLoot>::iterator newInfo = aux.begin() ; newInfo!= aux.end(); newInfo++)
     {
-        GraphicLoot *p = new GraphicLoot(newInfo->owner, imageLoader.getImageP(newInfo->loot));
+        GraphicLoot *p = new GraphicLoot(newInfo->owner, imageLoader.getImageP(newInfo->loot), false);
         p->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
-        if(onZoom && (newInfo->owner == lootZoomed)) 
+        if(onZoom && newInfo->owner == lootZoomed && lootZoomed != NON_PLAYER)
             p->setZoom(true);
         p->setPosition(lootsCount[newInfo->owner]++);
         itemsList->push_back((GraphicItem *) p);
         if(newInfo->loot == GOLD_BAR)
         {
-            //newInfo++;        //always after a goldBar there is another goldBar
+            goldBar = model->getGoldBarInfo();
+            if(goldBar.first == true)           //there is a gold bar on the floor
+            {
+                GraphicLoot *p = new GraphicLoot(newInfo->owner, imageLoader.getImageP(newInfo->loot), true);
+                p->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
+                if(onZoom && goldBar.second.floor == floorZoomed) p->setZoom(true);
+                p->setPosition(goldBar.second);
+                itemsList->push_back((GraphicItem *) p);
+                newInfo++;        //always after a goldBar there is another goldBar
+            }	    
         }
     }
     
@@ -431,8 +436,7 @@ void BurgleBrosView::updateGuards(BurgleBrosModel* model)
                 guard++;
             }
             guard++;    //point to next floor
-            if(onZoom && i == floorZoomed) 
-                zoom = true;
+            if(onZoom && i == floorZoomed) zoom = true;
             else zoom = false;
             guard_item->setZoom(zoom);
             guard_item->setInitialized(info_guard.initialized);
@@ -442,7 +446,9 @@ void BurgleBrosView::updateGuards(BurgleBrosModel* model)
             guard_die->setPosition(info_guard.diePosition);
             guard_die->setNumber(imageLoader.getImageP(RED_DICE, info_guard.dieNumber));
 
-            GraphicGuardCards * it_cards = dynamic_cast<GraphicGuardCards *> (*it);
+            GraphicGuardCards * it_cards = dynamic_cast<GraphicGuardCards *> (*(++it));
+            if(onZoom && i == guardZoomed) it_cards->setZoom(true);
+            else it_cards->setZoom(false);
             it_cards->setTopOfNonVisibleDeck(info_guard.isTopOfNotShownDeckVisible, imageLoader.getImageP(info_guard.topOfNotShownDeck));
             it_cards->clearShownCards();
             while(!info_guard.shownDeck.empty())
@@ -466,7 +472,7 @@ void BurgleBrosView::updateExtraDices(BurgleBrosModel* model)
         {
             GraphicEDices * dice = new GraphicEDices(imageLoader.getImageP(WHITE_DICE, info_dices[i]));
             dice->setScreenDimentions(al_get_display_width(display),al_get_display_height(display));
-            if(onZoom) dice->toggleZoom();
+            if(onZoom && floorZoomed != NO_FLOOR_ZOOMED) dice->toggleZoom();
             dice->setPosition(i);
             it_itemType->push_back(dice);
         }

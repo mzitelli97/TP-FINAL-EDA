@@ -209,6 +209,12 @@ vector<unsigned int> BurgleBrosModel::getInfo2DrawExtraDices()
     return dice.getCurrDice();
 }
 
+pair<bool, CardLocation> BurgleBrosModel::getGoldBarInfo()
+{
+    return loots.getGoldBarOnFloor();
+}
+
+
 PlayerId BurgleBrosModel::getPlayerOnTurn()
 {
     if(myPlayer.isItsTurn())

@@ -172,6 +172,12 @@ void BurgleBrosLoots::setNewLootOwner(Loot loot, PlayerId playerId)
     
 }
 
+pair<bool, CardLocation> BurgleBrosLoots::getGoldBarOnFloor()
+{
+    return goldBarOnFloor;
+}
+
+
 
 BurgleBrosLoots::~BurgleBrosLoots()
 {

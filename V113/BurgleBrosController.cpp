@@ -14,6 +14,7 @@
 #include "BurgleBrosController.h"
 #include "MouseED.h"
 #include "GraphicMenuItem.h"
+#include "GraphicGuardCards.h"
 #include <algorithm>
 
 using namespace std;
@@ -68,6 +69,7 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
             CardLocation * auxLocation;
             PlayerId * auxPlayer;
             auxInfo * menuInfo;
+            auxInfoGuard * guardInfo;
             unsigned int * floor;
             switch(temp.type)
             {
@@ -87,8 +89,11 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                     view->update(modelPointer);
                     break;
                 case GUARD_CARDS_CLICK:
-                    floor = (unsigned int *)temp.info;
-                    view->showMenu(modelPointer->getPosibleActionsToGuard(modelPointer->getPlayerOnTurn(), *floor), aux, *floor);
+                    guardInfo = (auxInfoGuard *)temp.info;
+                    if(guardInfo->shownDeck == true)
+                        view->zoomGuardDeck(guardInfo->floor);
+                    else
+                        modelPointer->peekGuardsCard(modelPointer->getPlayerOnTurn(),guardInfo->floor);
                     view->update(modelPointer);
                     break;
                 case CHAR_CARD_CLICK:
