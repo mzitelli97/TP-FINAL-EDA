@@ -768,12 +768,14 @@ void BurgleBrosModel::pickLoot(PlayerId playerId, Loot lootToPick)
             tokens.placePersianKittyToken(kittyInfo);
             loots.setNewLootOwner(PERSIAN_KITTY, playerId);
             p->attachLoot(PERSIAN_KITTY);
+            view->update(this);
             actionOk=true;
         }
         else if(lootToPick==GOLD_BAR)
         {
             loots.pickGoldBarOnFloor(playerId, p->getPosition());
             p->attachLoot(GOLD_BAR);
+            view->update(this);
             actionOk=true;
         }
     }
@@ -1468,7 +1470,7 @@ bool BurgleBrosModel::dieForLootNeeded() //Si es necesario tirar un dado para el
 {
     bool retVal=false;
     BurgleBrosPlayer *p=getP2Player(getPlayerOnTurn());
-    if(p->hasLoot(PERSIAN_KITTY) || p->hasLoot(CHIHUAHUA)  && status==WAITING_DICE_FOR_LOOT && rollForLootCount==0) //Si se esperaba por el dice for loot y todavía no se tiraron los dados si
+    if((p->hasLoot(PERSIAN_KITTY) || p->hasLoot(CHIHUAHUA))  && status==WAITING_DICE_FOR_LOOT && rollForLootCount==0) //Si se esperaba por el dice for loot y todavía no se tiraron los dados si
         retVal=true;
     else if(p->hasLoot(PERSIAN_KITTY) && p->hasLoot(CHIHUAHUA) && status==WAITING_DICE_FOR_LOOT && rollForLootCount==1 && board.canKittyMove(p->getPosition()))
         retVal=true; //Tambien si tenía los dos loots y tiró por el chihuahua, y ahora si el kitty puede moverse se tiene
@@ -1506,7 +1508,7 @@ void BurgleBrosModel::handlePersianKittyMove(unsigned int die)
         if(getPlayerOnTurn()==THIS_PLAYER)      //Si es este jugador tira los dados
             itWillMove=dice.persianKittyShallMove();
         else if(getPlayerOnTurn()==OTHER_PLAYER)    //SIno pone el dado recibido
-            itWillMove=dice.persianKittyShallMove();
+            itWillMove=dice.persianKittyShallMove(die);
         if(itWillMove)
         {
             p->deattachLoot(PERSIAN_KITTY);
@@ -1515,8 +1517,8 @@ void BurgleBrosModel::handlePersianKittyMove(unsigned int die)
             persianKittyToken.first = true;
             persianKittyToken.second = board.getKittyMovingPos(p->getPosition());
             tokens.placePersianKittyToken(persianKittyToken);
-            view->update(this);
         }
+        view->update(this);
     }
     rollForLootCount++;
 }
@@ -1534,8 +1536,8 @@ void BurgleBrosModel::handleChihuahuaMove(unsigned int die)
         {
             tokens.triggerAlarm(p->getPosition());
             setGuardsNewPath(p->getPosition().floor);
-            view->update(this);
         }
+        view->update(this);
     }
     rollForLootCount++;
 }
