@@ -31,6 +31,38 @@ BurgleBrosModel::BurgleBrosModel()
     rollForLootCount=0;
     specialMotionCase=false;
 }
+void BurgleBrosModel::reset()
+{
+    BurgleBrosGuard aux1(0);
+    BurgleBrosGuard aux2(1);
+    BurgleBrosGuard aux3(2);
+    BurgleBrosBoard auxBoard;
+    BurgleBrosLoots auxLoots;
+    BurgleBrosTokens auxTokens;
+    BurgleBrosDices auxDice;
+    BurgleBrosPlayer auxPlayer;
+    guards[0]= aux1;
+    guards[1]= aux2;
+    guards[2]= aux3;
+    board=auxBoard;
+    board.initBoard();
+    loots=auxLoots;
+    tokens=auxTokens;
+    dice=auxDice;
+    auxPlayer.setName(myPlayer.getName());
+    myPlayer=auxPlayer;
+    auxPlayer.setName(otherPlayer.getName());
+    otherPlayer=auxPlayer;
+    gameFinished=false;
+    playerSpentFreeAction=false;
+    status=WAITING_FOR_ACTION;
+    guardFinishedMoving=false;
+    rollForLootCount=0;
+    specialMotionCase=false;
+    finishMsg.clear();
+    auxMsgsToShow.clear();
+}
+
 void BurgleBrosModel::attachView(View * view)
 {
     this->view = view;
@@ -1031,11 +1063,14 @@ void BurgleBrosModel::checkIfWonOrLost()
         gameFinished=true;
         finishMsg= "WON";
     }
-    /*else if(myPlayer.getCurrLifes()==0 || otherPlayer.getCurrLifes()==0)
+#ifndef INMORTAL
+    else if(myPlayer.getCurrLifes()==0 || otherPlayer.getCurrLifes()==0)
     {
         gameFinished=true;
         finishMsg= "LOST";
-    }*/
+    }
+    
+#endif
 }
 
 

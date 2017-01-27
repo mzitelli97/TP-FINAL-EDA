@@ -21,7 +21,7 @@
 #include "NetworkInterface.h"
 
 typedef enum{INITIALIZING, PLAYING}GameStatus;
-
+typedef enum{FIRST_DECIDING_PLAYER, SECOND_DECIDING_PLAYER}PlayAgainId;//Para cuando se decide jugar de vuelta y se toma como server o cliente, para diferenciarlos esta esto.
 typedef enum{USER_QUIT, GAME_WON}QuitCause;
 
 typedef struct
@@ -34,6 +34,7 @@ typedef struct
 
 #define DEFAULT_WIN_MSG "WON!","You have won the game","Now that youve won the game, you can choose if either play again or quit.","Play again","Quit"
 #define DEFAULT_LOST_MSG "LOST!","You have lost the game","Now that youve lost the game, you can choose if either play again or quit.","Play again","Quit"
+#define DEFAULT_PLAY_AGAIN_MSG "Play again?", "The game has finished", "The other Player has chosen to play again, do you agree?", "Play again", "Quit"
 
 class BurgleBrosController:public Controller {
 public:
@@ -51,9 +52,12 @@ public:
     
     virtual ~BurgleBrosController();
 private:
+    void handlePlayAgain();
     void handleLootsExchange(NetworkED * networkEvent);
     void clientInitRoutine(NetworkED *networkEvent);
     void serverInitRoutine(NetworkED *networkEvent);
+    void firstDecidedRoutine(NetworkED *networkEvent);
+    void secondDecidedRoutine(NetworkED *networkEvent);
     void interpretNetworkAction(NetworkED *networkEvent);
     void doOnePacketAction(NetworkED *networkEvent);
     void interpretAction(string action, CardLocation location);
@@ -70,9 +74,11 @@ private:
     BurgleBrosModel *modelPointer;
     BurgleBrosView *view;
     bool aMoveActionPending;
+    bool iStarted;
     CardLocation previousMovingToLocation;
     string thisPlayerName;
     bool quit;
+    PlayAgainId whichPlayer;
     GameStatus status;
     QuitCause quitCause;
     bool waiting4QuitAck;

@@ -74,6 +74,17 @@ BurgleBrosView::~BurgleBrosView() {
     board = model->getElements()->getBoard();
 }
 */
+
+void BurgleBrosView::reset()
+{
+    this->graphicInterface.clear(); //Esto después se debería hacer con deletes.
+    onZoom = false;
+    floorZoomed = NO_FLOOR_ZOOMED;
+    guardZoomed = NO_GUARD_ZOOMED;
+    playerZoomed = NON_PLAYER;
+    lootZoomed = NON_PLAYER;
+}
+
 void BurgleBrosView::ViewInit(BurgleBrosModel* model)
 {
     /*VEO SI ANDA ASI O SINO VER CASTEO CON */    

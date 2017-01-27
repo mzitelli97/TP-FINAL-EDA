@@ -41,6 +41,7 @@ public:
     ItemInfo itemFromClick(Point point);
     
     virtual void update(Model * model);
+    void reset();
     void ViewInit(BurgleBrosModel* model);
     void showMenu(list<string> options, Point click, CardLocation tile);
     void showMenu(list<string> options, Point click, unsigned int floor);

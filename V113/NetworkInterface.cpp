@@ -10,7 +10,7 @@ using namespace std;
 
 bool packetHasNoDataField(PerezProtocolHeader h)
 {
-    return (h==ACK || h==AGREE || h==DISAGREE || h==NAME || h==YOU_START || h==I_START || h==PASS || h==WE_WON || h==WE_LOST || h==GAME_OVER || h==QUIT || h==ERRORR);
+    return (h==ACK || h==AGREE || h==DISAGREE || h==NAME || h==YOU_START || h==I_START || h==PASS || h==WE_WON || h==WE_LOST || h==GAME_OVER  || h==PLAY_AGAIN || h==QUIT || h==ERRORR);
 }
 
 
