@@ -207,7 +207,8 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                 case EXIT_BUTTON_CLICK:
                     if(view->yesNoMessageBox(exitMsg)==1)
                     {
-                        quit=true;
+                        networkInterface->sendPacket(QUIT);
+                        waiting4QuitAck=true;
                         quitCause=USER_QUIT;
                     }
                     break;
@@ -388,6 +389,8 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
                 modelPointer->move(OTHER_PLAYER, networkEvent->getPos(),networkEvent->getSafeNumber());
             if(modelPointer->hasGameFinished() && modelPointer->getFinishMsg() == "WON")
                 networkInterface->sendPacket(WE_WON);
+            else if(modelPointer->hasGameFinished() && modelPointer->getFinishMsg()== "LOST")
+                networkInterface->sendPacket(WE_LOST);
             else
                 networkInterface->sendPacket(ACK);
             break;
