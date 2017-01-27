@@ -200,6 +200,7 @@ Info2DrawPlayer BurgleBrosModel:: getInfo2DrawPlayer(PlayerId player)
     info.position=p->getPosition();
     info.currActions=p->getcurrentActions();
     info.turn = p->isItsTurn();
+    info.isOnHelicopter = p->isOnHelicopter();
     return info;
 }
 
@@ -844,7 +845,7 @@ bool BurgleBrosModel::isAskForLootPossible(PlayerId playerId, CardLocation tile,
     bool retVal = false;
     BurgleBrosPlayer * p = getP2Player(playerId);
     BurgleBrosPlayer * o = getP2OtherPlayer(playerId);
-    if(p->isItsTurn() && p->getPosition() == tile && o->getPosition() == tile && o->hasLoot(loot))
+    if(p->isItsTurn() && p->getPosition() == tile && o->getPosition() == tile && o->hasLoot(loot) && !o->isOnHelicopter())
     {
         retVal = true;
         if(loot == GOLD_BAR && p->hasLoot(loot))
@@ -858,7 +859,7 @@ bool BurgleBrosModel::isOfferLootPossible(PlayerId playerId, CardLocation tile, 
     bool retVal = false;
     BurgleBrosPlayer * p = getP2Player(playerId);
     BurgleBrosPlayer * o = getP2OtherPlayer(playerId);
-    if(p->isItsTurn() && p->getPosition() == tile && o->getPosition() == tile && p->hasLoot(loot))
+    if(p->isItsTurn() && p->getPosition() == tile && o->getPosition() == tile && p->hasLoot(loot) && !o->isOnHelicopter())
     {
         retVal = true;
         if(loot == GOLD_BAR && o->hasLoot(loot))

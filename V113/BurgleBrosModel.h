@@ -22,17 +22,17 @@
 #define ASK_FOR_LOOT_TEXT           "Loot Request",     "Confirm Request","The other player ask you for the loot: "
 #define SPOTTER_SPECIAL_ACTION_TEXT "Spotter guard peek", "Complete action", "You have spotted the top of the guard deck. Would you like to let it on the top or put it at the bottom?"
 /*Botones de los dialog box:*/
-#define ACCEPT_TEXTB "Accept"
-#define DECLINE_TEXTB "Decline"
-#define USE_LAVATORY_TOKEN_TEXTB "Use Lavatory stealth token"
-#define USE_MY_STEALTH_TOKEN_TEXTB "Use one of my stealth tokens"
-#define SPEND_ACTIONS_TEXTB "Spend actions"
-#define GET_BACK_TEXTB  "Go back"
-#define SPEND_ACTION_TEXTB "Spend action"
-#define USE_HACK_TOKEN_TEXTB "Use hack token"
-#define TRIGGER_ALARM_TEXTB "Trigger alarm"
-#define SPOTTER_TOP         "Top"
-#define SPOTTER_BOTTOM      "Bottom"
+#define ACCEPT_TEXTB                "Accept"
+#define DECLINE_TEXTB               "Decline"
+#define USE_LAVATORY_TOKEN_TEXTB    "Use Lavatory stealth token"
+#define USE_MY_STEALTH_TOKEN_TEXTB  "Use one of my stealth tokens"
+#define SPEND_ACTIONS_TEXTB         "Spend actions"
+#define GET_BACK_TEXTB              "Go back"
+#define SPEND_ACTION_TEXTB          "Spend action"
+#define USE_HACK_TOKEN_TEXTB        "Use hack token"
+#define TRIGGER_ALARM_TEXTB         "Trigger alarm"
+#define SPOTTER_TOP                 "Top"
+#define SPOTTER_BOTTOM              "Bottom"
 
 class BurgleBrosModel : public Model
 {
