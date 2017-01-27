@@ -580,7 +580,7 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
         wall->setLocation(infoWalls[i+NUMBER_OF_WALLS * floor].FrontCard, infoWalls[i+NUMBER_OF_WALLS * floor].RearCard);
     }
     
-    Info2DrawPlayer player = model->getInfo2DrawPlayer(model->getPlayerOnTurn());
+    //Info2DrawPlayer player = model->getInfo2DrawPlayer(model->getPlayerOnTurn());
     it = accessGraphicItems(FIRST_LAYER, BUTTONS_LIST);
     advance(it, floor);                                             //go to the zoom icon of the floor zoomed
     GraphicButton * button = dynamic_cast<GraphicButton *> (*it);
@@ -592,7 +592,10 @@ void BurgleBrosView::zoomFloor(unsigned int floor, Model * auxModel)
         button = dynamic_cast<GraphicButton *> (*it);
         button->toggleZoom();
         if(i == (int)MUTE_BUTTON) i++;         //this is because there are the MUTE and the UNMUTE buttons
-    }   
+    }
+    
+    
+    
 }
 
 void BurgleBrosView::zoomLoot(PlayerId owner)

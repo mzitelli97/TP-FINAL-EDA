@@ -43,13 +43,12 @@ void GraphicEDices::setPosition(unsigned int number)
     {
         width += DICE_WIDTH/2;
         height += DICE_HEIGHT/2;
-        min.x -= DICE_WIDTH;
-        max.x -= DICE_WIDTH;
     }
     if(width < height) width = height;
     else height = width;
     
     min.x = FLOOR_MIN_X + TOTAL_FLOORS_WIDTH;
+    if(zoomed) min.x = totalWidth - width - width/10.0;
     min.y = FLOOR_MIN_Y + number*height + (number+1)*SPACE_BETWEEN_DICES;
     max.x = min.x + width;
     max.y = min.y + height;
