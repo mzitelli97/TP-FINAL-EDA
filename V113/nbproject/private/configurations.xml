@@ -13,6 +13,8 @@
         <gdb_interceptlist>
           <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
         </gdb_interceptlist>
+        <gdb_signals>
+        </gdb_signals>
         <gdb_options>
           <DebugOptions>
           </DebugOptions>
@@ -30,10 +32,10 @@
           <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 127,0.1.0 192.168.1.107</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 127,0.0.1 192.168.1.107</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 192.168.1.107</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 127.0.0.1</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 192.168.1.69</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 127.0.0.1</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}" PEPE 192.168.1.69</runcommand>
+        <runcommand>"${OUTPUT_PATH}" PEPE 127.0.0.1</runcommand>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>
