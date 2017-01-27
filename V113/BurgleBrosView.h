@@ -25,6 +25,8 @@ typedef enum {MENU_ITEM_LIST} ThirdLayerLists;
 #define DROPDOWNS_MENUS_LIST 0
 #define INIT_QUANTITY_LAYERS 3
 
+//#define FULLSCREEN
+
 class BurgleBrosView : public View{
 public:
     BurgleBrosView();

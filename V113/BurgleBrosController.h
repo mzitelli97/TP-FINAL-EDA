@@ -20,7 +20,7 @@
 #include "Controller.h"
 #include "NetworkInterface.h"
 
-typedef enum{INITIALIZING, PLAYING, GAME_ENDED}GameStatus;
+typedef enum{INITIALIZING, PLAYING}GameStatus;
 
 typedef enum{USER_QUIT, GAME_WON}QuitCause;
 
@@ -33,7 +33,7 @@ typedef struct
 
 
 #define DEFAULT_WIN_MSG "WON!","You have won the game","Now that youve won the game, you can choose if either play again or quit.","Play again","Quit"
-
+#define DEFAULT_LOST_MSG "LOST!","You have lost the game","Now that youve lost the game, you can choose if either play again or quit.","Play again","Quit"
 
 class BurgleBrosController:public Controller {
 public:
@@ -58,8 +58,11 @@ private:
     void doOnePacketAction(NetworkED *networkEvent);
     void interpretAction(string action, CardLocation location);
     void analizeIfModelRequiresMoreActions(NetworkED *networkEvent);
+    void handleWonOrLost(PerezProtocolHeader msg);
     void checkGameStatus();
+    void resetGame();
     NetworkInterface * networkInterface;
+    bool firstInitDone;
     CommunicationRole communicationRole;
     unsigned int initPacketCount;
     AuxInitInfo auxInitInfo[NUMBER_OF_PLAYERS]; 

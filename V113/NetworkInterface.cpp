@@ -50,7 +50,7 @@ bool NetworkInterface::standardConnectionStart(string &ip)
                 time = DIFF_TIME_CLOCK(currClock, prevClock);
 		if (p2networking->tryToConnect() == true)
 			connected = true;
-		else if (time > 0.0)          //ESTO LO PUSE EN 0 PORQUE EN LA CAGADA DE NETBEANS NO FUNCABA SINO.
+		else if (time > 0.5)          //ESTO LO PUSE EN 0 PORQUE EN LA CAGADA DE NETBEANS NO FUNCABA SINO.
 		{
 			currentRole = SERVER;
 			p2networking->abortConnecting();

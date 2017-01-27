@@ -40,6 +40,7 @@ string protocolHeaderToStr(PerezProtocolHeader header)
         case WE_LOST:retVal="We lost";break;
         case GAME_OVER:retVal="Game over";break;
         case QUIT:retVal="Quit";break;
+        case PLAY_AGAIN: retVal= "Play again";break;
         case ERRORR:retVal="Error";break;
         default: retVal="Unknown header";break;
     }

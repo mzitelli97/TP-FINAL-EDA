@@ -30,6 +30,7 @@ BurgleBrosController::BurgleBrosController()
     initPacketCount=0;
     aMoveActionPending=false;
     waiting4QuitAck=false;
+    firstInitDone=false;
 }
 
 BurgleBrosController::BurgleBrosController(const BurgleBrosController& orig) 
@@ -334,10 +335,14 @@ void BurgleBrosController::parseNetworkEvent(EventData *networkEvent)
         switch(status)      //Depende de en que estado está el juego, los paquetes de internet significan distintas cosas
         {
             case INITIALIZING:          //En la inicialización importa si es el cliente o el server en cuanto al orden de los mensajes
-                if(communicationRole==CLIENT)
-                    clientInitRoutine(p2NetworkData);
-                else if(communicationRole==SERVER)
-                    serverInitRoutine(p2NetworkData);
+                if(!firstInitDone)
+                {
+                    if(communicationRole==CLIENT)
+                        clientInitRoutine(p2NetworkData);
+                    else if(communicationRole==SERVER)
+                        serverInitRoutine(p2NetworkData);
+                }
+                
                 break;
             case PLAYING:
                 interpretNetworkAction(p2NetworkData);  //Si esta jugando, se interpreta la jugada del otro jugador.
@@ -546,7 +551,10 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
                 modelPointer->escape(OTHER_PLAYER, networkEvent->getPos());
             else
                 modelPointer->move(OTHER_PLAYER, networkEvent->getPos(),networkEvent->getSafeNumber());
-            networkInterface->sendPacket(ACK);
+            if(modelPointer->hasGameFinished() && modelPointer->getFinishMsg() == "WON")
+                networkInterface->sendPacket(WE_WON);
+            else
+                networkInterface->sendPacket(ACK);
             break;
         case ADD_TOKEN:
             if(modelPointer->isAddDieToSafePossible(OTHER_PLAYER,networkEvent->getTokenPos()))      //SI el add token era para añadir un dado al safe
@@ -634,7 +642,9 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
         case GUARD_MOVEMENT:
             networkEvent->getGuardMovement(guardMovement);  //Obtengo el movimiento del guardia
             modelPointer->guardMove(guardMovement); //Y hago que el modelo lo procese.
-            if(modelPointer->dieForLootNeeded())        //Si se necesita tirar un dado para los loots (chihuahua o persian kitty).
+            if(modelPointer->hasGameFinished() && modelPointer->getFinishMsg()== "LOST")
+                networkInterface->sendPacket(WE_LOST);
+            else if(modelPointer->dieForLootNeeded())        //Si se necesita tirar un dado para los loots (chihuahua o persian kitty).
             {
                 unsigned int die=modelPointer->rollDieForLoot(NO_DIE);
                 networkInterface->sendRollDiceForLoot(die);
@@ -673,6 +683,9 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             modelPointer->peekGuardsCard(OTHER_PLAYER,&auxLoc,networkEvent->getSpyPatrolChoice());
             networkInterface->sendPacket(ACK);
             break;
+        case WE_WON: case WE_LOST:
+            handleWonOrLost(networkEvent->getHeader());
+            break;
         case QUIT:
             quit=true;
             networkInterface->sendPacket(ACK);
@@ -706,6 +719,33 @@ void BurgleBrosController::handleLootsExchange(NetworkED *networkEvent)
         else if (networkEvent->getHeader()== DISAGREE)
             modelPointer->userDecidedTo(DECLINE_TEXTB);
     }
+}
+void BurgleBrosController::handleWonOrLost(PerezProtocolHeader msg)
+{
+    vector<string> toShow;
+    if(msg==WE_WON)
+    {
+        vector<string> aux({DEFAULT_WIN_MSG});
+        toShow=aux;
+    }
+    else if (msg==WE_LOST)
+    {
+        vector<string> aux({DEFAULT_LOST_MSG});
+        toShow=aux;
+    }
+    string userChoice=view->MessageBox(toShow);
+    if(userChoice == "Play again")
+    {
+        networkInterface->sendPacket(PLAY_AGAIN);
+        this->status=INITIALIZING;
+        //resetGame();
+    }
+    else
+    {
+        waiting4QuitAck=true;
+        networkInterface->sendPacket(GAME_OVER);
+    }
+    
 }
 
 
