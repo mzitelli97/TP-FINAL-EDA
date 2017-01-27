@@ -29,6 +29,7 @@ BurgleBrosModel::BurgleBrosModel()
     status=WAITING_FOR_ACTION;
     guardFinishedMoving=false;
     rollForLootCount=0;
+    specialMotionCase=false;
 }
 void BurgleBrosModel::attachView(View * view)
 {
@@ -314,8 +315,9 @@ vector<string> BurgleBrosModel::getMsgToShow()
 {
     return msgsToShow;
 }
-void BurgleBrosModel::userDecidedTo(string userChoice)
+bool BurgleBrosModel::userDecidedTo(string userChoice)
 {   /*Esta funcion se encarga de procesar la elección del usuario a entrar a tiles especiales, del de este jugador y del otro jugador.*/
+    bool guardHasToMove=false;
     BurgleBrosPlayer * movingPlayer= getP2Player(getPlayerOnTurn()); 
     vector<string> fingerPrint({ENTER_FINGERPRINT_TEXT});
     vector<string> lavatory({LAVATORY_TEXT});
@@ -329,7 +331,11 @@ void BurgleBrosModel::userDecidedTo(string userChoice)
         if(userChoice==USE_HACK_TOKEN_TEXTB)        // y uso hack tokens
             tokens.removeOneHackTokenOf(COMPUTER_ROOM_MOTION);
         else if(userChoice==TRIGGER_ALARM_TEXTB)        //Sino, triggerea la alarma
-        {    tokens.triggerAlarm(prevLoc); setGuardsNewPath(prevLoc.floor);}
+        {    
+            tokens.triggerAlarm(prevLoc); setGuardsNewPath(prevLoc.floor); 
+            if(movingPlayer->getcurrentActions() == 0 && getPlayerOnTurn() == THIS_PLAYER && !specialMotionCase) //SI es de este player justo cuando termina su turno, se tiene que enviar el paquete del guardia.
+                guardHasToMove=true;
+        }
     }
     else if(msgsToShow[2]==deadbolt[2])
     {
@@ -349,6 +355,8 @@ void BurgleBrosModel::userDecidedTo(string userChoice)
         {
               tokens.triggerAlarm(movingPlayer->getPosition());
               setGuardsNewPath(movingPlayer->getPosition().floor); //Así se pone el dado a donde tiene que ir, este lo necesitaba desde el guardia
+              if(movingPlayer->getcurrentActions() == 0 && getPlayerOnTurn() == THIS_PLAYER) //SI es de este player justo cuando termina su turno, se tiene que enviar el paquete del guardia.
+                    guardHasToMove=true;
         }
     }
     else if(msgsToShow[2]==laser[2])
@@ -359,11 +367,17 @@ void BurgleBrosModel::userDecidedTo(string userChoice)
             tokens.removeOneHackTokenOf(COMPUTER_ROOM_LASER);
         else if(userChoice==SPEND_ACTION_TEXTB)
             movingPlayer->decActions();
+        if(movingPlayer->getcurrentActions() == 0 && getPlayerOnTurn() == THIS_PLAYER && msgsToShow.size()==5 && msgsToShow[4]==USE_HACK_TOKEN_TEXTB && userChoice==TRIGGER_ALARM_TEXTB)
+            guardHasToMove=true; //En el caso que: this player se mete a un laser y se queda sin acciones, pero tenía token y decide no usar un token, no se manda ningun paquete, por lo cual se tiene que manda el paquete de guardmove.
     }
     else if(msgsToShow[2]==lavatory[2])
     {
         if(userChoice ==USE_MY_STEALTH_TOKEN_TEXTB)
+        {
             movingPlayer->decLives();
+            if(movingPlayer->getcurrentActions() == 0 && getPlayerOnTurn() == THIS_PLAYER) //SI es de este player justo cuando termina su turno, se tiene que enviar el paquete del guardia.
+                    guardHasToMove=true;
+        }
         else if(userChoice ==USE_LAVATORY_TOKEN_TEXTB)
             tokens.useLavatoryToken();
     }
@@ -388,10 +402,24 @@ void BurgleBrosModel::userDecidedTo(string userChoice)
             view->update(this);
         }
     }
-    status=WAITING_FOR_ACTION;
+    if(msgsToShow[2]== motion[2] && specialMotionCase)      //Si fue el caso especial de motion salen 2 carteles seguidos, o sea se espera por una confirmación más.
+    {
+        if(!auxMsgsToShow.empty())
+        {
+            status=WAITING_FOR_USER_CONFIRMATION;
+            this->msgsToShow=auxMsgsToShow;
+            auxMsgsToShow.clear();
+        }
+        else        //Si estaba vacía era el caso especial para el keypad.
+            status=WAITING_FOR_DICE;
+        specialMotionCase=false;
+    }   
+    else
+        status=WAITING_FOR_ACTION;
     view->update(this);
     checkTurns();
     view->update(this);
+    return guardHasToMove;
 }
 
 void BurgleBrosModel::setDice(vector<unsigned int> &currDice)
@@ -501,6 +529,7 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
                 this->msgsToShow=aux;
                 status=WAITING_FOR_USER_CONFIRMATION; //Ahora el modelo va a esperar la respuesta del usuario.
                 this->prevLoc=prevLocation;
+                handleSpecialMoveFromMotion(locationToMove,&cardWasVisible); //EN el caso en que se mueve a otra carte que pida cartel, se encarga esta función de arreglarlo.
             }
             else 
             {    tokens.triggerAlarm(prevLocation); setGuardsNewPath(prevLocation.floor); }
@@ -550,7 +579,7 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
         {   
             if(movingPlayer->getcurrentActions()<2 && !cardWasVisible)
                 movingPlayer->setPosition(prevLocation);
-            else 
+            else if(!specialMotionCase)
             {
                 std::vector<string> aux({DEADBOLT_TEXT,SPEND_ACTIONS_TEXTB,GET_BACK_TEXTB});
                 this->msgsToShow=aux;
@@ -560,7 +589,7 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
                 
         }    
         //Si quiero entrar a un keypad y no esta abierto tengo que tirar los dados (el numero de dados se corresponde con los intentos en el mismo turno)
-        if( newCardType==KEYPAD && !tokens.isThereAKeypadToken(locationToMove))
+        if( newCardType==KEYPAD && !tokens.isThereAKeypadToken(locationToMove) && !specialMotionCase)
         {
             bool keyCracked=false;
             this->status=WAITING_FOR_DICE;
@@ -571,7 +600,7 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
         {    
         if( newCardType==FINGERPRINT)//hay que arreglar el tema de cuando hace click en la cruz del native message
         {
-               if(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_FINGERPRINT) )//Si hay tokens disponibles
+               if(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_FINGERPRINT) && !specialMotionCase )//Si hay tokens disponibles
                {
                   std::vector<string> aux({ENTER_FINGERPRINT_TEXT,USE_HACK_TOKEN_TEXTB,TRIGGER_ALARM_TEXTB});  //Esto contiene el título del cartelito, subtitulo y texto, por eso vector
                   this->msgsToShow=aux;
@@ -591,7 +620,7 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
         {   
             if( !(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_LASER)) && !(movingPlayer->getcurrentActions()) )
                 {tokens.triggerAlarm(locationToMove); setGuardsNewPath(locationToMove.floor);}
-            else
+            else if(!specialMotionCase)
             {
                 std::vector<string> aux({LASER_TEXT,TRIGGER_ALARM_TEXTB}); 
                 if(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_LASER))
@@ -611,9 +640,12 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
 
             if(locationToMove==guards[locationToMove.floor].getPosition() && tokens.isThereAStealthToken(locationToMove))
             {
-                vector<string> aux({LAVATORY_TEXT,USE_LAVATORY_TOKEN_TEXTB,USE_MY_STEALTH_TOKEN_TEXTB});
-                this->msgsToShow=aux;
-                status=WAITING_FOR_USER_CONFIRMATION;
+                if(!specialMotionCase)
+                {
+                    vector<string> aux({LAVATORY_TEXT,USE_LAVATORY_TOKEN_TEXTB,USE_MY_STEALTH_TOKEN_TEXTB});
+                    this->msgsToShow=aux;
+                    status=WAITING_FOR_USER_CONFIRMATION;
+                }
             }    
             else if(locationToMove==guards[locationToMove.floor].getPosition() && !tokens.isThereAStealthToken(locationToMove))
                 movingPlayer->decLives();
@@ -640,6 +672,53 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
     {   gameFinished=true; finishMsg = "ERROR: BBModel error: A peek action was called when it wasnt possible to do it!"; }
     return retVal;
 }
+void BurgleBrosModel::handleSpecialMoveFromMotion(CardLocation movingToTile, bool *cardWasVisible)
+{
+    CardName moveTo=board.getCardType(movingToTile);
+    BurgleBrosPlayer * playerMoving = getP2Player(getPlayerOnTurn());
+    BurgleBrosPlayer * playerNotMoving = getP2OtherPlayer(getPlayerOnTurn());
+    if(moveTo==FINGERPRINT && tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_FINGERPRINT))
+    {
+        specialMotionCase=true;
+        std::vector<string> aux({ENTER_FINGERPRINT_TEXT,USE_HACK_TOKEN_TEXTB,TRIGGER_ALARM_TEXTB});  //Esto contiene el título del cartelito, subtitulo y texto, por eso vector
+        this->auxMsgsToShow=aux;
+    }                                                                                                                                   //Mayor igual que dos porque ya se gasto una acción en el move.
+    else if(moveTo==DEADBOLT && movingToTile!=guards[movingToTile.floor].getPosition() && movingToTile!=playerNotMoving->getPosition() && playerMoving->getcurrentActions()>=2)
+    {   
+        specialMotionCase=true;
+        std::vector<string> aux({ENTER_FINGERPRINT_TEXT,USE_HACK_TOKEN_TEXTB,TRIGGER_ALARM_TEXTB});  //Esto contiene el título del cartelito, subtitulo y texto, por eso vector
+        this->auxMsgsToShow=aux;
+    }
+    else if(moveTo==KEYPAD && !tokens.isThereAKeypadToken(movingToTile))
+    {   
+        specialMotionCase=true;
+        auxMsgsToShow.clear();      //Para el caso de moverse de un motion que se puede activar y tiene tokens a un keypad que no está abierto:
+    }
+    else if(moveTo==LAVATORY)
+    {
+        if(!(*cardWasVisible))
+        {   tokens.lavatoryRevealed(movingToTile); *cardWasVisible=true;    }
+        if(movingToTile==guards[movingToTile.floor].getPosition() && tokens.isThereAStealthToken(movingToTile))
+        {
+            specialMotionCase=true;
+            vector<string> aux({LAVATORY_TEXT,USE_LAVATORY_TOKEN_TEXTB,USE_MY_STEALTH_TOKEN_TEXTB});
+            this->auxMsgsToShow=aux;
+        }
+    }
+    else if(moveTo==LASER &&  !playerMoving->hasLoot(MIRROR) && (tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_LASER) || playerMoving->getcurrentActions()))
+    {
+        std::vector<string> aux({LASER_TEXT,TRIGGER_ALARM_TEXTB}); 
+        if(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_LASER))
+            aux.push_back(USE_HACK_TOKEN_TEXTB);
+        if(playerMoving->getcurrentActions())
+            aux.push_back(SPEND_ACTION_TEXTB);
+        specialMotionCase=true;
+        this->auxMsgsToShow=aux;
+    }
+}
+
+
+
 void BurgleBrosModel::addToken(PlayerId playerId, CardLocation locationToAddToken)
 {
     bool actionOk=false;
@@ -768,12 +847,14 @@ void BurgleBrosModel::pickLoot(PlayerId playerId, Loot lootToPick)
             tokens.placePersianKittyToken(kittyInfo);
             loots.setNewLootOwner(PERSIAN_KITTY, playerId);
             p->attachLoot(PERSIAN_KITTY);
+            view->update(this);
             actionOk=true;
         }
         else if(lootToPick==GOLD_BAR)
         {
             loots.pickGoldBarOnFloor(playerId, p->getPosition());
             p->attachLoot(GOLD_BAR);
+            view->update(this);
             actionOk=true;
         }
     }
@@ -1468,7 +1549,7 @@ bool BurgleBrosModel::dieForLootNeeded() //Si es necesario tirar un dado para el
 {
     bool retVal=false;
     BurgleBrosPlayer *p=getP2Player(getPlayerOnTurn());
-    if(p->hasLoot(PERSIAN_KITTY) || p->hasLoot(CHIHUAHUA)  && status==WAITING_DICE_FOR_LOOT && rollForLootCount==0) //Si se esperaba por el dice for loot y todavía no se tiraron los dados si
+    if((p->hasLoot(PERSIAN_KITTY) || p->hasLoot(CHIHUAHUA))  && status==WAITING_DICE_FOR_LOOT && rollForLootCount==0) //Si se esperaba por el dice for loot y todavía no se tiraron los dados si
         retVal=true;
     else if(p->hasLoot(PERSIAN_KITTY) && p->hasLoot(CHIHUAHUA) && status==WAITING_DICE_FOR_LOOT && rollForLootCount==1 && board.canKittyMove(p->getPosition()))
         retVal=true; //Tambien si tenía los dos loots y tiró por el chihuahua, y ahora si el kitty puede moverse se tiene
@@ -1506,7 +1587,7 @@ void BurgleBrosModel::handlePersianKittyMove(unsigned int die)
         if(getPlayerOnTurn()==THIS_PLAYER)      //Si es este jugador tira los dados
             itWillMove=dice.persianKittyShallMove();
         else if(getPlayerOnTurn()==OTHER_PLAYER)    //SIno pone el dado recibido
-            itWillMove=dice.persianKittyShallMove();
+            itWillMove=dice.persianKittyShallMove(die);
         if(itWillMove)
         {
             p->deattachLoot(PERSIAN_KITTY);
@@ -1515,8 +1596,8 @@ void BurgleBrosModel::handlePersianKittyMove(unsigned int die)
             persianKittyToken.first = true;
             persianKittyToken.second = board.getKittyMovingPos(p->getPosition());
             tokens.placePersianKittyToken(persianKittyToken);
-            view->update(this);
         }
+        view->update(this);
     }
     rollForLootCount++;
 }
@@ -1534,8 +1615,8 @@ void BurgleBrosModel::handleChihuahuaMove(unsigned int die)
         {
             tokens.triggerAlarm(p->getPosition());
             setGuardsNewPath(p->getPosition().floor);
-            view->update(this);
         }
+        view->update(this);
     }
     rollForLootCount++;
 }

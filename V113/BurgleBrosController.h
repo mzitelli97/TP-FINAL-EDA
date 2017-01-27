@@ -34,6 +34,7 @@ typedef struct
 
 #define DEFAULT_WIN_MSG "WON!","You have won the game","Now that youve won the game, you can choose if either play again or quit.","Play again","Quit"
 
+
 class BurgleBrosController:public Controller {
 public:
     BurgleBrosController();
@@ -71,6 +72,7 @@ private:
     bool quit;
     GameStatus status;
     QuitCause quitCause;
+    bool waiting4QuitAck;
 };
 
 #endif /* BURGLEBROSCONTROLLER_H */

@@ -2,7 +2,8 @@
 #include <array>        // std::array
 #include <random>       // std::default_random_engine
 #include <chrono>       // std::chrono::system_clock
-#include <algorithm>    // std::shuffle
+#include <algorithm>
+#include <list>    // std::shuffle
 
 string loot2Str(Loot loot)
 {
@@ -42,6 +43,14 @@ BurgleBrosLoots::BurgleBrosLoots()
         lootDeck.push_back((Loot) i);
     lootDeck.push_back(GOLD_BAR);  //Hay 2 barras de oro en el mazo.
     shuffleDeck();
+    
+    /*Esto es para probar.*/
+    /*lootDeck.push_back(PERSIAN_KITTY);
+    lootDeck.push_back(CHIHUAHUA);
+    lootDeck.push_back(GOLD_BAR);
+    lootDeck.push_back(GOLD_BAR);*/
+    
+    
     goldBarOnFloor.first=false;
 }
 void BurgleBrosLoots::shuffleDeck()

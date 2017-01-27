@@ -29,6 +29,7 @@ BurgleBrosController::BurgleBrosController()
     status=INITIALIZING;
     initPacketCount=0;
     aMoveActionPending=false;
+    waiting4QuitAck=false;
 }
 
 BurgleBrosController::BurgleBrosController(const BurgleBrosController& orig) 
@@ -147,7 +148,7 @@ string BurgleBrosController::getUsersResponse(vector<string> &message)
                 retVal=GET_BACK_TEXTB;
         }
     }
-          
+    packetToAnalize.clear();
     return retVal;
 }
 
@@ -525,6 +526,7 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
 {
     vector<string> message;
     Loot loot;
+    bool guardHasToMove;
     CardLocation guardPosition, guardDice,auxLoc;
     list<GuardMoveInfo> guardMovement;
     vector<unsigned int> dice;
@@ -554,16 +556,25 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             networkInterface->sendPacket(ACK);
             break;
         case ACK:
-            if(aMoveActionPending)      //SI se tuvo que inicializar un guardia por un move, se inicializo y despues se mando la acción move.
+            if(waiting4QuitAck)
+                quit=true;
+            else if(aMoveActionPending)      //SI se tuvo que inicializar un guardia por un move, se inicializo y despues se mando la acción move.
             {
                 unsigned int safeNumber = modelPointer->move(THIS_PLAYER,previousMovingToLocation,NO_SAFE_NUMBER);      //Se ejecuta el move y se hace.
                 networkInterface->sendMove(previousMovingToLocation, safeNumber);
                 aMoveActionPending=false;
             }
+            else if(modelPointer->getModelStatus()== WAITING_FOR_ACTION && modelPointer->isGuardsTurn())    //Si el jugador gastó todas las acciones y, para casos especiales metió lo que se preguntaba (deadbolt, etc) se procede a mover el guardia.
+            {
+                modelPointer->guardMove(guardMovement);         //Se hace la movida del guardia, y se guarda por referencia en guardMovement 
+                networkInterface->sendGMove(guardMovement);     //Se envía esa información.
+            }
             else if(modelPointer->getModelStatus()==WAITING_FOR_USER_CONFIRMATION)   //Si se esperaba la confirmación del usuario para una accion propia del jugador de esta cpu:
             {
                 message=modelPointer->getMsgToShow(); //Se obtiene el mensaje a mostrar,
-                modelPointer->userDecidedTo(getUsersResponse(message));//Esta función devuelve lo que elige el jugador en el cartelito. y le pasa la respuesta al modelo.
+                guardHasToMove = modelPointer->userDecidedTo(getUsersResponse(message));//Esta función devuelve lo que elige el jugador en el cartelito. y le pasa la respuesta al modelo.
+                if(guardHasToMove)      //Si se termino una jugada que no mando paquete y termino su turno, se tiene que enviar el paquete del guardia.
+                {   modelPointer->guardMove(guardMovement); networkInterface->sendGMove(guardMovement);}
             }
             else if(modelPointer->getModelStatus()== WAITING_FOR_DICE)
             {
@@ -574,11 +585,6 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             {
                 modelPointer->generateGuardInitPos(&guardPosition, &guardDice);
                 networkInterface->sendInitGPos(guardPosition, guardDice);
-            }
-            else if(modelPointer->getModelStatus()== WAITING_FOR_ACTION && modelPointer->isGuardsTurn())    //Si el jugador gastó todas las acciones y, para casos especiales metió lo que se preguntaba (deadbolt, etc) se procede a mover el guardia.
-            {
-                modelPointer->guardMove(guardMovement);         //Se hace la movida del guardia, y se guarda por referencia en guardMovement 
-                networkInterface->sendGMove(guardMovement);     //Se envía esa información.
             }
             else if(modelPointer->getModelStatus()==WAITING_FOR_LOOT)   //Si se envió un throw dice que habría el safe
             {
@@ -667,6 +673,10 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             modelPointer->peekGuardsCard(OTHER_PLAYER,&auxLoc,networkEvent->getSpyPatrolChoice());
             networkInterface->sendPacket(ACK);
             break;
+        case QUIT:
+            quit=true;
+            networkInterface->sendPacket(ACK);
+            break;
         default:
             break;
 
@@ -704,7 +714,7 @@ void BurgleBrosController::analizeIfModelRequiresMoreActions(NetworkED *networkE
 {
     PerezProtocolHeader h = networkEvent->getHeader();
     vector<string> message;
-    if(modelPointer->getModelStatus()==WAITING_FOR_USER_CONFIRMATION && h!=SPENT_OK && h!=USE_TOKEN) //Si se hizo un move que podía llegar un use token o un spent ok luego, pero no llegó
+    if(modelPointer->getModelStatus()==WAITING_FOR_USER_CONFIRMATION && h!=SPENT_OK && h!=USE_TOKEN && modelPointer->getPlayerOnTurn()==OTHER_PLAYER) //Si se hizo un move que podía llegar un use token o un spent ok luego, pero no llegó
     {
         message=modelPointer->getMsgToShow(); //Se obtiene el mensaje que se mostraria si saltar el cartel
         modelPointer->userDecidedTo(getUsersResponse(message));//Y esta funcion "emula" lo elegido por el otro jugador. por ejemplo si no gasto las acciones del deadbolt simula como que eligio no gastarlas en el cartel, pero siendo el jugador desde la otra pc.
