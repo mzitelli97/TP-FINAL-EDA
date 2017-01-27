@@ -365,7 +365,7 @@ void BurgleBrosController::parseNetworkEvent(EventData *networkEvent)
 }
 void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
 {
-    vector<string> message;
+    vector<string> message, quitMsg({DEFAULT_QUIT_MSG}), gameOverMsg({DEFAULT_GAME_OVER_MSG});
     Loot loot;
     bool guardHasToMove;
     CardLocation guardPosition, guardDice,auxLoc;
@@ -527,6 +527,7 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
         case QUIT:
             quit=true;
             networkInterface->sendPacket(ACK);
+            view->MessageBox(quitMsg);
             break;
         case PLAY_AGAIN:
             handlePlayAgain();
@@ -534,6 +535,7 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
         case GAME_OVER:
             quit=true;
             networkInterface->sendPacket(ACK);
+            view->MessageBox(gameOverMsg);
             break;
         default:
             break;
