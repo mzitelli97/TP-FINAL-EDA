@@ -39,7 +39,7 @@
 #define SPOTTER_NO_PREV_CHOICE "..."
 
 
-//#define INMORTAL //Comentar para perder cuando se te terminan las vidas.
+#define INMORTAL //Comentar para perder cuando se te terminan las vidas.
 
 
 

@@ -227,7 +227,7 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
             }
         }
     }
-    checkGameStatus();
+    //checkGameStatus();
 }
 void BurgleBrosController::interpretAction(string action, CardLocation location)
 {
@@ -384,7 +384,11 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             break;
         case MOVE:    
             if(networkEvent->getPos().floor==3)     //Si es un movimiento al 4to piso, es un escape.
-                modelPointer->escape(OTHER_PLAYER, networkEvent->getPos());
+            {   
+                auxLoc=networkEvent->getPos();
+                auxLoc.floor--;         //Apunto al stair tile
+                modelPointer->escape(OTHER_PLAYER, auxLoc);
+            }
             else
                 modelPointer->move(OTHER_PLAYER, networkEvent->getPos(),networkEvent->getSafeNumber());
             if(modelPointer->hasGameFinished() && modelPointer->getFinishMsg() == "WON")
