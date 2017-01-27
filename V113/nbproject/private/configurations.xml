@@ -32,12 +32,12 @@
           <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 127,0.1.0 192.168.1.107</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 127,0.0.1 192.168.1.107</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 192.168.1.107</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 127.0.0.1</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 192.168.1.69</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 2620:9b::1961:f9e6</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 25.97.249.230</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 127.0.0.1</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}" PEPE 25.97.249.230</runcommand>
+        <runcommand>"${OUTPUT_PATH}" PEPE 127.0.0.1</runcommand>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>

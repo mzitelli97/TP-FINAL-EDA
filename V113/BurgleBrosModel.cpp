@@ -1374,7 +1374,7 @@ void BurgleBrosModel::makeGuardMove(list<GuardMoveInfo> &guardMovement)
         if(tokens.isThereAToken(guardMoving->getPosition(), CROW_TOKEN) && stepsToMove > 0)
             stepsToMove--;
         view->update(this);
-        //sleep(1.0);         //Esto despues cambiará (es bloqueante)
+        sleep(0.2);         //Esto despues cambiará (es bloqueante)
     }
     
 }
@@ -1442,7 +1442,7 @@ void BurgleBrosModel::copyGuardMove(list<GuardMoveInfo> &guardMovement)
         else if(it->meaning==GUARD_CARD_PICK)
             guardMoving->drawCardTarget(it->cardLocation);
         view->update(this);
-        //sleep(1.0);         //Esto despues cambiará (es bloqueante)
+        sleep(0.2);         //Esto despues cambiará (es bloqueante)
     }
     setGuardsNewPath(guardFloor, guardMoving->getTargetPosition());//Para que no quede sin un camino  si la próxima vez se ejecuta desde esta cpu.
 }

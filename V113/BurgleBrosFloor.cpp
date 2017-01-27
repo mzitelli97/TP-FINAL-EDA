@@ -8,7 +8,7 @@ using namespace std;
 #define NO_PREVIOUS (-1)
 
 unsigned int indexToInt(CardLocation &i );
-
+static void findNErase(vector<pair<unsigned int, int>> &cardQueue,pair<unsigned int, int> pair);
 BurgleBrosFloor::BurgleBrosFloor(unsigned int whichFloor, std::vector<CardName> &orderedCards)
 {
 	initFloor(whichFloor, orderedCards);
@@ -271,8 +271,10 @@ list<CardLocation> BurgleBrosFloor::getShortestPath(CardLocation source, CardLoc
     minDist[sourceCard] = 0;                                        //La distancia desde el vertice que partí hacia si mismo es 0.
     prevCard.clear();                               
     prevCard.resize(numberOfCards, NO_PREVIOUS);
-    set<pair<unsigned int, int> > cardQueue;
-    cardQueue.insert(make_pair(minDist[sourceCard], sourceCard));  //Parto del vértice sourceCard.
+    //set<pair<unsigned int, int> > cardQueue;
+    //cardQueue.insert(make_pair(minDist[sourceCard], sourceCard));  //Parto del vértice sourceCard.
+    std::vector<std::pair<unsigned int, int>> cardQueue;
+    cardQueue.push_back(make_pair(minDist[sourceCard], sourceCard));
     while (!pathToTargetObtained && !cardQueue.empty())             
     {
         unsigned int dist = cardQueue.begin()->first;
@@ -286,11 +288,12 @@ list<CardLocation> BurgleBrosFloor::getShortestPath(CardLocation source, CardLoc
             unsigned int B = *neighbor_iter;
             unsigned int totalDist = dist + 1; //El peso de entre dos vértices siempre es 1 para nuestro grafo.
             if (totalDist < minDist[B]) {
-	        cardQueue.erase(std::make_pair(minDist[B], B));
+                findNErase(cardQueue,make_pair(minDist[B], B));
+	        //cardQueue.erase(std::make_pair(minDist[B], B));
  
 	        minDist[B] = totalDist;
 	        prevCard[B] = A;
-	        cardQueue.insert(std::make_pair(minDist[B], B));
+	        cardQueue.push_back(std::make_pair(minDist[B], B));
                 if(B==destinationCard)
                 {
                     pathToTargetObtained=true;
@@ -299,6 +302,17 @@ list<CardLocation> BurgleBrosFloor::getShortestPath(CardLocation source, CardLoc
 	    }
         }
     }
+ }
+ void findNErase(std::vector<std::pair<unsigned int, int>> &cardQueue,pair<unsigned int, int> pair)
+ {
+     std::vector< std::pair<unsigned int, int> >::iterator it;
+     for(it = cardQueue.begin(); it != cardQueue.end(); it++)
+     {
+         if(*it==pair)
+             break;
+     }
+     if(it!=cardQueue.end())
+         cardQueue.erase(it);
  }
 unsigned int indexToInt(CardLocation &i )
 {
