@@ -22,6 +22,7 @@ GraphicPlayer::GraphicPlayer(ALLEGRO_BITMAP * image, CardLocation location,unsig
     this->image = image;
     setScreenDimentions(width,height);
     setLocation(location);
+    isOnHelicopter = false;
 }
 
 GraphicPlayer::GraphicPlayer(const GraphicPlayer& orig) {
@@ -52,6 +53,18 @@ GraphicPlayer::~GraphicPlayer() {
 ItemInfo GraphicPlayer::IAm()
 {
     return {NO_ITEM_CLICK, nullptr};
+}
+
+void GraphicPlayer::goToDaChoppa()
+{
+    isOnHelicopter = true;
+}
+
+void GraphicPlayer::draw()
+{
+    if(!isOnHelicopter)
+        if(image != nullptr)
+            al_draw_scaled_bitmap(image,0,0,al_get_bitmap_width(image),al_get_bitmap_height(image),min.x,min.y,width,height,0);
 }
 
 

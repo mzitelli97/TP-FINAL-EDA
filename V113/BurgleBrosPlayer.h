@@ -18,6 +18,7 @@ typedef struct{
     string name;
     unsigned int currActions;
     bool turn;
+    bool isOnHelicopter;
 }Info2DrawPlayer;
 
 CharacterName getRandomCharacter();

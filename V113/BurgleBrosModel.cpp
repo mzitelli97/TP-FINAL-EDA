@@ -31,6 +31,38 @@ BurgleBrosModel::BurgleBrosModel()
     rollForLootCount=0;
     specialMotionCase=false;
 }
+void BurgleBrosModel::reset()
+{
+    BurgleBrosGuard aux1(0);
+    BurgleBrosGuard aux2(1);
+    BurgleBrosGuard aux3(2);
+    BurgleBrosBoard auxBoard;
+    BurgleBrosLoots auxLoots;
+    BurgleBrosTokens auxTokens;
+    BurgleBrosDices auxDice;
+    BurgleBrosPlayer auxPlayer;
+    guards[0]= aux1;
+    guards[1]= aux2;
+    guards[2]= aux3;
+    board=auxBoard;
+    board.initBoard();
+    loots=auxLoots;
+    tokens=auxTokens;
+    dice=auxDice;
+    auxPlayer.setName(myPlayer.getName());
+    myPlayer=auxPlayer;
+    auxPlayer.setName(otherPlayer.getName());
+    otherPlayer=auxPlayer;
+    gameFinished=false;
+    playerSpentFreeAction=false;
+    status=WAITING_FOR_ACTION;
+    guardFinishedMoving=false;
+    rollForLootCount=0;
+    specialMotionCase=false;
+    finishMsg.clear();
+    auxMsgsToShow.clear();
+}
+
 void BurgleBrosModel::attachView(View * view)
 {
     this->view = view;
@@ -269,6 +301,7 @@ Info2DrawPlayer BurgleBrosModel:: getInfo2DrawPlayer(PlayerId player)
     info.position=p->getPosition();
     info.currActions=p->getcurrentActions();
     info.turn = p->isItsTurn();
+    info.isOnHelicopter = p->isOnHelicopter();
     return info;
 }
 
@@ -1031,11 +1064,14 @@ void BurgleBrosModel::checkIfWonOrLost()
         gameFinished=true;
         finishMsg= "WON";
     }
-    /*else if(myPlayer.getCurrLifes()==0 || otherPlayer.getCurrLifes()==0)
+#ifndef INMORTAL
+    else if(myPlayer.getCurrLifes()==0 || otherPlayer.getCurrLifes()==0)
     {
         gameFinished=true;
         finishMsg= "LOST";
-    }*/
+    }
+    
+#endif
 }
 
 
@@ -1374,7 +1410,7 @@ void BurgleBrosModel::makeGuardMove(list<GuardMoveInfo> &guardMovement)
         if(tokens.isThereAToken(guardMoving->getPosition(), CROW_TOKEN) && stepsToMove > 0)
             stepsToMove--;
         view->update(this);
-        //sleep(1.0);         //Esto despues cambiará (es bloqueante)
+        sleep(0.2);         //Esto despues cambiará (es bloqueante)
     }
     
 }
@@ -1442,7 +1478,7 @@ void BurgleBrosModel::copyGuardMove(list<GuardMoveInfo> &guardMovement)
         else if(it->meaning==GUARD_CARD_PICK)
             guardMoving->drawCardTarget(it->cardLocation);
         view->update(this);
-        //sleep(1.0);         //Esto despues cambiará (es bloqueante)
+        sleep(0.2);         //Esto despues cambiará (es bloqueante)
     }
     setGuardsNewPath(guardFloor, guardMoving->getTargetPosition());//Para que no quede sin un camino  si la próxima vez se ejecuta desde esta cpu.
 }

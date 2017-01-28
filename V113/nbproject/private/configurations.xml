@@ -13,8 +13,6 @@
         <gdb_interceptlist>
           <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
         </gdb_interceptlist>
-        <gdb_signals>
-        </gdb_signals>
         <gdb_options>
           <DebugOptions>
           </DebugOptions>
@@ -26,16 +24,18 @@
       </nativedebugger>
       <runprofile version="9">
         <runcommandpicklist>
-          <runcommandpicklistitem>PEPE 192.168.1.8</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 192.168.1.8</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 127,0.1.0 192.168.1.107</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 127,0.0.1 192.168.1.107</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 192.168.1.107</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 192.168.1.69</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 2620:9b::1961:f9e6</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 25.97.249.230</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 127.0.0.1</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" MAXI 192.168.1.34</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" MAXI 25-9-131-28</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" MAXI 25.9.131.28</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}" PEPE 127.0.0.1</runcommand>
+        <runcommand>"${OUTPUT_PATH}" MAXI 25.9.131.28</runcommand>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>

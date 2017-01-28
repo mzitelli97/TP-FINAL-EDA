@@ -25,6 +25,8 @@ typedef enum {MENU_ITEM_LIST} ThirdLayerLists;
 #define DROPDOWNS_MENUS_LIST 0
 #define INIT_QUANTITY_LAYERS 3
 
+//#define FULLSCREEN
+
 class BurgleBrosView : public View{
 public:
     BurgleBrosView();
@@ -39,6 +41,7 @@ public:
     ItemInfo itemFromClick(Point point);
     
     virtual void update(Model * model);
+    void reset();
     void ViewInit(BurgleBrosModel* model);
     void showMenu(list<string> options, Point click, CardLocation tile);
     void showMenu(list<string> options, Point click, unsigned int floor);

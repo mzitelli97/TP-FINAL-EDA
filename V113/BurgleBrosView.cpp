@@ -74,6 +74,17 @@ BurgleBrosView::~BurgleBrosView() {
     board = model->getElements()->getBoard();
 }
 */
+
+void BurgleBrosView::reset()
+{
+    this->graphicInterface.clear(); //Esto después se debería hacer con deletes.
+    onZoom = false;
+    floorZoomed = NO_FLOOR_ZOOMED;
+    guardZoomed = NO_GUARD_ZOOMED;
+    playerZoomed = NON_PLAYER;
+    lootZoomed = NON_PLAYER;
+}
+
 void BurgleBrosView::ViewInit(BurgleBrosModel* model)
 {
     /*VEO SI ANDA ASI O SINO VER CASTEO CON */    
@@ -130,15 +141,7 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
         auxButtons_list.push_back(auxButton);
         if(i == (int)MUTE_BUTTON) i++;          //this is because there are the MUTE and the UNMUTE buttons
     }
-    /*auxButton = new GraphicButton(imageLoader.getImageP(PASS_BUTTON), nullptr, PASS_BUTTON, al_get_display_width(display), al_get_display_height(display));
-    auxButtons_list.push_back(auxButton);
-    auxButton = new GraphicButton(imageLoader.getImageP(QUIT_BUTTON), nullptr, QUIT_BUTTON, al_get_display_width(display), al_get_display_height(display));
-    auxButtons_list.push_back(auxButton);
-    auxButton = new GraphicButton(imageLoader.getImageP(HELP_BUTTON), nullptr, HELP_BUTTON, al_get_display_width(display), al_get_display_height(display));
-    auxButtons_list.push_back(auxButton);
-    auxButton = new GraphicButton(imageLoader.getImageP(MUTE_BUTTON), nullptr, MUTE_BUTTON, al_get_display_width(display), al_get_display_height(display));
-    auxButtons_list.push_back(auxButton);*/
-      
+          
     //creo una lista de graphicCharacterscards
     list<GraphicItem* > auxCharactersCards_list;
     
@@ -371,6 +374,7 @@ void BurgleBrosView::updateCharacters(BurgleBrosModel *model) {
         if(onZoom && player.position.floor == floorZoomed) gPlayer->setZoom(true);
         else gPlayer->setZoom(false);
         gPlayer->setLocation(player.position);
+        if(player.isOnHelicopter) gPlayer->goToDaChoppa();
     }
     //Second Player
     player = model->getInfo2DrawPlayer(OTHER_PLAYER);
@@ -380,6 +384,7 @@ void BurgleBrosView::updateCharacters(BurgleBrosModel *model) {
         if(onZoom && player.position.floor == floorZoomed) gPlayer->setZoom(true);
         else gPlayer->setZoom(false);
         gPlayer->setLocation(player.position);
+        if(player.isOnHelicopter) gPlayer->goToDaChoppa();
     }
 }
 
