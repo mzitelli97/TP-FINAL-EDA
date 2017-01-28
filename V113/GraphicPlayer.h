@@ -25,9 +25,13 @@ public:
     GraphicPlayer(const GraphicPlayer& orig);
     virtual ~GraphicPlayer();
     void setLocation(CardLocation l);
+    void goToDaChoppa();
     virtual ItemInfo IAm();
+    void draw() override;
+
 private:
     GraphicPlayer();
+    bool isOnHelicopter;
 
 };
 

@@ -301,6 +301,7 @@ Info2DrawPlayer BurgleBrosModel:: getInfo2DrawPlayer(PlayerId player)
     info.position=p->getPosition();
     info.currActions=p->getcurrentActions();
     info.turn = p->isItsTurn();
+    info.isOnHelicopter = p->isOnHelicopter();
     return info;
 }
 
@@ -797,6 +798,7 @@ void BurgleBrosModel::crackSafe(PlayerId playerId,vector<unsigned int> &diceThro
             else                                        //Sino tira los dados normales
                 diceThrown=dice.throwDiceForSafe(safe.floor);
         }
+        else dice.setDice(diceThrown);  //Si fue el otro jugador se copian
         list<CardLocation> tilesCrackedOnThisAction = board.tilesWithCracked(diceThrown,safe.floor);   //Obtengo las cartas que tienen como safe number uno de los numeros que salio en el dado
         tokens.addCrackTokenOn(tilesCrackedOnThisAction);
         if(tokens.isSafeOpened(safe.floor))

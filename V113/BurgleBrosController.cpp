@@ -331,24 +331,34 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
 void BurgleBrosController::parseNetworkEvent(EventData *networkEvent)
 {
     NetworkED *p2NetworkData = dynamic_cast<NetworkED *> (networkEvent);
+    vector<string> gameOverMsg({DEFAULT_GAME_OVER_MSG});
     if(p2NetworkData!=nullptr)
     {
         switch(status)      //Depende de en que estado está el juego, los paquetes de internet significan distintas cosas
         {
             case INITIALIZING:          //En la inicialización importa si es el cliente o el server en cuanto al orden de los mensajes
-                if(!firstInitDone)
+                if(p2NetworkData->getHeader() != GAME_OVER)
                 {
-                    if(communicationRole==CLIENT)
-                        clientInitRoutine(p2NetworkData);
-                    else if(communicationRole==SERVER)
-                        serverInitRoutine(p2NetworkData);
+                    if(!firstInitDone)
+                    {
+                        if(communicationRole==CLIENT)
+                            clientInitRoutine(p2NetworkData);
+                        else if(communicationRole==SERVER)
+                            serverInitRoutine(p2NetworkData);
+                    }
+                    else
+                    {
+                        if(whichPlayer==FIRST_DECIDING_PLAYER)
+                            firstDecidedRoutine(p2NetworkData);
+                        else
+                            secondDecidedRoutine(p2NetworkData);
+                    }
                 }
                 else
                 {
-                    if(whichPlayer==FIRST_DECIDING_PLAYER)
-                        firstDecidedRoutine(p2NetworkData);
-                    else
-                        secondDecidedRoutine(p2NetworkData);
+                    quit=true;
+                    networkInterface->sendPacket(ACK);
+                    view->MessageBox(gameOverMsg);
                 }
                 
                 break;
@@ -653,7 +663,8 @@ void BurgleBrosController::clientInitRoutine(NetworkED *networkEvent)
         case 0: 
             if(networkEvent->getHeader() == NAME)   //Primero el client recibe el paquete name
             {
-                networkInterface->sendName(thisPlayerName);  //Al cual le responde con su nombre 
+                networkInterface->sendName(thisPlayerName);             //Al cual le responde con su nombre 
+                auxInitInfo[THIS_PLAYER].PlayerName = thisPlayerName;   //Y lo guarda para el modelo
                 initPacketCount++;
             }
             break;
@@ -752,6 +763,7 @@ void BurgleBrosController::serverInitRoutine(NetworkED *networkEvent)
             if(networkEvent->getHeader() == NAME)       //El cliente le pide al server su name
             {
                 networkInterface->sendName(thisPlayerName);     //El server se lo devuelve.
+                auxInitInfo[THIS_PLAYER].PlayerName = thisPlayerName;   //Me guardo mi nombre
                 initPacketCount++;
             }
             break;
