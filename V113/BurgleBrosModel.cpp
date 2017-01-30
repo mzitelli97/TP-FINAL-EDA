@@ -1362,7 +1362,7 @@ void BurgleBrosModel::makeGuardMove(list<GuardMoveInfo> &guardMovement)
             else if(userChoice ==USE_LAVATORY_TOKEN_TEXTB)
                 tokens.useLavatoryToken();
         }
-        else*/ if(guardMoving->getPosition() == myPlayer.getPosition())   //Si el guardia entra al tile del player, el mismo pierde una vida.
+         else*/ if(guardMoving->getPosition() == myPlayer.getPosition() && !myPlayer.isOnHelicopter())   //Si el guardia entra al tile del player y no se encuentra en el helicoptero, el mismo pierde una vida.
             myPlayer.decLives();
         /*if(guards[floor].getPosition() == otherPlayer.getPosition() && board.getCardType(otherPlayer.getPosition())==LAVATORY && tokens.isThereAStealthToken(otherPlayer.getPosition()))
         {
@@ -1373,7 +1373,7 @@ void BurgleBrosModel::makeGuardMove(list<GuardMoveInfo> &guardMovement)
             else if(userChoice ==USE_LAVATORY_TOKEN_TEXTB)
                 tokens.useLavatoryToken();
         }
-        else*/ if(guardMoving->getPosition() == otherPlayer.getPosition())
+         else*/ if(guardMoving->getPosition() == otherPlayer.getPosition() && !otherPlayer.isOnHelicopter())
             otherPlayer.decLives();
         if(board.isCardVisible(guardMoving->getPosition()))
         {   
@@ -1448,7 +1448,7 @@ void BurgleBrosModel::copyGuardMove(list<GuardMoveInfo> &guardMovement)
                 else if(userChoice ==USE_LAVATORY_TOKEN_TEXTB)
                     tokens.useLavatoryToken();
             }
-            else*/ if(guardMoving->getPosition() == myPlayer.getPosition())   //Si el guardia entra al tile del player, el mismo pierde una vida.
+            else*/ if(guardMoving->getPosition() == myPlayer.getPosition() && !myPlayer.isOnHelicopter())   //Si el guardia entra al tile del player, el mismo pierde una vida.
                 myPlayer.decLives();
             /*if(guards[floor].getPosition() == otherPlayer.getPosition() && board.getCardType(otherPlayer.getPosition())==LAVATORY && tokens.isThereAStealthToken(otherPlayer.getPosition()))
             {
@@ -1459,7 +1459,7 @@ void BurgleBrosModel::copyGuardMove(list<GuardMoveInfo> &guardMovement)
                 else if(userChoice ==USE_LAVATORY_TOKEN_TEXTB)
                     tokens.useLavatoryToken();
             }
-            else*/ if(guardMoving->getPosition() == otherPlayer.getPosition())
+             else*/ if(guardMoving->getPosition() == otherPlayer.getPosition() && !otherPlayer.isOnHelicopter())
                 otherPlayer.decLives();
             if(board.isCardVisible(guardMoving->getPosition()))
             {   
