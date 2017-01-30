@@ -35,7 +35,7 @@
 #define ACTIONS_FONT_H al_get_bitmap_height(backScreen)/50.0
 #define NO_FLOOR_ZOOMED -1
 #define NO_GUARD_ZOOMED -1
-#define FULLSCREEN
+
 
 BurgleBrosView::BurgleBrosView() {
     imageLoader.initImages();           //Falta checkear.
