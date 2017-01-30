@@ -897,13 +897,13 @@ void BurgleBrosModel::pickLoot(PlayerId playerId, Loot lootToPick)
     {   gameFinished=true; finishMsg = "ERROR: BBModel error: A pick loot action was called when it wasnt possible to do it!"; }
 }
 
-string BurgleBrosModel::peekGuardsCard(PlayerId playerId, CardLocation *guardCard, string prevChoice)
+string BurgleBrosModel::peekGuardsCard(PlayerId playerId, CardLocation *guardCard, unsigned int guardsFloor, string prevChoice)
 {
     bool actionOk = false;
     string userChoice;
-    if(isPeekGuardsCardPossible(playerId, guardCard->floor) && !gameFinished)
+    if(isPeekGuardsCardPossible(playerId, guardsFloor) && !gameFinished)
     {
-        unsigned int guardsFloor= guardCard->floor;
+        //unsigned int guardsFloor= guardCard->floor;
         guards[guardsFloor].setTopOfNotShownDeckVisible(true);      //Muestro la carta de arriba
         view->update(this);
         
@@ -917,11 +917,11 @@ string BurgleBrosModel::peekGuardsCard(PlayerId playerId, CardLocation *guardCar
             userChoice=prevChoice;      //Sino es lo pasado por argumento.
             sleep(1); //Se duerme un segundo para mostrar la carta que saco el otro pj.
         }    
-        
+        *guardCard=guards[guardsFloor].getTopCard();        //tomo la carta sacada
         if(userChoice==SPOTTER_TOP)
         {
             guards[guardsFloor].setTopOfNotShownDeckVisible(false); //Si la quería arriba no hago nada y dejo de mostrarla.
-            *guardCard=guards[guardsFloor].getTopCard();
+            //*guardCard=guards[guardsFloor].getTopCard();
             guards[guardsFloor].pushCardToTheTop(*guardCard);
         }
         else

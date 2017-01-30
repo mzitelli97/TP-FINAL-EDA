@@ -298,8 +298,8 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
     }
     else if(action=="PEEK TOP CARD")
     {
-        CardLocation topOfNotShown = location;
-        string userChoice=modelPointer->peekGuardsCard(THIS_PLAYER,&topOfNotShown, SPOTTER_NO_PREV_CHOICE);
+        CardLocation topOfNotShown;// = location;
+        string userChoice=modelPointer->peekGuardsCard(THIS_PLAYER,&topOfNotShown,location.floor, SPOTTER_NO_PREV_CHOICE);
         networkInterface->sendSpyPatrol(topOfNotShown,userChoice);
     }
     else
@@ -532,7 +532,7 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             break;
         case SPY_PATROL:
             auxLoc=networkEvent->getSpyPatrolPos();
-            modelPointer->peekGuardsCard(OTHER_PLAYER,&auxLoc,networkEvent->getSpyPatrolChoice());
+            modelPointer->peekGuardsCard(OTHER_PLAYER,&auxLoc,auxLoc.floor,networkEvent->getSpyPatrolChoice());
             networkInterface->sendPacket(ACK);
             break;
         case WE_WON: case WE_LOST:

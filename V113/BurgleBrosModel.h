@@ -98,7 +98,7 @@ class BurgleBrosModel : public Model
         void askForLoot(PlayerId playerId, Loot loot);
         void offerLoot(PlayerId playerId, Loot loot);
         void escape(PlayerId playerId, CardLocation stairTile);
-        string peekGuardsCard(PlayerId playerId, CardLocation *guardCard, string prevChoice);
+        string peekGuardsCard(PlayerId playerId, CardLocation *guardCard, unsigned int floor, string prevChoice);
         void guardMove(list<GuardMoveInfo> &guardMovement);
         /*Prueba para ver si se pueden realizar ciertas acciones*/
         bool isMovePosible(PlayerId playerId,CardLocation tileToMove);  //Pregunta si una movida es posible
