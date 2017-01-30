@@ -1427,10 +1427,12 @@ void BurgleBrosModel::copyGuardMove(list<GuardMoveInfo> &guardMovement)
     BurgleBrosGuard *guardMoving = &(guards[guardFloor]);
     if(tokens.isThereAnAlarmToken(guardMoving->getPosition()))     //Si hay una alarma en su posición ya la desactiva y busca un nuevo camino.
         tokens.turnOffAlarm(guardMoving->getPosition());
-    if(myPlayer.getCharacter()== THE_ACROBAT && myPlayer.getPosition() == guardMoving->getPosition()) // Si un acrobat termina su turno en el tile del guardia PERDERA LA CABEZA! digo un stealth token.
+    /*if(myPlayer.getCharacter()== THE_ACROBAT && myPlayer.getPosition() == guardMoving->getPosition()) // Si un acrobat termina su turno en el tile del guardia PERDERA LA CABEZA! digo un stealth token.
         myPlayer.decLives();
     if(otherPlayer.getCharacter()== THE_ACROBAT && otherPlayer.getPosition() == guardMoving->getPosition())
-        otherPlayer.decLives();
+        otherPlayer.decLives();*/
+    if(getP2Player(playerOnTurnBeforeGuardMove)->getCharacter() == THE_ACROBAT && getP2Player(playerOnTurnBeforeGuardMove)->getPosition() == guardMoving->getPosition())
+        getP2Player(playerOnTurnBeforeGuardMove)->decLives();
     for(list<GuardMoveInfo>::iterator it=guardMovement.begin(); it!=guardMovement.end() && !gameFinished; it++)
     {
         if(it->meaning==GUARD_STEP_TO)
