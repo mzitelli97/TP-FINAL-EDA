@@ -114,6 +114,7 @@ void BurgleBrosModel::initPlayer(PlayerId playerId, string playerName, Character
     BurgleBrosPlayer *p = getP2Player(playerId);
     p->setName(playerName);
     p->setPosition(playerPos);
+    //board.setCardVisible(playerPos);
     p->setCharacter(playerCharacter);
     if(!tokens.isThereADownstairToken(playerPos))
         tokens.placeDownstairToken(playerPos);
@@ -1341,10 +1342,12 @@ void BurgleBrosModel::makeGuardMove(list<GuardMoveInfo> &guardMovement)
         tokens.turnOffAlarm(guardMoving->getPosition());
         setGuardsNewPath(guardFloor);
     }
-    if(myPlayer.getCharacter()== THE_ACROBAT && myPlayer.getPosition() == guardMoving->getPosition()) // Si un acrobat termina su turno en el tile del guardia PERDERA LA CABEZA! digo un stealth token.
+    /*if(myPlayer.getCharacter()== THE_ACROBAT && myPlayer.getPosition() == guardMoving->getPosition()) // Si un acrobat termina su turno en el tile del guardia PERDERA LA CABEZA! digo un stealth token.
         myPlayer.decLives();
     if(otherPlayer.getCharacter()== THE_ACROBAT && otherPlayer.getPosition() == guardMoving->getPosition())
-        otherPlayer.decLives();
+        otherPlayer.decLives();*/
+    if(getP2Player(playerOnTurnBeforeGuardMove)->getCharacter() == THE_ACROBAT && getP2Player(playerOnTurnBeforeGuardMove)->getPosition() == guardMoving->getPosition())
+        getP2Player(playerOnTurnBeforeGuardMove)->decLives();
     while(stepsToMove!=0 && !gameFinished)
     {
         stepsToMove--;
