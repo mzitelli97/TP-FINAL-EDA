@@ -798,6 +798,7 @@ void BurgleBrosModel::crackSafe(PlayerId playerId,vector<unsigned int> &diceThro
             else                                        //Sino tira los dados normales
                 diceThrown=dice.throwDiceForSafe(safe.floor);
         }
+        else dice.setDice(diceThrown);  //Si fue el otro jugador se copian
         list<CardLocation> tilesCrackedOnThisAction = board.tilesWithCracked(diceThrown,safe.floor);   //Obtengo las cartas que tienen como safe number uno de los numeros que salio en el dado
         tokens.addCrackTokenOn(tilesCrackedOnThisAction);
         if(tokens.isSafeOpened(safe.floor))
@@ -925,10 +926,10 @@ string BurgleBrosModel::peekGuardsCard(PlayerId playerId, CardLocation *guardCar
         else
         {
             guards[guardsFloor].setTopOfNotShownDeckVisible(false);
-            if(playerId==THIS_PLAYER)
+            //if(playerId==THIS_PLAYER)
                 guards[guardsFloor].pushTopCardToTheBottom();
-            else
-                guards[guardsFloor].pushCardToTheBottom(*guardCard);
+            //7else
+               // guards[guardsFloor].pushCardToTheBottom(*guardCard);
         }
         getP2Player(playerId)->decActions();
         playerSpentFreeAction=true;
@@ -1018,7 +1019,7 @@ void BurgleBrosModel::checkTurns()
         handlePersianKittyMove(OTHER_PLAYER);
         handleChihuahuaMove(OTHER_PLAYER);*/
         playerSpentFreeAction=false;
-        dice.resetKeypadsDice();
+        //dice.resetKeypadsDice();
         board.deActivateMotion();
     }
     else if(otherPlayer.isItsTurn() && otherPlayer.getcurrentActions() == 0 && status==WAITING_FOR_ACTION)
@@ -1035,7 +1036,7 @@ void BurgleBrosModel::checkTurns()
         handlePersianKittyMove(THIS_PLAYER);
         handleChihuahuaMove(THIS_PLAYER);*/
         playerSpentFreeAction=false;
-        dice.resetKeypadsDice();
+        //dice.resetKeypadsDice();
         board.deActivateMotion();
     }
     else if(isGuardsTurn() && guardFinishedMoving==true)
@@ -1052,6 +1053,7 @@ void BurgleBrosModel::checkTurns()
         // handlePersianKittyMove(nextPlayerOnTurn);
        // handleChihuahuaMove(nextPlayerOnTurn);
         guardFinishedMoving=false;
+        dice.resetKeypadsDice();
         view->update(this);
     }
     checkIfWonOrLost();
@@ -1343,7 +1345,7 @@ void BurgleBrosModel::makeGuardMove(list<GuardMoveInfo> &guardMovement)
         myPlayer.decLives();
     if(otherPlayer.getCharacter()== THE_ACROBAT && otherPlayer.getPosition() == guardMoving->getPosition())
         otherPlayer.decLives();
-    while(stepsToMove!=0)
+    while(stepsToMove!=0 && !gameFinished)
     {
         stepsToMove--;
         targetReached = guardMoving->step();
@@ -1410,6 +1412,7 @@ void BurgleBrosModel::makeGuardMove(list<GuardMoveInfo> &guardMovement)
         if(tokens.isThereAToken(guardMoving->getPosition(), CROW_TOKEN) && stepsToMove > 0)
             stepsToMove--;
         view->update(this);
+        checkIfWonOrLost();
         sleep(0.2);         //Esto despues cambiará (es bloqueante)
     }
     
@@ -1425,7 +1428,7 @@ void BurgleBrosModel::copyGuardMove(list<GuardMoveInfo> &guardMovement)
         myPlayer.decLives();
     if(otherPlayer.getCharacter()== THE_ACROBAT && otherPlayer.getPosition() == guardMoving->getPosition())
         otherPlayer.decLives();
-    for(list<GuardMoveInfo>::iterator it=guardMovement.begin(); it!=guardMovement.end(); it++)
+    for(list<GuardMoveInfo>::iterator it=guardMovement.begin(); it!=guardMovement.end() && !gameFinished; it++)
     {
         if(it->meaning==GUARD_STEP_TO)
         {
@@ -1478,6 +1481,7 @@ void BurgleBrosModel::copyGuardMove(list<GuardMoveInfo> &guardMovement)
         else if(it->meaning==GUARD_CARD_PICK)
             guardMoving->drawCardTarget(it->cardLocation);
         view->update(this);
+        checkIfWonOrLost();
         sleep(0.2);         //Esto despues cambiará (es bloqueante)
     }
     setGuardsNewPath(guardFloor, guardMoving->getTargetPosition());//Para que no quede sin un camino  si la próxima vez se ejecuta desde esta cpu.

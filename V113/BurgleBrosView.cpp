@@ -36,6 +36,7 @@
 #define NO_FLOOR_ZOOMED -1
 #define NO_GUARD_ZOOMED -1
 #define FULLSCREEN
+
 BurgleBrosView::BurgleBrosView() {
     imageLoader.initImages();           //Falta checkear.
 #ifdef FULLSCREEN
