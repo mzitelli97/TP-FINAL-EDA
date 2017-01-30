@@ -1008,7 +1008,7 @@ void BurgleBrosModel::checkTurns()
 {
     if(myPlayer.isItsTurn() && myPlayer.getcurrentActions() == 0 && status==WAITING_FOR_ACTION)
     {
-        if(board.getCardType(myPlayer.getPosition()) == THERMO)
+        if(board.getCardType(myPlayer.getPosition()) == THERMO && board.isCardVisible(myPlayer.getPosition()))
         {    tokens.triggerAlarm(myPlayer.getPosition()); setGuardsNewPath(myPlayer.getPosition().floor);}
         myPlayer.setTurn(false);
         playerOnTurnBeforeGuardMove=THIS_PLAYER;
@@ -1025,7 +1025,7 @@ void BurgleBrosModel::checkTurns()
     }
     else if(otherPlayer.isItsTurn() && otherPlayer.getcurrentActions() == 0 && status==WAITING_FOR_ACTION)
     {
-        if(board.getCardType(otherPlayer.getPosition()) == THERMO)
+        if(board.getCardType(otherPlayer.getPosition()) == THERMO && board.isCardVisible(otherPlayer.getPosition()))
         {   tokens.triggerAlarm(otherPlayer.getPosition()); setGuardsNewPath(otherPlayer.getPosition().floor);}
         otherPlayer.setTurn(false);
         playerOnTurnBeforeGuardMove=OTHER_PLAYER;
