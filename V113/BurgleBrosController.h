@@ -37,7 +37,7 @@ typedef struct
 #define DEFAULT_PLAY_AGAIN_MSG "Play again?", "The game has finished", "The other Player has chosen to play again, do you agree?", "Play again", "Quit"
 #define DEFAULT_QUIT_MSG "Quit", "The game will close", "The other Player has closed the game, this game will close itself", "OK"
 #define DEFAULT_GAME_OVER_MSG "Game over", "The game will close", " The other player decided not to play again, so this game will close itself", "OK"
-
+#define DEFAULT_SPOTTER_MSG "Hability used", "The Spotter","The other player uses The Spotter hability and choose to put the card at the ","Ok"
 
 class BurgleBrosController:public Controller {
 public:

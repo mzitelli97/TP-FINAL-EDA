@@ -375,7 +375,7 @@ void BurgleBrosController::parseNetworkEvent(EventData *networkEvent)
 }
 void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
 {
-    vector<string> message, quitMsg({DEFAULT_QUIT_MSG}), gameOverMsg({DEFAULT_GAME_OVER_MSG});
+    vector<string> message, quitMsg({DEFAULT_QUIT_MSG}), gameOverMsg({DEFAULT_GAME_OVER_MSG}), spotterDecision({DEFAULT_SPOTTER_MSG});
     Loot loot;
     bool guardHasToMove;
     CardLocation guardPosition, guardDice,auxLoc;
@@ -533,6 +533,8 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
         case SPY_PATROL:
             auxLoc=networkEvent->getSpyPatrolPos();
             modelPointer->peekGuardsCard(OTHER_PLAYER,&auxLoc,auxLoc.floor,networkEvent->getSpyPatrolChoice());
+            spotterDecision[spotterDecision.size()-1]+=networkEvent->getSpyPatrolChoice();
+            view->MessageBox(spotterDecision);      //Le informo al usuario lo que el otro jugador hizo con la carta espiada
             networkInterface->sendPacket(ACK);
             break;
         case WE_WON: case WE_LOST:

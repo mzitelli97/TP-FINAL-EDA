@@ -258,6 +258,7 @@ CardLocation NetworkED::getSpyPatrolPos()
     }
     else 
         error=true;
+    return retVal;
 }
 NetworkED::~NetworkED() 
 {
