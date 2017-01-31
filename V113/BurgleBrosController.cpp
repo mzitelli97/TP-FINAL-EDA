@@ -205,10 +205,7 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                     break;
                 case CHAR_CARD_CLICK:
                     auxPlayer = (PlayerId *)temp.info;
-                    if(*auxPlayer == THIS_PLAYER)
-                        view->cheatCards();
-                    else if (*auxPlayer == OTHER_PLAYER)
-                        view->zoomPlayerCard(*auxPlayer);
+                    view->zoomPlayerCard(*auxPlayer);
                     view->update(modelPointer);
                     break;
                 case ZOOM_CLICK:
@@ -231,6 +228,10 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                         modelPointer->pass(THIS_PLAYER);
                         networkInterface->sendPacket(PASS);
                     }
+                    break;
+                case HELP_BUTTON_CLICK:
+                    view->cheatCards();
+                    view->update(modelPointer);
                     break;
                 default:
                     view->eraseMenu();
@@ -307,12 +308,6 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
         modelPointer->escape(THIS_PLAYER,location);
         location.floor++;
         networkInterface->sendMove(location,0);
-    }
-    else if(action=="PEEK TOP CARD")
-    {
-        /*CardLocation * topOfNotShown;// = location;
-        string userChoice=modelPointer->peekGuardsCard(THIS_PLAYER,&topOfNotShown,location.floor, SPOTTER_NO_PREV_CHOICE);
-        networkInterface->sendSpyPatrol(*topOfNotShown,userChoice);*/
     }
     else
     {

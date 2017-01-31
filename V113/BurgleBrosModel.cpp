@@ -904,8 +904,8 @@ string BurgleBrosModel::peekGuardsCard(PlayerId playerId, CardLocation **guardCa
     string userChoice;
     if(isPeekGuardsCardPossible(playerId, guardsFloor) && !gameFinished)
     {
-        //unsigned int guardsFloor= guardCard->floor;
-        if(*guardCard != nullptr) guards[guardsFloor].pushCardToTheTop(**guardCard);  //significa que guardCard es la carta que espio el otro jugador
+        if(*guardCard != nullptr) 
+            guards[guardsFloor].pushCardToTheTop(**guardCard);  //significa que guardCard es la carta que espio el otro jugador
         else
         {
             spyGuardCard = guards[guardsFloor].getTopCard();
@@ -925,24 +925,14 @@ string BurgleBrosModel::peekGuardsCard(PlayerId playerId, CardLocation **guardCa
             sleep(1); //Se duerme un segundo para mostrar la carta que saco el otro pj.
         }    
         
-        if(userChoice==SPOTTER_TOP)
-        {
-            guards[guardsFloor].setTopOfNotShownDeckVisible(false); //Si la quería arriba no hago nada y dejo de mostrarla.
-            //*guardCard=guards[guardsFloor].getTopCard();
-            //guards[guardsFloor].pushCardToTheTop(*guardCard);
-        }
-        else
-        {
-            guards[guardsFloor].setTopOfNotShownDeckVisible(false);
-            //if(playerId==THIS_PLAYER)
-                guards[guardsFloor].pushTopCardToTheBottom();
-            //7else
-               // guards[guardsFloor].pushCardToTheBottom(*guardCard);
-        }
+        guards[guardsFloor].setTopOfNotShownDeckVisible(false); //Dejo de mostrarla.
+        if(userChoice==SPOTTER_BOTTOM)
+            guards[guardsFloor].pushTopCardToTheBottom();
         getP2Player(playerId)->decActions();
         playerSpentFreeAction=true;
         view->update(this);
         actionOk=true;
+        checkTurns();
     }
     if(actionOk==false)
     {   gameFinished=true; finishMsg = "ERROR: BBModel error: A peek guards card action was called when it wasnt possible to do it!"; }
@@ -1027,7 +1017,6 @@ void BurgleBrosModel::checkTurns()
         handlePersianKittyMove(OTHER_PLAYER);
         handleChihuahuaMove(OTHER_PLAYER);*/
         playerSpentFreeAction=false;
-        //dice.resetKeypadsDice();
         board.deActivateMotion();
     }
     else if(otherPlayer.isItsTurn() && otherPlayer.getcurrentActions() == 0 && status==WAITING_FOR_ACTION)
@@ -1044,7 +1033,6 @@ void BurgleBrosModel::checkTurns()
         handlePersianKittyMove(THIS_PLAYER);
         handleChihuahuaMove(THIS_PLAYER);*/
         playerSpentFreeAction=false;
-        //dice.resetKeypadsDice();
         board.deActivateMotion();
     }
     else if(isGuardsTurn() && guardFinishedMoving==true)
@@ -1349,10 +1337,6 @@ void BurgleBrosModel::makeGuardMove(list<GuardMoveInfo> &guardMovement)
         tokens.turnOffAlarm(guardMoving->getPosition());
         setGuardsNewPath(guardFloor);
     }
-    /*if(myPlayer.getCharacter()== THE_ACROBAT && myPlayer.getPosition() == guardMoving->getPosition()) // Si un acrobat termina su turno en el tile del guardia PERDERA LA CABEZA! digo un stealth token.
-        myPlayer.decLives();
-    if(otherPlayer.getCharacter()== THE_ACROBAT && otherPlayer.getPosition() == guardMoving->getPosition())
-        otherPlayer.decLives();*/
     if(getP2Player(playerOnTurnBeforeGuardMove)->getCharacter() == THE_ACROBAT && getP2Player(playerOnTurnBeforeGuardMove)->getPosition() == guardMoving->getPosition())
         getP2Player(playerOnTurnBeforeGuardMove)->decLives();
     while(stepsToMove!=0 && !gameFinished)
@@ -1434,10 +1418,6 @@ void BurgleBrosModel::copyGuardMove(list<GuardMoveInfo> &guardMovement)
     BurgleBrosGuard *guardMoving = &(guards[guardFloor]);
     if(tokens.isThereAnAlarmToken(guardMoving->getPosition()))     //Si hay una alarma en su posición ya la desactiva y busca un nuevo camino.
         tokens.turnOffAlarm(guardMoving->getPosition());
-    /*if(myPlayer.getCharacter()== THE_ACROBAT && myPlayer.getPosition() == guardMoving->getPosition()) // Si un acrobat termina su turno en el tile del guardia PERDERA LA CABEZA! digo un stealth token.
-        myPlayer.decLives();
-    if(otherPlayer.getCharacter()== THE_ACROBAT && otherPlayer.getPosition() == guardMoving->getPosition())
-        otherPlayer.decLives();*/
     if(getP2Player(playerOnTurnBeforeGuardMove)->getCharacter() == THE_ACROBAT && getP2Player(playerOnTurnBeforeGuardMove)->getPosition() == guardMoving->getPosition())
         getP2Player(playerOnTurnBeforeGuardMove)->decLives();
     for(list<GuardMoveInfo>::iterator it=guardMovement.begin(); it!=guardMovement.end() && !gameFinished; it++)
