@@ -196,10 +196,6 @@ bool BurgleBrosLoots::areLootsOnFloor()
     return retVal;
 }
 
-
-
-
-
 void BurgleBrosLoots::setNewLootOwner(Loot loot, PlayerId playerId) 
 {
     unsigned int i;
@@ -213,7 +209,6 @@ void BurgleBrosLoots::setNewLootOwner(Loot loot, PlayerId playerId)
         persianKitty.first=true;
     
 }
-
 
 BurgleBrosLoots::~BurgleBrosLoots()
 {

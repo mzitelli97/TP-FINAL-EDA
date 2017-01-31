@@ -79,10 +79,6 @@ bool BurgleBrosModel::moveRequiresToInitGuard(CardLocation locationToMove)
 {
     return !guards[locationToMove.floor].checkIfInitialized();
 }
-pair<bool,CardLocation> BurgleBrosModel::getGoldBarInfo()
-{
-    return loots.getGoldBarOnFloor();
-}
 
 void BurgleBrosModel::initBoard(vector<CardName> &allTiles)
 {
@@ -310,6 +306,11 @@ Info2DrawPlayer BurgleBrosModel:: getInfo2DrawPlayer(PlayerId player)
 vector<unsigned int> BurgleBrosModel::getInfo2DrawExtraDices()
 {
     return dice.getCurrDice();
+}
+
+pair<bool,CardLocation> BurgleBrosModel::getGoldBarInfo()
+{
+    return loots.getGoldBarOnFloor();
 }
 
 PlayerId BurgleBrosModel::getPlayerOnTurn()
@@ -897,13 +898,19 @@ void BurgleBrosModel::pickLoot(PlayerId playerId, Loot lootToPick)
     {   gameFinished=true; finishMsg = "ERROR: BBModel error: A pick loot action was called when it wasnt possible to do it!"; }
 }
 
-string BurgleBrosModel::peekGuardsCard(PlayerId playerId, CardLocation *guardCard, unsigned int guardsFloor, string prevChoice)
+string BurgleBrosModel::peekGuardsCard(PlayerId playerId, CardLocation **guardCard, unsigned int guardsFloor, string prevChoice)
 {
     bool actionOk = false;
     string userChoice;
     if(isPeekGuardsCardPossible(playerId, guardsFloor) && !gameFinished)
     {
         //unsigned int guardsFloor= guardCard->floor;
+        if(*guardCard != nullptr) guards[guardsFloor].pushCardToTheTop(**guardCard);  //significa que guardCard es la carta que espio el otro jugador
+        else
+        {
+            spyGuardCard = guards[guardsFloor].getTopCard();
+            *guardCard=&spyGuardCard;        //sino, es un movimiento mio, asi que guardo la carta que espio para mandarla
+        }
         guards[guardsFloor].setTopOfNotShownDeckVisible(true);      //Muestro la carta de arriba
         view->update(this);
         
@@ -917,12 +924,12 @@ string BurgleBrosModel::peekGuardsCard(PlayerId playerId, CardLocation *guardCar
             userChoice=prevChoice;      //Sino es lo pasado por argumento.
             sleep(1); //Se duerme un segundo para mostrar la carta que saco el otro pj.
         }    
-        *guardCard=guards[guardsFloor].getTopCard();        //tomo la carta sacada
+        
         if(userChoice==SPOTTER_TOP)
         {
             guards[guardsFloor].setTopOfNotShownDeckVisible(false); //Si la quería arriba no hago nada y dejo de mostrarla.
             //*guardCard=guards[guardsFloor].getTopCard();
-            guards[guardsFloor].pushCardToTheTop(*guardCard);
+            //guards[guardsFloor].pushCardToTheTop(*guardCard);
         }
         else
         {

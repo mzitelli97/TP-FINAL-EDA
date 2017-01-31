@@ -14,6 +14,7 @@
 #include "BurgleBrosController.h"
 #include "MouseED.h"
 #include "GraphicMenuItem.h"
+#include "GraphicGuardCards.h"
 #include "GUI.h"
 #include "NetworkED.h"
 #include <algorithm>
@@ -159,16 +160,18 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
     if(mouseEvent!=nullptr && status!=INITIALIZING)
     {
         MouseED *p2MouseData = dynamic_cast<MouseED *> (mouseEvent);
-        if( p2MouseData != nullptr && checkIfGameFinished() == false)
+        if( p2MouseData != nullptr)
         {
             ItemInfo temp;
             vector<string> exitMsg={"Quit","Confirm quit", "You have pressed the quit button. Are you sure you wanna quit?"};
             Point aux={(double)p2MouseData->getX(), (double)p2MouseData->getY()};
             temp=view->itemFromClick(aux);
-            CardLocation * auxLocation;
-            PlayerId * auxPlayer;
-            auxInfo * menuInfo;
-            unsigned int * floor;
+            CardLocation * auxLocation = nullptr;
+            PlayerId * auxPlayer = nullptr;
+            auxInfo * menuInfo = nullptr;
+            auxInfoGuard * guardInfo = nullptr;
+            unsigned int * floor = nullptr;
+            string userChoice;
             switch(temp.type)
             {
                 case TILE_CLICK:
@@ -187,8 +190,17 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                     view->update(modelPointer);
                     break;
                 case GUARD_CARDS_CLICK:
-                    floor = (unsigned int *)temp.info;
-                    view->showMenu(modelPointer->getPosibleActionsToGuard(THIS_PLAYER, *floor), aux, *floor);
+                    guardInfo = (auxInfoGuard *)temp.info;
+                    if(guardInfo->shownDeck == true)
+                        view->zoomGuardDeck(guardInfo->floor);
+                    else
+                    {
+                        if(modelPointer->isPeekGuardsCardPossible(THIS_PLAYER,guardInfo->floor))
+                        {
+                            userChoice = modelPointer->peekGuardsCard(THIS_PLAYER,&auxLocation,guardInfo->floor,SPOTTER_NO_PREV_CHOICE);
+                            networkInterface->sendSpyPatrol(*auxLocation,userChoice);
+                        }
+                    }
                     view->update(modelPointer);
                     break;
                 case CHAR_CARD_CLICK:
@@ -298,9 +310,9 @@ void BurgleBrosController::interpretAction(string action, CardLocation location)
     }
     else if(action=="PEEK TOP CARD")
     {
-        CardLocation topOfNotShown;// = location;
+        /*CardLocation * topOfNotShown;// = location;
         string userChoice=modelPointer->peekGuardsCard(THIS_PLAYER,&topOfNotShown,location.floor, SPOTTER_NO_PREV_CHOICE);
-        networkInterface->sendSpyPatrol(topOfNotShown,userChoice);
+        networkInterface->sendSpyPatrol(*topOfNotShown,userChoice);*/
     }
     else
     {
@@ -379,6 +391,7 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
     Loot loot;
     bool guardHasToMove;
     CardLocation guardPosition, guardDice,auxLoc;
+    CardLocation * spyGuardCard = &auxLoc;
     list<GuardMoveInfo> guardMovement;
     vector<unsigned int> dice;
     analizeIfModelRequiresMoreActions(networkEvent);
@@ -532,8 +545,8 @@ void BurgleBrosController::interpretNetworkAction(NetworkED *networkEvent)
             break;
         case SPY_PATROL:
             auxLoc=networkEvent->getSpyPatrolPos();
-            modelPointer->peekGuardsCard(OTHER_PLAYER,&auxLoc,auxLoc.floor,networkEvent->getSpyPatrolChoice());
-            spotterDecision[spotterDecision.size()-1]+=networkEvent->getSpyPatrolChoice();
+            modelPointer->peekGuardsCard(OTHER_PLAYER,&spyGuardCard,auxLoc.floor,networkEvent->getSpyPatrolChoice());
+            spotterDecision[spotterDecision.size()-2]+=networkEvent->getSpyPatrolChoice();
             view->MessageBox(spotterDecision);      //Le informo al usuario lo que el otro jugador hizo con la carta espiada
             networkInterface->sendPacket(ACK);
             break;

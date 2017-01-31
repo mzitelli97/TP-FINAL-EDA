@@ -20,11 +20,12 @@
 
 
 
-GraphicLoot::GraphicLoot(PlayerId owner, ALLEGRO_BITMAP * image) 
+GraphicLoot::GraphicLoot(PlayerId owner, ALLEGRO_BITMAP * image, bool isAGoldBar) 
 {
     this->image = image;
     this->owner = owner;
     isVisible=true;
+    isGoldBarOnFloor = isAGoldBar;
 }
 GraphicLoot::GraphicLoot(ALLEGRO_BITMAP * backImage)
 {
@@ -65,6 +66,12 @@ void GraphicLoot::setPosition(unsigned int quantity)
     max.y = min.y + height;
 
 }
+
+void GraphicLoot::setPosition(CardLocation location)
+{
+    logic2GraphicCardLocation(location);
+}
+
 PlayerId GraphicLoot::getOwner()
 {
     return owner;

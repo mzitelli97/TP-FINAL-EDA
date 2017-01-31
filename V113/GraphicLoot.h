@@ -18,7 +18,7 @@
 
 class GraphicLoot: public GraphicItem {
 public:
-    GraphicLoot(PlayerId owner, ALLEGRO_BITMAP * image);
+    GraphicLoot(PlayerId owner, ALLEGRO_BITMAP * image, bool isAGoldBar);
     
     GraphicLoot(ALLEGRO_BITMAP * backImage);
     GraphicLoot(const GraphicLoot& orig);
@@ -26,10 +26,12 @@ public:
     void setOwner(PlayerId owner);
     virtual ItemInfo IAm();
     void setPosition(unsigned int quantity);
+    void setPosition(CardLocation location);
     virtual ~GraphicLoot();
 private:
     bool isVisible;
     PlayerId owner;
+    bool isGoldBarOnFloor;
 };
 
 #endif /* GRAPHICLOOT_H */
