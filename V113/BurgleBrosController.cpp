@@ -213,14 +213,6 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                     view->zoomFloor(*floor,modelPointer);
                     view->update(modelPointer);
                     break;
-                case EXIT_BUTTON_CLICK:
-                    if(view->yesNoMessageBox(exitMsg)==1)
-                    {
-                        networkInterface->sendPacket(QUIT);
-                        waiting4QuitAck=true;
-                        quitCause=USER_QUIT;
-                    }
-                    break;
                 case PASS_BUTTON_CLICK:
                     view->eraseMenu();
                     if(modelPointer->getPlayerOnTurn()==THIS_PLAYER)
@@ -229,9 +221,19 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                         networkInterface->sendPacket(PASS);
                     }
                     break;
+                case VOL_BUTTON_CLICK:
+                    break;
                 case HELP_BUTTON_CLICK:
                     view->cheatCards();
                     view->update(modelPointer);
+                    break;
+                case EXIT_BUTTON_CLICK:
+                    if(view->yesNoMessageBox(exitMsg)==1)
+                    {
+                        networkInterface->sendPacket(QUIT);
+                        waiting4QuitAck=true;
+                        quitCause=USER_QUIT;
+                    }
                     break;
                 default:
                     view->eraseMenu();

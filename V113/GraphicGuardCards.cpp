@@ -16,6 +16,8 @@
 #define CARD_WIDTH (totalWidth/11.0)
 #define CARD_HEIGHT (totalHeight/7.0)
 #define SEPARATION (FLOOR_HEIGHT-2*CARD_WIDTH)
+#define RADIX (totalWidth/250.0)
+#define RED al_map_rgb(200,10,10)
 
 GraphicGuardCards::GraphicGuardCards(ALLEGRO_BITMAP * image, unsigned int floor, bool isShownDeck)
 {
@@ -113,6 +115,7 @@ void GraphicGuardCards::drawOnZoom()
         al_draw_scaled_bitmap(*it,0,0,al_get_bitmap_width(*it),al_get_bitmap_height(*it),
                 min.x +i%4 * width, min.y + (int)i/4 * height, width, height, 0);
     }
+    al_draw_rounded_rectangle(min.x,min.y,max.x,max.y,RADIX,RADIX,RED,RADIX);
 }
 
 

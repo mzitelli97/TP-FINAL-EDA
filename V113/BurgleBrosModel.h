@@ -128,6 +128,7 @@ class BurgleBrosModel : public Model
         void checkIfWonOrLost();
         void handlePersianKittyMove(unsigned int die);
         void handleChihuahuaMove(unsigned int die);
+        void triggerAlarm(CardLocation tile);
         void triggerSilentAlarm(unsigned int floor);
         void handleSpecialMoveFromMotion(CardLocation movingTo,bool *cardWasVisible);
         bool GuardInCamera();

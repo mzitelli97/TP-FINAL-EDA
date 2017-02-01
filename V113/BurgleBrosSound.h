@@ -21,6 +21,7 @@
 #include <vector>
 
 #define MUSIC_FOLDER "Music/"
+#define SOUNDS_FOLDER "Sounds/"
 
 
 #define THEME_1 "Pink panther"
@@ -37,6 +38,7 @@ public:
     virtual ~BurgleBrosSound();
 private:
     vector<ALLEGRO_SAMPLE *> samples;
+    string soundEffect2String(SoundEffect effect);
     bool loadAllSamples();
     bool initOK;
 
