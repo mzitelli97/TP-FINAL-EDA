@@ -20,9 +20,9 @@ using namespace std;
 BurgleBrosSound::BurgleBrosSound() {
     bool test;
     initOK=loadAllSamples();
-    al_reserve_samples(1);
+    al_reserve_samples(3);
     if(initOK)
-         //test=al_play_sample(samples.front(), 1.0, 0.0, 1.0,ALLEGRO_PLAYMODE_LOOP, NULL);
+         test=al_play_sample(samples.front(), 1.0, 0.0, 1.0,ALLEGRO_PLAYMODE_LOOP, NULL);
     cout<<(unsigned int)test;
     onMute = false;
 }
@@ -33,9 +33,8 @@ BurgleBrosSound::BurgleBrosSound(const BurgleBrosSound& orig) {
 
 void BurgleBrosSound::playSoundEffect(SoundEffect effect)
 {
-    //list<ALLEGRO_SAMPLE *>::iterator it = samples.begin();
-    if(!onMute)
-        al_play_sample(samples[(int)effect+1], 1.0, 0.0, 1.0,ALLEGRO_PLAYMODE_ONCE, NULL);
+    if(!onMute && initOK)
+        al_play_sample(samples[(int)effect+1], 1.5, 0.0, 1.0,ALLEGRO_PLAYMODE_ONCE, NULL);
 }
 bool BurgleBrosSound::loadAllSamples()
 {
@@ -86,6 +85,14 @@ void BurgleBrosSound::toggleMute()
     else
         al_stop_samples();
 }
+
+void BurgleBrosSound::reset()
+{
+    onMute = false;
+    al_stop_samples();              //paro todos los sonidos que pueda haber
+    al_play_sample(samples.front(), 1.0, 0.0, 1.0,ALLEGRO_PLAYMODE_LOOP, NULL); //reinicio la musica de fondo
+}
+
 
 BurgleBrosSound::~BurgleBrosSound() {
 }

@@ -22,6 +22,7 @@ public:
     SoundManager(const SoundManager& orig);
     virtual void playSoundEffect(SoundEffect effect)=0;
     virtual void toggleMute()=0;
+    virtual void reset()=0;
     virtual ~SoundManager();
 private:
 

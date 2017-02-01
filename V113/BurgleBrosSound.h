@@ -36,6 +36,7 @@ public:
     BurgleBrosSound(const BurgleBrosSound& orig);
     virtual void playSoundEffect(SoundEffect effect);
     virtual void toggleMute();
+    virtual void reset();
     virtual ~BurgleBrosSound();
 private:
     vector<ALLEGRO_SAMPLE *> samples;

@@ -222,7 +222,7 @@ void BurgleBrosController::parseMouseEvent(EventData *mouseEvent)
                     }
                     break;
                 case VOL_BUTTON_CLICK:
-                    //modelPointer->toggleVol();
+                    modelPointer->toggleVol();
                     break;
                 case HELP_BUTTON_CLICK:
                     view->cheatCards();

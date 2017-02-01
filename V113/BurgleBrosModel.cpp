@@ -61,6 +61,7 @@ void BurgleBrosModel::reset()
     specialMotionCase=false;
     finishMsg.clear();
     auxMsgsToShow.clear();
+    soundManager->reset();
 }
 
 void BurgleBrosModel::attachView(View * view)
@@ -562,7 +563,8 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
         movingPlayer->decActions();
         movingPlayer->setPosition(locationToMove);
         
-        
+        if(locationToMove.floor != prevLocation.floor && (board.getCardType(prevLocation) == STAIR || tokens.isThereADownstairToken(prevLocation)))
+            soundManager->playSoundEffect(STAIRS_STEPS);
         
         //Cambios segun el lugar desde el que me muevo
         if(board.getCardType(prevLocation)==MOTION && board.isMotionActivated())
@@ -1000,6 +1002,7 @@ void BurgleBrosModel::escape(PlayerId playerId, CardLocation stairTile)
         while(p->getcurrentActions())
             p->decActions();
         p->getToDaChoppa(); 
+        soundManager->playSoundEffect(STAIRS_STEPS);
         view->update(this);
         checkTurns();
         view->update(this);
