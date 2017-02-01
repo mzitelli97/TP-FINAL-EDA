@@ -35,12 +35,14 @@ public:
     BurgleBrosSound();
     BurgleBrosSound(const BurgleBrosSound& orig);
     virtual void playSoundEffect(SoundEffect effect);
+    virtual void toggleMute();
     virtual ~BurgleBrosSound();
 private:
     vector<ALLEGRO_SAMPLE *> samples;
     string soundEffect2String(SoundEffect effect);
     bool loadAllSamples();
     bool initOK;
+    bool onMute;
 
 };
 

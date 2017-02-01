@@ -80,6 +80,7 @@ class BurgleBrosModel : public Model
         bool userDecidedTo(string decision); // Devuelve si hay que llamar a move guard.
         /*Otras funciones*/
         void setDice(vector<unsigned int> &dice);
+        void toggleVol();
         bool dieForLootNeeded();      //Si es necesario tirar un dado para el chihuahua o persian kitty
         void continueGame();        //Si el juego estaba parado por los dados para el loot, se le dice que continúe.
         unsigned int rollDieForLoot(unsigned int die);          //Tira un dado para los loots y devuelve el número que salió. en el caso que tenga chihuahua y persian kitty el player, primero se tira por chihuahua y luego por persian kitty.

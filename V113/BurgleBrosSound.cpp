@@ -24,6 +24,7 @@ BurgleBrosSound::BurgleBrosSound() {
     if(initOK)
          //test=al_play_sample(samples.front(), 1.0, 0.0, 1.0,ALLEGRO_PLAYMODE_LOOP, NULL);
     cout<<(unsigned int)test;
+    onMute = false;
 }
 
 BurgleBrosSound::BurgleBrosSound(const BurgleBrosSound& orig) {
@@ -33,7 +34,8 @@ BurgleBrosSound::BurgleBrosSound(const BurgleBrosSound& orig) {
 void BurgleBrosSound::playSoundEffect(SoundEffect effect)
 {
     //list<ALLEGRO_SAMPLE *>::iterator it = samples.begin();
-    al_play_sample(samples[(int)effect+1], 1.0, 0.0, 1.0,ALLEGRO_PLAYMODE_ONCE, NULL);
+    if(!onMute)
+        al_play_sample(samples[(int)effect+1], 1.0, 0.0, 1.0,ALLEGRO_PLAYMODE_ONCE, NULL);
 }
 bool BurgleBrosSound::loadAllSamples()
 {
@@ -76,6 +78,14 @@ string BurgleBrosSound::soundEffect2String(SoundEffect effect)
     return retVal;
 }
 
+void BurgleBrosSound::toggleMute()
+{
+    onMute ^= true;
+    if(!onMute)
+        al_play_sample(samples.front(), 1.0, 0.0, 1.0,ALLEGRO_PLAYMODE_LOOP, NULL);
+    else
+        al_stop_samples();
+}
 
 BurgleBrosSound::~BurgleBrosSound() {
 }

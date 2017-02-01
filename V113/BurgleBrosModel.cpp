@@ -1698,6 +1698,12 @@ void BurgleBrosModel::triggerAlarm(CardLocation tile)
     soundManager->playSoundEffect(ALARM_TRIGGERED);
 }
 
+void BurgleBrosModel::toggleVol()
+{
+    soundManager->toggleMute();
+}
+
+
 BurgleBrosModel::~BurgleBrosModel()
 {
 }
