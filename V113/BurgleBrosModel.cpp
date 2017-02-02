@@ -1655,17 +1655,20 @@ unsigned int BurgleBrosModel::rollDieForLoot(unsigned int die)
 void BurgleBrosModel::handlePersianKittyMove(unsigned int die)
 {
     BurgleBrosPlayer *p=getP2Player(getPlayerOnTurn());
-    if(p->isItsTurn() && p->hasLoot(PERSIAN_KITTY) && board.canKittyMove(p->getPosition()))   
+    if(loots.isLootDrawn(PERSIAN_KITTY) && board.canKittyMove(p->hasLoot(PERSIAN_KITTY) ? p->getPosition() : tokens.getPersianKittyToken().second))   
     {
         bool itWillMove;
         if(getPlayerOnTurn()==THIS_PLAYER)      //Si es este jugador tira los dados
             itWillMove=dice.persianKittyShallMove();
-        else if(getPlayerOnTurn()==OTHER_PLAYER)    //SIno pone el dado recibido
+        else if(getPlayerOnTurn()==OTHER_PLAYER)    //Sino pone el dado recibido
             itWillMove=dice.persianKittyShallMove(die);
         if(itWillMove)
         {
-            p->deattachLoot(PERSIAN_KITTY);
-            loots.setNewLootOwner(PERSIAN_KITTY,NON_PLAYER);
+            if(p->hasLoot(PERSIAN_KITTY))
+            {
+                p->deattachLoot(PERSIAN_KITTY);
+                loots.setNewLootOwner(PERSIAN_KITTY,NON_PLAYER);
+            }
             pair<bool, CardLocation> persianKittyToken;
             persianKittyToken.first = true;
             persianKittyToken.second = board.getKittyMovingPos(p->getPosition());

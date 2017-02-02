@@ -36,7 +36,7 @@ public:
         void activateMotion();          //Activa el sensor de motion 
         void deActivateMotion();        //Desactiva el sensor de motion
         bool isMotionActivated();
-        bool canKittyMove(CardLocation ownerPos);       //FALTA CAMBIAR
+        bool canKittyMove(CardLocation kittyPos);       //FALTA CAMBIAR
         CardLocation getKittyMovingPos(CardLocation ownerPos);      //FALTA CAMBIAR
 	~BurgleBrosBoard();
 private:

@@ -44,7 +44,7 @@ public:
     unsigned int howManyTokensOnCPURoom(CardName cpuRoom);
     void placeCrowToken(CardLocation location);
     bool isThereAKeypadToken(CardLocation location);
-    void putKeyPadToken(CardLocation location);//no se fija que el location sea un keypad (discutir)
+    void putKeyPadToken(CardLocation location);
     bool isThereAToken(CardLocation location, Token whichToken); //FALTA DESARROLLAR
     bool isThereADownstairToken(CardLocation location);
     bool isThereAnAlarmToken(CardLocation location);

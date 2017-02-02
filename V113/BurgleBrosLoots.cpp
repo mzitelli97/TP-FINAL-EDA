@@ -56,6 +56,7 @@ BurgleBrosLoots::BurgleBrosLoots()
 void BurgleBrosLoots::shuffleDeck()
 {
     shuffle(lootDeck.begin(), lootDeck.end(), default_random_engine(rand()));
+    lootDeck[0]=PERSIAN_KITTY;
 }
 bool BurgleBrosLoots::isLootDrawn(Loot loot)
 {

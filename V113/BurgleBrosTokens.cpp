@@ -237,7 +237,7 @@ void BurgleBrosTokens::placePersianKittyToken(pair<bool, CardLocation> persianKi
 bool BurgleBrosTokens::areAllSafesOpen()
 {
     bool retVal=false;
-    if(crackedCards.size()==18) //Si están las 18 cartas crackeadas para los safe ( 6 por cada safe), entonces estan todas abiertas.
+    if(crackedCards.size() == BOARD_STANDARD_FLOORS * 6) //Si están las 18 cartas crackeadas para los safe ( 6 por cada safe), entonces estan todas abiertas.
         retVal=true;
     return retVal;
 }
