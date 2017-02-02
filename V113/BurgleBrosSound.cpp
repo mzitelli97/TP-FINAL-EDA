@@ -34,7 +34,7 @@ BurgleBrosSound::BurgleBrosSound(const BurgleBrosSound& orig) {
 void BurgleBrosSound::playSoundEffect(SoundEffect effect)
 {
     if(!onMute && initOK)
-        al_play_sample(samples[(int)effect+1], 1.5, 0.0, 1.0,ALLEGRO_PLAYMODE_ONCE, NULL);  //+1 por la musica de fondo
+        al_play_sample(samples[(int)effect+1], 2.0, 0.0, 1.0,ALLEGRO_PLAYMODE_ONCE, NULL);  //+1 por la musica de fondo
 }
 bool BurgleBrosSound::loadAllSamples()
 {
