@@ -87,8 +87,7 @@ void BurgleBrosView::reset()
 }
 
 void BurgleBrosView::ViewInit(BurgleBrosModel* model)
-{
-    /*VEO SI ANDA ASI O SINO VER CASTEO CON */    
+{  
     //creo los info2draw
     vector<Info2DrawCards> info_tiles= model->getInfo2DrawCards();
     Info2DrawGuard infoGuard[3];
@@ -129,6 +128,7 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
     //creo una lista de Buttons
     list<GraphicItem* > auxButtons_list;
     GraphicButton *auxButton;
+    /*Los botones de zoom para cada piso*/
     for(int i = 0; i < BOARD_STANDARD_FLOORS; i++)
     {
         auxButton = new GraphicButton(imageLoader.getImageP(ZOOM_BUTTON), nullptr, ZOOM_BUTTON, al_get_display_width(display), al_get_display_height(display));
@@ -136,11 +136,14 @@ void BurgleBrosView::ViewInit(BurgleBrosModel* model)
         auxButton->setLocation();
         auxButtons_list.push_back(auxButton);
     }
-    for(int i = (int)MUTE_BUTTON; i <= (int)QUIT_BUTTON; i++)
+    /*El boton del volumen*/
+    auxButton = new GraphicButton(imageLoader.getImageP(MUTE_BUTTON), imageLoader.getImageP(UNMUTE_BUTTON), MUTE_BUTTON, al_get_display_width(display), al_get_display_height(display));
+    auxButtons_list.push_back(auxButton);
+    /*Los demas botones*/
+    for(int i = (int)PASS_BUTTON; i <= (int)QUIT_BUTTON; i++)
     {
         auxButton = new GraphicButton(imageLoader.getImageP((buttonAction)i), nullptr, (buttonAction)i, al_get_display_width(display), al_get_display_height(display));
         auxButtons_list.push_back(auxButton);
-        if(i == (int)MUTE_BUTTON) i++;          //this is because there are the MUTE and the UNMUTE buttons
     }
           
     //creo una lista de graphicCharacterscards
@@ -679,6 +682,16 @@ void BurgleBrosView::zoomGuardDeck(unsigned int floor)
             if(i == (int)MUTE_BUTTON) i++;         //this is because there are the MUTE and the UNMUTE buttons
         }
     }   
+}
+
+void BurgleBrosView::toggleVolButton()
+{
+    list<GraphicItem *>::iterator it = accessGraphicItems(FIRST_LAYER, (unsigned int) BUTTONS_LIST);
+    advance(it,BOARD_STANDARD_FLOORS);      //avanzo  hasta el boton del volumen(primero estan los de zoom)
+    GraphicButton * button;
+    button = dynamic_cast<GraphicButton *> (*it);
+    if(button != nullptr)
+            button->toggleMute();
 }
 
 

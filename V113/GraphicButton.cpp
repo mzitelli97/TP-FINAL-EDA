@@ -107,10 +107,16 @@ void GraphicButton::setZoomFloor(unsigned int floor)
 
 void GraphicButton::toggleMute()
 {
+    ALLEGRO_BITMAP * aux;
     if(button==MUTE_BUTTON)
         button=UNMUTE_BUTTON;
+        
     if(button==UNMUTE_BUTTON)
         button=MUTE_BUTTON;
+    aux = image;
+    image = image_2;
+    image_2 = aux;
+        
 }
 
 void GraphicButton::setLocation()

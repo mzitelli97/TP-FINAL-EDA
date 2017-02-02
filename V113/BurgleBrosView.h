@@ -36,7 +36,7 @@ public:
      TILE -> CARDLOCATION
      LOOT_CARD -> OWNER(actionOrigin)
      PLAYER_CARDS -> ACTIONORIGIN
-     GUARD_CARD -> FLOOR(unsigned int)
+     GUARD_CARD -> AUXGUARDINFO(unsigned int y bool)
      MENU_ITEM -> AUXINFO (string y cardLocation)*/
     ItemInfo itemFromClick(Point point);
     
@@ -50,6 +50,7 @@ public:
     void zoomLoot(PlayerId owner);
     void zoomPlayerCard(PlayerId player);
     void zoomGuardDeck(unsigned int floor);
+    void toggleVolButton();
     string MessageBox(vector<string> &message);
     int yesNoMessageBox(vector<string> &message);
     void cheatCards();
