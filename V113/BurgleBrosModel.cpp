@@ -483,6 +483,8 @@ void BurgleBrosModel::setDice(vector<unsigned int> &currDice)
     {
         tokens.putKeyPadToken(movingPlayer->getPosition());
         soundManager->playSoundEffect(KEYPAD_OPENED);
+        if(movingPlayer->getPosition() == guards[movingPlayer->getPosition().floor].getPosition())
+            movingPlayer->decLives();       //si habia un guardia al entrar al keypad, pierde una vida
     }
     else
     {
@@ -596,7 +598,8 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
         
         view->update(this);
         if(locationToMove==guards[locationToMove.floor].getPosition() && board.getCardType(locationToMove)!= LAVATORY && movingPlayer->getCharacter()!=THE_ACROBAT)
-            movingPlayer->decLives();
+            if( !(board.getCardType(locationToMove) == KEYPAD && !tokens.isThereAKeypadToken(locationToMove)) )     //esto cubre el caso de que te rebote el keypad
+                movingPlayer->decLives();
         
         CardLocation downstairsLocationToMove={locationToMove.floor-1, locationToMove.row, locationToMove.column};
         if(prevLocation==downstairsLocationToMove && !tokens.isThereADownstairToken(locationToMove))
