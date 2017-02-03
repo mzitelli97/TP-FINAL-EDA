@@ -30,6 +30,8 @@
 #define USE_LAVATORY_TOKEN_TEXTB "Use Lavatory stealth token"
 #define USE_MY_STEALTH_TOKEN_TEXTB "Use one of my stealth tokens"
 #define SPEND_ACTIONS_TEXTB "Spend actions"
+#define SPEND_3ACTIONS_TEXTB "Spend 3 extra actions"
+#define SPEND_2ACTIONS_TEXTB "Spend 2 extra actions"
 #define GET_BACK_TEXTB  "Go back"
 #define SPEND_ACTION_TEXTB "Spend action"
 #define USE_HACK_TOKEN_TEXTB "Use hack token"

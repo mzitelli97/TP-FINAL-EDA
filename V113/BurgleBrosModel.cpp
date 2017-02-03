@@ -376,13 +376,15 @@ bool BurgleBrosModel::userDecidedTo(string userChoice)
     }
     else if(msgsToShow[2]==deadbolt[2])
     {
-        if(userChoice==SPEND_ACTIONS_TEXTB)//decide gastar las acciones y entra
-        {
-            for(unsigned int i=0;i<2;++i)//PODRIA SER UN DEFINE EL 2
-                movingPlayer->decActions();
-        }
+        unsigned int actionsSpend = 0;
+        if(userChoice==SPEND_3ACTIONS_TEXTB)//decide gastar las acciones y entra (cuando no era visible)
+            actionsSpend = 3;
+        else if (userChoice == SPEND_2ACTIONS_TEXTB)//decide gastar las acciones y entra (cuando era visible)
+            actionsSpend = 2;
         else if(userChoice==GET_BACK_TEXTB)//decide no gastar las acciones y vuelve atras
             movingPlayer->setPosition(prevLoc);
+        for(unsigned int i=0;i<actionsSpend;++i)
+                movingPlayer->decActions();
     }
     else if(msgsToShow[2]==fingerPrint[2])
     {
@@ -399,13 +401,18 @@ bool BurgleBrosModel::userDecidedTo(string userChoice)
     }
     else if(msgsToShow[2]==laser[2])
     {
+        unsigned int actionsSpend = 0;
         if(userChoice==TRIGGER_ALARM_TEXTB)
         {    //tokens.triggerAlarm(movingPlayer->getPosition()); setGuardsNewPath(movingPlayer->getPosition().floor);}
             triggerAlarm(movingPlayer->getPosition());
         }
         else if(userChoice==USE_HACK_TOKEN_TEXTB)
             tokens.removeOneHackTokenOf(COMPUTER_ROOM_LASER);
-        else if(userChoice==SPEND_ACTION_TEXTB)
+        else if(userChoice==SPEND_ACTION_TEXTB)     //si decidio gastar las acciones y estaba visible(necesita 1 extra)
+            actionsSpend = 1;
+        else if(userChoice == SPEND_2ACTIONS_TEXTB) //si decidio gastar las acciones y no estaba visible(necesita 2 extra)
+            actionsSpend = 2;
+        for(int i = 0; i < actionsSpend; i++)
             movingPlayer->decActions();
         if(movingPlayer->getcurrentActions() == 0 && getPlayerOnTurn() == THIS_PLAYER && msgsToShow.size()==5 && msgsToShow[4]==USE_HACK_TOKEN_TEXTB && userChoice==TRIGGER_ALARM_TEXTB)
             guardHasToMove=true; //En el caso que: this player se mete a un laser y se queda sin acciones, pero tenía token y decide no usar un token, no se manda ningun paquete, por lo cual se tiene que manda el paquete de guardmove.
@@ -504,10 +511,10 @@ void BurgleBrosModel::pass(PlayerId playerId)
     {
         while(p->getcurrentActions())
             p->decActions();
-        if(board.getCardType(p->getPosition()) == THERMO && board.isCardVisible(p->getPosition()))
+        /*if(board.getCardType(p->getPosition()) == THERMO && board.isCardVisible(p->getPosition()))
         {   //tokens.triggerAlarm(p->getPosition()); setGuardsNewPath(p->getPosition().floor);}
             triggerAlarm(p->getPosition());
-        }
+        }*/
         checkTurns();
         view->update(this);
         actionOk=true;
@@ -615,10 +622,10 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
         
         //Cambios segun el tipo de carta al que me movi
         
-        //Si me movi a un atrium y hay un guard arriba o abajo se activa una alarma
+        //Si me movi a un atrium y hay un guard arriba o abajo pierde una vida
         if(newCardType==ATRIUM &&
                 ( (locationToMove.floor>0 && board.isCardDownstairs(locationToMove,guards[locationToMove.floor-1].getPosition()) ) || ( locationToMove.floor<2 && board.isCardUpstairs(locationToMove,guards[locationToMove.floor+1].getPosition()) ) ) )
-            movingPlayer->decLives();//OJO SI PIERDE NO HACE NADA POR AHORA!!!!!!!!!!!!!
+            movingPlayer->decLives();
         //Si me movi a una camara y hay un guardia en otra camara activo una alarma en donde estoy
         if( newCardType==CAMERA && GuardInCamera() && locationToMove!= guards[locationToMove.floor].getPosition() ) 
         {//tokens.triggerAlarm(locationToMove); setGuardsNewPath(locationToMove.floor);}
@@ -626,21 +633,21 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
         }
         //Si me movi a un foyer y hay un guardia en un tile adyacente me ve (a menos que haya una pared)
         if( newCardType== FOYER && board.adjacentCards(locationToMove, guards[locationToMove.floor].getPosition() ) )
-            movingPlayer->decLives();//OJO SI PIERDE NO HACE NADA POR AHORA!!!!!!!!!!!!!
+            movingPlayer->decLives();
         //Si me movi a un deadbolt tengo que gastar 3 acciones para entrar o vuelvo a donde estaba
         if( newCardType==DEADBOLT && locationToMove!=guards[locationToMove.floor].getPosition() && locationToMove!=playerNotMoving->getPosition())
         {   
-            if(movingPlayer->getcurrentActions()<2 && !cardWasVisible)
+            if(movingPlayer->getcurrentActions()<3 && !cardWasVisible)  //si revelo el tile con un move, necesito 3 acciones mas
                 movingPlayer->setPosition(prevLocation);
             else if(!specialMotionCase)
             {
-                std::vector<string> aux({DEADBOLT_TEXT,SPEND_ACTIONS_TEXTB,GET_BACK_TEXTB});
+                std::vector<string> aux({DEADBOLT_TEXT,SPEND_2ACTIONS_TEXTB,GET_BACK_TEXTB});
+                if(!cardWasVisible) aux[aux.size()-2] = SPEND_3ACTIONS_TEXTB;
                 this->msgsToShow=aux;
                 this->status=WAITING_FOR_USER_CONFIRMATION; //Pone al modelo en el estado de espera por la respuesta del usuario.
                 this->prevLoc=prevLocation;
-            }
-                
-        }    
+            }    
+        }
         //Si quiero entrar a un keypad y no esta abierto tengo que tirar los dados (el numero de dados se corresponde con los intentos en el mismo turno)
         if( newCardType==KEYPAD && !tokens.isThereAKeypadToken(locationToMove) && !specialMotionCase)
         {
@@ -651,42 +658,45 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
         
         if(movingPlayer->getCharacter()!=THE_HACKER && ( playerNotMoving->getCharacter()!=THE_HACKER || (playerNotMoving->getCharacter()==THE_HACKER && locationToMove!= playerNotMoving->getPosition() ) ))
         {    
-        if( newCardType==FINGERPRINT)//hay que arreglar el tema de cuando hace click en la cruz del native message
-        {
-               if(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_FINGERPRINT) && !specialMotionCase )//Si hay tokens disponibles
-               {
-                  std::vector<string> aux({ENTER_FINGERPRINT_TEXT,USE_HACK_TOKEN_TEXTB,TRIGGER_ALARM_TEXTB});  //Esto contiene el título del cartelito, subtitulo y texto, por eso vector
-                  this->msgsToShow=aux;
-                  this->status=WAITING_FOR_USER_CONFIRMATION;
-               }
-               else
-               {
-                   triggerAlarm(locationToMove);
-                   //tokens.triggerAlarm(locationToMove);
-                   //setGuardsNewPath(locationToMove.floor); //Así se pone el dado a donde tiene que ir, este lo necesitaba desde el guardia
-               }
-        }   
-          
-        if( newCardType==MOTION)
-            board.activateMotion();//hay que marcar que se entro en este turno y si sale en el mismo turno tiene que gastar un token o activar una alarma, en el proximo ya puede salir
-         
-        if(newCardType==LASER && !movingPlayer->hasLoot(MIRROR))
-        {   
-            if( !(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_LASER)) && !(movingPlayer->getcurrentActions()) )
-            {//tokens.triggerAlarm(locationToMove); setGuardsNewPath(locationToMove.floor);}
-                triggerAlarm(locationToMove);
-            }
-            else if(!specialMotionCase)
+            if( newCardType==FINGERPRINT)//hay que arreglar el tema de cuando hace click en la cruz del native message
             {
-                std::vector<string> aux({LASER_TEXT,TRIGGER_ALARM_TEXTB}); 
-                if(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_LASER))
-                    aux.push_back(USE_HACK_TOKEN_TEXTB);
-                if(movingPlayer->getcurrentActions())
-                    aux.push_back(SPEND_ACTION_TEXTB);
-                this->msgsToShow=aux;
-                this->status=WAITING_FOR_USER_CONFIRMATION;
+                   if(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_FINGERPRINT) && !specialMotionCase )//Si hay tokens disponibles
+                   {
+                      std::vector<string> aux({ENTER_FINGERPRINT_TEXT,USE_HACK_TOKEN_TEXTB,TRIGGER_ALARM_TEXTB});  //Esto contiene el título del cartelito, subtitulo y texto, por eso vector
+                      this->msgsToShow=aux;
+                      this->status=WAITING_FOR_USER_CONFIRMATION;
+                   }
+                   else
+                   {
+                       triggerAlarm(locationToMove);
+                       //tokens.triggerAlarm(locationToMove);
+                       //setGuardsNewPath(locationToMove.floor); //Así se pone el dado a donde tiene que ir, este lo necesitaba desde el guardia
+                   }
+            }   
+
+            if( newCardType==MOTION)
+                board.activateMotion();//hay que marcar que se entro en este turno y si sale en el mismo turno tiene que gastar un token o activar una alarma, en el proximo ya puede salir
+
+            if(newCardType==LASER && !movingPlayer->hasLoot(MIRROR))
+            {   
+                if( !(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_LASER)) )     //si no hay hack tokens de laser
+                    if(cardWasVisible ? movingPlayer->getcurrentActions()<1 : movingPlayer->getcurrentActions()<2)
+                    {//tokens.triggerAlarm(locationToMove); setGuardsNewPath(locationToMove.floor);}
+                        triggerAlarm(locationToMove);
+                    }
+                else if(!specialMotionCase)
+                {
+                    std::vector<string> aux({LASER_TEXT,TRIGGER_ALARM_TEXTB});
+                    if(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_LASER))
+                        aux.push_back(USE_HACK_TOKEN_TEXTB);
+                    if(cardWasVisible && movingPlayer->getcurrentActions()>=1)
+                        aux.push_back(SPEND_ACTION_TEXTB);
+                    else if(!cardWasVisible && movingPlayer->getcurrentActions()>=2)
+                        aux.push_back(SPEND_2ACTIONS_TEXTB);
+                    this->msgsToShow=aux;
+                    this->status=WAITING_FOR_USER_CONFIRMATION;
+                }
             }
-        }
         }
         
         if(newCardType==LAVATORY)
@@ -746,7 +756,7 @@ void BurgleBrosModel::handleSpecialMoveFromMotion(CardLocation movingToTile, boo
     else if(moveTo==DEADBOLT && movingToTile!=guards[movingToTile.floor].getPosition() && movingToTile!=playerNotMoving->getPosition() && playerMoving->getcurrentActions()>=2)
     {   
         specialMotionCase=true;
-        std::vector<string> aux({ENTER_FINGERPRINT_TEXT,USE_HACK_TOKEN_TEXTB,TRIGGER_ALARM_TEXTB});  //Esto contiene el título del cartelito, subtitulo y texto, por eso vector
+        std::vector<string> aux({DEADBOLT_TEXT,SPEND_ACTIONS_TEXTB,GET_BACK_TEXTB});  //Esto contiene el título del cartelito, subtitulo y texto, por eso vector
         this->auxMsgsToShow=aux;
     }
     else if(moveTo==KEYPAD && !tokens.isThereAKeypadToken(movingToTile))

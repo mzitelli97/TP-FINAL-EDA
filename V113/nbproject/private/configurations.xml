@@ -34,10 +34,10 @@
           <runcommandpicklistitem>"${OUTPUT_PATH}" VICKY 25.9.110.200</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" PEPE 127.0.0.1</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" MAXI 127.0.0.1</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" MAXI_1 25.9.131.28</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" MAXI 25.19.160.63</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" MAXI_1 25.9.131.28</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}" MAXI 25.19.160.63</runcommand>
+        <runcommand>"${OUTPUT_PATH}" MAXI_1 25.9.131.28</runcommand>
         <rundir></rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>
