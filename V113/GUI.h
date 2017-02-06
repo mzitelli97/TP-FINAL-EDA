@@ -27,7 +27,7 @@ class GUI {
 public:
     GUI();
     GUI(const GUI& orig);
-    void getNameAndIp(string userName, string ipToConnect);
+    void getNameAndIp(string userName, string ipToConnect, string ipToListen);
     void connect();
     bool hayEvento(void);
     void parseEvento(void);
@@ -40,6 +40,7 @@ private:
     string userName;
     bool error;
     string ipToConnect;
+    string ipToListen;
     CommunicationRole communicationRole;
     GuiEvent event;
     ALLEGRO_TIMER * timer;

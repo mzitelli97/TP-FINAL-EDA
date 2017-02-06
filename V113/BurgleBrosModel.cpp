@@ -377,9 +377,11 @@ bool BurgleBrosModel::userDecidedTo(string userChoice)
     else if(msgsToShow[2]==deadbolt[2])
     {
         unsigned int actionsSpend = 0;
-        if(userChoice==SPEND_3ACTIONS_TEXTB)//decide gastar las acciones y entra (cuando no era visible)
+        /*if(userChoice==SPEND_3ACTIONS_TEXTB)//decide gastar las acciones y entra (cuando no era visible)
             actionsSpend = 3;
         else if (userChoice == SPEND_2ACTIONS_TEXTB)//decide gastar las acciones y entra (cuando era visible)
+            actionsSpend = 2;*/
+        if(userChoice==SPEND_ACTIONS_TEXTB)
             actionsSpend = 2;
         else if(userChoice==GET_BACK_TEXTB)//decide no gastar las acciones y vuelve atras
             movingPlayer->setPosition(prevLoc);
@@ -410,8 +412,8 @@ bool BurgleBrosModel::userDecidedTo(string userChoice)
             tokens.removeOneHackTokenOf(COMPUTER_ROOM_LASER);
         else if(userChoice==SPEND_ACTION_TEXTB)     //si decidio gastar las acciones y estaba visible(necesita 1 extra)
             actionsSpend = 1;
-        else if(userChoice == SPEND_2ACTIONS_TEXTB) //si decidio gastar las acciones y no estaba visible(necesita 2 extra)
-            actionsSpend = 2;
+        /*else if(userChoice == SPEND_2ACTIONS_TEXTB) //si decidio gastar las acciones y no estaba visible(necesita 2 extra)
+            actionsSpend = 2;*/
         for(int i = 0; i < actionsSpend; i++)
             movingPlayer->decActions();
         if(movingPlayer->getcurrentActions() == 0 && getPlayerOnTurn() == THIS_PLAYER && msgsToShow.size()==5 && msgsToShow[4]==USE_HACK_TOKEN_TEXTB && userChoice==TRIGGER_ALARM_TEXTB)
@@ -637,12 +639,12 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
         //Si me movi a un deadbolt tengo que gastar 3 acciones para entrar o vuelvo a donde estaba
         if( newCardType==DEADBOLT && locationToMove!=guards[locationToMove.floor].getPosition() && locationToMove!=playerNotMoving->getPosition())
         {   
-            if(movingPlayer->getcurrentActions()<3 && !cardWasVisible)  //si revelo el tile con un move, necesito 3 acciones mas
+            if(movingPlayer->getcurrentActions()<2 && !cardWasVisible)  //si revelo el tile con un move, necesito 3 acciones mas
                 movingPlayer->setPosition(prevLocation);
             else if(!specialMotionCase)
             {
-                std::vector<string> aux({DEADBOLT_TEXT,SPEND_2ACTIONS_TEXTB,GET_BACK_TEXTB});
-                if(!cardWasVisible) aux[aux.size()-2] = SPEND_3ACTIONS_TEXTB;
+                std::vector<string> aux({DEADBOLT_TEXT,SPEND_ACTIONS_TEXTB,GET_BACK_TEXTB});
+                //if(!cardWasVisible) aux[aux.size()-2] = SPEND_3ACTIONS_TEXTB;
                 this->msgsToShow=aux;
                 this->status=WAITING_FOR_USER_CONFIRMATION; //Pone al modelo en el estado de espera por la respuesta del usuario.
                 this->prevLoc=prevLocation;
@@ -679,8 +681,8 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
 
             if(newCardType==LASER && !movingPlayer->hasLoot(MIRROR))
             {   
-                if( !(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_LASER)) )     //si no hay hack tokens de laser
-                    if(cardWasVisible ? movingPlayer->getcurrentActions()<1 : movingPlayer->getcurrentActions()<2)
+                if( !(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_LASER)) && movingPlayer->getcurrentActions()<1)     //si no hay hack tokens de laser
+                    //if(cardWasVisible ? movingPlayer->getcurrentActions()<1 : movingPlayer->getcurrentActions()<2)
                     {//tokens.triggerAlarm(locationToMove); setGuardsNewPath(locationToMove.floor);}
                         triggerAlarm(locationToMove);
                     }
@@ -689,10 +691,10 @@ unsigned int BurgleBrosModel::move(PlayerId playerId, CardLocation locationToMov
                     std::vector<string> aux({LASER_TEXT,TRIGGER_ALARM_TEXTB});
                     if(tokens.howManyTokensOnCPURoom(COMPUTER_ROOM_LASER))
                         aux.push_back(USE_HACK_TOKEN_TEXTB);
-                    if(cardWasVisible && movingPlayer->getcurrentActions()>=1)
+                    if(movingPlayer->getcurrentActions()>=1)
                         aux.push_back(SPEND_ACTION_TEXTB);
-                    else if(!cardWasVisible && movingPlayer->getcurrentActions()>=2)
-                        aux.push_back(SPEND_2ACTIONS_TEXTB);
+                    /*else if(!cardWasVisible && movingPlayer->getcurrentActions()>=2)
+                        aux.push_back(SPEND_2ACTIONS_TEXTB);*/
                     this->msgsToShow=aux;
                     this->status=WAITING_FOR_USER_CONFIRMATION;
                 }
@@ -1293,7 +1295,7 @@ bool BurgleBrosModel::isEscapePossible(PlayerId playerId, CardLocation tile)
 bool BurgleBrosModel::isPeekGuardsCardPossible(PlayerId playerId, unsigned int guardsFloor)
 {
     bool retVal = false;
-    BurgleBrosPlayer * p = getP2Player(playerId);
+    BurgleBrosPlayer * p = getP2Player(playerId);   //aca hay que checkear si quedan cartas en el mazo del guardia
     if(p->isItsTurn() && p->getCharacter()== THE_SPOTTER && p->getPosition().floor == guardsFloor && status == WAITING_FOR_ACTION && playerSpentFreeAction==false)
         retVal=true;
     return retVal;

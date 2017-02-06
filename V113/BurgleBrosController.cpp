@@ -93,7 +93,7 @@ string BurgleBrosController::getUsersResponse(vector<string> &message)
         {
             if(retVal==USE_HACK_TOKEN_TEXTB)        //y eligio gastar un hack token, se manda con la location del mismo.
                 networkInterface->sendUseToken(modelPointer->locationOfComputerRoomOrLavatory(COMPUTER_ROOM_LASER));
-            else if (retVal==SPEND_ACTION_TEXTB || retVal==SPEND_2ACTIONS_TEXTB)
+            else if (retVal==SPEND_ACTION_TEXTB)// || retVal==SPEND_2ACTIONS_TEXTB)
                 networkInterface->sendSpent(true);  //Si eligió gastar acciones se manda con este
             else
                 networkInterface->sendSpent(false); //Sino, se manda con este paquete.
@@ -102,7 +102,7 @@ string BurgleBrosController::getUsersResponse(vector<string> &message)
             networkInterface->sendUseToken(modelPointer->locationOfComputerRoomOrLavatory(LAVATORY));
         else if(message[2]==deadbolt[2])          //Si era un deadbolt
         {
-            if(retVal==SPEND_3ACTIONS_TEXTB || retVal==SPEND_2ACTIONS_TEXTB)         //Se manda spend actions con true si eligió gastarlas, con no si no gasto nada el rata.
+            if(retVal==SPEND_ACTIONS_TEXTB)//SPEND_3ACTIONS_TEXTB || retVal==SPEND_2ACTIONS_TEXTB)         //Se manda spend actions con true si eligió gastarlas, con no si no gasto nada el rata.
                 networkInterface->sendSpent(true);
             else
                 networkInterface->sendSpent(false);

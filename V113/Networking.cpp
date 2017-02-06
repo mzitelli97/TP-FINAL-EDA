@@ -123,12 +123,12 @@ void Networking::abortConnecting()
 }
 
 
-bool Networking::prepareToListen()
+bool Networking::prepareToListen(std::string &ip)
 {
 	bool retVal = false;
 	apr_status_t rv;
 	apr_socket_t *news;
-	rv = apr_sockaddr_info_get(&socketAddres, HOME_IP, APR_INET, STANDARD_PORT, 0, memoryPool);
+	rv = apr_sockaddr_info_get(&socketAddres, ip.c_str(), APR_INET, STANDARD_PORT, 0, memoryPool);
 	if (rv == APR_SUCCESS)
 	{
 		rv = apr_socket_create(&news, APR_INET, SOCK_STREAM, APR_PROTO_TCP, memoryPool);

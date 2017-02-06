@@ -37,14 +37,15 @@ void GUI::atachController(BurgleBrosController* Controller)
     this->Controller->attachNetworkInterface(&networkingInterface);
 }
 
-void GUI::getNameAndIp(string userName, string ipToConnect)
+void GUI::getNameAndIp(string userName, string ipToConnect, string ipToListen)
 {
     this->userName=userName;
     this->ipToConnect=ipToConnect;
+    this->ipToListen=ipToListen;
 }
 void GUI::connect()
 {
-    while(!networkingInterface.standardConnectionStart(ipToConnect));
+    while(!networkingInterface.standardConnectionStart(ipToConnect,ipToListen));
     Controller->setCommunicationRoleNThisPlayerName(networkingInterface.getCommunicationRole(), userName);
 }
 

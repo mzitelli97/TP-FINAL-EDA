@@ -34,7 +34,7 @@ public:
 	bool prepareToConnect(std::string &ip);
 	bool tryToConnect();
 	void abortConnecting();
-	bool prepareToListen();
+	bool prepareToListen(std::string &ip);
 	bool listen();
 	bool sendPacket(PerezProtocolHeader header, const char *packetInfo, unsigned int packetLength);
 	bool recievePacket(PerezProtocolHeader *header,char *buffer, unsigned int *length);					//buffer len >= BUFSIZE!!!

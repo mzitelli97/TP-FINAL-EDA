@@ -28,7 +28,7 @@ public:
 	/*Intenta conectarse con un server, y despues con un tiempo random entre las 2 macros definidas arriba
 	se vuelve en servidor y espera que alguien se conecte. Es no bloqueante, devuelve 1 si se pudo establecer una conexion (se tiene que llamar
 	a getcomunicationrole para saber si quedo como server o como cliente.*/
-	bool standardConnectionStart(std::string &ip);	
+	bool standardConnectionStart(std::string &ip, std::string &myIP);	
 	/*Devuelve si se conect� como server o cliente */
 	CommunicationRole getCommunicationRole();
 	bool recievePacket(PerezProtocolHeader *header, unsigned char * msg, unsigned int *len);

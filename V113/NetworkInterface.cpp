@@ -34,7 +34,7 @@ NetworkInterface::NetworkInterface(Networking &networking)
 	prevClock = currClock;
         error=false;
 }
-bool NetworkInterface::standardConnectionStart(string &ip)
+bool NetworkInterface::standardConnectionStart(string &ip, string &myIP)
 {
 	bool connected = false;
         double time;
@@ -54,7 +54,7 @@ bool NetworkInterface::standardConnectionStart(string &ip)
 		{
 			currentRole = SERVER;
 			p2networking->abortConnecting();
-			p2networking->prepareToListen();
+			p2networking->prepareToListen(myIP);
                         cout<<"YA SOY SERVER";
 		}
                break;

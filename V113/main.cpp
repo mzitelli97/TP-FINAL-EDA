@@ -41,8 +41,9 @@ int main(int argc, char** argv) {
     
     string name=argv[1];
     string ipToConnect=argv[2];
+    string ipToListen=argv[3];
     
-    gui.getNameAndIp(name, ipToConnect);
+    gui.getNameAndIp(name, ipToConnect, ipToListen);
     gui.connect();
     while(gui.gameStillPlaying())
     {
