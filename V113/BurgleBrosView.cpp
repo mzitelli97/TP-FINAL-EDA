@@ -32,7 +32,7 @@
 #define SCREEN_W 720
 #define SCREEN_H (SCREEN_W*9/16)
 #define TITLE_H al_get_bitmap_height(backScreen)/20.0
-#define ACTIONS_FONT_H al_get_bitmap_height(backScreen)/50.0
+#define ACTIONS_FONT_H al_get_bitmap_height(backScreen)/60.0
 #define NO_FLOOR_ZOOMED -1
 #define NO_GUARD_ZOOMED -1
 
@@ -67,7 +67,10 @@ BurgleBrosView::BurgleBrosView() {
 }
 
 
-BurgleBrosView::~BurgleBrosView() {
+BurgleBrosView::~BurgleBrosView()
+{
+    al_destroy_bitmap(backScreen);
+    al_destroy_display(display);
 }
 /*void BurgleBrosView::attachModel(BurgleBrosModel *model)
 {
@@ -78,7 +81,22 @@ BurgleBrosView::~BurgleBrosView() {
 
 void BurgleBrosView::reset()
 {
-    this->graphicInterface.clear(); //Esto después se debería hacer con deletes.
+    list<list<list<GraphicItem *>>>::iterator it_layers;
+    list<list<GraphicItem *>>::iterator it_itemType;
+    list<GraphicItem *>::iterator it_items;
+    for( it_layers = graphicInterface.begin(); it_layers != graphicInterface.end(); it_layers++)
+    {
+        for( it_itemType = it_layers->begin(); it_itemType != it_layers->end(); it_itemType++)
+        {
+            for( it_items = it_itemType->begin(); it_items != it_itemType->end(); it_items++)
+            {
+                if(*it_items != nullptr) delete *it_items;
+            }
+            it_itemType->clear();
+        }
+        it_layers->clear();
+    }
+    this->graphicInterface.clear();
     onZoom = false;
     floorZoomed = NO_FLOOR_ZOOMED;
     guardZoomed = NO_GUARD_ZOOMED;

@@ -1186,7 +1186,7 @@ bool BurgleBrosModel::isAddDieToSafePossible(PlayerId player, CardLocation tile)
 {
     bool retVal=false;
     BurgleBrosPlayer* p;
-    p = getP2Player(player);
+    p = getP2Player(player);    //checkear si es necesario checkear si el safe se ṕuede crackear
     if(p->isItsTurn() && p->getcurrentActions()>= 2 && board.getCardType(p->getPosition())==SAFE && p->getPosition()==tile && status == WAITING_FOR_ACTION)
     {
         if(board.canSafeBeCracked(tile.floor) && !board.isSafeCracked(tile.floor) && dice.getSafeDiceCount(tile.floor) < MAX_NMBR_OF_EXTRA_DICES)

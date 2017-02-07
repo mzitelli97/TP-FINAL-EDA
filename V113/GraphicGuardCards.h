@@ -15,6 +15,7 @@
 #define GRAPHICGUARDCARDS_H
 
 #include "GraphicItem.h"
+#include <list>
 
 typedef struct
 {
@@ -33,7 +34,7 @@ public:
     virtual void draw() override;
     void setTopOfNonVisibleDeck(bool visible, ALLEGRO_BITMAP *target);
 private:
-    list<ALLEGRO_BITMAP *> cards;
+    std::list<ALLEGRO_BITMAP *> cards;
     void setPosition();
     void drawOnZoom();
     auxInfoGuard properties;

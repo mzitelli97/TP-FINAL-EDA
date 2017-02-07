@@ -108,7 +108,7 @@ void GraphicGuardCards::setPosition()
 
 void GraphicGuardCards::drawOnZoom()
 {
-    list<ALLEGRO_BITMAP *>::iterator it;
+    std::list<ALLEGRO_BITMAP *>::iterator it;
     int i = 0;
     for(it = cards.begin(); it != cards.end(); it++, i++)
     {

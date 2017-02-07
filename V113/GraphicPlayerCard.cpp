@@ -19,7 +19,7 @@
 #define CARD_HEIGHT (totalHeight/5.4)
 #define SEPARATION (totalWidth/90.0)
 #define ACTIONS_SEPARATION (totalHeight/76.0)
-#define NAME_SEPARATION (totalHeight/76.0)
+#define NAME_SEPARATION (totalHeight/80.0)
 #define ACTIONS_COLOR (al_map_rgb(255,255,255))
 #define NAME_COLOR (al_map_rgb(255,255,255))
 #define RADIX (totalWidth/270.0)

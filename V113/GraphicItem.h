@@ -15,7 +15,8 @@
 #define GRAPHICITEM_H
 
 #include "View.h"
-#include "ImageLoader.h"        //check if this is necessary(this include the model)
+//#include "ImageLoader.h"        //check if this is necessary(this include the model)
+#include "BurgleBrosModel.h"
 #include "LibsInit.h"
 
 typedef struct

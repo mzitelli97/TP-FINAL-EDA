@@ -59,7 +59,7 @@ void GraphicItem::setZoom(bool zoom)
 bool GraphicItem::logic2GraphicCardLocation(CardLocation location)
 {
     bool retVal = false;
-    if(location.floor < BOARD_STANDARD_FLOORS && location.row < FLOOR_RAWS && location.column < FLOOR_COLUMNS)
+    //if(location.floor < BOARD_STANDARD_FLOORS && location.row < FLOOR_RAWS && location.column < FLOOR_COLUMNS)
     {
         double myWidth = FLOOR_WIDTH, myHeight = FLOOR_HEIGHT;
         double tile_height = TILES_HEIGHT, tile_width = TILES_WIDTH;   
